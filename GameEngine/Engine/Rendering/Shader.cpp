@@ -223,7 +223,7 @@ void Shader::setUniformPointLight(const std::string& uniformName, const PointLig
 	setUniform(uniformName + ".base.intensity", light.intensity);
 	setUniform(uniformName + ".atten.constant", light.attenuation.constant);
 	setUniform(uniformName + ".atten.linear", light.attenuation.linear);
-	setUniform(uniformName + "atten.exponent", light.attenuation.exponent);
+	setUniform(uniformName + ".atten.exponent", light.attenuation.exponent);
 	setUniform(uniformName + ".position", light.getTransform().getTransformedPosition());
 	setUniform(uniformName + ".range", light.range);
 }

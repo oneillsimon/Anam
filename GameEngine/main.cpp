@@ -52,7 +52,7 @@ void TestGame::init()
 	GameObject* pointlightObj = new GameObject();
 	pointlightObj->addComponent(new PointLight(Vector3(0, 1, 0), 0.4f, Attenuation(0, 0, 1)));
 	pointlightObj->getTransform().setPosition(Vector3(7, 0, 7));
-	//addToScene(pointlightObj);
+	addToScene(pointlightObj);
 
 	GameObject* spotlightObj = new GameObject();
 	spotlightObj->addComponent(new SpotLight(Vector3(0, 1, 1), 1.0f, Attenuation(0, 0, 0.1f), 0.7f));
