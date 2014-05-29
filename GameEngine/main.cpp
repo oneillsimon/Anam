@@ -17,7 +17,6 @@ private:
 
 void TestGame::init()
 {
-
 	GameObject* planeObj = new GameObject();
 	GameObject* cameraObj = new GameObject();
 	GameObject* testmesh1 = new GameObject();
@@ -47,6 +46,24 @@ void TestGame::init()
 	addToScene(planeObj);
 	addToScene(cameraObj);
 	addToScene(testmesh1);
+
+	// Lighting
+
+	GameObject* pointlightObj = new GameObject();
+	pointlightObj->addComponent(new PointLight(Vector3(0, 1, 0), 0.4f, Attenuation(0, 0, 1)));
+	pointlightObj->getTransform().setPosition(Vector3(7, 0, 7));
+	//addToScene(pointlightObj);
+
+	GameObject* spotlightObj = new GameObject();
+	spotlightObj->addComponent(new SpotLight(Vector3(0, 1, 1), 1.0f, Attenuation(0, 0, 0.1f), 0.7f));
+	spotlightObj->getTransform().setRotation(Quaternion(Vector3(0, 1, 0), GameMath::toRadians(90.0f)));
+	addToScene(spotlightObj);
+
+	// TODO: intensity on directional light doesn't work
+	GameObject* dirlightObj = new GameObject();
+	dirlightObj->addComponent(new DirectionalLight(Vector3(1, 0, 0.05f), 0.0f));
+	dirlightObj->getTransform().setRotation(Quaternion(Vector3(1, 0, 0), GameMath::toRadians(-45)));
+	addToScene(dirlightObj);
 }
 
 int main()
