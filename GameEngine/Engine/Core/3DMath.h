@@ -24,6 +24,7 @@ public:
 	float max() const;
 	float cross(const Vector2& v) const;
 	Vector2 normalised() const;
+	Vector2 inversed() const;
 	Vector2 rotate(float angle);
 	Vector2 lerp(const Vector2& destination, float lerpFactor) const;
 
@@ -46,9 +47,9 @@ public:
 class Vector3
 {
 private:
-	float x;
-	float y;
-	float z;
+	mutable float x;
+	mutable float y;
+	mutable float z;
 
 public:
 	static const Vector3 ZERO;
@@ -59,14 +60,17 @@ public:
 	~Vector3();
 
 	float length() const;
+	float squareLength() const;
 	float dot(const Vector3& v) const;
 	float max() const;
 	Vector3 cross(const Vector3& v) const;
 	Vector3 normalised() const;
+	Vector3 inversed() const;
 	Vector3 rotate(const Vector3& axis, float angle) const;
 	Vector3 rotate(const Quaternion& rotation) const;
 	Vector3 lerp(const Vector3& destination, float lerpFactor) const;
-	Vector3 abs();
+	Vector3 absolute();
+	void addScaledVector3(const Vector3& v, float scale);
 
 	float getX() const;
 	float getY() const;
@@ -77,13 +81,26 @@ public:
 	void setZ(float z);
 
 	Vector3 operator +(const Vector3& v) const;
-	Vector3 operator +(float f) const;
 	Vector3 operator -(const Vector3& v) const;
-	Vector3 operator -(float f) const;
 	Vector3 operator *(const Vector3& v) const;
-	Vector3 operator *(float f) const;
 	Vector3 operator /(const Vector3& v) const;
+
+	void operator +=(const Vector3& v) const;
+	void operator -=(const Vector3& v) const;
+	void operator *=(const Vector3& v) const;
+	void operator /=(const Vector3& v) const;
+
+	Vector3 operator +(float f) const;
+	Vector3 operator -(float f) const;
+	Vector3 operator *(float f) const;
 	Vector3 operator /(float) const;
+
+	void operator +=(float f) const;
+	void operator -=(float f) const;
+	void operator *=(float f) const;
+	void operator /=(float f) const;
+
+	bool operator ==(const Vector3& v) const;
 	bool operator !=(const Vector3& v) const;
 };
 

@@ -48,6 +48,11 @@ Vector2 Vector2::normalised() const
 	return Vector2(x / l, y / l);
 }
 
+Vector2 Vector2::inversed() const
+{
+	return Vector2(-x, -y);
+}
+
 Vector2 Vector2::rotate(float angle)
 {
 	double radians = GameMath::toRadians(angle);

@@ -23,7 +23,12 @@ Vector3::~Vector3()
 
 float Vector3::length() const
 {
-	return sqrtf(x * x + y * y + z * z);
+	return sqrtf(squareLength());
+}
+
+float Vector3::squareLength() const
+{
+	return x * x + y * y + z * z;
 }
 
 float Vector3::dot(const Vector3& v) const
@@ -51,6 +56,11 @@ Vector3 Vector3::normalised() const
 	return Vector3(x / l, y / l, z / l);
 }
 
+Vector3 Vector3::inversed() const
+{
+	return Vector3(-x, -y, -z);
+}
+
 Vector3 Vector3::rotate(const Vector3& axis, float angle) const
 {
 	float sinAngle = (float)sin(-angle);
@@ -73,6 +83,18 @@ Vector3 Vector3::rotate(const Quaternion& rotation) const
 Vector3 Vector3::lerp(const Vector3& destination, float lerpFactor) const
 {
 	return destination - *this * lerpFactor + *this;
+}
+
+Vector3 Vector3::absolute()
+{
+	return Vector3(abs(x), abs(y), abs(z));
+}
+
+void Vector3::addScaledVector3(const Vector3& v, float scale)
+{
+	x += v.getX() * scale;
+	y += v.getY() * scale;
+	z += v.getZ() * scale;
 }
 
 float Vector3::getX() const
@@ -110,19 +132,9 @@ Vector3 Vector3::operator +(const Vector3& v) const
 	return Vector3(x + v.getX(), y + v.getY(), z + v.getZ());
 }
 
-Vector3 Vector3::operator +(float f) const
-{
-	return Vector3(x + f, y + f, z + f);
-}
-
 Vector3 Vector3::operator -(const Vector3& v) const
 {
 	return Vector3(x - v.getX(), y - v.getY(), z - v.getZ());
-}
-
-Vector3 Vector3::operator -(float f) const
-{
-	return Vector3(x - f, y - f, z - f);
 }
 
 Vector3 Vector3::operator *(const Vector3& v) const
@@ -130,14 +142,52 @@ Vector3 Vector3::operator *(const Vector3& v) const
 	return Vector3(x * v.getX(), y * v.getY(), z * v.getZ());
 }
 
-Vector3 Vector3::operator *(float f) const
-{
-	return Vector3(x * f, y * f, z * f);
-}
-
 Vector3 Vector3::operator /(const Vector3& v) const
 {
 	return Vector3(x / v.getX(), y / v.getY(), z / v.getZ());
+}
+
+void Vector3::operator +=(const Vector3& v) const
+{
+	x += v.getX();
+	y += v.getY();
+	z += v.getZ();
+}
+
+void Vector3::operator -=(const Vector3& v) const
+{
+	x -= v.getX();
+	y -= v.getY();
+	z -= v.getZ();
+}
+
+void Vector3::operator *=(const Vector3& v) const
+{
+	x *= v.getX();
+	y *= v.getY();
+	z *= v.getZ();
+}
+
+void Vector3::operator /=(const Vector3& v) const
+{
+	x /= v.getX();
+	y /= v.getY();
+	z /= v.getZ();
+}
+
+Vector3 Vector3::operator +(float f) const
+{
+	return Vector3(x + f, y + f, z + f);
+}
+
+Vector3 Vector3::operator -(float f) const
+{
+	return Vector3(x - f, y - f, z - f);
+}
+
+Vector3 Vector3::operator *(float f) const
+{
+	return Vector3(x * f, y * f, z * f);
 }
 
 Vector3 Vector3::operator /(float f) const
@@ -145,7 +195,40 @@ Vector3 Vector3::operator /(float f) const
 	return Vector3(x / f, y / f, z / f);
 }
 
+void Vector3::operator +=(float f) const
+{
+	x += f;
+	y += f;
+	z += f;
+}
+
+void Vector3::operator -=(float f) const
+{
+	x -= f;
+	y -= f;
+	z -= f;
+}
+
+void Vector3::operator *=(float f) const
+{
+	x *= f;
+	y *= f;
+	z *= f;
+}
+
+void Vector3::operator /=(float f) const
+{
+	x /= f;
+	y /= f;
+	z /= f;
+}
+
+bool Vector3::operator ==(const Vector3& v) const
+{
+	return x == v.getX() && y == v.getY() && z == v.getZ();
+}
+
 bool Vector3::operator !=(const Vector3& v) const
 {
-	return x != v.getX() || y != v.getY() || z != v.getZ();
+	return x != v.getX() && y != v.getY() && z != v.getZ();
 }

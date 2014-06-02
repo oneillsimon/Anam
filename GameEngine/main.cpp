@@ -61,7 +61,7 @@ void TestGame::init()
 
 	// TODO: intensity on directional light doesn't work
 	GameObject* dirlightObj = new GameObject();
-	dirlightObj->addComponent(new DirectionalLight(Vector3(1, 0, 0.05f), 0.0f));
+	dirlightObj->addComponent(new DirectionalLight(Vector3(1, 1, 1), 0.0f));
 	dirlightObj->getTransform().setRotation(Quaternion(Vector3(1, 0, 0), GameMath::toRadians(-45)));
 	addToScene(dirlightObj);
 }
