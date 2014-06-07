@@ -2,6 +2,7 @@
 #include "Engine\Core\GameMath.h"
 #include "Engine\Components\FreeLook.h"
 #include "Engine\Components\FreeMove.h"
+#include "Engine\Physics\Particle.h"
 
 class TestGame : public Game
 {
@@ -19,8 +20,7 @@ void TestGame::init()
 {
 	GameObject* planeObj = new GameObject();
 	GameObject* cameraObj = new GameObject();
-	GameObject* testmesh1 = new GameObject();
-	GameObject* testmesh2 = new GameObject();
+	Particle* testParticle = new Particle(Vector3(0, 0, 0), Vector3(0, 0, 10), 1.0f, 0.9f);
 
 	planeObj->addComponent(new MeshRenderer(new Mesh("./res/models/plane3.obj"), new Material(new Texture("bricks.jpg"), 1, 8)));
 	planeObj->getTransform().setPosition(Vector3(0, -1, 5));
@@ -31,21 +31,14 @@ void TestGame::init()
 	cameraObj->addComponent(new FreeLook());
 	cameraObj->addComponent(new FreeMove());
 
-	testmesh1->addComponent(new MeshRenderer(new Mesh("./res/models/plane3.obj"), new Material(new Texture("bricks.jpg"), 1, 8)));
-	testmesh2->addComponent(new MeshRenderer(new Mesh("./res/models/plane3.obj"), new Material(new Texture("bricks.jpg"), 1, 8)));
+	testParticle->addComponent(new MeshRenderer(new Mesh("./res/models/plane3.obj"), new Material(new Texture("bricks.jpg"), 1, 8)));
+	testParticle->getTransform().setPosition(Vector3(0, 0, 5));
+	testParticle->getTransform().setScale(Vector3(1, 1, 1));
+	testParticle->addComponent(new FreeMove(10.0f, Input::KEY_UP, Input::KEY_DOWN, Input::KEY_LEFT, Input::KEY_RIGHT));
 
-	testmesh1->getTransform().setPosition(Vector3(0, 2, 0));
-	testmesh1->getTransform().setRotation(Quaternion(Vector3(0, 1, 0), 0.4f));
-	testmesh1->getTransform().setScale(Vector3(1, 1, 1));
-
-	testmesh2->getTransform().setPosition(Vector3(0, 0, 25));
-
-	testmesh1->addChild(testmesh2);
-	testmesh1->addComponent(new FreeMove(10.0f, Input::KEY_UP, Input::KEY_DOWN, Input::KEY_LEFT, Input::KEY_RIGHT));
-
-	addToScene(planeObj);
+	//addToScene(planeObj);
 	addToScene(cameraObj);
-	addToScene(testmesh1);
+	addToScene(testParticle);
 
 	// Lighting
 

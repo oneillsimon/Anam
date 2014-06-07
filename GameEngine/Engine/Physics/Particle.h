@@ -1,9 +1,9 @@
 #include "../Core/3DMath.h"
+#include "../Core/GameObject.h"
 
-class Particle
+class Particle : public GameObject
 {
 private:
-	Vector3 position;
 	Vector3 velocity;
 	Vector3 acceleration;
 	
@@ -12,5 +12,22 @@ private:
 	Vector3 forceAccumulated;
 
 public:
-	void update(float delta);
+	Particle(Vector3 velocity, Vector3 acceleration, float mass, float damping);
+	~Particle();
+
+	virtual void update(float delta);
+
+	Vector3 getVelocity() const;
+	Vector3 getAcceleration() const;
+	
+	float getDamping() const;
+	float getMass() const;
+	float getInverseMass() const;
+	Vector3 getForceAccumulated() const;
+
+	void setVelocity(const Vector3& v);
+	void setAcceleration(const Vector3& v);
+
+	void setDamping(float f);
+	void setMass(float mass);
 };

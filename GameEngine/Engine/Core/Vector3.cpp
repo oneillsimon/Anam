@@ -92,9 +92,9 @@ Vector3 Vector3::absolute()
 
 void Vector3::addScaledVector3(const Vector3& v, float scale)
 {
-	x += v.getX() * scale;
-	y += v.getY() * scale;
-	z += v.getZ() * scale;
+	x += (v.getX() * scale);
+	y += (v.getY() * scale);
+	z += (v.getZ() * scale);
 }
 
 float Vector3::getX() const

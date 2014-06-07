@@ -40,8 +40,6 @@ void FreeLook::input(float delta)
 		{
 			Input::setMousePosition(centrePosition);
 			Quaternion q = getTransform().getRotation().normalised();
-
-			fprintf(stdout, "%.4f, %.4f, %.4f, %.4f\n", q.getX(), q.getY(), q.getZ(), q.getW());
 		}
 	}
 
