@@ -200,5 +200,8 @@
     <ClInclude Include="Engine\Physics\Particle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Physics\PFGenerator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

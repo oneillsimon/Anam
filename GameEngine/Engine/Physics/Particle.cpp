@@ -35,6 +35,16 @@ void Particle::update(float delta)
 	// Apply damping
 	velocity *= powf(damping, delta);
 
+	clearAccumulator();
+}
+
+void Particle::addForce(const Vector3& v)
+{
+	forceAccumulated += v;
+}
+
+void Particle::clearAccumulator()
+{
 	forceAccumulated = Vector3::ZERO;
 }
 

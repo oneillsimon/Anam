@@ -17,6 +17,9 @@ public:
 
 	virtual void update(float delta);
 
+	void addForce(const Vector3& v);
+	void clearAccumulator();
+
 	Vector3 getVelocity() const;
 	Vector3 getAcceleration() const;
 	

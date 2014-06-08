@@ -29,6 +29,7 @@
     <ClInclude Include="Engine\Core\GameObject.h" />
     <ClInclude Include="Engine\GameEngine.h" />
     <ClInclude Include="Engine\Physics\Particle.h" />
+    <ClInclude Include="Engine\Physics\PFGenerator.h" />
     <ClInclude Include="Engine\Rendering\MappedValues.h" />
     <ClInclude Include="Engine\Rendering\Material.h" />
     <ClInclude Include="Engine\Rendering\Mesh.h" />
