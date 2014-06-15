@@ -29,6 +29,7 @@
     <ClInclude Include="Engine\Core\GameObject.h" />
     <ClInclude Include="Engine\GameEngine.h" />
     <ClInclude Include="Engine\Physics\Particle.h" />
+    <ClInclude Include="Engine\Physics\PContacts.h" />
     <ClInclude Include="Engine\Physics\PFGenerator.h" />
     <ClInclude Include="Engine\Rendering\MappedValues.h" />
     <ClInclude Include="Engine\Rendering\Material.h" />
@@ -60,6 +61,7 @@
     <ClCompile Include="Engine\Core\SDLWrapper.cpp" />
     <ClCompile Include="Engine\Core\GameObject.cpp" />
     <ClCompile Include="Engine\Physics\Particle.cpp" />
+    <ClCompile Include="Engine\Physics\PContacts.cpp" />
     <ClCompile Include="Engine\Physics\PFGenerator.cpp" />
     <ClCompile Include="Engine\Rendering\MappedValues.cpp" />
     <ClCompile Include="Engine\Rendering\Material.cpp" />
