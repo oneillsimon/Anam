@@ -60,6 +60,7 @@
     <ClCompile Include="Engine\Core\SDLWrapper.cpp" />
     <ClCompile Include="Engine\Core\GameObject.cpp" />
     <ClCompile Include="Engine\Physics\Particle.cpp" />
+    <ClCompile Include="Engine\Physics\PFGenerator.cpp" />
     <ClCompile Include="Engine\Rendering\MappedValues.cpp" />
     <ClCompile Include="Engine\Rendering\Material.cpp" />
     <ClCompile Include="Engine\Rendering\Mesh.cpp" />

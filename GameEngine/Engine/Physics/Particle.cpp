@@ -48,6 +48,11 @@ void Particle::clearAccumulator()
 	forceAccumulated = Vector3::ZERO;
 }
 
+bool Particle::hasFiniteMass()
+{
+	return inverseMass >= 0;
+}
+
 Vector3 Particle::getVelocity() const
 {
 	return velocity;

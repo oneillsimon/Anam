@@ -19,6 +19,7 @@ public:
 
 	void addForce(const Vector3& v);
 	void clearAccumulator();
+	bool hasFiniteMass();
 
 	Vector3 getVelocity() const;
 	Vector3 getAcceleration() const;
