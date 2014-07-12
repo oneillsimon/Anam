@@ -5,7 +5,7 @@
 
 #define COLOUR_DEPTH 256
 
-Light::Light(const Vector3& colour, float intensity)
+Light::Light(const Colour& colour, float intensity)
 {
 	m_colour = colour;
 	m_intensity = intensity;
@@ -30,7 +30,7 @@ Shader* Light::getShader()
 	return m_shader;
 }
 
-Vector3 Light::getColour() const
+Colour Light::getColour() const
 {
 	return m_colour;
 }
@@ -50,7 +50,7 @@ void Light::setShader(Shader* shader)
 	this->m_shader = shader;
 }
 
-void Light::setColour(const Vector3& colour)
+void Light::setColour(const Colour& colour)
 {
 	m_colour = colour;
 }
@@ -97,13 +97,13 @@ void Attenuation::setExponent(float exponent)
 	m_exponent = exponent;
 }
 
-DirectionalLight::DirectionalLight(const Vector3& colour, float intensity)
+DirectionalLight::DirectionalLight(const Colour& colour, float intensity)
 	: Light(colour, intensity)
 {
 	setShader(new Shader("forward-directional"));
 }
 
-PointLight::PointLight(const Vector3& colour, float intensity, const Attenuation& attenuation)
+PointLight::PointLight(const Colour& colour, float intensity, const Attenuation& attenuation)
 	: Light(colour, intensity)
 {
 	float a = attenuation.getExponent();
@@ -125,7 +125,7 @@ float PointLight::getRange() const
 	return m_range;
 }
 
-void PointLight::setAttenuation(Attenuation attenuation)
+void PointLight::setAttenuation(const Attenuation& attenuation)
 {
 	m_attenuation = attenuation;
 }
@@ -135,7 +135,7 @@ void PointLight::setRange(float range)
 	m_range = range;
 }
 
-SpotLight::SpotLight(const Vector3& colour, float intensity, const Attenuation& attenuation, float cutoff)
+SpotLight::SpotLight(const Colour& colour, float intensity, const Attenuation& attenuation, float cutoff)
 	: PointLight(colour, intensity, attenuation)
 {
 	m_cutoff = cutoff;

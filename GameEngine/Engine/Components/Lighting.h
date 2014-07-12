@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../Core/3DMath.h"
+#include "../Rendering/Colour.h"
 #include "GameComponent.h"
 
 class CoreEngine;
@@ -9,23 +10,23 @@ class Light : public GameComponent
 {
 private:
 	Shader* m_shader;
-	Vector3 m_colour;
+	Colour m_colour;
 	float m_intensity;
 
 	void operator =(Light& light) {}
 
 public:
-	Light(const Vector3& colour, float intensity);
+	Light(const Colour& colour, float intensity);
 	virtual ~Light();
 
 	virtual void addToCoreEngine(CoreEngine* coreEngine);
 
 	Shader* getShader();
-	Vector3 getColour() const;
+	Colour getColour() const;
 	float getIntensity() const;
 
 	void setShader(Shader* shader);
-	void setColour(const Vector3& colour);
+	void setColour(const Colour& colour);
 	void setIntensity(float intensity);
 };
 
@@ -51,7 +52,7 @@ public:
 class DirectionalLight : public Light
 {
 public:
-	DirectionalLight(const Vector3& colour, float intensity);
+	DirectionalLight(const Colour& colour, float intensity);
 };
 
 class PointLight : public Light
@@ -61,12 +62,12 @@ private:
 	float m_range;
 
 public:
-	PointLight(const Vector3& colour, float intensity, const Attenuation& attenuation);
+	PointLight(const Colour& colour, float intensity, const Attenuation& attenuation);
 
 	Attenuation getAttenuation() const;
 	float getRange() const;
 
-	void setAttenuation(Attenuation attenuation);
+	void setAttenuation(const Attenuation& attenuation);
 	void setRange(float range);
 };
 
@@ -76,7 +77,7 @@ private:
 	float m_cutoff;
 
 public:
-	SpotLight(const Vector3& colour, float intensity, const Attenuation& attenuation, float cutoff);
+	SpotLight(const Colour& colour, float intensity, const Attenuation& attenuation, float cutoff);
 
 	float getCutoff() const;
 	

@@ -47,18 +47,18 @@ void TestGame::init()
 	// Lighting
 
 	GameObject* pointlightObj = new GameObject();
-	pointlightObj->addComponent(new PointLight(Vector3(0, 1, 0), 1.2f, Attenuation(0, 0, 1)));
+	pointlightObj->addComponent(new PointLight(Colour(0, 255, 0), 1.2f, Attenuation(0, 0, 1)));
 	pointlightObj->getTransform().setPosition(Vector3(7, 0, 7));
 	addToScene(pointlightObj);
 
 	GameObject* spotlightObj = new GameObject();
-	spotlightObj->addComponent(new SpotLight(Vector3(1, 1, 0), 5.0f, Attenuation(0, 0, 0.1f), 0.7f));
+	spotlightObj->addComponent(new SpotLight(Colour(255, 255, 0), 5.0f, Attenuation(0, 0, 0.1f), 0.7f));
 	spotlightObj->addComponent(new FreeMove(10, Input::KEY_UP, Input::KEY_DOWN, Input::KEY_LEFT, Input::KEY_RIGHT));
 	spotlightObj->getTransform().setRotation(Quaternion(Vector3(0, 1, 0), GameMath::toRadians(90.0f)));
 	addToScene(spotlightObj);
 
 	GameObject* dirlightObj = new GameObject();
-	dirlightObj->addComponent(new DirectionalLight(Vector3(1, 0, 0), 0.5f));
+	dirlightObj->addComponent(new DirectionalLight(Colour(255, 0, 0), 0.5f));
 	dirlightObj->addComponent(new FreeMove(10, Input::KEY_UP, Input::KEY_DOWN, Input::KEY_LEFT, Input::KEY_RIGHT));
 	dirlightObj->getTransform().setRotation(Quaternion(Vector3(1, 0, 0), GameMath::toRadians(-45)));
 	addToScene(dirlightObj);
