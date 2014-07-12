@@ -8,15 +8,16 @@ RenderingEngine::RenderingEngine()
 {
 	m_samplerMap.insert(std::pair<std::string, unsigned int>("diffuse", 0));
 
-	addVector3("ambient", Vector3(0.1f, 0.1f, 0.1f));
+	addVector3("ambient", Vector3(0.01f, 0.01f, 0.01f));
 	m_defaultShader = new Shader("forward-ambient");
 
 	glClearColor(0, 0, 0, 0);
 
-	glFrontFace(GL_CW);
-	glCullFace(GL_BACK);
-	glEnable(GL_CULL_FACE);
+	//glEnable(GL_CULL_FACE);
+	//glCullFace(GL_BACK);
+	//glFrontFace(GL_CW);
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_COLOR_MATERIAL);
 	glEnable(GL_DEPTH_CLAMP);
 }
 

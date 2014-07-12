@@ -5,6 +5,21 @@ MeshRenderer::MeshRenderer(Mesh* mesh, Material* material)
 {
 	m_mesh = mesh;
 	m_material = material;
+	m_colour = new Vector4(0, 0, 0, 0);
+}
+
+MeshRenderer::MeshRenderer(Mesh* mesh, Vector4* colour)
+{
+	m_mesh = mesh;
+	m_material = new Material(new Texture("default.png"), 1, 8);
+	m_colour = colour;
+}
+
+MeshRenderer::MeshRenderer(Mesh* mesh, Material* material, Vector4* colour)
+{
+	m_mesh = mesh;
+	m_material = material;
+	m_colour = colour;
 }
 
 MeshRenderer::~MeshRenderer()
@@ -18,12 +33,16 @@ MeshRenderer::~MeshRenderer()
 	{
 		delete m_material;
 	}
+
+	if(m_colour)
+	{
+		delete m_colour;
+	}
 }
 
 void MeshRenderer::render(Shader* shader, RenderingEngine* renderingEngine)
 {
 	shader->bind();
-	Transform t = getTransform();
-	shader->updateUniforms(t, *m_material, renderingEngine);
+	shader->updateUniforms(getTransform(), *m_material, *m_colour, renderingEngine);
 	m_mesh->draw();
 }

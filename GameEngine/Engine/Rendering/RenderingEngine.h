@@ -6,6 +6,7 @@
 #include "../Components/Lighting.h"
 #include "MappedValues.h"
 #include "Material.h"
+#include "Line.h"
 
 class GameObject;
 
