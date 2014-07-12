@@ -9,46 +9,76 @@ class Light : public GameComponent
 {
 private:
 	Shader* m_shader;
-	void operator =(Light& light) {}
-
-public:
 	Vector3 m_colour;
 	float m_intensity;
 
+	void operator =(Light& light) {}
+
+public:
 	Light(const Vector3& colour, float intensity);
 	virtual ~Light();
 
 	virtual void addToCoreEngine(CoreEngine* coreEngine);
 
 	Shader* getShader();
+	Vector3 getColour() const;
+	float getIntensity() const;
+
 	void setShader(Shader* shader);
+	void setColour(const Vector3& colour);
+	void setIntensity(float intensity);
 };
 
-struct Attenuation
+class Attenuation
 {
-	float constant;
-	float linear;
-	float exponent;
+private:
+	float m_constant;
+	float m_linear;
+	float m_exponent;
 
-	Attenuation(float constant = 0, float linear = 0, float exponent = 1) : constant(constant), linear(linear), exponent(exponent){}
+public:
+	Attenuation(float constant = 0, float linear = 0, float exponent = 1);
+
+	float getConstant() const;
+	float getLinear() const;
+	float getExponent() const;
+
+	void setConstant(float constant);
+	void setLinear(float linear);
+	void setExponent(float exponent);
 };
 
-struct DirectionalLight : public Light
+class DirectionalLight : public Light
 {
+public:
 	DirectionalLight(const Vector3& colour, float intensity);
 };
 
-struct PointLight : public Light
+class PointLight : public Light
 {
-	Attenuation attenuation;
-	float range;
+private:
+	Attenuation m_attenuation;
+	float m_range;
 
+public:
 	PointLight(const Vector3& colour, float intensity, const Attenuation& attenuation);
+
+	Attenuation getAttenuation() const;
+	float getRange() const;
+
+	void setAttenuation(Attenuation attenuation);
+	void setRange(float range);
 };
 
-struct SpotLight : public PointLight
+class SpotLight : public PointLight
 {
-	float cutoff;
+private:
+	float m_cutoff;
 
+public:
 	SpotLight(const Vector3& colour, float intensity, const Attenuation& attenuation, float cutoff);
+
+	float getCutoff() const;
+	
+	void setCutoff(float cutoff);
 };

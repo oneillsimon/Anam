@@ -222,32 +222,32 @@ void Shader::setUniform(const std::string& uniformName, const Vector4& value)
 void Shader::setUniformDirectionalLight(const std::string& uniformName, const DirectionalLight& light)
 {
 	setUniform(uniformName + ".direction", light.getTransform().getTransformedRotation().getForward());
-	setUniform(uniformName + ".base.color", light.m_colour);
-	setUniform(uniformName + ".base.intensity", light.m_intensity);
+	setUniform(uniformName + ".base.color", light.getColour());
+	setUniform(uniformName + ".base.intensity", light.getIntensity());
 }
 
 void Shader::setUniformPointLight(const std::string& uniformName, const PointLight& light)
 {
-	setUniform(uniformName + ".base.color", light.m_colour);
-	setUniform(uniformName + ".base.intensity", light.m_intensity);
-	setUniform(uniformName + ".atten.constant", light.attenuation.constant);
-	setUniform(uniformName + ".atten.linear", light.attenuation.linear);
-	setUniform(uniformName + ".atten.exponent", light.attenuation.exponent);
+	setUniform(uniformName + ".base.color", light.getColour());
+	setUniform(uniformName + ".base.intensity", light.getIntensity());
+	setUniform(uniformName + ".atten.constant", light.getAttenuation().getConstant());
+	setUniform(uniformName + ".atten.linear", light.getAttenuation().getLinear());
+	setUniform(uniformName + ".atten.exponent", light.getAttenuation().getExponent());
 	setUniform(uniformName + ".position", light.getTransform().getTransformedPosition());
-	setUniform(uniformName + ".range", light.range);
+	setUniform(uniformName + ".range", light.getRange());
 }
 
 void Shader::setUniformSpotLight(const std::string& uniformName, const SpotLight& light)
 {
-	setUniform(uniformName + ".pointLight.base.color", light.m_colour);
-	setUniform(uniformName + ".pointLight.base.intensity", light.m_intensity);
-	setUniform(uniformName + ".pointLight.atten.constant", light.attenuation.constant);
-	setUniform(uniformName + ".pointLight.atten.linear", light.attenuation.linear);
-	setUniform(uniformName + ".pointLight.atten.exponent", light.attenuation.exponent);
+	setUniform(uniformName + ".pointLight.base.color", light.getColour());
+	setUniform(uniformName + ".pointLight.base.intensity", light.getIntensity());
+	setUniform(uniformName + ".pointLight.atten.constant", light.getAttenuation().getConstant());
+	setUniform(uniformName + ".pointLight.atten.linear", light.getAttenuation().getLinear());
+	setUniform(uniformName + ".pointLight.atten.exponent", light.getAttenuation().getExponent());
 	setUniform(uniformName + ".pointLight.position", light.getTransform().getTransformedPosition());
-	setUniform(uniformName + ".pointLight.range", light.range);
+	setUniform(uniformName + ".pointLight.range", light.getRange());
 	setUniform(uniformName + ".direction", light.getTransform().getTransformedRotation().getForward());
-	setUniform(uniformName + ".cutoff", light.cutoff);
+	setUniform(uniformName + ".cutoff", light.getCutoff());
 }
 
 int ShaderData::getProgram()
