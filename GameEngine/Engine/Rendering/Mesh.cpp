@@ -29,6 +29,10 @@ MeshData::~MeshData()
 	}
 }
 
+Mesh::Mesh()
+{
+}
+
 Mesh::Mesh(Vertex* vertices, int vertSize, int* indices, int indexSize, bool calcNormals)
 {
 	m_fileName = "";

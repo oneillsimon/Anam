@@ -100,7 +100,7 @@ void Shader::bind()
 	glUseProgram(m_shaderData->getProgram());
 }
 
-void Shader::updateUniforms(const Transform& transform, Material& material, RenderingEngine* renderingEngine)
+void Shader::updateUniforms(const Transform& transform, Material& material, Vector4& colour, RenderingEngine* renderingEngine)
 {
 	Matrix4 worldMatrix = transform.getTransformation();
 	Matrix4 viewProjection = renderingEngine->getMainCamera().getViewProjection();
@@ -139,6 +139,10 @@ void Shader::updateUniforms(const Transform& transform, Material& material, Rend
 			if(uniformType == "vec3")
 			{
 				setUniform(uniformName, renderingEngine->getVector3(unprefixedName));
+			}
+			else if(uniformType == "vec4")
+			{
+				setUniform(uniformName, colour);
 			}
 			else if(uniformType == "float")
 			{
@@ -208,6 +212,11 @@ void Shader::setUniform(const std::string& uniformName, const Matrix4& value)
 void Shader::setUniform(const std::string& uniformName, const Vector3& value)
 {
 	glUniform3f(m_shaderData->getUniformMap().at(uniformName), value.getX(), value.getY(), value.getZ());
+}
+
+void Shader::setUniform(const std::string& uniformName, const Vector4& value)
+{
+	glUniform4f(m_shaderData->getUniformMap().at(uniformName), value.getX(), value.getY(), value.getZ(), value.getW());
 }
 
 void Shader::setUniformDirectionalLight(const std::string& uniformName, const DirectionalLight& light)

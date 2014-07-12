@@ -8,6 +8,7 @@
 #include "../Core/3DMath.h"
 #include "Material.h"
 #include "RenderingEngine.h"
+#include "Colour.h"
 #include "../Components/Lighting.h"
 #include "../Core/Transform.h"
 
@@ -69,10 +70,11 @@ public:
 	virtual ~Shader();
 
 	void bind();
-	void updateUniforms(const Transform& transform, Material& material, RenderingEngine* renderingEngine);
+	void updateUniforms(const Transform& transform, Material& material, Vector4& colour, RenderingEngine* renderingEngine);
 
 	void setUniform(const std::string& fileName, int value);
 	void setUniform(const std::string& fileName, float value);
 	void setUniform(const std::string& fileName, const Matrix4& value);
 	void setUniform(const std::string& fileName, const Vector3& value);
+	void setUniform(const std::string& fileName, const Vector4& value);
 };

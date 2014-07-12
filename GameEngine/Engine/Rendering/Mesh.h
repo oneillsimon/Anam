@@ -25,7 +25,7 @@ public:
 
 class Mesh
 {
-private:
+protected:
 	static std::map<std::string, MeshData*> resourceMap;
 
 	std::string m_fileName;
@@ -37,9 +37,10 @@ private:
 	void operator =(Mesh& mesh) {}
 	
 public:
+	Mesh();
 	Mesh(std::string fileName);
 	Mesh(Vertex* vertices, int vertSize, int* indices, int indexSize, bool calcNormals);
 	~Mesh();
 
-	void draw();
+	virtual void draw();
 };
