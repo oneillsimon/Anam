@@ -1,3 +1,5 @@
+#include <cmath>
+#include <algorithm>
 #include "3DMath.h"
 
 Vector4::Vector4()
@@ -15,6 +17,11 @@ Vector4::Vector4(float x, float y, float z, float w)
 
 Vector4::~Vector4()
 {
+}
+
+float Vector4::max() const
+{
+	return std::max(x, std::max(y, std::max(z, w)));
 }
 
 float Vector4::getX() const

@@ -120,6 +120,8 @@ public:
 	Vector4(float x, float y, float z, float w);
 	~Vector4();
 
+	float max() const;
+
 	float getX() const;
 	float getY() const;
 	float getZ() const;
