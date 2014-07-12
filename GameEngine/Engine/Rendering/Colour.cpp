@@ -1,12 +1,12 @@
 #include "Colour.h"
 
 Colour::Colour()
-	: Vector4(0, 0, 0, 0)
+	: Vector4(0, 0, 0, 1)
 {
 }
 
 Colour::Colour(float r, float g, float b)
-	: Vector4(r / 255.0f, g / 255.0f, b / 255.0f, 255.0f)
+	: Vector4(r / 255.0f, g / 255.0f, b / 255.0f, 1)
 {
 }
 
@@ -17,7 +17,7 @@ Colour::Colour(float r, float g, float b, float a)
 
 Vector3 Colour::getRGB() const
 {
-	return Vector3(x, y, z);
+	return Vector3(x, y, z) * w;
 }
 
 float Colour::getR() const
