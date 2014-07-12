@@ -131,5 +131,5 @@ class ParticleFakeSpring : public ParticleForceGenerator
 
 public:
 	ParticleFakeSpring(Vector3* anchor, float springConstant, float damping);
-	virtual void updateForce(Particle* particle, float duration;
+	virtual void updateForce(Particle* particle, float duration);
 };

@@ -68,6 +68,11 @@ float Particle::getDamping() const
 	return damping;
 }
 
+float Particle::getMass() const
+{
+	return 1.0f / inverseMass;
+}
+
 float Particle::getInverseMass() const
 {
 	return inverseMass;
