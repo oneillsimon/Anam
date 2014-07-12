@@ -5,6 +5,13 @@
 
 #define COLOUR_DEPTH 256
 
+Light::Light(const Vector3& colour, float intensity)
+{
+	m_colour = colour;
+	m_intensity = intensity;
+	m_shader = 0;
+}
+
 Light::~Light()
 {
 	if(m_shader)

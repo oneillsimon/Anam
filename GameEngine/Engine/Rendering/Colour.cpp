@@ -1,54 +1,51 @@
 #include "Colour.h"
 
-Colour::Colour(int r, int g, int b)
+Colour::Colour(float r, float g, float b)
+	: Vector4(r / 255.0f, g / 255.0f, b / 255.0f, 255.0f)
 {
-	Colour(r, g, b, 1);
 }
 
-Colour::Colour(int r, int g, int b, int a)
+Colour::Colour(float r, float g, float b, float a)
+	: Vector4(r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f)
 {
-	red = r;
-	green = g;
-	blue = b;
-	alpha = a;
 }
 
-int Colour::getRed() const
+float Colour::getR() const
 {
-	return red;
+	return x;
 }
 
-int Colour::getGreen() const
+float Colour::getG() const
 {
-	return green;
+	return y;
 }
 
-int Colour::getBlue() const
+float Colour::getB() const
 {
-	return blue;
+	return z;
 }
 
-int Colour::getAlpha() const
+float Colour::getA() const
 {
-	return alpha;
+	return w;
 }
 
-void Colour::setRed(int r)
+void Colour::setR(float r)
 {
-	red = r;
+	this->x = r;
 }
 
-void Colour::setGreen(int g)
+void Colour::setG(float g)
 {
-	green = g;
+	this->y = g;
 }
 
-void Colour::setBlue(int b)
+void Colour::setB(float b)
 {
-	blue = b;
+	this->z = b;
 }
 
-void Colour::setAlpha(int a)
+void Colour::setA(float a)
 {
-	alpha = a;
+	this->w = a;
 }

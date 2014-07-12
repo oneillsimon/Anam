@@ -5,17 +5,17 @@ MeshRenderer::MeshRenderer(Mesh* mesh, Material* material)
 {
 	m_mesh = mesh;
 	m_material = material;
-	m_colour = new Vector4(0, 0, 0, 0);
+	m_colour = new Colour(1, 1, 1);
 }
 
-MeshRenderer::MeshRenderer(Mesh* mesh, Vector4* colour)
+MeshRenderer::MeshRenderer(Mesh* mesh, Colour* colour)
 {
 	m_mesh = mesh;
-	m_material = new Material(new Texture("default.png"), 1, 8);
+	m_material = new Material(new Texture("test.png"), 1, 8);
 	m_colour = colour;
 }
 
-MeshRenderer::MeshRenderer(Mesh* mesh, Material* material, Vector4* colour)
+MeshRenderer::MeshRenderer(Mesh* mesh, Material* material, Colour* colour)
 {
 	m_mesh = mesh;
 	m_material = material;

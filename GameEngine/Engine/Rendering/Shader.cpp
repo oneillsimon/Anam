@@ -222,14 +222,14 @@ void Shader::setUniform(const std::string& uniformName, const Vector4& value)
 void Shader::setUniformDirectionalLight(const std::string& uniformName, const DirectionalLight& light)
 {
 	setUniform(uniformName + ".direction", light.getTransform().getTransformedRotation().getForward());
-	setUniform(uniformName + ".base.color", light.colour);
-	setUniform(uniformName + ".base.intensity", light.intensity);
+	setUniform(uniformName + ".base.color", light.m_colour);
+	setUniform(uniformName + ".base.intensity", light.m_intensity);
 }
 
 void Shader::setUniformPointLight(const std::string& uniformName, const PointLight& light)
 {
-	setUniform(uniformName + ".base.color", light.colour);
-	setUniform(uniformName + ".base.intensity", light.intensity);
+	setUniform(uniformName + ".base.color", light.m_colour);
+	setUniform(uniformName + ".base.intensity", light.m_intensity);
 	setUniform(uniformName + ".atten.constant", light.attenuation.constant);
 	setUniform(uniformName + ".atten.linear", light.attenuation.linear);
 	setUniform(uniformName + ".atten.exponent", light.attenuation.exponent);
@@ -239,8 +239,8 @@ void Shader::setUniformPointLight(const std::string& uniformName, const PointLig
 
 void Shader::setUniformSpotLight(const std::string& uniformName, const SpotLight& light)
 {
-	setUniform(uniformName + ".pointLight.base.color", light.colour);
-	setUniform(uniformName + ".pointLight.base.intensity", light.intensity);
+	setUniform(uniformName + ".pointLight.base.color", light.m_colour);
+	setUniform(uniformName + ".pointLight.base.intensity", light.m_intensity);
 	setUniform(uniformName + ".pointLight.atten.constant", light.attenuation.constant);
 	setUniform(uniformName + ".pointLight.atten.linear", light.attenuation.linear);
 	setUniform(uniformName + ".pointLight.atten.exponent", light.attenuation.exponent);

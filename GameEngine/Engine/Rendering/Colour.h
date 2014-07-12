@@ -1,22 +1,34 @@
-class Colour
+#ifndef COLOUR_H
+#define COLOUR_H
+
+#include "../Core/3DMath.h"
+
+class Colour : public Vector4
 {
 private:
-	int red;
-	int green;
-	int blue;
-	int alpha;
+	float getX() const;
+	float getY() const;
+	float getZ() const;
+	float getW() const;
+
+	void setX(float x);
+	void setY(float y);
+	void setZ(float z);
+	void setW(float w);
 
 public:
-	Colour(int r, int g, int b);
-	Colour(int r, int g, int b, int a);
+	Colour(float r, float g, float b);
+	Colour(float r, float g, float b, float a);
 
-	int getRed() const;
-	int getGreen() const;
-	int getBlue() const;
-	int getAlpha() const;
+	float getR() const;
+	float getG() const;
+	float getB() const;
+	float getA() const;
 
-	void setRed(int r);
-	void setGreen(int g);
-	void setBlue(int b);
-	void setAlpha(int a);
+	void setR(float x);
+	void setG(float y);
+	void setB(float z);
+	void setA(float w);
 };
+
+#endif

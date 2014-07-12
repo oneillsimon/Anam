@@ -12,10 +12,10 @@ private:
 	void operator =(Light& light) {}
 
 public:
-	Vector3 colour;
-	float intensity;
+	Vector3 m_colour;
+	float m_intensity;
 
-	Light(const Vector3& colour, float intensity) : colour(colour), intensity(intensity), m_shader(0){}
+	Light(const Vector3& colour, float intensity);
 	virtual ~Light();
 
 	virtual void addToCoreEngine(CoreEngine* coreEngine);

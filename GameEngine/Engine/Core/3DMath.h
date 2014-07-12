@@ -109,7 +109,7 @@ public:
 
 class Vector4
 {
-private:
+protected:
 	mutable float x;
 	mutable float y;
 	mutable float z;
