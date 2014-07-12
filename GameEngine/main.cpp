@@ -58,7 +58,7 @@ void TestGame::init()
 	addToScene(spotlightObj);
 
 	GameObject* dirlightObj = new GameObject();
-	dirlightObj->addComponent(new DirectionalLight(Colour(255, 0, 0, 255), 0.5f));
+	dirlightObj->addComponent(new DirectionalLight(Colour(255, 0, 255, 255), 0));
 	dirlightObj->addComponent(new FreeMove(10, Input::KEY_UP, Input::KEY_DOWN, Input::KEY_LEFT, Input::KEY_RIGHT));
 	dirlightObj->getTransform().setRotation(Quaternion(Vector3(1, 0, 0), GameMath::toRadians(-45)));
 	addToScene(dirlightObj);
