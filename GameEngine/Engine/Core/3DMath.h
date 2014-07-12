@@ -2,6 +2,7 @@
 
 //class Vector2;
 class Vector3;
+class Vector4;
 class Matrix4;
 class Quaternion;
 
@@ -104,6 +105,30 @@ public:
 
 	bool operator ==(const Vector3& v) const;
 	bool operator !=(const Vector3& v) const;
+};
+
+class Vector4
+{
+private:
+	mutable float x;
+	mutable float y;
+	mutable float z;
+	mutable float w;
+
+public:
+	Vector4();
+	Vector4(float x, float y, float z, float w);
+	~Vector4();
+
+	float getX() const;
+	float getY() const;
+	float getZ() const;
+	float getW() const;
+
+	void setX(float x);
+	void setY(float y);
+	void setZ(float z);
+	void setW(float w);
 };
 
 class Matrix4
