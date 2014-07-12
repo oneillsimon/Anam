@@ -17,8 +17,11 @@ private:
 	void setW(float w);
 
 public:
+	Colour();
 	Colour(float r, float g, float b);
 	Colour(float r, float g, float b, float a);
+
+	Vector3 getRGB() const;
 
 	float getR() const;
 	float getG() const;
