@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SDLWRAPPER_H
+#define SDLWRAPPER_H
 
 bool SDLGetIsCloseRequested();
 void SDLSetIsCloseRequested(bool value);
@@ -7,3 +8,5 @@ void SDLSetFullScreen(bool value);
 void SDLSwapBuffers();
 void SDLDestroyWindow();
 void SDLSetMousePosition(int x, int y);
+
+#endif

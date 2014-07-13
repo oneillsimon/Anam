@@ -1,5 +1,5 @@
 #include <cmath>
-#include "3DMath.h"
+#include "Math3D.h"
 
 Quaternion::Quaternion()
 {

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef MATH3D_H
+#define MATH3D_H
 
 //class Vector2;
 class Vector3;
@@ -210,3 +211,5 @@ public:
 	bool operator ==(const Quaternion& q) const;
 	bool operator !=(const Quaternion& q) const;
 };
+
+#endif

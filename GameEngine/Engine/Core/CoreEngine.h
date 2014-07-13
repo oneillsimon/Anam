@@ -1,4 +1,5 @@
-#pragma once
+#ifndef COREENGINE_H
+#define COREENGINE_H
 
 #include <string>
 #include "../Rendering/RenderingEngine.h"
@@ -30,3 +31,5 @@ public:
 
 	RenderingEngine* getRenderingEngine();
 };
+
+#endif

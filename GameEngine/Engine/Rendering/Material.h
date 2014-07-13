@@ -1,9 +1,10 @@
-#pragma once
+#ifndef MATERIAL_H
+#define MATERIAL_H
 
 #include <map>
 #include "Texture.h"
 #include "MappedValues.h"
-#include "../Core/3DMath.h"
+#include "../Core/Math3D.h"
 
 class Material : public MappedValues
 {
@@ -20,3 +21,5 @@ public:
 
 	Texture* getTexture(std::string name);
 };
+
+#endif

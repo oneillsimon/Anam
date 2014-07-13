@@ -1,11 +1,12 @@
-#pragma once
+#ifndef SHADER_H
+#define SHADER_H
 
 #include <map>
 #include <vector>
 #include <string>
 
 #include "ReferenceCounter.h"
-#include "../Core/3DMath.h"
+#include "../Core/Math3D.h"
 #include "Material.h"
 #include "RenderingEngine.h"
 #include "Colour.h"
@@ -78,3 +79,5 @@ public:
 	void setUniform(const std::string& fileName, const Vector3& value);
 	void setUniform(const std::string& fileName, const Vector4& value);
 };
+
+#endif

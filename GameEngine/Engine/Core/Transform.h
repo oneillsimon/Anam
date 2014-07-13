@@ -1,6 +1,7 @@
-#pragma once
+#ifndef TRANSFORM_H
+#define TRANSFORM_H
 
-#include "3DMath.h"
+#include "Math3D.h"
 
 class Transform
 {
@@ -50,3 +51,4 @@ public:
 	void setScale(Vector3 scale);
 };
 
+#endif

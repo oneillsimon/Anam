@@ -1,4 +1,7 @@
-#include "../Core/3DMath.h"
+#ifndef PARTICLE_H
+#define PARTICLE_H
+
+#include "../Core/Math3D.h"
 #include "../Core/GameObject.h"
 
 class Particle : public GameObject
@@ -35,3 +38,5 @@ public:
 	void setDamping(float f);
 	void setMass(float mass);
 };
+
+#endif

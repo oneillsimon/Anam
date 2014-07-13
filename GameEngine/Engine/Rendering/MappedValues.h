@@ -1,8 +1,9 @@
-#pragma once
+#ifndef MAPPEDVALUES_H
+#define MAPPEDVALUES_H
 
 #include <string>
 #include <map>
-#include "../Core/3DMath.h"
+#include "../Core/Math3D.h"
 
 class MappedValues
 {
@@ -20,3 +21,5 @@ public:
 	Vector4 getVector4(std::string name);
 	float getFloat(std::string name);
 };
+
+#endif

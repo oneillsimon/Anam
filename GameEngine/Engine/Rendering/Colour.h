@@ -1,7 +1,7 @@
 #ifndef COLOUR_H
 #define COLOUR_H
 
-#include "../Core/3DMath.h"
+#include "../Core/Math3D.h"
 
 class Colour : public Vector4
 {

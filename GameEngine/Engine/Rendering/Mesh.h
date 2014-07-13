@@ -1,4 +1,5 @@
-#pragma once
+#ifndef MESH_H
+#define MESH_H
 
 #include <string>
 #include <map>
@@ -44,3 +45,5 @@ public:
 
 	virtual void draw();
 };
+
+#endif

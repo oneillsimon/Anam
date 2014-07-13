@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TEXTURE_H
+#define TEXTURE_H
 
 #include <string>
 #include <map>
@@ -41,3 +42,5 @@ public:
 
 	void bind(int uint);
 };
+
+#endif

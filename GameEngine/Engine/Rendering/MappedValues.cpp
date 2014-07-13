@@ -1,4 +1,4 @@
-#include "../Core/3DMath.h"
+#include "../Core/Math3D.h"
 #include "MappedValues.h"
 
 void MappedValues::addVector3(std::string name, Vector3 v)

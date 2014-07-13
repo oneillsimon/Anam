@@ -1,6 +1,7 @@
-#pragma once
+#ifndef CAMERA_H
+#define CAMERA_H
 
-#include "../Core/3DMath.h"
+#include "../Core/Math3D.h"
 #include "GameComponent.h"
 
 class Camera : public GameComponent
@@ -15,3 +16,5 @@ public:
 
 	Matrix4 getViewProjection();
 };
+
+#endif

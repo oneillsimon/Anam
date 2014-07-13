@@ -1,4 +1,5 @@
-#pragma once
+#ifndef GAME_H
+#define GAME_H
 
 #include "GameObject.h"
 #include "CoreEngine.h"
@@ -25,3 +26,5 @@ public:
 
 	void setEngine(CoreEngine* engine);
 };
+
+#endif

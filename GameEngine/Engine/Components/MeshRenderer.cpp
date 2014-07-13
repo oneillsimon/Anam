@@ -1,6 +1,13 @@
 #include "MeshRenderer.h"
 #include "../Rendering/Shader.h"
 
+MeshRenderer::MeshRenderer()
+{
+	m_mesh = 0;
+	m_material = 0;
+	m_colour = 0;
+}
+
 MeshRenderer::MeshRenderer(Mesh* mesh, Material* material)
 {
 	m_mesh = mesh;

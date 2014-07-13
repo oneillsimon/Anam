@@ -1,4 +1,5 @@
-#pragma once
+#ifndef REFERENCECOUNTER_H
+#define REFERENCECOUNTER_H
 
 class ReferenceCounter
 {
@@ -13,3 +14,5 @@ public:
 
 	int getReferenceCount();
 };
+
+#endif

@@ -17,7 +17,7 @@
     <ClInclude Include="Engine\Components\GameComponent.h" />
     <ClInclude Include="Engine\Components\Lighting.h" />
     <ClInclude Include="Engine\Components\MeshRenderer.h" />
-    <ClInclude Include="Engine\Core\3DMath.h" />
+    <ClInclude Include="Engine\Core\Math3D.h" />
     <ClInclude Include="Engine\Core\CoreEngine.h" />
     <ClInclude Include="Engine\Core\Game.h" />
     <ClInclude Include="Engine\Core\GameMath.h" />

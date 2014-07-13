@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RENDERINGENGINE_H
+#define RENDERINGENGINE_H
 
 #include <vector>
 #include <map>
@@ -38,3 +39,5 @@ public:
 	Light* getActiveLight();
 	unsigned int getSamplerSlot(std::string& samplerName);
 };
+
+#endif

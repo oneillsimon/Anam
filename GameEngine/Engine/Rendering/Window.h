@@ -1,4 +1,5 @@
-#pragma once
+#ifndef WINDOW_H
+#define WINDOW_H
 
 #include <string>
 
@@ -23,3 +24,5 @@ public:
 
 	static void setFullscreen(bool value);
 };
+
+#endif

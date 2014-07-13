@@ -1,3 +1,6 @@
+#ifndef PCONTACTS_H
+#define PCONTACTS_H
+
 #include "Particle.h"
 
 class ParticleContact
@@ -50,3 +53,5 @@ public:
 
 	void setIterations(unsigned interations);
 };
+
+#endif

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef GAMECOMPONENT_H
+#define GAMECOMPONENT_H
 
 #include "../Core/Transform.h"
 #include "../Core/GameObject.h"
@@ -28,3 +29,5 @@ public:
 	inline Transform& getTransform() { return m_parent->getTransform(); }
 	inline const Transform& getTransform() const { return m_parent->getTransform(); }*/
 };
+
+#endif

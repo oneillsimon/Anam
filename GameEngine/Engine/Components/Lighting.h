@@ -1,6 +1,7 @@
-#pragma once
+#ifndef LIGHTING_H
+#define LIGHTING_H
 
-#include "../Core/3DMath.h"
+#include "../Core/Math3D.h"
 #include "../Rendering/Colour.h"
 #include "GameComponent.h"
 
@@ -83,3 +84,5 @@ public:
 	
 	void setCutoff(float cutoff);
 };
+
+#endif

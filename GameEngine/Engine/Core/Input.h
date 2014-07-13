@@ -1,6 +1,7 @@
-#pragma once
+#ifndef INPUT_H
+#define INPUT_H
 
-#include "3DMath.h"
+#include "Math3D.h"
 
 class Input
 {
@@ -294,3 +295,5 @@ public:
 	static void setMousePosition(Vector2 position);
 	static void setCursor(bool value);
 };
+
+#endif

@@ -1,6 +1,6 @@
 #include <cmath>
 #include <algorithm>
-#include "3DMath.h"
+#include "Math3D.h"
 
 const Vector3 Vector3::ZERO = Vector3(0, 0, 0);
 const Vector3 Vector3::ONE = Vector3(1, 1, 1);

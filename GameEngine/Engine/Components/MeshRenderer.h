@@ -1,4 +1,5 @@
-#pragma once
+#ifndef MESHRENDERER_H
+#define MESHRENDERER_H
 
 #include "../Rendering/Mesh.h"
 #include "../Rendering/Material.h"
@@ -13,6 +14,7 @@ private:
 	Colour* m_colour;
 
 public:
+	MeshRenderer();
 	MeshRenderer(Mesh* mesh, Material* material);
 	MeshRenderer(Mesh* mesh, Colour* colour);
 	MeshRenderer(Mesh* mesh, Material* material, Colour* colour);
@@ -20,3 +22,5 @@ public:
 
 	virtual void render(Shader* shader, RenderingEngine* renderingEngine);
 };
+
+#endif

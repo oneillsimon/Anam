@@ -1,6 +1,7 @@
-#pragma once
+#ifndef VERTEX_H
+#define VERTEX_H
 
-#include "../Core/3DMath.h"
+#include "../Core/Math3D.h"
 
 class Vertex
 {
@@ -20,3 +21,5 @@ public:
 	void setTexCoord(Vector2 texCoord);
 	void setNormal(Vector3 normal);
 };
+
+#endif

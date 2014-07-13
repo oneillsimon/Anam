@@ -1,4 +1,5 @@
-#pragma once
+#ifndef GAMEOBJECT_H
+#define GAMEOBJECT_H
 
 #include <vector>
 #include "Transform.h"
@@ -39,3 +40,4 @@ public:
 	void setEngine(CoreEngine* engine);
 };
 
+#endif
