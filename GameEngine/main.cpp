@@ -30,15 +30,15 @@ void TestGame::init()
 
 	cameraObj->addComponent(new Camera(Matrix4().initPerspective((float)GameMath::toRadians(70.0), Window::getAspectRatio(), 0.1f, 1000.0f)));
 	//cameraObj->addComponent(new MeshRenderer(new Line(Vector3(0, 2, 15), Vector3(1, 0, 15)), new Colour(255, 0, 0)));
-	//cameraObj->addComponent(new Line(Vector3(0, 2, 15), Vector3(1, 0, 15), new Colour(255, 0, 0)));
+	cameraObj->addComponent(new Line(Vector3(0, 2, 15), Vector3(1, 0, 15), new Colour(255, 0, 0)));
 	cameraObj->getTransform().setPosition(Vector3(0, 15, 0));
 	cameraObj->addComponent(new FreeLook());
 	cameraObj->addComponent(new FreeMove(20));
 
-	testParticle->addComponent(new MeshRenderer(new Mesh("./res/models/plane3.obj"), new Material(new Texture("bricks.jpg"), 1, 8)));
-	testParticle->getTransform().setPosition(Vector3(0, 0, 5));
-	testParticle->getTransform().setScale(Vector3(1, 1, 1));
-	testParticle->addComponent(new FreeMove(10.0f, Input::KEY_UP, Input::KEY_DOWN, Input::KEY_LEFT, Input::KEY_RIGHT));
+	//testParticle->addComponent(new MeshRenderer(new Mesh("./res/models/plane3.obj"), new Material(new Texture("bricks.jpg"), 1, 8)));
+	//testParticle->getTransform().setPosition(Vector3(0, 0, 5));
+	//testParticle->getTransform().setScale(Vector3(1, 1, 1));
+	//testParticle->addComponent(new FreeMove(10.0f, Input::KEY_UP, Input::KEY_DOWN, Input::KEY_LEFT, Input::KEY_RIGHT));
 
 	addToScene(planeObj);
 	addToScene(cameraObj);
@@ -50,14 +50,14 @@ void TestGame::init()
 	pointlightObj->addComponent(new PointLight(Colour(255, 255, 255), 1.2f, Attenuation(0, 0, 1)));
 	pointlightObj->getTransform().setPosition(Vector3(7, 0, 7));
 	addToScene(pointlightObj);
-
+	
 	GameObject* spotlightObj = new GameObject();
 	spotlightObj->addComponent(new SpotLight(Colour(255, 255, 255), 15.0f, Attenuation(0, 0, 1.0f), 0.7f));
 	spotlightObj->addComponent(new FreeMove(10, Input::KEY_UP, Input::KEY_DOWN, Input::KEY_LEFT, Input::KEY_RIGHT));
 	spotlightObj->getTransform().setRotation(Quaternion(Vector3(0, 1, 0), GameMath::toRadians(90.0f)));
 	spotlightObj->getTransform().setScale(Vector3(2, 2, 2));
 	addToScene(spotlightObj);
-
+	
 	GameObject* dirlightObj = new GameObject();
 	dirlightObj->addComponent(new DirectionalLight(Colour(255, 0, 255, 255), 0));
 	dirlightObj->addComponent(new FreeMove(10, Input::KEY_UP, Input::KEY_DOWN, Input::KEY_LEFT, Input::KEY_RIGHT));
@@ -66,7 +66,7 @@ void TestGame::init()
 	GameObject* test = new GameObject();
 	//test->addComponent(new MeshRenderer(new Line(spotlightObj->getTransform().getPosition(), cameraObj->getTransform().getPosition()), new Colour(0, 255, 0)));
 	//test->addComponent(new MeshRenderer(new Line(Vector3(0, 5, 15), Vector3(1, 7, 15)), new Colour(0, 255, 0)));
-	//test->addComponent(new Line(spotlightObj->getTransform().getPosition(), cameraObj->getTransform().getPosition(), new Colour(0, 255, 0)));
+	test->addComponent(new Line(spotlightObj->getTransform().getPosition(), cameraObj->getTransform().getPosition(), new Colour(0, 255, 0)));
 	addToScene(test);
 }
 

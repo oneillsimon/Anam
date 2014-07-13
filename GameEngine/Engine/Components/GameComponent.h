@@ -9,7 +9,7 @@ class RenderingEngine;
 
 class GameComponent
 {
-private:
+protected:
 	GameObject* m_parent;
 
 public:

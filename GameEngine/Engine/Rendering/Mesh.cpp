@@ -124,6 +124,11 @@ void Mesh::initMesh(Vertex* vertices, int vertSize, int* indices, int indexSize,
 
 void Mesh::draw()
 {
+	draw(GL_TRIANGLES);
+}
+
+void Mesh::draw(int gl_primitives)
+{
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2);
@@ -134,7 +139,7 @@ void Mesh::draw()
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(sizeof(Vector3) + sizeof(Vector2)));
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_meshData->getIbo());
-	glDrawElements(GL_TRIANGLES, m_meshData->getSize(), GL_UNSIGNED_INT, 0);
+	glDrawElements(gl_primitives, m_meshData->getSize(), GL_UNSIGNED_INT, 0);
 
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);

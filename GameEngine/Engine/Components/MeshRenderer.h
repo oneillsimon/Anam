@@ -3,7 +3,7 @@
 
 #include "../Rendering/Mesh.h"
 #include "../Rendering/Material.h"
-#include "../Rendering/Shader.h"
+#include "../Rendering/Colour.h"
 #include "GameComponent.h"
 
 class MeshRenderer : public GameComponent
