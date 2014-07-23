@@ -39,7 +39,7 @@ protected:
 	
 public:
 	Mesh();
-	Mesh(std::string fileName);
+	Mesh(const std::string& fileName);
 	Mesh(Vertex* vertices, int vertSize, int* indices, int indexSize, bool calcNormals);
 	~Mesh();
 

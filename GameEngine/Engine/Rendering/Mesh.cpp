@@ -5,6 +5,7 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
+#include "OBJLoader.h"
 #include "Mesh.h"
 
 std::map<std::string, MeshData*>Mesh::resourceMap;
@@ -39,12 +40,12 @@ Mesh::Mesh(Vertex* vertices, int vertSize, int* indices, int indexSize, bool cal
 	initMesh(vertices, vertSize, indices, indexSize, calcNormals);
 }
 
-Mesh::Mesh(std::string fileName)
+Mesh::Mesh(const std::string& filename)
 {
-	m_fileName = fileName;
+	m_fileName = filename;
 	m_meshData = 0;
 
-	std::map<std::string, MeshData*>::const_iterator it = resourceMap.find(fileName);
+	std::map<std::string, MeshData*>::const_iterator it = resourceMap.find(filename);
 
 	if(it != resourceMap.end())
 	{
@@ -53,43 +54,17 @@ Mesh::Mesh(std::string fileName)
 	}
 	else
 	{
-		Assimp::Importer importer;
-
-		const aiScene* scene = importer.ReadFile(fileName.c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs);
-
-		if(!scene)
-		{
-			fprintf(stderr, "Mesh load failed: %s\n", fileName);
-		}
-
-		const aiMesh* model = scene->mMeshes[0];
+		IndexedModel model = OBJModel(filename).toIndexedModel();
 
 		std::vector<Vertex> vertices;
-		std::vector<int> indices;
 
-		const aiVector3D aiZeroVector(0.0f, 0.0f, 0.0f);
-
-		for(unsigned int i = 0; i < model->mNumVertices; i++)
+		for(unsigned int i = 0; i < model.positions.size(); i++)
 		{
-			const aiVector3D* pos = &(model->mVertices[i]);
-			const aiVector3D* nor = &(model->mNormals[i]);
-			const aiVector3D* tCor = model->HasTextureCoords(0) ? &(model->mTextureCoords[0][i]) : &aiZeroVector;
-
-			Vertex vertex(Vector3(pos->x, pos->y, pos->z), Vector2(tCor->x, tCor->y), Vector3(nor->x, nor->y, nor->z));
-			vertices.push_back(vertex);
+			vertices.push_back(Vertex(model.positions[i], model.texCoords[i], model.normals[i]));
 		}
 
-		for(unsigned int i = 0; i < model->mNumFaces; i++)
-		{
-			const aiFace& face = model->mFaces[i];
-			assert(face.mNumIndices == 3);
-			indices.push_back(face.mIndices[0]);
-			indices.push_back(face.mIndices[1]);
-			indices.push_back(face.mIndices[2]);
-		}
-
-		initMesh(&vertices[0], vertices.size(), (int*)&indices[0], indices.size(), false);
-		resourceMap.insert(std::pair<std::string, MeshData*>(m_fileName, m_meshData));
+		initMesh(&vertices[0], vertices.size(), (int*)&model.indices[0], model.indices.size(), false);
+		resourceMap.insert(std::pair<std::string, MeshData*>(filename, m_meshData));
 	}
 }
 
