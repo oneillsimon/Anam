@@ -1,63 +1,46 @@
-#ifndef OBJLOADER_H
-#define OBJLOADER_H
+#ifndef OBJ_LOADER_H_INCLUDED
+#define OBJ_LOADER_H_INCLUDED
 
 #include <vector>
 #include <string>
 #include "../Core/Math3D.h"
 
-class OBJIndex
+struct OBJIndex
 {
-private:
-	unsigned int vertexIndex;
-	unsigned int uvIndex;
-	unsigned int normalIndex;
-
-public:
-	unsigned int getVertexIndex() const;
-	unsigned int getUVIndex() const;
-	unsigned int getNormalIndex() const;
-
-	void setVertexIndex(unsigned int vertexIndex);
-	void setUVIndex(unsigned int uvIndex);
-	void setNormalIndex(unsigned int normalIndex);
-
-	bool operator <(const OBJIndex& o) const;
+    unsigned int vertexIndex;
+    unsigned int uvIndex;
+    unsigned int normalIndex;
+    
+    bool operator <(const OBJIndex& o) const;
 };
 
 class IndexedModel
 {
-private:
-	std::vector<Vector3> positions;
-	std::vector<Vector2> texCoords;
-	std::vector<Vector3> normals;
-	std::vector<unsigned int> indices;
-
 public:
-	void calculateNormals();
-
-	std::vector<Vector3> getPositions() const;
-	std::vector<Vector2> getTexCoords() const;
-	std::vector<Vector3> getNormals() const;
-	std::vector<unsigned int> getIndices();
+    std::vector<Vector3> positions;
+    std::vector<Vector2> texCoords;
+    std::vector<Vector3> normals;
+    std::vector<unsigned int> indices;
+    
+    void calculateNormals();
 };
 
 class OBJModel
 {
-private:
-	std::vector<OBJIndex> objIndices;
-	std::vector<Vector3> vertices;
-	std::vector<Vector2> uvs;
-	std::vector<Vector3> normals;
-	bool hasUVs;
-	bool hasNormals;
-
-	unsigned int findLastVertexIndex(const std::vector<OBJIndex*>& indexLookup, const OBJIndex* currentIndex, const IndexedModel& result) const;
-	void createOBJFace(const std::string& line);
-
 public:
-	OBJModel(const std::string& filename);
-
-	IndexedModel toIndexedModel();
+    std::vector<OBJIndex> objIndices;
+    std::vector<Vector3> vertices;
+    std::vector<Vector2> uvs;
+    std::vector<Vector3> normals;
+    bool hasUVs;
+    bool hasNormals;
+    
+    OBJModel(const std::string& fileName);
+    
+    IndexedModel toIndexedModel();
+private:
+    unsigned int findLastVertexIndex(const std::vector<OBJIndex*>& indexLookup, const OBJIndex* currentIndex, const IndexedModel& result) const;
+    void createOBJFace(const std::string& line);
 };
 
 #endif
