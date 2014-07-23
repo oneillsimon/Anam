@@ -43,7 +43,7 @@ public:
 	Mesh(Vertex* vertices, int vertSize, int* indices, int indexSize, bool calcNormals);
 	~Mesh();
 
-	virtual void draw();
+	void draw();
 	void draw(int gl_primitives);
 };
 
