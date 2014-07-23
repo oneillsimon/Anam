@@ -55,7 +55,6 @@
     <ClCompile Include="Engine\Components\MeshRenderer.cpp" />
     <ClCompile Include="Engine\Core\CoreEngine.cpp" />
     <ClCompile Include="Engine\Core\Game.cpp" />
-    <ClCompile Include="Engine\Rendering\OBJLoader.cpp" />
     <ClCompile Include="Engine\Core\Vector2.cpp" />
     <ClCompile Include="Engine\Core\Vector3.cpp" />
     <ClCompile Include="Engine\Core\Matrix4.cpp" />
@@ -73,6 +72,7 @@
     <ClCompile Include="Engine\Rendering\MappedValues.cpp" />
     <ClCompile Include="Engine\Rendering\Material.cpp" />
     <ClCompile Include="Engine\Rendering\Mesh.cpp" />
+    <ClCompile Include="Engine\Rendering\OBJLoader.cpp" />
     <ClCompile Include="Engine\Rendering\ReferenceCounter.cpp" />
     <ClCompile Include="Engine\Rendering\RenderingEngine.cpp" />
     <ClCompile Include="Engine\Rendering\RenderUtil.cpp" />
