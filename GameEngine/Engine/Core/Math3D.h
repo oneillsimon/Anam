@@ -44,6 +44,9 @@ public:
 	Vector2 operator *(float f) const;
 	Vector2 operator /(const Vector2& v) const;
 	Vector2 operator /(float f) const;
+
+	bool operator ==(const Vector2& v) const;
+	bool operator !=(const Vector2& v) const;
 };
 
 class Vector3

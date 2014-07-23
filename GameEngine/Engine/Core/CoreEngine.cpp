@@ -77,9 +77,9 @@ void CoreEngine::run()
 		unproccessedTime += passedTime;
 		frameCounter += passedTime;
 
-		if(frameCounter > 1.0)
+		if(frameCounter > 2.0)
 		{
-			//printf("%d\n", frames);
+			printf("%d\n", frames);
 			frames = 0;
 			frameCounter = 0;
 		}
@@ -109,7 +109,7 @@ void CoreEngine::run()
 		}
 		else
 		{
-			Util::sleep(1);
+			Util::sleep(0);
 		}
 	}
 }

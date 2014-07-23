@@ -32,10 +32,11 @@
     <ClInclude Include="Engine\Physics\PContacts.h" />
     <ClInclude Include="Engine\Physics\PFGenerator.h" />
     <ClInclude Include="Engine\Rendering\Colour.h" />
-    <ClInclude Include="Engine\Rendering\Line.h" />
+    <ClInclude Include="Engine\Rendering\LineMesh.h" />
     <ClInclude Include="Engine\Rendering\MappedValues.h" />
     <ClInclude Include="Engine\Rendering\Material.h" />
     <ClInclude Include="Engine\Rendering\Mesh.h" />
+    <ClInclude Include="Engine\Rendering\OBJLoader.h" />
     <ClInclude Include="Engine\Rendering\ReferenceCounter.h" />
     <ClInclude Include="Engine\Rendering\RenderingEngine.h" />
     <ClInclude Include="Engine\Rendering\RenderUtil.h" />
@@ -54,6 +55,7 @@
     <ClCompile Include="Engine\Components\MeshRenderer.cpp" />
     <ClCompile Include="Engine\Core\CoreEngine.cpp" />
     <ClCompile Include="Engine\Core\Game.cpp" />
+    <ClCompile Include="Engine\Rendering\OBJLoader.cpp" />
     <ClCompile Include="Engine\Core\Vector2.cpp" />
     <ClCompile Include="Engine\Core\Vector3.cpp" />
     <ClCompile Include="Engine\Core\Matrix4.cpp" />
@@ -67,7 +69,7 @@
     <ClCompile Include="Engine\Physics\PContacts.cpp" />
     <ClCompile Include="Engine\Physics\PFGenerator.cpp" />
     <ClCompile Include="Engine\Rendering\Colour.cpp" />
-    <ClCompile Include="Engine\Rendering\Line.cpp" />
+    <ClCompile Include="Engine\Rendering\LineMesh.cpp" />
     <ClCompile Include="Engine\Rendering\MappedValues.cpp" />
     <ClCompile Include="Engine\Rendering\Material.cpp" />
     <ClCompile Include="Engine\Rendering\Mesh.cpp" />

@@ -232,5 +232,5 @@ bool Vector3::operator ==(const Vector3& v) const
 
 bool Vector3::operator !=(const Vector3& v) const
 {
-	return x != v.getX() && y != v.getY() && z != v.getZ();
+	return x != v.getX() || y != v.getY() || z != v.getZ();
 }

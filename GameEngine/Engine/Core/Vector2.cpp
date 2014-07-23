@@ -126,3 +126,13 @@ Vector2 Vector2::operator /(float f) const
 {
 	return Vector2(x / f, y / f);
 }
+
+bool Vector2::operator ==(const Vector2& v) const
+{
+	return x == v.getX() && y == v.getY();
+}
+
+bool Vector2::operator !=(const Vector2& v) const
+{
+	return x != v.getX() || y != v.getY();
+}
