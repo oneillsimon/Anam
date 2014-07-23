@@ -176,3 +176,8 @@ void Transform::setScale(Vector3 scale)
 {
 	m_scale = scale;
 }
+
+void Transform::setScale(float scale)
+{
+	setScale(Vector3(scale, scale, scale));
+}
