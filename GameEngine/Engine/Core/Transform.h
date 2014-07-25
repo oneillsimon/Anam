@@ -48,7 +48,7 @@ public:
 	void setParentMatrix(Matrix4 parentMatrix);
 	void setPosition(const Vector3& position);
 	void setRotation(const Quaternion& rotation);
-	void setScale(Vector3 scale);
+	void setScale(const Vector3& scale);
 	void setScale(float scale);
 };
 

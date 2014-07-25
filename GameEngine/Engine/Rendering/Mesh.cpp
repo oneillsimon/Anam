@@ -114,7 +114,7 @@ void Mesh::initMesh(Vertex* vertices, int vertSize, int* indices, int indexSize,
 
 	if(calcNormals)
 	{
-		this->calculateNormals(vertices, vertSize, indices, indexSize);
+		calculateNormals(vertices, vertSize, indices, indexSize);
 	}
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_meshData->getVbo());

@@ -14,6 +14,7 @@ public:
 	static void create(int width, int height, const std::string& title);
 	static void render();
 	static void dispose();
+	static void bindAsRenderTarget();
 
 	static bool isCloseRequested();
 

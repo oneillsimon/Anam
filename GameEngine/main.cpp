@@ -25,8 +25,9 @@ void TestGame::init()
 	GameObject* testMesh1 = new GameObject();
 	GameObject* testMesh2 = new GameObject();
 
-	//planeObj->addComponent(new MeshRenderer(new Mesh("./res/models/plane3.obj"), new Material(new Texture("bricks.jpg"), 1, 8, new Texture("bricks_normal.jpg"))));
-	planeObj->addComponent(new MeshRenderer(new Mesh("./res/models/plane3.obj"), new Material(new Texture("bricks.jpg"), 1, 8)));
+	planeObj->addComponent(new MeshRenderer(new Mesh("./res/models/plane3.obj"), new Material(new Texture("bricks.jpg"), 0.5f, 4,
+																							  new Texture("bricks_normal.jpg"),
+																							  new Texture("bricks_disp.png"), 0.03f, -0.5f)));
 	planeObj->getTransform().setPosition(Vector3(0, -1, 5));
 	planeObj->getTransform().setScale(Vector3(4, 4, 4));
 
@@ -35,7 +36,9 @@ void TestGame::init()
 	cameraObj->addComponent(new FreeLook());
 	cameraObj->addComponent(new FreeMove(20));
 
-	testMesh1->addComponent(new MeshRenderer(new Mesh("./res/models/plane3.obj"), new Material(new Texture("bricks2.jpg"), 1, 8, new Texture("bricks2_normal.jpg"))));
+	testMesh1->addComponent(new MeshRenderer(new Mesh("./res/models/plane3.obj"), new Material(new Texture("bricks2.jpg"), 1, 8,
+																							   new Texture("bricks2_normal.jpg"),
+																							   new Texture("bricks2_disp.jpg"), 0.04f, 0.0f)));
 	testMesh2->addComponent(new MeshRenderer(new Mesh("./res/models/plane3.obj"), new Material(new Texture("bricks2.jpg"), 1, 8, new Texture("bricks2_normal.jpg"))));
 
 	testMesh1->getTransform().setPosition(Vector3(0, 2, 0));
@@ -49,7 +52,7 @@ void TestGame::init()
 
 	addToScene(planeObj);
 	addToScene(cameraObj);
-	//addToScene(testMesh1);
+	addToScene(testMesh1);
 
 	// Lighting
 
@@ -66,16 +69,14 @@ void TestGame::init()
 	
 	GameObject* dirlightObj = new GameObject();
 	dirlightObj->addComponent(new DirectionalLight(Colour(255, 255, 255), 0.4f));
-	
-	addToScene(dirlightObj);
-
 	dirlightObj->getTransform().setRotation(Quaternion(Vector3(1, 0, 0), GameMath::toRadians(-45)));
+	addToScene(dirlightObj);
 }
 
 int main()
 {
 	TestGame game;
-	CoreEngine engine(1280, 720, 120, &game);
+	CoreEngine engine(800, 600, 120, &game);
 	engine.createWindow("Game Engine");
 	engine.start();
 	

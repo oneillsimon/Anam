@@ -6,6 +6,10 @@ Material::Material(Texture* diffuse, float specularIntensity, float specularExpo
 	addFloat("specularIntensity", specularIntensity);
 	addFloat("specularExponent", specularExponent);
 	addTexture("normalMap", new Texture("default_normal.jpg"));
+	addTexture("displacementMap", new Texture("default_disp.png"));
+
+	float baseBias = 0.0f / 2.0f;
+	addFloat("displacementMapBias", -baseBias + baseBias * 0.0f);
 }
 
 Material::Material(Texture* diffuse, float specularIntensity, float specularExponent, Texture* normalMap)
@@ -14,6 +18,23 @@ Material::Material(Texture* diffuse, float specularIntensity, float specularExpo
 	addFloat("specularIntensity", specularIntensity);
 	addFloat("specularExponent", specularExponent);
 	addTexture("normalMap", normalMap);
+	addTexture("displacementMap", new Texture("default_disp.png"));
+
+	float baseBias = 0.0f / 2.0f;
+	addFloat("displacementMapBias", -baseBias + baseBias * 0.0f);
+}
+
+Material::Material(Texture* diffuse, float specularIntensity, float specularExponent, Texture* normalMap, Texture* displacementMap, float displacementMapScale, float displacementMapOffset)
+{
+	addTexture("diffuse", diffuse);
+	addFloat("specularIntensity", specularIntensity);
+	addFloat("specularExponent", specularExponent);
+	addTexture("normalMap", normalMap);
+	addTexture("displacementMap", displacementMap);
+	addFloat("displacementMapScale", displacementMapScale);
+
+	float baseBias = displacementMapScale / 2.0f;
+	addFloat("displacementMapBias", -baseBias + baseBias * displacementMapOffset);
 }
 
 Material::~Material()

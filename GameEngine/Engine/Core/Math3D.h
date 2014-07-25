@@ -87,6 +87,7 @@ public:
 	void setY(float y);
 	void setZ(float z);
 
+	//Vector3& operator =(const Vector3& v);
 	Vector3 operator +(const Vector3& v) const;
 	Vector3 operator -(const Vector3& v) const;
 	Vector3 operator *(const Vector3& v) const;

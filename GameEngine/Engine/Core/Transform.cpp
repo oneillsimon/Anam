@@ -172,7 +172,7 @@ void Transform::setRotation(const Quaternion& rotation)
 	m_rotation = rotation;
 }
 
-void Transform::setScale(Vector3 scale)
+void Transform::setScale(const Vector3& scale)
 {
 	m_scale = scale;
 }

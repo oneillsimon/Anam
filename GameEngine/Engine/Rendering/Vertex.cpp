@@ -1,4 +1,5 @@
 #include "Vertex.h"
+#include <stdio.h>
 
 Vertex::Vertex(Vector3 position, Vector2 texCoord, Vector3 normal)
 {
@@ -16,42 +17,42 @@ Vertex::Vertex(Vector3 position, Vector2 texCoord, Vector3 normal, Vector3 tange
 	m_tangent = tangent;
 }
 
-Vector3 Vertex::getPosition()
+Vector3 Vertex::getPosition() const
 {
 	return m_position;
 }
 
-Vector2 Vertex::getTexCoord()
+Vector2 Vertex::getTexCoord() const
 {
 	return m_texCoord;
 }
 
-Vector3 Vertex::getNormal()
+Vector3 Vertex::getNormal() const
 {
 	return m_normal;
 }
 
-Vector3 Vertex::getTangent()
+Vector3 Vertex::getTangent() const
 {
 	return m_tangent;
 }
 
-void Vertex::setPosition(Vector3 position)
+void Vertex::setPosition(const Vector3& position)
 {
 	m_position = position;
 }
 
-void Vertex::setTexCoord(Vector2 texCoord)
+void Vertex::setTexCoord(const Vector2& texCoord)
 {
 	m_texCoord = texCoord;
 }
 
-void Vertex::setNormal(Vector3 normal)
+void Vertex::setNormal(const Vector3& normal)
 {
 	m_normal = normal;
 }
 
-void Vertex::setTangent(Vector3 tangent)
+void Vertex::setTangent(const Vector3& tangent)
 {
 	m_tangent = tangent;
 }

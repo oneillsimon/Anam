@@ -15,15 +15,15 @@ public:
 	Vertex(Vector3 position, Vector2 texCoord, Vector3 normal);
 	Vertex(Vector3 position, Vector2 texCoord, Vector3 normal, Vector3 tangent);
 
-	Vector3 getPosition();
-	Vector2 getTexCoord();
-	Vector3 getNormal();
-	Vector3 getTangent();
+	Vector3 getPosition() const;
+	Vector2 getTexCoord() const;
+	Vector3 getNormal() const;
+	Vector3 getTangent() const;
 
-	void setPosition(Vector3 position);
-	void setTexCoord(Vector2 texCoord);
-	void setNormal(Vector3 normal);
-	void setTangent(Vector3 tangent);
+	void setPosition(const Vector3& position);
+	void setTexCoord(const Vector2& texCoord);
+	void setNormal(const Vector3& normal);
+	void setTangent(const Vector3& tangent);
 };
 
 #endif
