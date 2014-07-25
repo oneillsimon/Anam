@@ -71,7 +71,7 @@ public:
 	virtual ~Shader();
 
 	void bind();
-	void updateUniforms(const Transform& transform, Material& material, Vector4& colour, RenderingEngine* renderingEngine);
+	void updateUniforms(const Transform& transform, Material& material, RenderingEngine* renderingEngine);
 
 	void setUniform(const std::string& fileName, int value);
 	void setUniform(const std::string& fileName, float value);
