@@ -7,15 +7,17 @@
 RenderingEngine::RenderingEngine()
 {
 	m_samplerMap.insert(std::pair<std::string, unsigned int>("diffuse", 0));
+	m_samplerMap.insert(std::pair<std::string, unsigned int>("normalMap", 1));
 
-	addVector3("ambient", Vector3(0.3f, 0.3f, 0.3f));
+	float ambiance = 0.1f;
+	addVector3("ambient", Vector3(ambiance, ambiance, ambiance));
 	m_defaultShader = new Shader("forward-ambient");
 
 	glClearColor(0, 0, 0, 0);
 
-	//glEnable(GL_CULL_FACE);
-	//glCullFace(GL_BACK);
-	//glFrontFace(GL_CW);
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
+	glFrontFace(GL_CW);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_DEPTH_CLAMP);
 }

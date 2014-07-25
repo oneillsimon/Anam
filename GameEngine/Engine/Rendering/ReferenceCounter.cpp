@@ -7,7 +7,7 @@ ReferenceCounter::ReferenceCounter()
 
 void ReferenceCounter::addReference()
 {
-	referenceCount++;
+	this->referenceCount++;
 }
 
 bool ReferenceCounter::removeReference()

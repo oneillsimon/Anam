@@ -41,7 +41,7 @@ private:
 
 	void addAllAttributes(const std::string& shaderText);
 	void addShaderUniforms(const std::string& shaderText);
-	void addUniform(const std::string& uniformName, const std::string& uniformType, std::vector<UniformStruct> structs);
+	void addUniform(const std::string& uniformName, const std::string& uniformType, const std::vector<UniformStruct>& structs);
 	void compileShader();
 public:
 	ShaderData(const std::string& fileName);

@@ -33,6 +33,7 @@ GLuint TextureData::getTextureID()
 Texture::Texture(std::string fileName, GLenum textureTarget, GLfloat filter)
 {
 	this->fileName = fileName;
+	textureData = 0;
 
 	std::map<std::string, TextureData*>::const_iterator it = resourceMap.find(fileName);
 

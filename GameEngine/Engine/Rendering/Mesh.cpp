@@ -54,17 +54,44 @@ Mesh::Mesh(const std::string& filename)
 	}
 	else
 	{
-		IndexedModel model = OBJModel(filename).toIndexedModel();
+		Assimp::Importer importer;
 
-		std::vector<Vertex> vertices;
+		const aiScene* scene = importer.ReadFile(filename.c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
 
-		for(unsigned int i = 0; i < model.positions.size(); i++)
+		if(!scene)
 		{
-			vertices.push_back(Vertex(model.positions[i], model.texCoords[i], model.normals[i]));
+			fprintf(stderr, "Mesh load failed: %s\n", filename);
 		}
 
-		initMesh(&vertices[0], vertices.size(), (int*)&model.indices[0], model.indices.size(), false);
-		resourceMap.insert(std::pair<std::string, MeshData*>(filename, m_meshData));
+		const aiMesh* model = scene->mMeshes[0];
+
+		std::vector<Vertex> vertices;
+		std::vector<int> indices;
+
+		const aiVector3D aiZeroVector(0.0f, 0.0f, 0.0f);
+
+		for(unsigned int i = 0; i < model->mNumVertices; i++)
+		{
+			const aiVector3D* pos = &(model->mVertices[i]);
+			const aiVector3D* nor = &(model->mNormals[i]);
+			const aiVector3D* tCor = model->HasTextureCoords(0) ? &(model->mTextureCoords[0][i]) : &aiZeroVector;
+			const aiVector3D* tang = &(model->mTangents[i]);
+
+			Vertex vertex(Vector3(pos->x, pos->y, pos->z), Vector2(tCor->x, tCor->y), Vector3(nor->x, nor->y, nor->z), Vector3(tang->x, tang->y, tang->z));
+			vertices.push_back(vertex);
+		}
+
+		for(unsigned int i = 0; i < model->mNumFaces; i++)
+		{
+			const aiFace& face = model->mFaces[i];
+			assert(face.mNumIndices == 3);
+			indices.push_back(face.mIndices[0]);
+			indices.push_back(face.mIndices[1]);
+			indices.push_back(face.mIndices[2]);
+		}
+
+		initMesh(&vertices[0], vertices.size(), (int*)&indices[0], indices.size(), false);
+		resourceMap.insert(std::pair<std::string, MeshData*>(m_fileName, m_meshData));
 	}
 }
 
@@ -94,7 +121,7 @@ void Mesh::initMesh(Vertex* vertices, int vertSize, int* indices, int indexSize,
 	glBufferData(GL_ARRAY_BUFFER, vertSize * sizeof(Vertex), vertices, GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_meshData->getIbo());
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, vertSize * sizeof(int), indices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexSize * sizeof(int), indices, GL_STATIC_DRAW);
 }
 
 void Mesh::draw()
@@ -107,11 +134,13 @@ void Mesh::draw(int gl_primitives)
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2);
+	glEnableVertexAttribArray(3);
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_meshData->getVbo());
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)sizeof(Vector3));
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(sizeof(Vector3) + sizeof(Vector2)));
+	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(sizeof(Vector3) + sizeof(Vector2) + sizeof(Vector3)));
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_meshData->getIbo());
 	glDrawElements(gl_primitives, m_meshData->getSize(), GL_UNSIGNED_INT, 0);
@@ -119,6 +148,7 @@ void Mesh::draw(int gl_primitives)
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(2);
+	glDisableVertexAttribArray(3);
 }
 
 void Mesh::calculateNormals(Vertex* vertices, int vertSize, int* indices, int indexSize)

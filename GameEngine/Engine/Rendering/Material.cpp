@@ -5,6 +5,15 @@ Material::Material(Texture* diffuse, float specularIntensity, float specularExpo
 	addTexture("diffuse", diffuse);
 	addFloat("specularIntensity", specularIntensity);
 	addFloat("specularExponent", specularExponent);
+	addTexture("normalMap", new Texture("default_normal.jpg"));
+}
+
+Material::Material(Texture* diffuse, float specularIntensity, float specularExponent, Texture* normalMap)
+{
+	addTexture("diffuse", diffuse);
+	addFloat("specularIntensity", specularIntensity);
+	addFloat("specularExponent", specularExponent);
+	addTexture("normalMap", normalMap);
 }
 
 Material::~Material()
@@ -20,12 +29,12 @@ Material::~Material()
 	}
 }
 
-void Material::addTexture(std::string name, Texture* texture)
+void Material::addTexture(const std::string& name, Texture* texture)
 {
 	textureMap.insert(std::pair<std::string, Texture*>(name, texture));
 }
 
-Texture* Material::getTexture(std::string name)
+Texture* Material::getTexture(const std::string& name) const
 {
 	std::map<std::string, Texture*>::const_iterator it = textureMap.find(name);
 

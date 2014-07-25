@@ -15,11 +15,12 @@ private:
 
 public:
 	Material(Texture* diffuse, float specularIntensity, float specularExponent);
+	Material(Texture* diffuse, float specularIntensity, float specularExponent, Texture* normalMap);
 	~Material();
 
-	void addTexture(std::string name, Texture* texture);
+	void addTexture(const std::string& name, Texture* texture);
 
-	Texture* getTexture(std::string name);
+	Texture* getTexture(const std::string& name) const;
 };
 
 #endif

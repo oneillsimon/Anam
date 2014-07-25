@@ -221,6 +221,10 @@ void Shader::setUniform(const std::string& uniformName, const Vector4& value)
 
 void Shader::setUniformDirectionalLight(const std::string& uniformName, const DirectionalLight& light)
 {
+	Vector3 dir = light.getTransform().getTransformedRotation().getForward();
+	Vector3 col = light.getColour().getRGB();
+	float f = light.getIntensity();
+	int i = 0;
 	setUniform(uniformName + ".direction", light.getTransform().getTransformedRotation().getForward());
 	setUniform(uniformName + ".base.color", light.getColour().getRGB());
 	setUniform(uniformName + ".base.intensity", light.getIntensity());
@@ -377,7 +381,7 @@ void ShaderData::addShaderUniforms(const std::string& text)
 	}
 }
 
-void ShaderData::addUniform(const std::string& uniformName, const std::string& uniformType, std::vector<UniformStruct> structs)
+void ShaderData::addUniform(const std::string& uniformName, const std::string& uniformType, const std::vector<UniformStruct>& structs)
 {
 	bool addThis = true;
 

@@ -106,6 +106,8 @@ DirectionalLight::DirectionalLight(const Colour& colour, float intensity)
 PointLight::PointLight(const Colour& colour, float intensity, const Attenuation& attenuation)
 	: Light(colour, intensity)
 {
+	m_attenuation = attenuation;
+
 	float a = attenuation.getExponent();
 	float b = attenuation.getLinear();
 	float c = attenuation.getConstant() - COLOUR_DEPTH * intensity * colour.max();

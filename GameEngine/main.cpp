@@ -25,7 +25,8 @@ void TestGame::init()
 	GameObject* testMesh1 = new GameObject();
 	GameObject* testMesh2 = new GameObject();
 
-	planeObj->addComponent(new MeshRenderer(new Mesh("./res/models/plane3.obj"), new Material(new Texture("bricks2.jpg"), 1, 8)));
+	//planeObj->addComponent(new MeshRenderer(new Mesh("./res/models/plane3.obj"), new Material(new Texture("bricks.jpg"), 1, 8, new Texture("bricks_normal.jpg"))));
+	planeObj->addComponent(new MeshRenderer(new Mesh("./res/models/plane3.obj"), new Material(new Texture("bricks.jpg"), 1, 8)));
 	planeObj->getTransform().setPosition(Vector3(0, -1, 5));
 	planeObj->getTransform().setScale(Vector3(4, 4, 4));
 
@@ -34,8 +35,8 @@ void TestGame::init()
 	cameraObj->addComponent(new FreeLook());
 	cameraObj->addComponent(new FreeMove(20));
 
-	testMesh1->addComponent(new MeshRenderer(new Mesh("./res/models/monkey3.obj"), new Material(new Texture("bricks.jpg"), 1, 8)));
-	testMesh2->addComponent(new MeshRenderer(new Mesh("./res/models/monkey3.obj"), new Material(new Texture("bricks.jpg"), 1, 8)));
+	testMesh1->addComponent(new MeshRenderer(new Mesh("./res/models/plane3.obj"), new Material(new Texture("bricks2.jpg"), 1, 8, new Texture("bricks2_normal.jpg"))));
+	testMesh2->addComponent(new MeshRenderer(new Mesh("./res/models/plane3.obj"), new Material(new Texture("bricks2.jpg"), 1, 8, new Texture("bricks2_normal.jpg"))));
 
 	testMesh1->getTransform().setPosition(Vector3(0, 2, 0));
 	testMesh1->getTransform().setRotation(Quaternion(Vector3(0, 1, 0), 0.4f));
@@ -48,28 +49,27 @@ void TestGame::init()
 
 	addToScene(planeObj);
 	addToScene(cameraObj);
-	addToScene(testMesh1);
-	//addToScene(testMesh2);
+	//addToScene(testMesh1);
 
 	// Lighting
 
 	GameObject* pointlightObj = new GameObject();
-	pointlightObj->addComponent(new PointLight(Colour(255, 255, 255), 1.2f, Attenuation(0, 0, 1)));
+	pointlightObj->addComponent(new PointLight(Colour(0, 255, 0), 0.4f, Attenuation(0, 0, 1)));
 	pointlightObj->getTransform().setPosition(Vector3(7, 0, 7));
 	addToScene(pointlightObj);
 	
 	GameObject* spotlightObj = new GameObject();
-	spotlightObj->addComponent(new SpotLight(Colour(255, 255, 255), 15.0f, Attenuation(0, 0, 1.0f), 0.7f));
-	//spotlightObj->addComponent(new FreeMove(10, Input::KEY_UP, Input::KEY_DOWN, Input::KEY_LEFT, Input::KEY_RIGHT));
-	spotlightObj->getTransform().setRotation(Quaternion(Vector3(0, 1, 0), GameMath::toRadians(90.0f)));
-	spotlightObj->getTransform().setScale(Vector3(2, 2, 2));
+	spotlightObj->addComponent(new SpotLight(Colour(0, 255, 255), 0.4f, Attenuation(0, 0, 0.1f), 0.7f));
+	spotlightObj->getTransform().setRotation(Quaternion(Vector3(0, 1, 0), GameMath::toRadians(90)));
+	spotlightObj->addComponent(new FreeMove(10, Input::KEY_T, Input::KEY_G, Input::KEY_F, Input::KEY_H));
 	addToScene(spotlightObj);
 	
 	GameObject* dirlightObj = new GameObject();
 	dirlightObj->addComponent(new DirectionalLight(Colour(255, 255, 255), 0.4f));
 	
-	dirlightObj->getTransform().setRotation(Quaternion(Vector3(1, 0, 0), GameMath::toRadians(-45)));
 	addToScene(dirlightObj);
+
+	dirlightObj->getTransform().setRotation(Quaternion(Vector3(1, 0, 0), GameMath::toRadians(-45)));
 }
 
 int main()
