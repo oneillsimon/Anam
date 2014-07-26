@@ -24,8 +24,6 @@ RenderingEngine::RenderingEngine()
 
 	float ambiance = 0.2f;
 	setVector3("ambient", Vector3(ambiance, ambiance, ambiance));
-	setTexture("shadowMap", new Texture(1024, 1024, 0, GL_TEXTURE_2D, GL_LINEAR, GL_RG32F, GL_RGBA, true, GL_COLOR_ATTACHMENT0));
-	setTexture("shadowMapTempTarget", new Texture(1024, 1024, 0, GL_TEXTURE_2D, GL_LINEAR, GL_RG32F, GL_RGBA, true, GL_COLOR_ATTACHMENT0));
 	m_defaultShader = new Shader("forward-ambient");
 	m_shadowMapShader = new Shader("shadowMapGenerator");
 	m_nullFilter = new Shader("filter-null");
@@ -53,10 +51,21 @@ RenderingEngine::RenderingEngine()
 	m_planeTransform.rotate(Quaternion(Vector3(1, 0, 0), GameMath::toRadians(90.0f)));
 	m_planeTransform.rotate(Quaternion(Vector3(0, 0, 1), GameMath::toRadians(180.0f)));
 	m_planeMesh = new Mesh("./res/models/plane.obj");
+
+	for(int i = 0; i < s_numShadowMaps; i++)
+	{
+		int shadowMapSize = 1 << (i + 1);
+		m_shadowMaps[i] = new Texture(shadowMapSize, shadowMapSize, 0, GL_TEXTURE_2D, GL_LINEAR, GL_RG32F, GL_RGBA, true, GL_COLOR_ATTACHMENT0);
+		m_shadowMapsTempTargets[i] = new Texture(shadowMapSize, shadowMapSize, 0, GL_TEXTURE_2D, GL_LINEAR, GL_RG32F, GL_RGBA, true, GL_COLOR_ATTACHMENT0);
+	}
+
+	m_lightMatrix = Matrix4().initScale(0, 0, 0);
 }
 
 RenderingEngine::~RenderingEngine()
 {
+	setTexture("shadowMap", 0);
+
 	if(m_defaultShader)
 	{
 		delete m_defaultShader;
@@ -91,6 +100,19 @@ RenderingEngine::~RenderingEngine()
 	{
 		delete m_gausBlurFilter;
 	}
+
+	for(int i = 0; i < s_numShadowMaps; i++)
+	{
+		if(m_shadowMaps[i])
+		{
+			delete m_shadowMaps[i];
+		}
+
+		if(m_shadowMapsTempTargets[i])
+		{
+			delete m_shadowMapsTempTargets[i];
+		}
+	}
 }
 
 void RenderingEngine::render(GameObject* object)
@@ -105,20 +127,31 @@ void RenderingEngine::render(GameObject* object)
 	for(unsigned int i = 0; i < m_lights.size(); i++)
 	{
 		m_activeLight = m_lights[i];
-
 		ShadowInfo* shadowInfo = m_activeLight->getShadowInfo();
 
-		getTexture("shadowMap")->bindAsRenderTarget();
-		glClear(GL_DEPTH_BUFFER_BIT);
+		int shadowMapIndex = 0;
+
+		if(shadowInfo)
+		{
+			shadowMapIndex = shadowInfo->getShadowMapSizeAsPowerOf2() - 1;
+		}
+
+		setTexture("shadowMap", m_shadowMaps[shadowMapIndex]);
+		m_shadowMaps[shadowMapIndex]->bindAsRenderTarget();
+		glClearColor(0.0f, 1.0f, 0.0f, 0.0f);
+		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
 		if(shadowInfo)
 		{
 			m_altCamera->setProjection(shadowInfo->getProjection());
-			m_altCamera->getTransform().setPosition(m_activeLight->getTransform().getTransformedPosition());
-			m_altCamera->getTransform().setRotation(m_activeLight->getTransform().getTransformedRotation());
+
+			ShadowCameraTransform shadowCameraTransform = m_activeLight->calculateShadowCameraTransform(m_mainCamera->getTransform().getTransformedPosition(),
+																										m_mainCamera->getTransform().getTransformedRotation());
+
+			m_altCamera->getTransform().setPosition(shadowCameraTransform.position);
+			m_altCamera->getTransform().setRotation(shadowCameraTransform.rotation);
 
 			m_lightMatrix = s_biasMatrix * m_altCamera->getViewProjection();
-
 			setFloat("shadowVarianceMin", shadowInfo->getVarianceMin());
 			setFloat("shadowLightBleedingReduction", shadowInfo->getLightBleedReductionAmount());
 			
@@ -141,7 +174,18 @@ void RenderingEngine::render(GameObject* object)
 
 			m_mainCamera = temp;
 
-			blurShadowMap(getTexture("shadowMap"), shadowInfo->getShadowSoftness());
+			float shadowSoftness = shadowInfo->getShadowSoftness();
+
+			if(shadowSoftness != 0)
+			{
+				blurShadowMap(shadowMapIndex, shadowSoftness);
+			}
+		}
+		else
+		{
+			m_lightMatrix = s_biasMatrix * m_altCamera->getViewProjection();
+			setFloat("shadowVarianceMin", 0.00002f);
+			setFloat("shadowLightBleedingReduction", 0);
 		}
 		
 		Window::bindAsRenderTarget();
@@ -182,13 +226,13 @@ void RenderingEngine::addCamera(Camera* camera)
 	m_mainCamera = camera;
 }
 
-void RenderingEngine::blurShadowMap(Texture* shadowMap, float blur)
+void RenderingEngine::blurShadowMap(int shadowMapIndex, float blur)
 {
-	setVector3("blurScale", Vector3(1.0 / (shadowMap->getWidth() * blur), 0.0f, 0.0f));
-	applyFilter(m_gausBlurFilter, shadowMap, getTexture("shadowMapTempTarget"));
+	setVector3("blurScale", Vector3(blur / m_shadowMaps[shadowMapIndex]->getWidth(), 0.0f, 0.0f));
+	applyFilter(m_gausBlurFilter, m_shadowMaps[shadowMapIndex], m_shadowMapsTempTargets[shadowMapIndex]);
 
-	setVector3("blurScale", Vector3(0.0f, 1.0 / (shadowMap->getHeight() * blur), 0.0f));
-	applyFilter(m_gausBlurFilter, getTexture("shadowMapTempTarget"), shadowMap);
+	setVector3("blurScale", Vector3(0.0f, blur / m_shadowMaps[shadowMapIndex]->getHeight(), 0.0f));
+	applyFilter(m_gausBlurFilter, m_shadowMapsTempTargets[shadowMapIndex], m_shadowMaps[shadowMapIndex]);
 }
 
 void RenderingEngine::applyFilter(Shader* filter, Texture* source, Texture* destination)

@@ -5,13 +5,14 @@
 
 #define COLOUR_DEPTH 256
 
-ShadowInfo::ShadowInfo(const Matrix4& projection, bool flipFaces, float shadowSoftness, float lightBleedReductionAmount, float minVariance)
+ShadowInfo::ShadowInfo(const Matrix4& projection, bool flipFaces, int shadowMapSizeAsPowerOf2, float shadowSoftness, float lightBleedReductionAmount, float minVariance)
 {
 	m_projection = projection;
 	m_flipFaces = flipFaces;
 	m_shadowSoftness = shadowSoftness;
 	m_lightBleedReductionAmount = lightBleedReductionAmount;
 	m_varianceMin = minVariance;
+	m_shadowMapSizeAsPowerOf2 = shadowMapSizeAsPowerOf2;
 }
 
 Matrix4 ShadowInfo::getProjection()
@@ -39,6 +40,11 @@ float ShadowInfo::getVarianceMin()
 	return m_varianceMin;
 }
 
+int ShadowInfo::getShadowMapSizeAsPowerOf2()
+{
+	return m_shadowMapSizeAsPowerOf2;
+}
+
 Light::Light(const Colour& colour, float intensity)
 {
 	m_shader = 0;
@@ -63,6 +69,14 @@ Light::~Light()
 void Light::addToCoreEngine(CoreEngine* coreEngine)
 {
 	coreEngine->getRenderingEngine()->addLight(this);
+}
+
+ShadowCameraTransform Light::calculateShadowCameraTransform(const Vector3& mainCameraPosition, const Quaternion& mainCameraRotation)
+{
+	ShadowCameraTransform result;
+	result.position = getTransform().getTransformedPosition();
+	result.rotation = getTransform().getTransformedRotation();
+	return result;
 }
 
 Shader* Light::getShader()
@@ -152,12 +166,37 @@ void Attenuation::setExponent(float exponent)
 	m_exponent = exponent;
 }
 
-DirectionalLight::DirectionalLight(const Colour& colour, float intensity)
+DirectionalLight::DirectionalLight(const Colour& colour, float intensity, int shadowMapSizedAsPowerOf2, float shadowArea, float shadowSoftness, float lightBleedReductionAmount, float minVariance)
 	: Light(colour, intensity)
 {
 	setShader(new Shader("forward-directional"));
-	//float shadowSoftness = 0.25f, float lightBleedReductionAmount = 0.2f, float minVariance = 0.00002f
-	setShadowInfo(new ShadowInfo(Matrix4().initOrthographic(-40, 40, -40, 40, -40, 40), true, 0.25f, 0.2f, 0.00002f));
+
+	m_halfShadowArea = shadowArea / 2;
+
+	if(shadowMapSizedAsPowerOf2 != 0)
+	{
+		setShadowInfo(new ShadowInfo(Matrix4().initOrthographic(-m_halfShadowArea, m_halfShadowArea, -m_halfShadowArea, m_halfShadowArea, -m_halfShadowArea, m_halfShadowArea), true, shadowMapSizedAsPowerOf2, shadowSoftness, lightBleedReductionAmount, minVariance));
+	}
+}
+
+ShadowCameraTransform DirectionalLight::calculateShadowCameraTransform(const Vector3& mainCameraPosition, const Quaternion& mainCameraRotation)
+{
+	//return Light::calculateShadowCameraTransform(mainCameraPosition, mainCameraRotation);
+
+	ShadowCameraTransform result;
+	result.position = mainCameraPosition + mainCameraRotation.getForward() * m_halfShadowArea;
+	result.rotation = getTransform().getTransformedRotation();
+
+	float worldSpaceShadowMapTexelSize = (m_halfShadowArea * 2) / (float)(1 << getShadowInfo()->getShadowMapSizeAsPowerOf2());
+
+	Vector3 altCameraPos = result.position.rotate(result.rotation.conjugate());
+	
+	altCameraPos.setX(worldSpaceShadowMapTexelSize * floor(altCameraPos.getX() / worldSpaceShadowMapTexelSize));
+	altCameraPos.setY(worldSpaceShadowMapTexelSize * floor(altCameraPos.getY() / worldSpaceShadowMapTexelSize));
+
+	result.position = altCameraPos.rotate(result.rotation);
+
+	return result;
 }
 
 PointLight::PointLight(const Colour& colour, float intensity, const Attenuation& attenuation)
@@ -194,20 +233,19 @@ void PointLight::setRange(float range)
 	m_range = range;
 }
 
-SpotLight::SpotLight(const Colour& colour, float intensity, const Attenuation& attenuation, float cutoff)
+SpotLight::SpotLight(const Colour& colour, float intensity, const Attenuation& attenuation, float fov, int shadowMapSizedAsPowerOf2, float shadowSoftness, float lightBleedReductionAmount, float minVariance)
 	: PointLight(colour, intensity, attenuation)
 {
-	m_cutoff = cutoff;
-
+	m_fov = fov;
 	setShader(new Shader("forward-spot"));
+
+	if(shadowMapSizedAsPowerOf2 != 0)
+	{
+		setShadowInfo(new ShadowInfo(Matrix4().initPerspective(m_fov, 1.0f, 0.1, getRange()), false, shadowMapSizedAsPowerOf2, shadowSoftness, lightBleedReductionAmount, minVariance));
+	}
 }
 
 float SpotLight::getCutoff() const
 {
-	return m_cutoff;
-}
-
-void SpotLight::setCutoff(float cutoff)
-{
-	m_cutoff = cutoff;
+	return cos(m_fov / 2);
 }

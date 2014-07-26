@@ -14,6 +14,8 @@ class GameObject;
 class RenderingEngine : public MappedValues
 {
 private:
+	static const int s_numShadowMaps = 10;
+
 	Camera* m_mainCamera;
 	Light* m_activeLight;
 	Shader* m_defaultShader;
@@ -30,6 +32,9 @@ private:
 	Mesh* m_planeMesh;
 	Texture* m_tempTarget;
 
+	Texture* m_shadowMaps[s_numShadowMaps];
+	Texture* m_shadowMapsTempTargets[s_numShadowMaps];
+
 	std::vector<Light*> m_lights;
 	std::map<std::string, unsigned int> m_samplerMap;
 
@@ -45,7 +50,7 @@ public:
 	void addLight(Light* light);
 	void addCamera(Camera* camera);
 
-	void blurShadowMap(Texture* shadowMap, float blur);
+	void blurShadowMap(int shadowMapIndex, float blur);
 	void applyFilter(Shader* filter, Texture* source, Texture* destination);
 
 	virtual void updateUniformStruct(const Transform& transform, Material& material, Shader* shader, std::string& uniformName, std::string& uniformType)

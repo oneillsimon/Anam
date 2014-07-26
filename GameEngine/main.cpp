@@ -32,7 +32,7 @@ void TestGame::init()
 	planeObj->getTransform().setScale(Vector3(4, 4, 4));
 
 	cameraObj->addComponent(new Camera(Matrix4().initPerspective((float)GameMath::toRadians(70.0), Window::getAspectRatio(), 0.1f, 1000.0f)));
-	cameraObj->getTransform().setPosition(Vector3(0, 15, 0));
+	cameraObj->getTransform().setPosition(Vector3(10, 1, 5));
 	cameraObj->addComponent(new FreeLook());
 	cameraObj->addComponent(new FreeMove(20));
 
@@ -65,13 +65,15 @@ void TestGame::init()
 	//addToScene(pointlightObj);
 	
 	GameObject* spotlightObj = new GameObject();
-	spotlightObj->addComponent(new SpotLight(Colour(0, 255, 255), 0.4f, Attenuation(0, 0, 0.1f), 0.7f));
-	spotlightObj->getTransform().setRotation(Quaternion(Vector3(0, 1, 0), GameMath::toRadians(90)));
+	spotlightObj->addComponent(new SpotLight(Colour(255, 255, 0), 0.4f, Attenuation(0, 0, 0.02f), GameMath::toRadians(91.1f), 10, 0));
+	spotlightObj->getTransform().rotate(Quaternion(Vector3(0, 1, 0), GameMath::toRadians(90)));
+	spotlightObj->getTransform().rotate(Quaternion(Vector3(1, 0, 0), GameMath::toRadians(-60)));
+	spotlightObj->getTransform().setPosition(Vector3(10, 1, 5));
 	spotlightObj->addComponent(new FreeMove(10, Input::KEY_T, Input::KEY_G, Input::KEY_F, Input::KEY_H));
-	//addToScene(spotlightObj);
+	addToScene(spotlightObj);
 	
 	GameObject* dirlightObj = new GameObject();
-	dirlightObj->addComponent(new DirectionalLight(Colour(255, 255, 255), 0.4f));
+	dirlightObj->addComponent(new DirectionalLight(Colour(255, 255, 255), 0.4f, 10));
 	dirlightObj->getTransform().setRotation(Quaternion(Vector3(1, 0, 0), GameMath::toRadians(-45)));
 	addToScene(dirlightObj);
 

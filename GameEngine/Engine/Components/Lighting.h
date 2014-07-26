@@ -15,15 +15,23 @@ private:
 	float m_shadowSoftness;
 	float m_lightBleedReductionAmount;
 	float m_varianceMin;
+	int m_shadowMapSizeAsPowerOf2;
 
 public:
-	ShadowInfo(const Matrix4& projection, bool flipFaces, float shadowSoftness, float lightBleedReductionAmount, float minVariance);
+	ShadowInfo(const Matrix4& projection, bool flipFaces, int shadowMapSizeAsPowerOf2, float shadowSoftness, float lightBleedReductionAmount, float minVariance);
 
 	Matrix4 getProjection();
 	bool getFlipFaces();
 	float getShadowSoftness();
 	float getLightBleedReductionAmount();
 	float getVarianceMin();
+	int getShadowMapSizeAsPowerOf2();
+};
+
+struct ShadowCameraTransform
+{
+	Vector3 position;
+	Quaternion rotation;
 };
 
 class Light : public GameComponent
@@ -45,6 +53,7 @@ public:
 	virtual ~Light();
 
 	virtual void addToCoreEngine(CoreEngine* coreEngine);
+	virtual ShadowCameraTransform calculateShadowCameraTransform(const Vector3& mainCameraPosition, const Quaternion& mainCamerRotation);
 
 	Shader* getShader();
 	ShadowInfo* getShadowInfo();
@@ -76,8 +85,13 @@ public:
 
 class DirectionalLight : public Light
 {
+private:
+	float m_halfShadowArea;
+
 public:
-	DirectionalLight(const Colour& colour, float intensity);
+	DirectionalLight(const Colour& colour, float intensity, int shadowMapSizedAsPowerOf2 = 10, float shadowArea = 80, float shadowSoftness = 0.25f, float lightBleedReductionAmount = 0.2f, float minVariance = 0.00002f);
+
+	virtual ShadowCameraTransform calculateShadowCameraTransform(const Vector3& mainCameraPosition, const Quaternion& mainCamerRotation);
 };
 
 class PointLight : public Light
@@ -99,14 +113,13 @@ public:
 class SpotLight : public PointLight
 {
 private:
-	float m_cutoff;
+	float m_fov;
 
 public:
-	SpotLight(const Colour& colour, float intensity, const Attenuation& attenuation, float cutoff);
+	//, true, 0.25f, 0.2f, 0.00002f))
+	SpotLight(const Colour& colour, float intensity, const Attenuation& attenuation, float fov, int shadowMapSizedAsPowerOf2 = 0, float shadowSoftness = 0.25f, float lightBleedReductionAmount = 0.2f, float minVariance = 0.00002f);
 
 	float getCutoff() const;
-	
-	void setCutoff(float cutoff);
 };
 
 #endif
