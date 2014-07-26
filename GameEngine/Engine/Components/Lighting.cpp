@@ -5,14 +5,26 @@
 
 #define COLOUR_DEPTH 256
 
-ShadowInfo::ShadowInfo(const Matrix4& projection)
+ShadowInfo::ShadowInfo(const Matrix4& projection, float bias, bool flipFaces)
 {
 	m_projection = projection;
+	m_bias = bias;
+	m_flipFaces = flipFaces;
 }
 
 Matrix4 ShadowInfo::getProjection()
 {
 	return m_projection;
+}
+
+float ShadowInfo::getBias()
+{
+	return m_bias;
+}
+
+bool ShadowInfo::getFlipFaces()
+{
+	return m_flipFaces;
 }
 
 Light::Light(const Colour& colour, float intensity)
@@ -132,7 +144,7 @@ DirectionalLight::DirectionalLight(const Colour& colour, float intensity)
 	: Light(colour, intensity)
 {
 	setShader(new Shader("forward-directional"));
-	setShadowInfo(new ShadowInfo(Matrix4().initOrthographic(-40, 40, -40, 40, -40, 40)));
+	setShadowInfo(new ShadowInfo(Matrix4().initOrthographic(-40, 40, -40, 40, -40, 40), 4.0f, true));
 }
 
 PointLight::PointLight(const Colour& colour, float intensity, const Attenuation& attenuation)
