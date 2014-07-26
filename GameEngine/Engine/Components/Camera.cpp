@@ -6,6 +6,11 @@ Camera::Camera(Matrix4& projection) : m_projection(projection)
 {
 }
 
+void Camera::setProjection(const Matrix4& projection)
+{
+	m_projection = projection;
+}
+
 void Camera::addToCoreEngine(CoreEngine* coreEngine)
 {
 	coreEngine->getRenderingEngine()->addCamera(this);

@@ -12,6 +12,8 @@ private:
 public:
 	Camera(Matrix4& projection);
 
+	void setProjection(const Matrix4& projection);
+
 	virtual void addToCoreEngine(CoreEngine* coreEgine);
 
 	Matrix4 getViewProjection();

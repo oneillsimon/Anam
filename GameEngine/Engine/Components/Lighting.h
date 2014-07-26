@@ -7,14 +7,30 @@
 
 class CoreEngine;
 
+class ShadowInfo
+{
+private:
+	Matrix4 m_projection;
+
+public:
+	ShadowInfo(const Matrix4& projection);
+
+	Matrix4 getProjection();
+};
+
 class Light : public GameComponent
 {
 private:
 	Shader* m_shader;
+	ShadowInfo* m_shadowInfo;
 	Colour m_colour;
 	float m_intensity;
 
 	void operator =(Light& light) {}
+
+protected:
+	void setShadowInfo(ShadowInfo* shadowInfo);
+	void setShader(Shader* shader);
 
 public:
 	Light(const Colour& colour, float intensity);
@@ -23,10 +39,10 @@ public:
 	virtual void addToCoreEngine(CoreEngine* coreEngine);
 
 	Shader* getShader();
+	ShadowInfo* getShadowInfo();
 	Colour getColour() const;
 	float getIntensity() const;
 
-	void setShader(Shader* shader);
 	void setColour(const Colour& colour);
 	void setIntensity(float intensity);
 };

@@ -8,6 +8,7 @@
 #include "MappedValues.h"
 #include "Material.h"
 
+class Mesh;
 class GameObject;
 
 class RenderingEngine : public MappedValues
@@ -16,9 +17,21 @@ private:
 	Camera* m_mainCamera;
 	Light* m_activeLight;
 	Shader* m_defaultShader;
+	Shader* m_shadowMapShader;
+	Matrix4 m_lightMatrix;
+
+	Camera* m_altCamera;
+	GameObject* m_altCameraObj;
+
+	Material* m_planeMaterial;
+	Transform m_planeTransform;
+	Mesh* m_planeMesh;
+	Texture* m_tempTarget;
 
 	std::vector<Light*> m_lights;
 	std::map<std::string, unsigned int> m_samplerMap;
+
+	static const Matrix4 s_biasMatrix;
 
 	void operator =(RenderingEngine& renderingEngine) {}
 
@@ -37,6 +50,7 @@ public:
 	Camera& getMainCamera();
 	Light* getActiveLight();
 	unsigned int getSamplerSlot(std::string& samplerName);
+	Matrix4 getLightMatrix();
 };
 
 #endif

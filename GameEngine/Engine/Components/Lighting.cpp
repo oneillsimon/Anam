@@ -5,11 +5,22 @@
 
 #define COLOUR_DEPTH 256
 
+ShadowInfo::ShadowInfo(const Matrix4& projection)
+{
+	m_projection = projection;
+}
+
+Matrix4 ShadowInfo::getProjection()
+{
+	return m_projection;
+}
+
 Light::Light(const Colour& colour, float intensity)
 {
+	m_shader = 0;
+	m_shadowInfo = 0;
 	m_colour = colour;
 	m_intensity = intensity;
-	m_shader = 0;
 }
 
 Light::~Light()
@@ -17,6 +28,11 @@ Light::~Light()
 	if(m_shader)
 	{
 		delete m_shader;
+	}
+
+	if(m_shadowInfo)
+	{
+		delete m_shadowInfo;
 	}
 }
 
@@ -28,6 +44,11 @@ void Light::addToCoreEngine(CoreEngine* coreEngine)
 Shader* Light::getShader()
 {
 	return m_shader;
+}
+
+ShadowInfo* Light::getShadowInfo()
+{
+	return m_shadowInfo;
 }
 
 Colour Light::getColour() const
@@ -48,6 +69,16 @@ void Light::setShader(Shader* shader)
 	}
 
 	this->m_shader = shader;
+}
+
+void Light::setShadowInfo(ShadowInfo* shadowInfo)
+{
+	if(m_shadowInfo)
+	{
+		delete m_shadowInfo;
+	}
+
+	m_shadowInfo = shadowInfo;
 }
 
 void Light::setColour(const Colour& colour)
@@ -101,6 +132,7 @@ DirectionalLight::DirectionalLight(const Colour& colour, float intensity)
 	: Light(colour, intensity)
 {
 	setShader(new Shader("forward-directional"));
+	setShadowInfo(new ShadowInfo(Matrix4().initOrthographic(-40, 40, -40, 40, -40, 40)));
 }
 
 PointLight::PointLight(const Colour& colour, float intensity, const Attenuation& attenuation)

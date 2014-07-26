@@ -111,32 +111,21 @@ void Shader::updateUniforms(const Transform& transform, Material& material, Rend
 		std::string uniformName = m_shaderData->getUniformNames()[i];
 		std::string uniformType = m_shaderData->getUniformTypes()[i];
 
-		if(uniformType == "sampler2D")
-		{
-			int samplerSlot = renderingEngine->getSamplerSlot(uniformName);
-			material.getTexture(uniformName)->bind(samplerSlot);
-			setUniform(uniformName, samplerSlot);
-		}
-		else if(uniformName.substr(0, 2) == "T_")
-		{
-			if(uniformName == "T_MVP")
-			{
-				setUniform(uniformName, projectedMatrix);
-			}
-			else if(uniformName == "T_model")
-			{
-				setUniform(uniformName, worldMatrix);
-			}
-			else
-			{
-				throw "Invalid transform uniform: " + uniformName;
-			}
-		}
-		else if(uniformName.substr(0, 2) == "R_")
+		if(uniformName.substr(0, 2) == "R_")
 		{
 			std::string unprefixedName = uniformName.substr(2, uniformName.length());
 
-			if(uniformType == "vec3")
+			if(unprefixedName == "lightMatrix")
+			{
+				setUniform(uniformName, renderingEngine->getLightMatrix() * worldMatrix);
+			}
+			else if(uniformType == "sampler2D")
+			{
+				int samplerSlot = renderingEngine->getSamplerSlot(unprefixedName);
+				renderingEngine->getTexture(unprefixedName)->bind(samplerSlot);
+				setUniform(uniformName, samplerSlot);
+			}
+			else if(uniformType == "vec3")
 			{
 				setUniform(uniformName, renderingEngine->getVector3(unprefixedName));
 			}
@@ -158,7 +147,28 @@ void Shader::updateUniforms(const Transform& transform, Material& material, Rend
 			}
 			else
 			{
-				renderingEngine->updateUniformStruct(transform, material, this, uniformType, uniformType);
+				renderingEngine->updateUniformStruct(transform, material, this, uniformName, uniformType);
+			}
+		}
+		else if(uniformType == "sampler2D")
+		{
+			int samplerSlot = renderingEngine->getSamplerSlot(uniformName);
+			material.getTexture(uniformName)->bind(samplerSlot);
+			setUniform(uniformName, samplerSlot);
+		}
+		else if(uniformName.substr(0, 2) == "T_")
+		{
+			if(uniformName == "T_MVP")
+			{
+				setUniform(uniformName, projectedMatrix);
+			}
+			else if(uniformName == "T_model")
+			{
+				setUniform(uniformName, worldMatrix);
+			}
+			else
+			{
+				throw "Invalid transform uniform: " + uniformName;
 			}
 		}
 		else if(uniformName.substr(0, 2) == "C_")

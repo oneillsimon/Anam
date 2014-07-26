@@ -1,22 +1,40 @@
 #include "../Core/Math3D.h"
 #include "MappedValues.h"
 
-void MappedValues::addVector3(std::string name, Vector3 v)
+MappedValues::~MappedValues()
 {
-	vector3Map.insert(std::pair<std::string, Vector3>(name, v));
+	std::map<std::string, Texture*>::iterator it;
+
+	for(it = textureMap.begin(); it != textureMap.end(); it++)
+	{
+		if(it->second)
+		{
+			delete it->second;
+		}
+	}
 }
 
-void MappedValues::addVector4(std::string name, Vector4 v)
+void MappedValues::setVector3(const std::string& name, Vector3 v)
 {
-	vector4Map.insert(std::pair<std::string, Vector4>(name, v));
+	vector3Map[name] = v;
 }
 
-void MappedValues::addFloat(std::string name, float f)
+void MappedValues::setVector4(const std::string& name, Vector4 v)
 {
-	floatMap.insert(std::pair<std::string, float>(name, f));
+	vector4Map[name] = v;
 }
 
-Vector3 MappedValues::getVector3(std::string name)
+void MappedValues::setFloat(const std::string& name, float f)
+{
+	floatMap[name] = f;
+}
+
+void MappedValues::setTexture(const std::string& name, Texture* t)
+{
+	textureMap[name] = t;
+}
+
+Vector3 MappedValues::getVector3(const std::string& name)
 {
 	std::map<std::string, Vector3>::const_iterator it = vector3Map.find(name);
 
@@ -28,7 +46,7 @@ Vector3 MappedValues::getVector3(std::string name)
 	return Vector3::ZERO;
 }
 
-Vector4 MappedValues::getVector4(std::string name)
+Vector4 MappedValues::getVector4(const std::string& name)
 {
 	std::map<std::string, Vector4>::const_iterator it = vector4Map.find(name);
 
@@ -40,7 +58,7 @@ Vector4 MappedValues::getVector4(std::string name)
 	return Vector4(0, 0, 0, 0);
 }
 
-float MappedValues::getFloat(std::string name)
+float MappedValues::getFloat(const std::string& name)
 {
 	std::map<std::string, float>::const_iterator it = floatMap.find(name);
 
@@ -50,4 +68,16 @@ float MappedValues::getFloat(std::string name)
 	}
 
 	return 0.0f;
+}
+
+Texture* MappedValues::getTexture(const std::string& name) const
+{
+	std::map<std::string, Texture*>::const_iterator it = textureMap.find(name);
+
+	if(it != textureMap.end())
+	{
+		return it->second;
+	}
+
+	return 0;
 }
