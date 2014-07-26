@@ -18,6 +18,8 @@ private:
 	Light* m_activeLight;
 	Shader* m_defaultShader;
 	Shader* m_shadowMapShader;
+	Shader* m_nullFilter;
+	Shader* m_gausBlurFilter;
 	Matrix4 m_lightMatrix;
 
 	Camera* m_altCamera;
@@ -42,6 +44,10 @@ public:
 	void render(GameObject* object);
 	void addLight(Light* light);
 	void addCamera(Camera* camera);
+
+	void blurShadowMap(Texture* shadowMap, float blur);
+	void applyFilter(Shader* filter, Texture* source, Texture* destination);
+
 	virtual void updateUniformStruct(const Transform& transform, Material& material, Shader* shader, std::string& uniformName, std::string& uniformType)
 	{
 		throw uniformType + " is not supported by the rendering engine";

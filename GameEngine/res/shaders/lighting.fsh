@@ -11,7 +11,7 @@ uniform float displacementMapScale;
 uniform float displacementMapBias;
 
 uniform sampler2D R_shadowMap;
-uniform float R_shadowMapBias;
-uniform vec3 R_shadowTexelSize;
+uniform float R_shadowVarianceMin;
+uniform float R_shadowLightBleedingReduction;
 
 #include "lighting.glh"

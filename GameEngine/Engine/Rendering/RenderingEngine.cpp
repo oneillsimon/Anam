@@ -24,9 +24,12 @@ RenderingEngine::RenderingEngine()
 
 	float ambiance = 0.2f;
 	setVector3("ambient", Vector3(ambiance, ambiance, ambiance));
-	setTexture("shadowMap", new Texture(1024, 1024, 0, GL_TEXTURE_2D, GL_NEAREST, GL_DEPTH_COMPONENT16, GL_DEPTH_COMPONENT, true, GL_DEPTH_ATTACHMENT));
+	setTexture("shadowMap", new Texture(1024, 1024, 0, GL_TEXTURE_2D, GL_LINEAR, GL_RG32F, GL_RGBA, true, GL_COLOR_ATTACHMENT0));
+	setTexture("shadowMapTempTarget", new Texture(1024, 1024, 0, GL_TEXTURE_2D, GL_LINEAR, GL_RG32F, GL_RGBA, true, GL_COLOR_ATTACHMENT0));
 	m_defaultShader = new Shader("forward-ambient");
 	m_shadowMapShader = new Shader("shadowMapGenerator");
+	m_nullFilter = new Shader("filter-null");
+	m_gausBlurFilter = new Shader("filter-gausBlur7x1");
 
 	glClearColor(0, 0, 0, 0);
 
@@ -73,14 +76,29 @@ RenderingEngine::~RenderingEngine()
 	{
 		delete m_planeMesh;
 	}
+
+	if(m_shadowMapShader)
+	{
+		delete m_shadowMapShader;
+	}
+
+	if(m_nullFilter)
+	{
+		delete m_nullFilter;
+	}
+
+	if(m_gausBlurFilter)
+	{
+		delete m_gausBlurFilter;
+	}
 }
 
 void RenderingEngine::render(GameObject* object)
 {
 	Window::bindAsRenderTarget();
 	//m_tempTarget->bindAsRenderTarget();
-	glClearColor(0, 0, 0, 0);
 
+	glClearColor(0, 0, 0, 0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	object->renderAll(m_defaultShader, this);
 
@@ -88,7 +106,7 @@ void RenderingEngine::render(GameObject* object)
 	{
 		m_activeLight = m_lights[i];
 
-		ShadowInfo* shadowInfo = m_lights[i]->getShadowInfo();
+		ShadowInfo* shadowInfo = m_activeLight->getShadowInfo();
 
 		getTexture("shadowMap")->bindAsRenderTarget();
 		glClear(GL_DEPTH_BUFFER_BIT);
@@ -101,9 +119,8 @@ void RenderingEngine::render(GameObject* object)
 
 			m_lightMatrix = s_biasMatrix * m_altCamera->getViewProjection();
 
-			setVector3("shadowTexelSize", Vector3(1.0f / 1024.0f, 1.0f / 1024.0f, 0.0f));
-														   // Shadow map size
-			setFloat("shadowMapBias", shadowInfo->getBias() / 1024.0f);
+			setFloat("shadowVarianceMin", shadowInfo->getVarianceMin());
+			setFloat("shadowLightBleedingReduction", shadowInfo->getLightBleedReductionAmount());
 			
 			bool flipFaces = shadowInfo->getFlipFaces();
 
@@ -123,6 +140,8 @@ void RenderingEngine::render(GameObject* object)
 			}
 
 			m_mainCamera = temp;
+
+			blurShadowMap(getTexture("shadowMap"), shadowInfo->getShadowSoftness());
 		}
 		
 		Window::bindAsRenderTarget();
@@ -161,6 +180,50 @@ void RenderingEngine::addLight(Light* light)
 void RenderingEngine::addCamera(Camera* camera)
 {
 	m_mainCamera = camera;
+}
+
+void RenderingEngine::blurShadowMap(Texture* shadowMap, float blur)
+{
+	setVector3("blurScale", Vector3(1.0 / (shadowMap->getWidth() * blur), 0.0f, 0.0f));
+	applyFilter(m_gausBlurFilter, shadowMap, getTexture("shadowMapTempTarget"));
+
+	setVector3("blurScale", Vector3(0.0f, 1.0 / (shadowMap->getHeight() * blur), 0.0f));
+	applyFilter(m_gausBlurFilter, getTexture("shadowMapTempTarget"), shadowMap);
+}
+
+void RenderingEngine::applyFilter(Shader* filter, Texture* source, Texture* destination)
+{
+	if(source == destination)
+	{
+		fprintf(stderr, "destination and source cannot be the same\n");
+		return;
+	}
+
+	if(destination == 0)
+	{
+		Window::bindAsRenderTarget();
+	}
+	else
+	{
+		destination->bindAsRenderTarget();
+	}
+
+	setTexture("filterTexture", source);
+
+	m_altCamera->setProjection(Matrix4().initIdentity());
+	m_altCamera->getTransform().setPosition(Vector3::ZERO);
+	m_altCamera->getTransform().setRotation(Quaternion(Vector3(0, 1, 0), GameMath::toRadians(180.0f)));
+	
+	Camera* temp = m_mainCamera;
+	m_mainCamera = m_altCamera;
+
+	glClear(GL_DEPTH_BUFFER_BIT);
+	filter->bind();
+	filter->updateUniforms(m_planeTransform, *m_planeMaterial, this);
+	m_planeMesh->draw();
+	
+	m_mainCamera = temp;
+	setTexture("filterTexture", 0);
 }
 
 Light* RenderingEngine::getActiveLight()

@@ -137,6 +137,16 @@ void TextureData::bindAsRenderTarget()
 	glViewport(0, 0, m_width, m_height);
 }
 
+int TextureData::getWidth()
+{
+	return m_width;
+}
+
+int TextureData::getHeight()
+{
+	return m_height;
+}
+
 Texture::Texture(std::string fileName, GLenum textureTarget, GLfloat filter, GLenum internalFormat, GLenum basicFormat, bool clamp, GLenum attachment)
 {
 	this->fileName = fileName;
@@ -186,4 +196,14 @@ void Texture::bind(int unit)
 void Texture::bindAsRenderTarget()
 {
 	textureData->bindAsRenderTarget();
+}
+
+int Texture::getWidth()
+{
+	return textureData->getWidth();
+}
+
+int Texture::getHeight()
+{
+	return textureData->getHeight(); 
 }

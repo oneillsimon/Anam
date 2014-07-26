@@ -11,15 +11,19 @@ class ShadowInfo
 {
 private:
 	Matrix4 m_projection;
-	float m_bias;
 	bool m_flipFaces;
+	float m_shadowSoftness;
+	float m_lightBleedReductionAmount;
+	float m_varianceMin;
 
 public:
-	ShadowInfo(const Matrix4& projection, float bias, bool flipFaces);
+	ShadowInfo(const Matrix4& projection, bool flipFaces, float shadowSoftness, float lightBleedReductionAmount, float minVariance);
 
 	Matrix4 getProjection();
-	float getBias();
 	bool getFlipFaces();
+	float getShadowSoftness();
+	float getLightBleedReductionAmount();
+	float getVarianceMin();
 };
 
 class Light : public GameComponent

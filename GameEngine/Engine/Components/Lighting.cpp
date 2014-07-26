@@ -5,11 +5,13 @@
 
 #define COLOUR_DEPTH 256
 
-ShadowInfo::ShadowInfo(const Matrix4& projection, float bias, bool flipFaces)
+ShadowInfo::ShadowInfo(const Matrix4& projection, bool flipFaces, float shadowSoftness, float lightBleedReductionAmount, float minVariance)
 {
 	m_projection = projection;
-	m_bias = bias;
 	m_flipFaces = flipFaces;
+	m_shadowSoftness = shadowSoftness;
+	m_lightBleedReductionAmount = lightBleedReductionAmount;
+	m_varianceMin = minVariance;
 }
 
 Matrix4 ShadowInfo::getProjection()
@@ -17,14 +19,24 @@ Matrix4 ShadowInfo::getProjection()
 	return m_projection;
 }
 
-float ShadowInfo::getBias()
-{
-	return m_bias;
-}
-
 bool ShadowInfo::getFlipFaces()
 {
 	return m_flipFaces;
+}
+
+float ShadowInfo::getShadowSoftness()
+{
+	return m_shadowSoftness;
+}
+
+float ShadowInfo::getLightBleedReductionAmount()
+{
+	return m_lightBleedReductionAmount;
+}
+
+float ShadowInfo::getVarianceMin()
+{
+	return m_varianceMin;
 }
 
 Light::Light(const Colour& colour, float intensity)
@@ -144,7 +156,8 @@ DirectionalLight::DirectionalLight(const Colour& colour, float intensity)
 	: Light(colour, intensity)
 {
 	setShader(new Shader("forward-directional"));
-	setShadowInfo(new ShadowInfo(Matrix4().initOrthographic(-40, 40, -40, 40, -40, 40), 4.0f, true));
+	//float shadowSoftness = 0.25f, float lightBleedReductionAmount = 0.2f, float minVariance = 0.00002f
+	setShadowInfo(new ShadowInfo(Matrix4().initOrthographic(-40, 40, -40, 40, -40, 40), true, 0.25f, 0.2f, 0.00002f));
 }
 
 PointLight::PointLight(const Colour& colour, float intensity, const Attenuation& attenuation)

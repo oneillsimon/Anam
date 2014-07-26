@@ -29,6 +29,9 @@ public:
 
 	void bind(int textureNum);
 	void bindAsRenderTarget();
+
+	int getWidth();
+	int getHeight();
 };
 
 class Texture
@@ -48,6 +51,9 @@ public:
 
 	void bind(int uint);
 	void bindAsRenderTarget();
+
+	int getWidth();
+	int getHeight();
 };
 
 #endif

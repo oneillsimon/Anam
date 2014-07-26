@@ -62,13 +62,13 @@ void TestGame::init()
 	GameObject* pointlightObj = new GameObject();
 	pointlightObj->addComponent(new PointLight(Colour(0, 255, 0), 0.4f, Attenuation(0, 0, 1)));
 	pointlightObj->getTransform().setPosition(Vector3(7, 0, 7));
-	addToScene(pointlightObj);
+	//addToScene(pointlightObj);
 	
 	GameObject* spotlightObj = new GameObject();
 	spotlightObj->addComponent(new SpotLight(Colour(0, 255, 255), 0.4f, Attenuation(0, 0, 0.1f), 0.7f));
 	spotlightObj->getTransform().setRotation(Quaternion(Vector3(0, 1, 0), GameMath::toRadians(90)));
 	spotlightObj->addComponent(new FreeMove(10, Input::KEY_T, Input::KEY_G, Input::KEY_F, Input::KEY_H));
-	addToScene(spotlightObj);
+	//addToScene(spotlightObj);
 	
 	GameObject* dirlightObj = new GameObject();
 	dirlightObj->addComponent(new DirectionalLight(Colour(255, 255, 255), 0.4f));
@@ -77,8 +77,8 @@ void TestGame::init()
 
 	GameObject* boxObj = new GameObject();
 	boxObj->addComponent(new MeshRenderer(new Mesh("./res/models/cube.obj"), new Material(new Texture("bricks2.jpg"), 1, 8,
-																						 new Texture("bricks2_normal.png"),
-																						 new Texture("bricks2_disp.jpg"), 0.04f, -1.0f)));
+																						  new Texture("bricks2_normal.png"),
+																						  new Texture("bricks2_disp.jpg"), 0.04f, -1.0f)));
 	boxObj->getTransform().setPosition(Vector3(14, 0, 5));
 	boxObj->getTransform().setRotation(Quaternion(Vector3(0, 1, 0), GameMath::toRadians(30.0f)));
 	addToScene(boxObj);
