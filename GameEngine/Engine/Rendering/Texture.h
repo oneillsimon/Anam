@@ -45,8 +45,8 @@ private:
 	void operator =(Texture& texture) {}
 
 public:
-	Texture(std::string fileName, GLenum textureTarget = GL_TEXTURE_2D, GLfloat filter = GL_LINEAR, GLenum internalFormat = GL_RGBA, GLenum basicFormat = GL_RGBA, bool clamp = false, GLenum attachment = GL_NONE);
-	Texture(int width = 0, int height = 0, unsigned char* data = 0, GLenum textureTarget = GL_TEXTURE_2D, GLfloat filter = GL_LINEAR, GLenum internalFormat = GL_RGBA, GLenum basicFormat = GL_RGBA, bool clamp = false, GLenum attachment = GL_NONE);
+	Texture(std::string fileName, GLenum textureTarget = GL_TEXTURE_2D, GLfloat filter = GL_LINEAR_MIPMAP_LINEAR, GLenum internalFormat = GL_RGBA, GLenum basicFormat = GL_RGBA, bool clamp = false, GLenum attachment = GL_NONE);
+	Texture(int width = 0, int height = 0, unsigned char* data = 0, GLenum textureTarget = GL_TEXTURE_2D, GLfloat filter = GL_LINEAR_MIPMAP_LINEAR, GLenum internalFormat = GL_RGBA, GLenum basicFormat = GL_RGBA, bool clamp = false, GLenum attachment = GL_NONE);
 	~Texture();
 
 	void bind(int uint);

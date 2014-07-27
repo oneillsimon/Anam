@@ -116,7 +116,6 @@ private:
 	float m_fov;
 
 public:
-	//, true, 0.25f, 0.2f, 0.00002f))
 	SpotLight(const Colour& colour, float intensity, const Attenuation& attenuation, float fov, int shadowMapSizedAsPowerOf2 = 0, float shadowSoftness = 0.25f, float lightBleedReductionAmount = 0.2f, float minVariance = 0.00002f);
 
 	float getCutoff() const;

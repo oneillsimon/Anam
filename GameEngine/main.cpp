@@ -65,7 +65,7 @@ void TestGame::init()
 	//addToScene(pointlightObj);
 	
 	GameObject* spotlightObj = new GameObject();
-	spotlightObj->addComponent(new SpotLight(Colour(255, 255, 0), 0.4f, Attenuation(0, 0, 0.02f), GameMath::toRadians(91.1f), 10, 0));
+	spotlightObj->addComponent(new SpotLight(Colour(255, 255, 0), 0.4f, Attenuation(0, 0, 0.02f), GameMath::toRadians(91.1f), 10, 0.25f));
 	spotlightObj->getTransform().rotate(Quaternion(Vector3(0, 1, 0), GameMath::toRadians(90)));
 	spotlightObj->getTransform().rotate(Quaternion(Vector3(1, 0, 0), GameMath::toRadians(-60)));
 	spotlightObj->getTransform().setPosition(Vector3(10, 1, 5));
@@ -73,7 +73,7 @@ void TestGame::init()
 	addToScene(spotlightObj);
 	
 	GameObject* dirlightObj = new GameObject();
-	dirlightObj->addComponent(new DirectionalLight(Colour(255, 255, 255), 0.4f, 10));
+	dirlightObj->addComponent(new DirectionalLight(Colour(255, 255, 255), 0.4f, 10, 80, 1.5f));
 	dirlightObj->getTransform().setRotation(Quaternion(Vector3(1, 0, 0), GameMath::toRadians(-45)));
 	addToScene(dirlightObj);
 

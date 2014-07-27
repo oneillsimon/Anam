@@ -56,14 +56,27 @@ void TextureData::initTextures(unsigned char** data, GLfloat* filters, GLenum* i
 
 		if(clamp)
 		{
-			glTexParameterf(m_textureTarget, GL_TEXTURE_WRAP_S, GL_CLAMP);
-			glTexParameterf(m_textureTarget, GL_TEXTURE_WRAP_T, GL_CLAMP);
+			glTexParameterf(m_textureTarget, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameterf(m_textureTarget, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		}
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
-
 		glTexImage2D(m_textureTarget, 0, internalFormat[i], m_width, m_height, 0, basicFormat[i], GL_UNSIGNED_BYTE, data[i]);
+
+		if(filters[i] == GL_NEAREST_MIPMAP_NEAREST ||
+		   filters[i] == GL_NEAREST_MIPMAP_LINEAR ||
+		   filters[i] == GL_LINEAR_MIPMAP_NEAREST ||
+		   filters[i] == GL_LINEAR_MIPMAP_LINEAR)
+		{
+			glGenerateMipmap(m_textureTarget);
+			GLfloat maxAnisotropy;
+			glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &maxAnisotropy);
+			glTexParameterf(m_textureTarget, GL_TEXTURE_MAX_ANISOTROPY_EXT, maxAnisotropy);
+		}
+		else
+		{
+			glTexParameteri(m_textureTarget, GL_TEXTURE_BASE_LEVEL, 0);
+			glTexParameteri(m_textureTarget, GL_TEXTURE_MAX_LEVEL, 0);
+		}
 	}
 }
 
@@ -169,7 +182,9 @@ Texture::Texture(std::string fileName, GLenum textureTarget, GLfloat filter, GLe
 			std::cerr << "Unable to load texture: " << fileName << std::endl;
 		}
 
-		textureData = new TextureData(textureTarget, x, y, 1, &data, &filter, &internalFormat, &basicFormat, clamp, &attachment);
+		GLfloat i = GL_LINEAR_MIPMAP_LINEAR;
+		GLfloat j = filter;
+		textureData = new TextureData(textureTarget, x, y, 1, &data, &i, &internalFormat, &basicFormat, clamp, &attachment);
 		stbi_image_free(data);
 
 		resourceMap.insert(std::pair<std::string, TextureData*>(fileName, textureData));
