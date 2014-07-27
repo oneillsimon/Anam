@@ -8,11 +8,6 @@
 #include <cstring>
 #include "../Core/Math3D.h"
 
-//TEMP
-//static Texture* t_tempTarget = 0;
-//static Mesh* t_mesh = 0;
-//static Transform t_transform;
-
 const Matrix4 RenderingEngine::s_biasMatrix = Matrix4().initScale(0.5f, 0.5f, 0.5f) * Matrix4().initTranslation(1.0f, 1.0f, 1.0f);
 
 RenderingEngine::RenderingEngine()
@@ -36,6 +31,7 @@ RenderingEngine::RenderingEngine()
 	glFrontFace(GL_CW);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_DEPTH_CLAMP);
+	glEnable(GL_MULTISAMPLE);
 
 	m_altCamera = new Camera(Matrix4().initIdentity());
 	m_altCameraObj = new GameObject();
@@ -118,7 +114,6 @@ RenderingEngine::~RenderingEngine()
 void RenderingEngine::render(GameObject* object)
 {
 	Window::bindAsRenderTarget();
-	//m_tempTarget->bindAsRenderTarget();
 
 	glClearColor(0, 0, 0, 0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -138,7 +133,7 @@ void RenderingEngine::render(GameObject* object)
 
 		setTexture("shadowMap", m_shadowMaps[shadowMapIndex]);
 		m_shadowMaps[shadowMapIndex]->bindAsRenderTarget();
-		glClearColor(0.0f, 1.0f, 0.0f, 0.0f);
+		glClearColor(1.0f, 1.0f, 0.0f, 0.0f);
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
 		if(shadowInfo)
@@ -200,20 +195,6 @@ void RenderingEngine::render(GameObject* object)
 		glDepthFunc(GL_LESS);
 		glDisable(GL_BLEND);
 	}
-
-	//TEMP
-	/*Window::bindAsRenderTarget();
-	
-	Camera* temp = m_mainCamera;
-	m_mainCamera = m_altCamera;
-	
-	glClearColor(0.0f,0.0f,0.5f,1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	m_defaultShader->bind();
-	m_defaultShader->updateUniforms(m_planeTransform, *m_planeMaterial, this);
-	m_planeMesh->draw();
-	
-	m_mainCamera = temp;*/
 }
 
 void RenderingEngine::addLight(Light* light)
