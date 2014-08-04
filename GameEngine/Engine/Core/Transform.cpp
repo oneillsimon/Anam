@@ -1,5 +1,4 @@
 #include "Transform.h"
-#include <stdio.h>
 
 Transform::Transform(const Vector3& position, const Quaternion& rotation, float scale)
 {

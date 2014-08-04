@@ -5,32 +5,32 @@ FreeMove::FreeMove(float speed, int forwardKey, int backwardKey, int leftKey, in
 {
 }
 
-void FreeMove::input(float delta)
+void FreeMove::processInput(const Input& input, float delta)
 {
 	float moveAmount = speed * delta;
 
-	if(Input::getKey(forwardKey))
+	if(input.getKey(forwardKey))
 	{
-		move(getTransform().getRotation().getForward(), moveAmount);
+		move(getTransform()->getRotation().getForward(), moveAmount);
 	}
 
-	if(Input::getKey(backwardKey))
+	if(input.getKey(backwardKey))
 	{
-		move(getTransform().getRotation().getBackward(), moveAmount);
+		move(getTransform()->getRotation().getBackward(), moveAmount);
 	}
 
-	if(Input::getKey(leftKey))
+	if(input.getKey(leftKey))
 	{
-		move(getTransform().getRotation().getLeft(), moveAmount);
+		move(getTransform()->getRotation().getLeft(), moveAmount);
 	}
 
-	if(Input::getKey(rightKey))
+	if(input.getKey(rightKey))
 	{
-		move(getTransform().getRotation().getRight(), moveAmount);
+		move(getTransform()->getRotation().getRight(), moveAmount);
 	}
 }
 
 void FreeMove::move(const Vector3& direction, float amount)
 {
-	getTransform().setPosition(getTransform().getPosition() + (direction * amount));
+	getTransform()->setPosition(getTransform()->getPosition() + (direction * amount));
 }

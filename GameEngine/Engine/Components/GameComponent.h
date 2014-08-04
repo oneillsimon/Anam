@@ -3,6 +3,7 @@
 
 #include "../Core/Transform.h"
 #include "../Core/GameObject.h"
+#include "../Core/Input.h"
 
 class Shader;
 class RenderingEngine;
@@ -15,19 +16,15 @@ protected:
 public:
 	virtual ~GameComponent() {};
 
-	virtual void input(float delta) {}
+	virtual void processInput(const Input& input, float delta) {}
 	virtual void update(float delta) {}
-	virtual void render(Shader* shader, RenderingEngine* renderingEngine) {}
+	virtual void render(const Shader& shader, const RenderingEngine& renderingEngine, const Camera& camera) const {}
 
-	virtual void addToCoreEngine(CoreEngine* coreEngine) {}
+	virtual void addToCoreEngine(CoreEngine* coreEngine) const {}
 
-	void setParent(GameObject* parent);
-	Transform& getTransform();
+	virtual void setParent(GameObject* parent);
+	Transform* getTransform();
 	const Transform& getTransform() const;
-
-	/*inline void setParent(GameObject* parent) { m_parent = parent; }
-	inline Transform& getTransform() { return m_parent->getTransform(); }
-	inline const Transform& getTransform() const { return m_parent->getTransform(); }*/
 };
 
 #endif

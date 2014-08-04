@@ -6,17 +6,41 @@
 #include "MappedValues.h"
 #include "../Core/Math3D.h"
 
-class Material : public MappedValues
+class MaterialData : public ReferenceCounter, public MappedValues
+{
+public:
+private:
+};
+
+class Material
 {
 private:
-	std::map<std::string, Texture*> textureMap;
-
-	void operator =(Material& material) {}
+	static std::map<std::string, MaterialData*> s_resourceMap;
+	MaterialData* m_materialData;
+	std::string m_materialName;
 
 public:
-	Material(Texture* diffuse, float specularIntensity, float specularExponent);
-	Material(Texture* diffuse, float specularIntensity, float specularExponent, Texture* normalMap);
-	Material(Texture* diffuse, float specularIntensity, float specularExponent, Texture* normalMap, Texture* displacementMap, float displacementMapScale, float displacementMapOffset);
+	Material(const std::string& materialName = "");
+	Material(const Material& material);
+	Material(const std::string& materialName,
+			 const Texture& diffuse,
+			 float specularIntensity,
+			 float specularPower,
+			 const Texture& normalMap = Texture("default_normal.jpg"),
+			 const Texture& displacementMap = Texture("default_disp.png"),
+			 float dispMapScale = 0.0f,
+			 float dispMapOffset = 0.0f);
+	virtual ~Material();
+
+	void setVector3(const std::string& name, const Vector3& value);
+	void setFloat(const std::string& name, const float value);
+	void setTexture(const std::string& name, const Texture& value);
+
+	const Vector3& getVector3(const std::string& name) const;
+	float getFloat(const std::string& name) const;
+	const Texture& getTexture(const std::string& name) const;
+
+	void operator =(Material& material) {}
 };
 
 #endif

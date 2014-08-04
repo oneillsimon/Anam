@@ -1,125 +1,104 @@
+#include <cstring>
 #include <SDL2/SDL.h>
 #include "SDLWrapper.h"
 #include "Input.h"
 
-const static int NUM_KEYS = 512;
-const static int NUM_MOUSE_BUTTONS = 256;
-
-static SDL_Event e;
-
-static int mouseX = 0;
-static int mouseY = 0;
-
-static bool inputs[NUM_KEYS];
-static bool downKeys[NUM_KEYS];
-static bool upKeys[NUM_KEYS];
-
-static bool mouseInput[NUM_MOUSE_BUTTONS];
-static bool downMouse[NUM_MOUSE_BUTTONS];
-static bool upMouse[NUM_MOUSE_BUTTONS];
-
-void Input::update()
+Input::Input(Window* window)
 {
-	for(int i = 0; i < NUM_MOUSE_BUTTONS; i++)
-	{
-		downMouse[i] = false;
-		upMouse[i] = false;
-	}
+	m_mouseX = 0;
+	m_mouseY = 0;
+	m_window = window;
 
-	for(int i = 0; i < NUM_KEYS; i++)
-	{
-		downKeys[i] = false;
-		upKeys[i] = false;
-	}
+	memset(m_inputs, 0, NUM_KEYS * sizeof(bool));
+	memset(m_downKeys, 0, NUM_KEYS * sizeof(bool));
+	memset(m_upKeys, 0, NUM_KEYS * sizeof(bool));
 
-	while(SDL_PollEvent(&e))
-	{
-		if(e.type == SDL_QUIT)
-		{
-			SDLSetIsCloseRequested(true);
-		}
-
-		if(e.type == SDL_MOUSEMOTION)
-		{
-			mouseX = e.motion.x;
-			mouseY = e.motion.y;
-		}
-
-		if(e.type == SDL_KEYDOWN)
-		{
-			int value = e.key.keysym.scancode;
-
-			inputs[value] = true;
-			downKeys[value] = true;
-		}
-
-		if(e.type == SDL_KEYUP)
-		{
-			int value = e.key.keysym.scancode;
-
-			inputs[value] = false;
-			upKeys[value] = true;
-		}
-
-		if(e.type == SDL_MOUSEBUTTONDOWN)
-		{
-			int value = e.button.button;
-
-			mouseInput[value] = true;
-			downMouse[value] = true;
-		}
-
-		if(e.type == SDL_MOUSEBUTTONUP)
-		{
-			int value = e.button.button;
-
-			mouseInput[value] = false;
-			upMouse[value] = true;
-		}
-	}
+	memset(m_mouseInputs, 0, NUM_MOUSE_BUTTONS * sizeof(bool));
+	memset(m_downMouse, 0, NUM_MOUSE_BUTTONS * sizeof(bool));
+	memset(m_upMouse, 0, NUM_MOUSE_BUTTONS * sizeof(bool));
 }
 
-bool Input::getKey(int keyCode)
+bool Input::getKey(int keyCode) const
 {
-	return inputs[keyCode];
+	return m_inputs[keyCode];
 }
 
-bool Input::getKeyDown(int keyCode)
+bool Input::getKeyDown(int keyCode) const
 {
-	return downKeys[keyCode];
+	return m_downKeys[keyCode];
 }
 
-bool Input::getKeyUp(int keyCode)
+bool Input::getKeyUp(int keyCode) const
 {
-	return upKeys[keyCode];
+	return m_upKeys[keyCode];
 }
 
-bool Input::getMouse(int button)
+bool Input::getMouse(int button) const
 {
-	return mouseInput[button];
+	return m_mouseInputs[button];
 }
 
-bool Input::getMouseDown(int button)
+bool Input::getMouseDown(int button) const
 {
-	return downMouse[button];
+	return m_downMouse[button];
 }
 
-bool Input::getMouseUp(int button)
+bool Input::getMouseUp(int button) const
 {
-	return upMouse[button];
+	return m_upMouse[button];
 }
 
-Vector2 Input::getMousePosition()
+Vector2 Input::getMousePosition() const
 {
-	return Vector2((float)mouseX, (float)mouseY);
+	return Vector2(m_mouseX, m_mouseY);
 }
 
-void Input::setMousePosition(Vector2 position)
+void Input::setKey(int keyCode, bool value)
+{
+	m_inputs[keyCode] = value;
+}
+
+void Input::setKeyDown(int keyCode, bool value)
+{
+	m_downKeys[keyCode] = value;
+}
+
+void Input::setKeyUp(int keyCode, bool value)
+{
+	m_upKeys[keyCode] = value;
+}
+
+void Input::setMouse(int mouseButton, bool value)
+{
+	m_mouseInputs[mouseButton] = value;
+}
+
+void Input::setMouseDown(int mouseButton, bool value)
+{
+	m_downMouse[mouseButton] = value;
+}
+
+void Input::setMouseUp(int mouseButton, bool value)
+{
+	m_upMouse[mouseButton] = value;
+}
+
+void Input::setMousePosition(Vector2 position) const
 {
 	SDLSetMousePosition((int)position.getX(), (int)position.getY());
 }
 
-void Input::setCursor(bool value)
+void Input::setMouseX(int x)
+{
+	m_mouseX = x;
+}
+
+void Input::setMouseY(int y)
+{
+	m_mouseY = y;
+}
+
+void Input::setCursor(bool value) const
 {
 	if(value)
 	{

@@ -1,18 +1,4 @@
-#include "../Core/Math3D.h"
 #include "MappedValues.h"
-
-MappedValues::~MappedValues()
-{
-	std::map<std::string, Texture*>::iterator it;
-
-	for(it = textureMap.begin(); it != textureMap.end(); it++)
-	{
-		if(it->second)
-		{
-			delete it->second;
-		}
-	}
-}
 
 void MappedValues::setVector3(const std::string& name, Vector3 v)
 {
@@ -29,12 +15,12 @@ void MappedValues::setFloat(const std::string& name, float f)
 	floatMap[name] = f;
 }
 
-void MappedValues::setTexture(const std::string& name, Texture* t)
+void MappedValues::setTexture(const std::string& name, const Texture& t)
 {
 	textureMap[name] = t;
 }
 
-Vector3 MappedValues::getVector3(const std::string& name)
+const Vector3& MappedValues::getVector3(const std::string& name) const
 {
 	std::map<std::string, Vector3>::const_iterator it = vector3Map.find(name);
 
@@ -46,7 +32,7 @@ Vector3 MappedValues::getVector3(const std::string& name)
 	return Vector3::ZERO;
 }
 
-Vector4 MappedValues::getVector4(const std::string& name)
+const Vector4& MappedValues::getVector4(const std::string& name) const
 {
 	std::map<std::string, Vector4>::const_iterator it = vector4Map.find(name);
 
@@ -58,7 +44,7 @@ Vector4 MappedValues::getVector4(const std::string& name)
 	return Vector4(0, 0, 0, 0);
 }
 
-float MappedValues::getFloat(const std::string& name)
+float MappedValues::getFloat(const std::string& name) const
 {
 	std::map<std::string, float>::const_iterator it = floatMap.find(name);
 
@@ -70,9 +56,9 @@ float MappedValues::getFloat(const std::string& name)
 	return 0.0f;
 }
 
-Texture* MappedValues::getTexture(const std::string& name) const
+const Texture& MappedValues::getTexture(const std::string& name) const
 {
-	std::map<std::string, Texture*>::const_iterator it = textureMap.find(name);
+	std::map<std::string, Texture>::const_iterator it = textureMap.find(name);
 
 	if(it != textureMap.end())
 	{

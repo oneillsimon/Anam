@@ -2,8 +2,9 @@
 #include "../Components/GameComponent.h"
 #include "GameObject.h"
 
-GameObject::GameObject()
+GameObject::GameObject(const Vector3& position, const Quaternion& rotation, float scale)
 {
+	m_transform = Transform(position, rotation, scale);
 	m_coreEngine = 0;
 }
 
@@ -30,7 +31,7 @@ GameObject::~GameObject()
 GameObject* GameObject::addChild(GameObject* child)
 {
 	m_children.push_back(child);
-	child->getTransform().setParent(&m_transform);
+	child->getTransform()->setParent(&m_transform);
 	child->setEngine(m_coreEngine);
 	return this;
 }
@@ -42,13 +43,13 @@ GameObject* GameObject::addComponent(GameComponent* component)
 	return this;
 }
 
-void GameObject::inputAll(float delta)
+void GameObject::processInputAll(const Input& input, float delta)
 {
-	input(delta);
+	processInput(input, delta);
 
 	for(unsigned int i = 0; i < m_children.size(); i++)
 	{
-		m_children[i]->inputAll(delta);
+		m_children[i]->processInputAll(input, delta);
 	}
 }
 
@@ -62,23 +63,23 @@ void GameObject::updateAll(float delta)
 	}
 }
 
-void GameObject::renderAll(Shader* shader, RenderingEngine* renderingEgine)
+void GameObject::renderAll(const Shader& shader, const RenderingEngine& renderingEgine, const Camera& camera) const
 {
-	render(shader, renderingEgine);
+	render(shader, renderingEgine, camera);
 
 	for(unsigned int i = 0; i < m_children.size(); i++)
 	{
-		m_children[i]->renderAll(shader, renderingEgine);
+		m_children[i]->renderAll(shader, renderingEgine, camera);
 	}
 }
 
-void GameObject::input(float delta)
+void GameObject::processInput(const Input& input, float delta)
 {
 	m_transform.update();
 
 	for(unsigned int i = 0; i < m_components.size(); i++)
 	{
-		m_components[i]->input(delta);
+		m_components[i]->processInput(input, delta);
 	}
 }
 
@@ -90,11 +91,11 @@ void GameObject::update(float delta)
 	}
 }
 
-void GameObject::render(Shader* shader, RenderingEngine* renderingEngine)
+void GameObject::render(const Shader& shader, const RenderingEngine& renderingEngine, const Camera& camera) const
 {
 	for(unsigned int i = 0; i < m_components.size(); i++)
 	{
-		m_components[i]->render(shader, renderingEngine);
+		m_components[i]->render(shader, renderingEngine, camera);
 	}
 }
 
@@ -112,9 +113,9 @@ std::vector<GameObject*> GameObject::getAllAttached()
 	return result;
 }
 
-Transform& GameObject::getTransform()
+Transform* GameObject::getTransform()
 {
-	return m_transform;
+	return &m_transform;
 }
 
 void GameObject::setEngine(CoreEngine* engine)

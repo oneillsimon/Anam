@@ -5,39 +5,264 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
-#include "OBJLoader.h"
 #include "Mesh.h"
 
 std::map<std::string, MeshData*>Mesh::resourceMap;
 
-MeshData::MeshData(int indexSize) : ReferenceCounter()
+IndexedModel::IndexedModel(const std::vector<unsigned int> indices, std::vector<Vector3> positions, std::vector<Vector2> texCoords, std::vector<Vector3> normals, std::vector<Vector3> tangents)
 {
-	glGenBuffers(1, &vbo);
-	glGenBuffers(1, &ibo);
-	size = indexSize;
+	m_indices = indices;
+	m_positions = positions;
+	m_texCoords = texCoords;
+	m_normals = normals;
+	m_tangents = tangents;
+}
+
+bool IndexedModel::isValid() const
+{
+	return m_positions.size() == m_texCoords.size() &&
+		   m_texCoords.size() == m_normals.size() &&
+		   m_normals.size() == m_tangents.size();
+}
+
+void IndexedModel::addVertex(const Vector3& v)
+{
+	m_positions.push_back(v);
+}
+
+void IndexedModel::addVertex(int x, int y, int z)
+{
+	addVertex(Vector3((float)x, (float)y, (float)z));
+}
+
+void IndexedModel::addTexCoord(const Vector2& v)
+{
+	m_texCoords.push_back(v);
+}
+
+void IndexedModel::addTexCoord(int x, int y)
+{
+	addTexCoord(Vector2((float)x, (float)y));
+}
+
+void IndexedModel::addNormal(const Vector3& v)
+{
+	m_normals.push_back(v);
+}
+
+void IndexedModel::addNormal(int x, int y, int z)
+{
+	addNormal(Vector3((float)x, (float)y, (float)z));
+}
+
+void IndexedModel::addTangent(const Vector3& v)
+{
+	m_tangents.push_back(v);
+}
+
+void IndexedModel::addTangent(int x, int y, int z)
+{
+	addTangent(Vector3((float)x, (float)y, (float)z));
+}
+
+IndexedModel IndexedModel::finalize()
+{
+	if(isValid())
+	{
+		return *this;
+	}
+
+	if(m_texCoords.size() == 0)
+	{
+		for(unsigned int i = 0; i < m_positions.size(); i++)
+		{
+			m_texCoords.push_back(Vector2::ZERO);
+		}
+	}
+
+	if(m_normals.size() == 0)
+	{
+		calculateNormals();
+	}
+
+	if(m_tangents.size() == 0)
+	{
+		calculateTangents();
+	}
+
+	return *this;
+}
+
+void IndexedModel::addFace(unsigned int vertexIndex0, unsigned int vertexIndex1, unsigned int vertexIndex2)
+{
+	m_indices.push_back(vertexIndex0);
+	m_indices.push_back(vertexIndex1);
+	m_indices.push_back(vertexIndex2);
+}
+
+void IndexedModel::calculateNormals()
+{
+	m_normals.clear();
+	m_normals.reserve(m_positions.size());
+
+	for(unsigned int i = 0; i < m_positions.size(); i++)
+	{
+		m_normals.push_back(Vector3::ZERO);
+	}
+
+	for(unsigned int i = 0; i < m_indices.size(); i += 3)
+	{
+		int i0 = m_indices[i];
+		int i1 = m_indices[i + 1];
+		int i2 = m_indices[i + 2];
+
+		Vector3 v1 = m_positions[i1] - m_positions[i0];
+		Vector3 v2 = m_positions[i2] - m_positions[i0];
+
+		Vector3 normal = v1.cross(v2).normalised();
+
+		m_normals[i0] = m_normals[i0] + normal;
+		m_normals[i1] = m_normals[i1] + normal;
+		m_normals[i2] = m_normals[i2] + normal;
+	}
+
+	for(unsigned int i = 0; i < m_normals.size(); i++)
+	{
+		m_normals[i] = m_normals[i].normalised();
+	}
+}
+
+void IndexedModel::calculateTangents()
+{
+	m_tangents.clear();
+	m_tangents.reserve(m_positions.size());
+
+	for(unsigned int i = 0; i < m_positions.size(); i++)
+	{
+		m_tangents.push_back(Vector3::ZERO);
+	}
+
+	for(unsigned int i = 0; i < m_indices.size(); i += 3)
+	{
+		int i0 = m_indices[i];
+		int i1 = m_indices[i + 1];
+		int i2 = m_indices[i + 2];
+
+		Vector3 edge1 = m_positions[i1] - m_positions[i0];
+		Vector3 edge2 = m_positions[i2] - m_positions[i0];
+
+		float deltaU1 = m_texCoords[i2].getX() - m_texCoords[i0].getX();
+		float deltaU2 = m_texCoords[i2].getX() - m_texCoords[i0].getX();
+		float deltaV1 = m_texCoords[i2].getY() - m_texCoords[i0].getY();
+		float deltaV2 = m_texCoords[i2].getY() - m_texCoords[i0].getY();
+
+		float dividend = (deltaU1 * deltaV2 - deltaU2 * deltaV1);
+
+		float f = 0;
+
+		if(dividend == 0.0f)
+		{
+			f = 0.0f;
+		}
+		else
+		{
+			f = 1.0f / dividend;
+		}
+
+		Vector3 tangent = Vector3::ZERO;
+
+		tangent.setX(f * (deltaV2 * edge1.getX() - deltaV1 * edge2.getX()));
+		tangent.setY(f * (deltaV2 * edge1.getY() - deltaV1 * edge2.getY()));
+		tangent.setZ(f * (deltaV2 * edge1.getZ() - deltaV1 * edge2.getZ()));
+
+		m_tangents[i0] += tangent;
+		m_tangents[i1] += tangent;
+		m_tangents[i2] += tangent;
+	}
+
+	for(unsigned int i = 0; i < m_tangents.size(); i++)
+	{
+		m_tangents[i] = m_tangents[i].normalised();
+	}
+}
+
+const std::vector<unsigned int>& IndexedModel::getIndices() const
+{
+	return m_indices;
+}
+
+const std::vector<Vector3>& IndexedModel::getPositions() const
+{
+	return m_positions;
+}
+
+const std::vector<Vector2>& IndexedModel::getTexCoords() const
+{
+	return m_texCoords;
+}
+
+const std::vector<Vector3>& IndexedModel::getNormals() const
+{
+	return m_normals;
+}
+
+const std::vector<Vector3>& IndexedModel::getTangents() const
+{
+	return m_tangents;
+}
+
+MeshData::MeshData(const IndexedModel& model) :
+	ReferenceCounter(),
+	m_drawCount(model.getIndices().size())
+{
+	if(!model.isValid())
+	{
+		fprintf(stderr, "Invalid meshdata");
+	}
+
+	glGenVertexArrays(1, &m_vertexArrayObject);
+	glBindVertexArray(m_vertexArrayObject);
+	//glGenVertexArrays(1, &m_vertexArrayObject);
+	//glBindVertexArray(m_vertexArrayObject);
+
+	glGenBuffers(NUM_BUFFERS, m_vertexArrayBuffers);
+	glBindBuffer(GL_ARRAY_BUFFER, m_vertexArrayBuffers[POSITION_VB]);
+	glBufferData(GL_ARRAY_BUFFER, model.getPositions().size() * sizeof(model.getPositions()[0]), &model.getPositions()[0], GL_STATIC_DRAW);
+
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, m_vertexArrayBuffers[TEXTCOORD_VB]);
+	glBufferData(GL_ARRAY_BUFFER, model.getTexCoords().size() * sizeof(model.getTexCoords()[0]), &model.getTexCoords()[0], GL_STATIC_DRAW);
+
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, m_vertexArrayBuffers[NORMAL_VB]);
+	glBufferData(GL_ARRAY_BUFFER, model.getNormals().size() * sizeof(model.getNormals()[0]), &model.getNormals()[0], GL_STATIC_DRAW);
+
+	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, m_vertexArrayBuffers[TANGENT_VB]);
+	glBufferData(GL_ARRAY_BUFFER, model.getTangents().size() * sizeof(model.getTangents()[0]), &model.getTangents()[0], GL_STATIC_DRAW);
+
+	glEnableVertexAttribArray(3);
+	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_vertexArrayBuffers[INDEX_VB]);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, model.getIndices().size() * sizeof(model.getIndices()[0]), &model.getIndices()[0], GL_STATIC_DRAW);
 }
 
 MeshData::~MeshData()
 {
-	if(vbo)
-	{
-		glDeleteBuffers(1, &vbo);
-	}
-
-	if(ibo)
-	{
-		glDeleteBuffers(1, &ibo);
-	}
+	glDeleteVertexArrays(1, &m_vertexArrayObject);
 }
 
-Mesh::Mesh()
+void MeshData::draw() const
 {
-}
-
-Mesh::Mesh(Vertex* vertices, int vertSize, int* indices, int indexSize, bool calcNormals)
-{
-	m_fileName = "";
-	initMesh(vertices, vertSize, indices, indexSize, calcNormals);
+	glBindVertexArray(m_vertexArrayObject);
+	glDrawElements(GL_TRIANGLES, m_drawCount, GL_UNSIGNED_INT, 0);
 }
 
 Mesh::Mesh(const std::string& filename)
@@ -56,7 +281,8 @@ Mesh::Mesh(const std::string& filename)
 	{
 		Assimp::Importer importer;
 
-		const aiScene* scene = importer.ReadFile(filename.c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
+		const aiScene* scene = importer.ReadFile(("./res/models/" + filename).c_str(),
+												 aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
 
 		if(!scene)
 		{
@@ -65,34 +291,64 @@ Mesh::Mesh(const std::string& filename)
 
 		const aiMesh* model = scene->mMeshes[0];
 
-		std::vector<Vertex> vertices;
-		std::vector<int> indices;
+		std::vector<unsigned int> indices;
+		std::vector<Vector3> positions;
+		std::vector<Vector2> texCoords;
+		std::vector<Vector3> normals;
+		std::vector<Vector3> tangents;
 
 		const aiVector3D aiZeroVector(0.0f, 0.0f, 0.0f);
 
 		for(unsigned int i = 0; i < model->mNumVertices; i++)
 		{
-			const aiVector3D* pos = &(model->mVertices[i]);
-			const aiVector3D* nor = &(model->mNormals[i]);
-			const aiVector3D* tCor = model->HasTextureCoords(0) ? &(model->mTextureCoords[0][i]) : &aiZeroVector;
-			const aiVector3D* tang = &(model->mTangents[i]);
+			const aiVector3D pos = model->mVertices[i];
+			const aiVector3D normal = model->mNormals[i];
+			const aiVector3D texCoord = model->HasTextureCoords(0) ? model->mTextureCoords[0][i] : aiZeroVector;
+			const aiVector3D tangent = model->mTangents[i];
 
-			Vertex vertex(Vector3(pos->x, pos->y, pos->z), Vector2(tCor->x, tCor->y), Vector3(nor->x, nor->y, nor->z), Vector3(tang->x, tang->y, tang->z));
-			vertices.push_back(vertex);
+			positions.push_back(Vector3(pos.x, pos.y, pos.z));
+			texCoords.push_back(Vector2(texCoord.x, texCoord.y));
+			normals.push_back(Vector3(normal.x, normal.y, normal.z));
+			tangents.push_back(Vector3(tangent.x, tangent.y, tangent.z));
 		}
 
 		for(unsigned int i = 0; i < model->mNumFaces; i++)
 		{
 			const aiFace& face = model->mFaces[i];
 			assert(face.mNumIndices == 3);
+
 			indices.push_back(face.mIndices[0]);
 			indices.push_back(face.mIndices[1]);
 			indices.push_back(face.mIndices[2]);
 		}
 
-		initMesh(&vertices[0], vertices.size(), (int*)&indices[0], indices.size(), false);
-		resourceMap.insert(std::pair<std::string, MeshData*>(m_fileName, m_meshData));
+		m_meshData = new MeshData(IndexedModel(indices, positions, texCoords, normals, tangents));
+		resourceMap.insert(std::pair<std::string, MeshData*>(filename, m_meshData));
 	}
+}
+
+Mesh::Mesh(const std::string& meshName, const IndexedModel& model)
+{
+	m_fileName = meshName;
+
+	std::map<std::string, MeshData*>::const_iterator it = resourceMap.find(meshName);
+
+	if(it != resourceMap.end())
+	{
+		fprintf(stderr, "Error adding Mesh, it already exists");
+	}
+	else
+	{
+		m_meshData = new MeshData(model);
+		resourceMap.insert(std::pair<std::string, MeshData*>(meshName, m_meshData));
+	}
+}
+
+Mesh::Mesh(const Mesh& mesh)
+{
+	m_fileName = mesh.m_fileName;
+	m_meshData = mesh.m_meshData;
+	m_meshData->addReference();
 }
 
 Mesh::~Mesh()
@@ -108,84 +364,7 @@ Mesh::~Mesh()
 	}
 }
 
-void Mesh::initMesh(Vertex* vertices, int vertSize, int* indices, int indexSize, bool calcNormals)
+void Mesh::draw() const
 {
-	m_meshData = new MeshData(indexSize);
-
-	if(calcNormals)
-	{
-		calculateNormals(vertices, vertSize, indices, indexSize);
-	}
-
-	glBindBuffer(GL_ARRAY_BUFFER, m_meshData->getVbo());
-	glBufferData(GL_ARRAY_BUFFER, vertSize * sizeof(Vertex), vertices, GL_STATIC_DRAW);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_meshData->getIbo());
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexSize * sizeof(int), indices, GL_STATIC_DRAW);
-}
-
-void Mesh::draw()
-{
-	draw(GL_TRIANGLES);
-}
-
-void Mesh::draw(int gl_primitives)
-{
-	glEnableVertexAttribArray(0);
-	glEnableVertexAttribArray(1);
-	glEnableVertexAttribArray(2);
-	glEnableVertexAttribArray(3);
-
-	glBindBuffer(GL_ARRAY_BUFFER, m_meshData->getVbo());
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)sizeof(Vector3));
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(sizeof(Vector3) + sizeof(Vector2)));
-	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(sizeof(Vector3) + sizeof(Vector2) + sizeof(Vector3)));
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_meshData->getIbo());
-	glDrawElements(gl_primitives, m_meshData->getSize(), GL_UNSIGNED_INT, 0);
-
-	glDisableVertexAttribArray(0);
-	glDisableVertexAttribArray(1);
-	glDisableVertexAttribArray(2);
-	glDisableVertexAttribArray(3);
-}
-
-void Mesh::calculateNormals(Vertex* vertices, int vertSize, int* indices, int indexSize)
-{
-	for(int i = 0; i < indexSize; i += 3)
-	{
-		int i0 = indices[i];
-		int i1 = indices[i + 1];
-		int i2 = indices[i + 2];
-
-		Vector3 v1 = vertices[i1].getPosition() - vertices[i0].getPosition();
-		Vector3 v2 = vertices[i2].getPosition() - vertices[i0].getPosition();
-
-		Vector3 normal = v1.cross(v2).normalised();
-
-		vertices[i0].setNormal(vertices[i0].getNormal() + normal);
-		vertices[i1].setNormal(vertices[i1].getNormal() + normal);
-		vertices[i2].setNormal(vertices[i2].getNormal() + normal);
-	}
-
-	for(int i = 0; i < vertSize; i++)
-	{
-		vertices[i].setNormal(vertices[i].getNormal().normalised());
-	}
-}
-
-int MeshData::getVbo()
-{
-	return vbo;
-}
-
-int MeshData::getIbo()
-{
-	return ibo;
-}
-
-int MeshData::getSize()
-{
-	return size;
+	m_meshData->draw();
 }

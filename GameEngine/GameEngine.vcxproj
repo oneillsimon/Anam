@@ -28,15 +28,10 @@
     <ClInclude Include="Engine\Core\SDLWrapper.h" />
     <ClInclude Include="Engine\Core\GameObject.h" />
     <ClInclude Include="Engine\GameEngine.h" />
-    <ClInclude Include="Engine\Physics\Particle.h" />
-    <ClInclude Include="Engine\Physics\PContacts.h" />
-    <ClInclude Include="Engine\Physics\PFGenerator.h" />
     <ClInclude Include="Engine\Rendering\Colour.h" />
-    <ClInclude Include="Engine\Rendering\LineMesh.h" />
     <ClInclude Include="Engine\Rendering\MappedValues.h" />
     <ClInclude Include="Engine\Rendering\Material.h" />
     <ClInclude Include="Engine\Rendering\Mesh.h" />
-    <ClInclude Include="Engine\Rendering\OBJLoader.h" />
     <ClInclude Include="Engine\Rendering\ReferenceCounter.h" />
     <ClInclude Include="Engine\Rendering\RenderingEngine.h" />
     <ClInclude Include="Engine\Rendering\RenderUtil.h" />
@@ -64,15 +59,10 @@
     <ClCompile Include="Engine\Core\SDLWrapper.cpp" />
     <ClCompile Include="Engine\Core\GameObject.cpp" />
     <ClCompile Include="Engine\Core\Vector4.cpp" />
-    <ClCompile Include="Engine\Physics\Particle.cpp" />
-    <ClCompile Include="Engine\Physics\PContacts.cpp" />
-    <ClCompile Include="Engine\Physics\PFGenerator.cpp" />
     <ClCompile Include="Engine\Rendering\Colour.cpp" />
-    <ClCompile Include="Engine\Rendering\LineMesh.cpp" />
     <ClCompile Include="Engine\Rendering\MappedValues.cpp" />
     <ClCompile Include="Engine\Rendering\Material.cpp" />
     <ClCompile Include="Engine\Rendering\Mesh.cpp" />
-    <ClCompile Include="Engine\Rendering\OBJLoader.cpp" />
     <ClCompile Include="Engine\Rendering\ReferenceCounter.cpp" />
     <ClCompile Include="Engine\Rendering\RenderingEngine.cpp" />
     <ClCompile Include="Engine\Rendering\RenderUtil.cpp" />
@@ -130,6 +120,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;opengl32.lib;glu32.lib;glew32.lib;glew32mx.lib;glew32mxs.lib;glew32s.lib;assimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>NotSet</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

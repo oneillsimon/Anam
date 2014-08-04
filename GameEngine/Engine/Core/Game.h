@@ -14,13 +14,13 @@ protected:
 	void addToScene(GameObject* object);
 
 public:
-	Game();
-	~Game();
+	Game() {};
+	virtual ~Game() {};
 
-	virtual void init();
-	virtual void input(float delta);
+	virtual void init(const Window& window) {};
+	virtual void processInput(const Input& input, float delta);
 	virtual void update(float delta);
-	virtual void render(RenderingEngine* renderingEngine);
+	virtual void render(RenderingEngine* renderingEngine, const Camera& camera);
 
 	GameObject& getRoot();
 

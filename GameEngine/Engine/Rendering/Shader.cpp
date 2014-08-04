@@ -3,8 +3,13 @@
 #include <iostream>
 #include <cstdlib>
 #include <GL\glew.h>
+#include <cstring>
+#include <sstream>
+
 #include "../Core/Util.h"
 #include "Shader.h"
+#include "../Components/Lighting.h"
+#include "RenderingEngine.h"
 
 std::map<std::string, ShaderData*> Shader::m_resourceMap;
 
@@ -82,6 +87,13 @@ Shader::Shader(const std::string& fileName)
 	}
 }
 
+Shader::Shader(const Shader& shader) :
+	m_shaderData(shader.m_shaderData),
+	m_fileName(shader.m_fileName)
+{
+	m_shaderData->addReference();
+}
+
 Shader::~Shader()
 {
 	if(m_shaderData && m_shaderData->removeReference())
@@ -95,16 +107,15 @@ Shader::~Shader()
 	}
 }
 
-void Shader::bind()
+void Shader::bind() const
 {
 	glUseProgram(m_shaderData->getProgram());
 }
 
-void Shader::updateUniforms(const Transform& transform, Material& material, RenderingEngine* renderingEngine)
+void Shader::updateUniforms(const Transform& transform, const Material& material, const RenderingEngine& renderingEngine, const Camera& camera) const
 {
 	Matrix4 worldMatrix = transform.getTransformation();
-	Matrix4 viewProjection = renderingEngine->getMainCamera().getViewProjection();
-	Matrix4 projectedMatrix = renderingEngine->getMainCamera().getViewProjection() * worldMatrix;
+	Matrix4 projectedMatrix = camera.getViewProjection() * worldMatrix;
 
 	for(unsigned int i = 0; i < m_shaderData->getUniformNames().size(); i++)
 	{
@@ -117,43 +128,43 @@ void Shader::updateUniforms(const Transform& transform, Material& material, Rend
 
 			if(unprefixedName == "lightMatrix")
 			{
-				setUniform(uniformName, renderingEngine->getLightMatrix() * worldMatrix);
+				setUniform(uniformName, renderingEngine.getLightMatrix() * worldMatrix);
 			}
 			else if(uniformType == "sampler2D")
 			{
-				int samplerSlot = renderingEngine->getSamplerSlot(unprefixedName);
-				renderingEngine->getTexture(unprefixedName)->bind(samplerSlot);
+				int samplerSlot = renderingEngine.getSamplerSlot(unprefixedName);
+				renderingEngine.getTexture(unprefixedName).bind(samplerSlot);
 				setUniform(uniformName, samplerSlot);
 			}
 			else if(uniformType == "vec3")
 			{
-				setUniform(uniformName, renderingEngine->getVector3(unprefixedName));
+				setUniform(uniformName, renderingEngine.getVector3(unprefixedName));
 			}
 			else if(uniformType == "float")
 			{
-				setUniform(uniformName, renderingEngine->getFloat(unprefixedName));
+				setUniform(uniformName, renderingEngine.getFloat(unprefixedName));
 			}
 			else if(uniformType == "DirectionalLight")
 			{
-				setUniformDirectionalLight(uniformName, *(DirectionalLight*)renderingEngine->getActiveLight());
+				setUniformDirectionalLight(uniformName, *(const DirectionalLight*)&renderingEngine.getActiveLight());
 			}
 			else if(uniformType == "PointLight")
 			{
-				setUniformPointLight(uniformName, *(PointLight*)renderingEngine->getActiveLight());
+				setUniformPointLight(uniformName, *(const PointLight*)&renderingEngine.getActiveLight());
 			}
 			else if(uniformType == "SpotLight")
 			{
-				setUniformSpotLight(uniformName, *(SpotLight*)renderingEngine->getActiveLight());
+				setUniformSpotLight(uniformName, *(const SpotLight*)&renderingEngine.getActiveLight());
 			}
 			else
 			{
-				renderingEngine->updateUniformStruct(transform, material, this, uniformName, uniformType);
+				renderingEngine.updateUniformStruct(transform, material, *this, uniformName, uniformType);
 			}
 		}
 		else if(uniformType == "sampler2D")
 		{
-			int samplerSlot = renderingEngine->getSamplerSlot(uniformName);
-			material.getTexture(uniformName)->bind(samplerSlot);
+			int samplerSlot = renderingEngine.getSamplerSlot(uniformName);
+			material.getTexture(uniformName).bind(samplerSlot);
 			setUniform(uniformName, samplerSlot);
 		}
 		else if(uniformName.substr(0, 2) == "T_")
@@ -175,7 +186,7 @@ void Shader::updateUniforms(const Transform& transform, Material& material, Rend
 		{
 			if(uniformName == "C_eyePos")
 			{
-				setUniform(uniformName, renderingEngine->getMainCamera().getTransform().getTransformedPosition());
+				setUniform(uniformName, camera.getTransform().getTransformedPosition());
 			}
 			else
 			{
@@ -200,43 +211,39 @@ void Shader::updateUniforms(const Transform& transform, Material& material, Rend
 	}
 }
 
-void Shader::setUniform(const std::string& uniformName, int value)
+void Shader::setUniform(const std::string& uniformName, int value) const
 {
 	glUniform1i(m_shaderData->getUniformMap().at(uniformName), value);
 }
 
-void Shader::setUniform(const std::string& uniformName, float value)
+void Shader::setUniform(const std::string& uniformName, float value) const
 {
 	glUniform1f(m_shaderData->getUniformMap().at(uniformName), value);
 }
 
-void Shader::setUniform(const std::string& uniformName, const Matrix4& value)
+void Shader::setUniform(const std::string& uniformName, const Matrix4& value) const
 {
 	glUniformMatrix4fv(m_shaderData->getUniformMap().at(uniformName), 1, GL_FALSE, &(value[0][0]));
 }
 
-void Shader::setUniform(const std::string& uniformName, const Vector3& value)
+void Shader::setUniform(const std::string& uniformName, const Vector3& value) const
 {
 	glUniform3f(m_shaderData->getUniformMap().at(uniformName), value.getX(), value.getY(), value.getZ());
 }
 
-void Shader::setUniform(const std::string& uniformName, const Vector4& value)
+void Shader::setUniform(const std::string& uniformName, const Vector4& value) const
 {
 	glUniform4f(m_shaderData->getUniformMap().at(uniformName), value.getX(), value.getY(), value.getZ(), value.getW());
 }
 
-void Shader::setUniformDirectionalLight(const std::string& uniformName, const DirectionalLight& light)
+void Shader::setUniformDirectionalLight(const std::string& uniformName, const DirectionalLight& light) const
 {
-	Vector3 dir = light.getTransform().getTransformedRotation().getForward();
-	Vector3 col = light.getColour().getRGB();
-	float f = light.getIntensity();
-	int i = 0;
 	setUniform(uniformName + ".direction", light.getTransform().getTransformedRotation().getForward());
 	setUniform(uniformName + ".base.color", light.getColour().getRGB());
 	setUniform(uniformName + ".base.intensity", light.getIntensity());
 }
 
-void Shader::setUniformPointLight(const std::string& uniformName, const PointLight& light)
+void Shader::setUniformPointLight(const std::string& uniformName, const PointLight& light) const
 {
 	setUniform(uniformName + ".base.color", light.getColour().getRGB());
 	setUniform(uniformName + ".base.intensity", light.getIntensity());
@@ -247,7 +254,7 @@ void Shader::setUniformPointLight(const std::string& uniformName, const PointLig
 	setUniform(uniformName + ".range", light.getRange());
 }
 
-void Shader::setUniformSpotLight(const std::string& uniformName, const SpotLight& light)
+void Shader::setUniformSpotLight(const std::string& uniformName, const SpotLight& light) const
 {
 	setUniform(uniformName + ".pointLight.base.color", light.getColour().getRGB());
 	setUniform(uniformName + ".pointLight.base.intensity", light.getIntensity());
@@ -414,6 +421,11 @@ void ShaderData::addUniform(const std::string& uniformName, const std::string& u
 	assert(location != GL_INVALID_VALUE);
 
 	m_uniformMap.insert(std::pair<std::string, unsigned int>(uniformName, location));
+
+	if(location > 100)
+	{
+		int brl = 0;
+	}
 }
 
 void ShaderData::compileShader()
@@ -484,7 +496,7 @@ static std::string loadShader(const std::string& fileName)
 	}
 	else
 	{
-		fprintf(stderr, "Unable to load shader: %s\n", fileName);
+		std::cout << "Unable to load shader " << fileName << std::endl;
 	}
 
 	return output;

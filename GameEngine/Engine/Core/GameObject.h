@@ -3,11 +3,13 @@
 
 #include <vector>
 #include "Transform.h"
+#include "../Core/Input.h"
 
 class CoreEngine;
 class GameComponent;
 class Shader;
 class RenderingEngine;
+class Camera;
 
 class GameObject
 {
@@ -18,24 +20,24 @@ private:
 	std::vector<GameComponent*> m_components;
 
 protected:
-	virtual void input(float delta);
+	virtual void processInput(const Input& input, float delta);
 	virtual void update(float delta);
-	virtual void render(Shader* shader, RenderingEngine* renderingEngine);
+	virtual void render(const Shader& shader, const RenderingEngine& renderingEngine, const Camera& camera) const;
 
 public:
-	GameObject();
+	GameObject(const Vector3& position = Vector3::ZERO, const Quaternion& rotation = Quaternion(0, 0, 0, 1), float scale = 1.0f);
 	~GameObject();
 
 	GameObject* addChild(GameObject* child);
 	GameObject* addComponent(GameComponent* component);
 
-	void inputAll(float delta);
+	void processInputAll(const Input& input, float delta);
 	void updateAll(float delta);
-	void renderAll(Shader* shader, RenderingEngine* renderingEngine);
+	void renderAll(const Shader& shader, const RenderingEngine& renderingEngine, const Camera& camera) const;
 
 	std::vector<GameObject*> getAllAttached();
 
-	Transform& getTransform();
+	Transform* getTransform();
 
 	void setEngine(CoreEngine* engine);
 };

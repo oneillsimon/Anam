@@ -3,8 +3,30 @@
 
 #include "Math3D.h"
 
+#define NUM_KEYS 512
+#define NUM_MOUSE_BUTTONS 256
+
+class Window;
+
 class Input
 {
+	//static const int NUM_MOUSE_BUTTONS = 256;
+	//static const int NUM_KEYS = 512;
+
+private:
+	bool m_inputs[NUM_KEYS];
+	bool m_downKeys[NUM_KEYS];
+	bool m_upKeys[NUM_KEYS];
+
+	bool m_mouseInputs[NUM_MOUSE_BUTTONS];
+	bool m_downMouse[NUM_MOUSE_BUTTONS];
+	bool m_upMouse[NUM_MOUSE_BUTTONS];
+
+	int m_mouseX;
+	int m_mouseY;
+
+	Window* m_window;
+
 public:
 	enum
 	{
@@ -280,20 +302,32 @@ public:
 		KEY_APP2 = 284,
 	};
 
-	static void update();
+	Input(Window* window = 0);
 
-	static bool getKey(int keyCode);
-	static bool getKeyDown(int keyCode);
-	static bool getKeyUp(int keyCode);
+	bool getKey(int keyCode) const;
+	bool getKeyDown(int keyCode) const;
+	bool getKeyUp(int keyCode) const;
 
-	static bool getMouse(int button);
-	static bool getMouseDown(int button);
-	static bool getMouseUp(int button);
+	bool getMouse(int button) const;
+	bool getMouseDown(int button) const;
+	bool getMouseUp(int button) const;
 
-	static Vector2 getMousePosition();
+	Vector2 getMousePosition() const;
 
-	static void setMousePosition(Vector2 position);
-	static void setCursor(bool value);
+	void setKey(int keyCode, bool value);
+	void setKeyDown(int keyCode, bool value);
+	void setKeyUp(int keyCode, bool value);
+
+	void setMouse(int mouseButton, bool value);
+	void setMouseDown(int mouseButton, bool value);
+	void setMouseUp(int mouseButton, bool value);
+
+	void setMousePosition(Vector2 position) const;
+
+	void setMouseX(int x);
+	void setMouseY(int y);
+
+	void setCursor(bool value) const;
 };
 
 #endif

@@ -1,5 +1,4 @@
 #version 120
-
 attribute vec3 position;
 attribute vec2 texCoord;
 attribute vec3 normal;
@@ -18,11 +17,10 @@ void main()
     texCoord0 = texCoord; 
     worldPos0 = (T_model * vec4(position, 1.0)).xyz;
     
-	vec3 n = normalize((T_model * vec4(normal, 0.0)).xyz);
-	vec3 t = normalize((T_model * vec4(tangent, 0.0)).xyz);
-
-	t = normalize(t - dot(t, n) * n);
-
-	vec3 biTangent = cross(t, n);
-	tbnMatrix = mat3(t, biTangent, n);
+    vec3 n = normalize((T_model * vec4(normal, 0.0)).xyz);
+    vec3 t = normalize((T_model * vec4(tangent, 0.0)).xyz);
+    t = normalize(t - dot(t, n) * n);
+    
+    vec3 biTangent = cross(t, n);
+    tbnMatrix = mat3(t, biTangent, n);
 }

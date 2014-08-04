@@ -177,9 +177,8 @@ private:
 	float w;
 
 public:
-	Quaternion();
+	Quaternion(float x = 0.0f, float y = 0.0f, float z = 0.0f, float w = 1.0f);
 	Quaternion(const Vector3& axis, float angle);
-	Quaternion(float x, float y, float z, float w);
 	Quaternion(Matrix4 rotation);
 	~Quaternion();
 

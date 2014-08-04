@@ -9,27 +9,32 @@ class Game;
 class CoreEngine
 {
 private:
-	bool isRunning;
-	int width;
-	int height;
-	double frameRate;
-	Game* game;
-	RenderingEngine* renderingEngine;
+	bool m_isRunning;
+	int m_width;
+	int m_height;
+	double m_frameRate;
+	Game* m_game;
+	RenderingEngine* m_renderingEngine;
+	Window* m_window;
+	const Camera* m_mainCamera;
 
 	void run();
+	void run2();
 
 	void operator =(const CoreEngine& coreEgine) {};
 
 public:
-	CoreEngine();
 	CoreEngine(int width, int height, double frameRate, Game* game);
-	~CoreEngine();
+	virtual ~CoreEngine();
 
-	void createWindow(std::string title);
+	void createWindow(const std::string& title);
+
 	void start();
 	void stop();
 
 	RenderingEngine* getRenderingEngine();
+
+	void setCamera(const Camera& camera);
 };
 
 #endif

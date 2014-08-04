@@ -3,24 +3,25 @@
 
 #include "../Rendering/Mesh.h"
 #include "../Rendering/Material.h"
-#include "../Rendering/Colour.h"
+#include "../Rendering/Shader.h"
 #include "GameComponent.h"
 
 class MeshRenderer : public GameComponent
 {
 private:
-	Mesh* m_mesh;
-	Material* m_material;
-	Colour* m_colour;
+	Mesh m_mesh;
+	Material m_material;
 
 public:
-	MeshRenderer();
-	MeshRenderer(Mesh* mesh, Material* material);
-	MeshRenderer(Mesh* mesh, Colour* colour);
-	MeshRenderer(Mesh* mesh, Material* material, Colour* colour);
-	~MeshRenderer();
+	MeshRenderer(const Mesh& mesh, const Material& material) :
+		m_mesh(mesh), m_material(material) {};
 
-	virtual void render(Shader* shader, RenderingEngine* renderingEngine);
+	virtual void render(const Shader& shader, const  RenderingEngine& renderingEngine, const Camera& camera) const
+	{
+		shader.bind();
+		shader.updateUniforms(getTransform(), m_material, renderingEngine, camera);
+		m_mesh.draw();
+	}
 };
 
 #endif

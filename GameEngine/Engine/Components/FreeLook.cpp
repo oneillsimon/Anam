@@ -4,50 +4,50 @@
 
 bool mouseLocked = false;
 
-FreeLook::FreeLook(float sensitivity, int unlockMouseKey)
+FreeLook::FreeLook(const Vector2 windowCentre, float sensitivity, int unlockMouseKey)
 {
+	m_windowCentre = windowCentre;
 	m_sensitivity = sensitivity;
 	m_unlockMouseKey = unlockMouseKey;
 }
 
-void FreeLook::input(float delta)
+void FreeLook::processInput(const Input& input, float delta)
 {
-	if(Input::getKey(m_unlockMouseKey))
+	if(input.getKey(m_unlockMouseKey))
 	{
-		Input::setCursor(true);
+		input.setCursor(true);
 		mouseLocked = false;
 	}
 
 	if(mouseLocked)
 	{
-		Vector2 centrePosition = Vector2((float)(Window::getWidth() / 2), (float)(Window::getHeight() / 2));
-		Vector2 deltaPos = Input::getMousePosition() - centrePosition;
+		Vector2 delta = input.getMousePosition() - m_windowCentre;
 
-		bool rotX = deltaPos.getY() != 0;
-		bool rotY = deltaPos.getX() != 0;
+		bool rotY = delta.getX() != 0;
+		bool rotX = delta.getY() != 0;
 
 		if(rotY)
 		{
-			getTransform().rotate(Vector3(0, 1, 0), (float)GameMath::toRadians(deltaPos.getX() * m_sensitivity));
+			getTransform()->rotate(Vector3(0, 1, 0), GameMath::toRadians(delta.getX() * m_sensitivity));
 		}
 
 		if(rotX)
 		{
-			getTransform().rotate(getTransform().getRotation().getRight(), (float)GameMath::toRadians(deltaPos.getY() * m_sensitivity));
+			getTransform()->rotate(getTransform()->getRotation().getRight(), GameMath::toRadians(delta.getY() * m_sensitivity));
 		}
 
-		if(rotY || rotX)
+		if(rotX || rotY)
 		{
-			Input::setMousePosition(centrePosition);
-			Quaternion q = getTransform().getRotation().normalised();
+			input.setCursor(false);
+			input.setMousePosition(m_windowCentre);
+			mouseLocked = true;
 		}
 	}
 
-	if(Input::getMouseDown(Input::LEFT_MOUSE))
+	if(input.getMouseDown(Input::LEFT_MOUSE))
 	{
-		Vector2 centrePosition = Vector2((float)(Window::getWidth() / 2), (float)(Window::getHeight() / 2));
-		Input::setCursor(false);
-		Input::setMousePosition(centrePosition);
+		input.setCursor(false);
+		input.setMousePosition(m_windowCentre);
 		mouseLocked = true;
 	}
 }

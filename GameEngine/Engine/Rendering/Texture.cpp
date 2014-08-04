@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cassert>
 #include "stb_image.h"
-#include <GL/glew.h>
+#include "../Core/Math3D.h"
 #include "Texture.h"
 
 std::map<std::string, TextureData*> Texture::resourceMap;
@@ -139,38 +139,37 @@ void TextureData::initRenderTargets(GLenum* attachments)
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void TextureData::bind(int textureNum)
+void TextureData::bind(int textureNum) const
 {
 	glBindTexture(m_textureTarget, m_textureID[textureNum]);
 }
 
-void TextureData::bindAsRenderTarget()
+void TextureData::bindAsRenderTarget() const
 {
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_framebuffer);
 	glViewport(0, 0, m_width, m_height);
 }
 
-int TextureData::getWidth()
+int TextureData::getWidth() const
 {
 	return m_width;
 }
 
-int TextureData::getHeight()
+int TextureData::getHeight() const
 {
 	return m_height;
 }
 
 Texture::Texture(std::string fileName, GLenum textureTarget, GLfloat filter, GLenum internalFormat, GLenum basicFormat, bool clamp, GLenum attachment)
 {
-	this->fileName = fileName;
-	textureData = 0;
+	m_fileName = fileName;
 
 	std::map<std::string, TextureData*>::const_iterator it = resourceMap.find(fileName);
 
 	if(it != resourceMap.end())
 	{
-		textureData = it->second;
-		textureData->addReference();
+		m_textureData = it->second;
+		m_textureData->addReference();
 	}
 	else
 	{
@@ -184,41 +183,65 @@ Texture::Texture(std::string fileName, GLenum textureTarget, GLfloat filter, GLe
 
 		GLfloat i = GL_LINEAR_MIPMAP_LINEAR;
 		GLfloat j = filter;
-		textureData = new TextureData(textureTarget, x, y, 1, &data, &i, &internalFormat, &basicFormat, clamp, &attachment);
+		m_textureData = new TextureData(textureTarget, x, y, 1, &data, &i, &internalFormat, &basicFormat, clamp, &attachment);
 		stbi_image_free(data);
 
-		resourceMap.insert(std::pair<std::string, TextureData*>(fileName, textureData));
+		resourceMap.insert(std::pair<std::string, TextureData*>(fileName, m_textureData));
 	}
 }
 
 Texture::Texture(int width, int height, unsigned char* data, GLenum textureTarget, GLfloat filter, GLenum internalFormat, GLenum basicFormat, bool clamp, GLenum attachment)
 {
-	fileName = "";
-	textureData = new TextureData(textureTarget, width, height, 1, &data, &filter, &internalFormat, &basicFormat, clamp, &attachment);
+	m_fileName = "";
+	m_textureData = new TextureData(textureTarget, width, height, 1, &data, &filter, &internalFormat, &basicFormat, clamp, &attachment);
+}
+
+Texture::Texture(const Texture& texture) :
+	m_textureData(texture.m_textureData),
+	m_fileName(texture.m_fileName)
+{
+	m_textureData->addReference();
 }
 
 Texture::~Texture()
 {
+	if(m_textureData && m_textureData->removeReference())
+	{
+		if(m_fileName.length() > 0)
+		{
+			resourceMap.erase(m_fileName);
+		}
+
+		delete m_textureData;
+	}
 }
 
-void Texture::bind(int unit)
+void Texture::bind(int unit) const
 {
 	assert(unit >= 0 && unit < 31);
 	glActiveTexture(GL_TEXTURE0 + unit);
-	textureData->bind(0);
+	m_textureData->bind(0);
 }
 
-void Texture::bindAsRenderTarget()
+void Texture::bindAsRenderTarget() const
 {
-	textureData->bindAsRenderTarget();
+	m_textureData->bindAsRenderTarget();
 }
 
-int Texture::getWidth()
+int Texture::getWidth() const
 {
-	return textureData->getWidth();
+	return m_textureData->getWidth();
 }
 
-int Texture::getHeight()
+int Texture::getHeight() const
 {
-	return textureData->getHeight(); 
+	return m_textureData->getHeight(); 
+}
+
+void Texture::operator =(Texture t)
+{
+	char* temp[sizeof(Texture) / sizeof(char)];
+	memcpy(temp, this, sizeof(Texture));
+	memcpy(this, &t, sizeof(Texture));
+	memcpy(&t, temp, sizeof(Texture));
 }

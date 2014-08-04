@@ -1,4 +1,5 @@
-vec2 CalcParallaxTexCoord(sampler2D displacementMap, mat3 tbnMatrix, vec3 directionToEye, vec2 texCoords, float scale, float bias)
+
+vec2 CalcParallaxTexCoords(sampler2D displacementMap, mat3 tbnMatrix, vec3 directionToEye, vec2 texCoords, float scale, float bias)
 {
 	return texCoords.xy + (directionToEye * tbnMatrix).xy * (texture2D(displacementMap, texCoords.xy).r * scale + bias);
 }
@@ -10,57 +11,55 @@ float SampleShadowMap(sampler2D shadowMap, vec2 coords, float compare)
 
 float SampleShadowMapLinear(sampler2D shadowMap, vec2 coords, float compare, vec2 texelSize)
 {
-	vec2 pixelPosition = coords / texelSize + vec2(0.5);
-	vec2 fracPart = fract(pixelPosition);
-	vec2 startTexel = (pixelPosition - fracPart) *  texelSize;
+	vec2 pixelPos = coords/texelSize + vec2(0.5);
+	vec2 fracPart = fract(pixelPos);
+	vec2 startTexel = (pixelPos - fracPart) * texelSize;
 	
-	float bLTexel = SampleShadowMap(shadowMap, startTexel, compare);
-	float bRTexel = SampleShadowMap(shadowMap, startTexel + vec2(texelSize.x, 0.0), compare);
-	float tLTexel = SampleShadowMap(shadowMap, startTexel + vec2(0.0, texelSize.y), compare);
-	float tRTexel = SampleShadowMap(shadowMap, startTexel + texelSize, compare);
+	float blTexel = SampleShadowMap(shadowMap, startTexel, compare);
+	float brTexel = SampleShadowMap(shadowMap, startTexel + vec2(texelSize.x, 0.0), compare);
+	float tlTexel = SampleShadowMap(shadowMap, startTexel + vec2(0.0, texelSize.y), compare);
+	float trTexel = SampleShadowMap(shadowMap, startTexel + texelSize, compare);
 	
-	float mixA = mix(bLTexel, tLTexel, fracPart.y);
-	float mixB = mix(bRTexel, tRTexel, fracPart.y);
+	float mixA = mix(blTexel, tlTexel, fracPart.y);
+	float mixB = mix(brTexel, trTexel, fracPart.y);
 	
 	return mix(mixA, mixB, fracPart.x);
 }
 
 float SampleShadowMapPCF(sampler2D shadowMap, vec2 coords, float compare, vec2 texelSize)
 {
-	const float NUM_SAMPLES = 5.0f;
-	const float SAMPLES_START = (NUM_SAMPLES - 1.0f) / 2.0f;
-	const float NUM_SAMPLES_SQUARED = NUM_SAMPLES * NUM_SAMPLES;
+	const float NUM_SAMPLES = 3.0f;
+	const float SAMPLES_START = (NUM_SAMPLES-1.0f)/2.0f;
+	const float NUM_SAMPLES_SQUARED = NUM_SAMPLES*NUM_SAMPLES;
 
-	float result = 0;
-	
+	float result = 0.0f;
 	for(float y = -SAMPLES_START; y <= SAMPLES_START; y += 1.0f)
 	{
 		for(float x = -SAMPLES_START; x <= SAMPLES_START; x += 1.0f)
 		{
-			vec2 coordsOffset = vec2(x, y) * texelSize;
+			vec2 coordsOffset = vec2(x,y)*texelSize;
 			result += SampleShadowMapLinear(shadowMap, coords + coordsOffset, compare, texelSize);
 		}
 	}
-	
-	return result / NUM_SAMPLES_SQUARED;
+	return result/NUM_SAMPLES_SQUARED;
 }
 
-float linStep(float low, float high, float v)
+float linstep(float low, float high, float v)
 {
-	return clamp((v - low) / (high - low), 0.0, 1.0);
+	return clamp((v-low)/(high-low), 0.0, 1.0);
 }
 
-float SampleVarianceShadowMap(sampler2D shadowMap, vec2 coords, float compare, float shadowVarianceMin, float shadowLightBleedingReduction)
+float SampleVarianceShadowMap(sampler2D shadowMap, vec2 coords, float compare, float varianceMin, float lightBleedReductionAmount)
 {
 	vec2 moments = texture2D(shadowMap, coords.xy).xy;
 	
 	float p = step(compare, moments.x);
-	float variance = max(moments.y - moments.x * moments.x, shadowVarianceMin);
+	float variance = max(moments.y - moments.x * moments.x, varianceMin);
 	
 	float d = compare - moments.x;
-	float pMax = linStep(shadowLightBleedingReduction, 1.0, variance / (variance + d * d));
+	float pMax = linstep(lightBleedReductionAmount, 1.0, variance / (variance + d*d));
 	
 	return min(max(p, pMax), 1.0);
-
 	//return step(compare, texture2D(shadowMap, coords.xy).r);
 }
+

@@ -2,8 +2,30 @@
 #include "../Rendering/RenderingEngine.h"
 #include "Camera.h"
 
-Camera::Camera(Matrix4& projection) : m_projection(projection)
+Camera::Camera(const Matrix4& projection, Transform* transform)
 {
+	m_projection = projection;
+	m_transform = transform;
+}
+
+Matrix4 Camera::getViewProjection() const
+{
+	Matrix4 cameraRotation = getTransform().getTransformedRotation().conjugate().toRotationMatrix();
+	Matrix4 cameraTranslation;
+
+	cameraTranslation.initTranslation(getTransform().getTransformedPosition() * -1);
+
+	return m_projection * cameraRotation * cameraTranslation;
+}
+
+Transform* Camera::getTransform()
+{
+	return m_transform;
+}
+
+const Transform& Camera::getTransform() const
+{
+	return *m_transform;
 }
 
 void Camera::setProjection(const Matrix4& projection)
@@ -11,19 +33,28 @@ void Camera::setProjection(const Matrix4& projection)
 	m_projection = projection;
 }
 
-void Camera::addToCoreEngine(CoreEngine* coreEngine)
+void Camera::setTransform(Transform* transform)
 {
-	coreEngine->getRenderingEngine()->addCamera(this);
+	m_transform = transform;
 }
 
-Matrix4 Camera::getViewProjection()
+void CameraComponent::addToCoreEngine(CoreEngine* engine) const
 {
-	Matrix4 cameraRotation = getTransform().getTransformedRotation().conjugate().toRotationMatrix();
-	Matrix4 cameraTranslation;
+	engine->setCamera(m_camera);
+}
 
-	Transform t = getTransform();
+Matrix4 CameraComponent::getViewProjection() const
+{
+	return m_camera.getViewProjection();
+}
 
-	cameraTranslation.initTranslation(t.getTransformedPosition() * -1);
+void CameraComponent::setProjection(const Matrix4& projection)
+{
+	m_camera.setProjection(projection);
+}
 
-	return m_projection * cameraRotation * cameraTranslation;
+void CameraComponent::setParent(GameObject* parent)
+{
+	GameComponent::setParent(parent);
+	m_camera.setTransform(getTransform());
 }

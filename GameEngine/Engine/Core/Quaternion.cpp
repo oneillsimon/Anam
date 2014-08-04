@@ -1,9 +1,12 @@
 #include <cmath>
 #include "Math3D.h"
 
-Quaternion::Quaternion()
+Quaternion::Quaternion(float x, float y, float z, float w)
 {
-	Quaternion(0, 0, 0, 0);
+	this->x = x;
+	this->y = y;
+	this->z = z;
+	this->w = w;
 }
 
 Quaternion::Quaternion(const Vector3& axis, float angle)
@@ -20,14 +23,6 @@ Quaternion::Quaternion(const Vector3& axis, float angle)
 	y = axis.getY() * sinHalfAngle;
 	z = axis.getZ() * sinHalfAngle;
 	w = cosHalfAngle;
-}
-
-Quaternion::Quaternion(float x, float y, float z, float w)
-{
-	this->x = x;
-	this->y = y;
-	this->z = z;
-	this->w = w;
 }
 
 Quaternion::Quaternion(Matrix4 rotation)

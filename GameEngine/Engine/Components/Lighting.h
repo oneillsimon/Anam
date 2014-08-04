@@ -2,7 +2,7 @@
 #define LIGHTING_H
 
 #include "../Core/Math3D.h"
-#include "../Rendering/Colour.h"
+#include "../Rendering/Shader.h"
 #include "GameComponent.h"
 
 class CoreEngine;
@@ -18,14 +18,14 @@ private:
 	int m_shadowMapSizeAsPowerOf2;
 
 public:
-	ShadowInfo(const Matrix4& projection, bool flipFaces, int shadowMapSizeAsPowerOf2, float shadowSoftness, float lightBleedReductionAmount, float minVariance);
+	ShadowInfo(const Matrix4& projection = Matrix4().initIdentity(), bool flipFaces = false, int shadowMapSizeAsPowerOf2 = 0, float shadowSoftness = 1.0f, float lightBleedReductionAmount = 0.3f, float minVariance = 0.00002f);
 
-	Matrix4 getProjection();
-	bool getFlipFaces();
-	float getShadowSoftness();
-	float getLightBleedReductionAmount();
-	float getVarianceMin();
-	int getShadowMapSizeAsPowerOf2();
+	Matrix4 getProjection() const;
+	bool getFlipFaces() const;
+	float getShadowSoftness() const;
+	float getLightBleedReductionAmount() const;
+	float getVarianceMin() const;
+	int getShadowMapSizeAsPowerOf2() const;
 };
 
 struct ShadowCameraTransform
@@ -37,28 +37,28 @@ struct ShadowCameraTransform
 class Light : public GameComponent
 {
 private:
-	Shader* m_shader;
-	ShadowInfo* m_shadowInfo;
+	Shader m_shader;
+	ShadowInfo m_shadowInfo;
 	Colour m_colour;
 	float m_intensity;
 
 	void operator =(Light& light) {}
 
 protected:
-	void setShadowInfo(ShadowInfo* shadowInfo);
-	void setShader(Shader* shader);
+	void setShadowInfo(const ShadowInfo& shadowInfo);
+	//void setShader(const Shader& shader);
 
 public:
-	Light(const Colour& colour, float intensity);
+	Light(const Colour& colour, float intensity, const Shader& shader);
 	virtual ~Light();
 
-	virtual void addToCoreEngine(CoreEngine* coreEngine);
-	virtual ShadowCameraTransform calculateShadowCameraTransform(const Vector3& mainCameraPosition, const Quaternion& mainCamerRotation);
+	virtual void addToCoreEngine(CoreEngine* coreEngine) const;
+	virtual ShadowCameraTransform calculateShadowCameraTransform(const Vector3& mainCameraPosition, const Quaternion& mainCamerRotation) const;
 
-	Shader* getShader();
-	ShadowInfo* getShadowInfo();
-	Colour getColour() const;
-	float getIntensity() const;
+	const Shader& getShader() const;
+	const ShadowInfo& getShadowInfo() const;
+	const Colour getColour() const;
+	const float getIntensity() const;
 
 	void setColour(const Colour& colour);
 	void setIntensity(float intensity);
@@ -91,7 +91,7 @@ private:
 public:
 	DirectionalLight(const Colour& colour, float intensity, int shadowMapSizedAsPowerOf2 = 10, float shadowArea = 80, float shadowSoftness = 0.25f, float lightBleedReductionAmount = 0.2f, float minVariance = 0.00002f);
 
-	virtual ShadowCameraTransform calculateShadowCameraTransform(const Vector3& mainCameraPosition, const Quaternion& mainCamerRotation);
+	virtual ShadowCameraTransform calculateShadowCameraTransform(const Vector3& mainCameraPosition, const Quaternion& mainCamerRotation) const;
 };
 
 class PointLight : public Light
@@ -100,6 +100,8 @@ private:
 	Attenuation m_attenuation;
 	float m_range;
 
+protected:
+	PointLight(const Colour& colour, float intensity, const Attenuation& attenuation, const Shader& shader);
 public:
 	PointLight(const Colour& colour, float intensity, const Attenuation& attenuation);
 

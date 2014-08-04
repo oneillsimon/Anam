@@ -1,40 +1,96 @@
 #include "Material.h"
 
-//TODO: change these base constructors to a more chain like structure
+std::map<std::string, MaterialData*> Material::s_resourceMap;
 
-Material::Material(Texture* diffuse, float specularIntensity, float specularExponent)
+Material::Material(const std::string& materialName) :
+	m_materialName(materialName)
 {
-	setTexture("diffuse", diffuse);
-	setFloat("specularIntensity", specularIntensity);
-	setFloat("specularExponent", specularExponent);
-	setTexture("normalMap", new Texture("default_normal.jpg"));
-	setTexture("displacementMap", new Texture("default_disp.png"));
+	if(materialName.length() > 0)
+	{
+		std::map<std::string, MaterialData*>::const_iterator it = s_resourceMap.find(materialName);
 
-	float baseBias = 0.0f / 2.0f;
-	setFloat("displacementMapBias", -baseBias + baseBias * 0.0f);
+		if(it == s_resourceMap.end())
+		{
+			fprintf(stderr, "Material has not been initialised");
+		}
+
+		m_materialData = it->second;
+		m_materialData->addReference();
+	}
 }
 
-Material::Material(Texture* diffuse, float specularIntensity, float specularExponent, Texture* normalMap)
+Material::Material(const Material& material)
 {
-	setTexture("diffuse", diffuse);
-	setFloat("specularIntensity", specularIntensity);
-	setFloat("specularExponent", specularExponent);
-	setTexture("normalMap", normalMap);
-	setTexture("displacementMap", new Texture("default_disp.png"));
+	m_materialData = material.m_materialData;
+	m_materialName = material.m_materialName;
 
-	float baseBias = 0.0f / 2.0f;
-	setFloat("displacementMapBias", -baseBias + baseBias * 0.0f);
+	m_materialData->addReference();
 }
 
-Material::Material(Texture* diffuse, float specularIntensity, float specularExponent, Texture* normalMap, Texture* displacementMap, float displacementMapScale, float displacementMapOffset)
+Material::Material(const std::string& materialName,
+				   const Texture& diffuse,
+				   float specularIntensity,
+				   float specularPower,
+				   const Texture& normalMap,
+				   const Texture& displacementMap,
+				   float dispMapScale,
+				   float dispMapOffset)
 {
-	setTexture("diffuse", diffuse);
-	setFloat("specularIntensity", specularIntensity);
-	setFloat("specularExponent", specularExponent);
-	setTexture("normalMap", normalMap);
-	setTexture("displacementMap", displacementMap);
-	setFloat("displacementMapScale", displacementMapScale);
+	m_materialName = materialName;
 
-	float baseBias = displacementMapScale / 2.0f;
-	setFloat("displacementMapBias", -baseBias + baseBias * displacementMapOffset);
+	m_materialData = new MaterialData();
+	s_resourceMap[m_materialName] = m_materialData;
+
+	m_materialData->setTexture("diffuse", diffuse);
+	m_materialData->setFloat("specularIntensity", specularIntensity);
+	m_materialData->setFloat("specularExponent", specularPower);
+	m_materialData->setTexture("normalMap", normalMap);
+	m_materialData->setTexture("displacementMap", displacementMap);
+
+	float bias = dispMapScale / 2.0f;
+	m_materialData->setFloat("displacementMapScale", dispMapScale);
+	m_materialData->setFloat("displacementMapBias", -bias + bias * dispMapOffset);
+}
+
+Material::~Material()
+{
+	if(m_materialData && m_materialData->removeReference())
+	{
+		if(m_materialName.length() > 0)
+		{
+			s_resourceMap.erase(m_materialName);
+		}
+
+		delete m_materialData;
+	}
+}
+
+void Material::setVector3(const std::string& name, const Vector3& value)
+{
+	m_materialData->setVector3(name, value);
+}
+
+void Material::setFloat(const std::string& name, float value)
+{
+	m_materialData->setFloat(name, value);
+}
+
+void Material::setTexture(const std::string& name, const Texture& value)
+{
+	m_materialData->setTexture(name, value);
+}
+
+const Vector3& Material::getVector3(const std::string& name) const
+{
+	return m_materialData->getVector3(name);
+}
+
+float Material::getFloat(const std::string& name) const
+{
+	return m_materialData->getFloat(name);
+}
+
+const Texture& Material::getTexture(const std::string& name) const
+{
+	return m_materialData->getTexture(name);
 }

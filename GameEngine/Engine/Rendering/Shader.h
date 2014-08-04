@@ -8,10 +8,14 @@
 #include "ReferenceCounter.h"
 #include "../Core/Math3D.h"
 #include "Material.h"
-#include "RenderingEngine.h"
-#include "Colour.h"
-#include "../Components/Lighting.h"
 #include "../Core/Transform.h"
+#include "../Components/Camera.h"
+#include "Colour.h"
+
+class RenderingEngine;
+class DirectionalLight;
+class PointLight;
+class SpotLight;
 
 struct TypedData
 {
@@ -62,22 +66,22 @@ private:
 	ShaderData* m_shaderData;
 	std::string m_fileName;
 
-	void setUniformDirectionalLight(const std::string& uniformName, const DirectionalLight& light);
-	void setUniformPointLight(const std::string& uniformName, const PointLight& light);
-	void setUniformSpotLight(const std::string& uniformName, const SpotLight& light);
+	void setUniformDirectionalLight(const std::string& uniformName, const DirectionalLight& light) const;
+	void setUniformPointLight(const std::string& uniformName, const PointLight& light) const;
+	void setUniformSpotLight(const std::string& uniformName, const SpotLight& light) const;
 
 public:
-	Shader(const std::string& filenName);
+	Shader(const std::string& filenName = "basicShader");
+	Shader(const Shader& shader);
 	virtual ~Shader();
 
-	void bind();
-	void updateUniforms(const Transform& transform, Material& material, RenderingEngine* renderingEngine);
-
-	void setUniform(const std::string& fileName, int value);
-	void setUniform(const std::string& fileName, float value);
-	void setUniform(const std::string& fileName, const Matrix4& value);
-	void setUniform(const std::string& fileName, const Vector3& value);
-	void setUniform(const std::string& fileName, const Vector4& value);
+	void bind() const;
+	void updateUniforms(const Transform& transform, const Material& material, const RenderingEngine& renderingEngine, const Camera& camera) const;
+	void setUniform(const std::string& fileName, int value) const;
+	void setUniform(const std::string& fileName, float value) const;
+	void setUniform(const std::string& fileName, const Matrix4& value) const;
+	void setUniform(const std::string& fileName, const Vector3& value) const;
+	void setUniform(const std::string& fileName, const Vector4& value) const;
 };
 
 #endif

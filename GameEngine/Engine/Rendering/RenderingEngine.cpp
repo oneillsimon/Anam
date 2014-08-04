@@ -5,171 +5,125 @@
 #include "RenderingEngine.h"
 #include "Mesh.h"
 #include "../Core/GameMath.h"
-#include <cstring>
 #include "../Core/Math3D.h"
 
-const Matrix4 RenderingEngine::s_biasMatrix = Matrix4().initScale(0.5f, 0.5f, 0.5f) * Matrix4().initTranslation(1.0f, 1.0f, 1.0f);
+const Matrix4 RenderingEngine::BIAS_MATRIX = Matrix4().initScale(0.5f, 0.5f, 0.5f) * Matrix4().initTranslation(1.0f, 1.0f, 1.0f);
 
-RenderingEngine::RenderingEngine()
+RenderingEngine::RenderingEngine(const Window& window) :
+	m_planeMesh(Mesh("plane.obj")),
+	m_window(&window),
+	m_tempTarget(window.getWidth(), window.getHeight(), 0, GL_TEXTURE_2D, GL_NEAREST, GL_RGBA, GL_RGBA, false, GL_COLOR_ATTACHMENT0),
+	m_planeMaterial("renderingEngine_filterPlane", m_tempTarget, 1, 8),
+	m_defaultShader("forward-ambient"),
+	m_shadowMapShader("shadowMapGenerator"),
+	m_nullFilter(("filter-null")),
+	m_gausBlurFilter("filter-gausBlur7x1"),
+	m_fxaaFilter("filter-fxaa"),
+	m_altCameraTransform(Vector3::ZERO, Quaternion(Vector3(0, 1, 0), GameMath::toRadians(180.0f))),
+	m_altCamera(Matrix4().initIdentity(), &m_altCameraTransform)
 {
-	m_samplerMap.insert(std::pair<std::string, unsigned int>("diffuse", 0));
-	m_samplerMap.insert(std::pair<std::string, unsigned int>("normalMap", 1));
-	m_samplerMap.insert(std::pair<std::string, unsigned int>("displacementMap", 2));
-	m_samplerMap.insert(std::pair<std::string, unsigned int>("shadowMap", 3));
+	setSamplerSlot("diffuse", 0);
+	setSamplerSlot("normalMap", 1);
+	setSamplerSlot("displacementMap", 2);
+	setSamplerSlot("shadowMap", 3);
 
-	float ambiance = 0.2f;
-	setVector3("ambient", Vector3(ambiance, ambiance, ambiance));
-	m_defaultShader = new Shader("forward-ambient");
-	m_shadowMapShader = new Shader("shadowMapGenerator");
-	m_nullFilter = new Shader("filter-null");
-	m_gausBlurFilter = new Shader("filter-gausBlur7x1");
+	setSamplerSlot("filterTexture", 0);
 
-	glClearColor(0, 0, 0, 0);
+	setVector3("ambient", Vector3(0.2f, 0.2f, 0.2f));
+
+	setFloat("fxaaSpanMax", 8.0f);
+	setFloat("fxaaReduceMin", 1.0f / 128.0f);
+	setFloat("fxaaReduceMul", 1.0f / 8.0f);
+
+	setTexture("displayTexture", Texture(m_window->getWidth(), m_window->getHeight(), 0, GL_TEXTURE_2D, GL_LINEAR, GL_RGBA, GL_RGBA, false, GL_COLOR_ATTACHMENT0));
+
+	glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
 
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CW);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_DEPTH_CLAMP);
-	glEnable(GL_MULTISAMPLE);
+	//glEnable(GL_MULTISAMPLE);
 
-	m_altCamera = new Camera(Matrix4().initIdentity());
-	m_altCameraObj = new GameObject();
-	m_altCameraObj->addComponent(m_altCamera);
-	m_altCamera->getTransform().rotate(Vector3(0, 1, 0), GameMath::toRadians(180.0f));
-
-	int width = Window::getWidth();
-	int height = Window::getHeight();
-
-	m_tempTarget = new Texture(width, height, 0, GL_TEXTURE_2D, GL_NEAREST, GL_RGBA, GL_RGBA, false, GL_COLOR_ATTACHMENT0);
-
-	m_planeMaterial = new Material(m_tempTarget, 1, 8);
+	m_planeTransform.setScale(1.0f);
 	m_planeTransform.rotate(Quaternion(Vector3(1, 0, 0), GameMath::toRadians(90.0f)));
 	m_planeTransform.rotate(Quaternion(Vector3(0, 0, 1), GameMath::toRadians(180.0f)));
-	m_planeMesh = new Mesh("./res/models/plane.obj");
 
-	for(int i = 0; i < s_numShadowMaps; i++)
+	for(int i = 0; i < NUM_SHADOW_MAPS; i++)
 	{
 		int shadowMapSize = 1 << (i + 1);
-		m_shadowMaps[i] = new Texture(shadowMapSize, shadowMapSize, 0, GL_TEXTURE_2D, GL_LINEAR, GL_RG32F, GL_RGBA, true, GL_COLOR_ATTACHMENT0);
-		m_shadowMapsTempTargets[i] = new Texture(shadowMapSize, shadowMapSize, 0, GL_TEXTURE_2D, GL_LINEAR, GL_RG32F, GL_RGBA, true, GL_COLOR_ATTACHMENT0);
+		m_shadowMaps[i] = Texture(shadowMapSize, shadowMapSize, 0, GL_TEXTURE_2D, GL_LINEAR, GL_RG32F, GL_RGBA, true, GL_COLOR_ATTACHMENT0);
+		m_shadowMapTempTargets[i] = Texture(shadowMapSize, shadowMapSize, 0, GL_TEXTURE_2D, GL_LINEAR, GL_RG32F, GL_RGBA, true, GL_COLOR_ATTACHMENT0);
 	}
 
 	m_lightMatrix = Matrix4().initScale(0, 0, 0);
+	this;
 }
 
-RenderingEngine::~RenderingEngine()
+void RenderingEngine::render(const GameObject& object, const Camera& mainCamera)
 {
-	setTexture("shadowMap", 0);
-
-	if(m_defaultShader)
-	{
-		delete m_defaultShader;
-	}
-
-	if(m_altCameraObj)
-	{
-		delete m_altCameraObj;
-	}
-
-	if(m_planeMaterial)
-	{
-		delete m_planeMaterial;
-	}
-
-	if(m_planeMesh)
-	{
-		delete m_planeMesh;
-	}
-
-	if(m_shadowMapShader)
-	{
-		delete m_shadowMapShader;
-	}
-
-	if(m_nullFilter)
-	{
-		delete m_nullFilter;
-	}
-
-	if(m_gausBlurFilter)
-	{
-		delete m_gausBlurFilter;
-	}
-
-	for(int i = 0; i < s_numShadowMaps; i++)
-	{
-		if(m_shadowMaps[i])
-		{
-			delete m_shadowMaps[i];
-		}
-
-		if(m_shadowMapsTempTargets[i])
-		{
-			delete m_shadowMapsTempTargets[i];
-		}
-	}
-}
-
-void RenderingEngine::render(GameObject* object)
-{
-	Window::bindAsRenderTarget();
+	//m_window->bindAsRenderTarget();
+	getTexture("displayTexture").bindAsRenderTarget();
 
 	glClearColor(0, 0, 0, 0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	object->renderAll(m_defaultShader, this);
+
+	object.renderAll(m_defaultShader, *this, mainCamera);
 
 	for(unsigned int i = 0; i < m_lights.size(); i++)
 	{
 		m_activeLight = m_lights[i];
-		ShadowInfo* shadowInfo = m_activeLight->getShadowInfo();
+		ShadowInfo shadowInfo = m_activeLight->getShadowInfo();
 
 		int shadowMapIndex = 0;
 
-		if(shadowInfo)
+		if(shadowInfo.getShadowMapSizeAsPowerOf2() != 0)
 		{
-			shadowMapIndex = shadowInfo->getShadowMapSizeAsPowerOf2() - 1;
+			shadowMapIndex = shadowInfo.getShadowMapSizeAsPowerOf2() - 1;
 		}
 
 		setTexture("shadowMap", m_shadowMaps[shadowMapIndex]);
-		m_shadowMaps[shadowMapIndex]->bindAsRenderTarget();
+		m_shadowMaps[shadowMapIndex].bindAsRenderTarget();
+
 		glClearColor(1.0f, 1.0f, 0.0f, 0.0f);
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
-		if(shadowInfo)
+		if(shadowInfo.getShadowMapSizeAsPowerOf2() != 0)
 		{
-			m_altCamera->setProjection(shadowInfo->getProjection());
+			m_altCamera.setProjection(shadowInfo.getProjection());
 
-			ShadowCameraTransform shadowCameraTransform = m_activeLight->calculateShadowCameraTransform(m_mainCamera->getTransform().getTransformedPosition(),
-																										m_mainCamera->getTransform().getTransformedRotation());
+			ShadowCameraTransform shadowCameraTransform = m_activeLight->calculateShadowCameraTransform(mainCamera.getTransform().getTransformedPosition(),
+																										mainCamera.getTransform().getTransformedRotation());
 
-			m_altCamera->getTransform().setPosition(shadowCameraTransform.position);
-			m_altCamera->getTransform().setRotation(shadowCameraTransform.rotation);
+			m_altCamera.getTransform()->setPosition(shadowCameraTransform.position);
+			m_altCamera.getTransform()->setRotation(shadowCameraTransform.rotation);
 
-			m_lightMatrix = s_biasMatrix * m_altCamera->getViewProjection();
-			setFloat("shadowVarianceMin", shadowInfo->getVarianceMin());
-			setFloat("shadowLightBleedingReduction", shadowInfo->getLightBleedReductionAmount());
+			m_lightMatrix = BIAS_MATRIX * m_altCamera.getViewProjection();
+
+			setFloat("shadowVarianceMin", shadowInfo.getVarianceMin());
+			setFloat("shadowLightBleedingReduction", shadowInfo.getLightBleedReductionAmount());
 			
-			bool flipFaces = shadowInfo->getFlipFaces();
+			bool flipFaces = shadowInfo.getFlipFaces();
 
-			Camera* temp = m_mainCamera;
-			m_mainCamera = m_altCamera;
+			//const Camera* temp = m_mainCamera;
+			//m_mainCamera = m_altCamera;
 
 			if(flipFaces)
 			{
 				glCullFace(GL_FRONT);
 			}
 
-			object->renderAll(m_shadowMapShader, this);
+			object.renderAll(m_shadowMapShader, *this, m_altCamera);
 
 			if(flipFaces)
 			{
 				glCullFace(GL_BACK);
 			}
 
-			m_mainCamera = temp;
+			//m_mainCamera = temp;
 
-			float shadowSoftness = shadowInfo->getShadowSoftness();
+			float shadowSoftness = shadowInfo.getShadowSoftness();
 
 			if(shadowSoftness != 0)
 			{
@@ -178,47 +132,52 @@ void RenderingEngine::render(GameObject* object)
 		}
 		else
 		{
-			m_lightMatrix = s_biasMatrix * m_altCamera->getViewProjection();
+			m_lightMatrix = Matrix4().initScale(0, 0, 0);
 			setFloat("shadowVarianceMin", 0.00002f);
-			setFloat("shadowLightBleedingReduction", 0);
+			setFloat("shadowLightBleedingReduction", 0.0f);
 		}
 		
-		Window::bindAsRenderTarget();
+		//m_window->bindAsRenderTarget();
+		getTexture("displayTexture").bindAsRenderTarget();
+
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_ONE, GL_ONE);
 		glDepthMask(GL_FALSE);
 		glDepthFunc(GL_EQUAL);
 
-		object->renderAll(m_activeLight->getShader(), this);
+		object.renderAll(m_activeLight->getShader(), *this, mainCamera);
 
 		glDepthMask(GL_TRUE);
 		glDepthFunc(GL_LESS);
 		glDisable(GL_BLEND);
 	}
+
+	setVector3("inverseFilterTextureSize", Vector3(1.0f / getTexture("displayTexture").getWidth(), 1.0f / getTexture("displayTexture").getHeight(), 0.0f));
+	applyFilter(m_fxaaFilter, getTexture("displayTexture"), 0);
 }
 
-void RenderingEngine::addLight(Light* light)
+void RenderingEngine::addLight(const Light& light)
 {
-	m_lights.push_back(light);
+	m_lights.push_back(&light);
 }
 
-void RenderingEngine::addCamera(Camera* camera)
-{
-	m_mainCamera = camera;
-}
+//void RenderingEngine::addCamera(const Camera& camera)
+//{
+//	m_mainCamera = &camera;
+//}
 
 void RenderingEngine::blurShadowMap(int shadowMapIndex, float blur)
 {
-	setVector3("blurScale", Vector3(blur / m_shadowMaps[shadowMapIndex]->getWidth(), 0.0f, 0.0f));
-	applyFilter(m_gausBlurFilter, m_shadowMaps[shadowMapIndex], m_shadowMapsTempTargets[shadowMapIndex]);
+	setVector3("blurScale", Vector3(blur / m_shadowMaps[shadowMapIndex].getWidth(), 0.0f, 0.0f));
+	applyFilter(m_gausBlurFilter, m_shadowMaps[shadowMapIndex], &m_shadowMapTempTargets[shadowMapIndex]);
 
-	setVector3("blurScale", Vector3(0.0f, blur / m_shadowMaps[shadowMapIndex]->getHeight(), 0.0f));
-	applyFilter(m_gausBlurFilter, m_shadowMapsTempTargets[shadowMapIndex], m_shadowMaps[shadowMapIndex]);
+	setVector3("blurScale", Vector3(0.0f, blur / m_shadowMaps[shadowMapIndex].getHeight(), 0.0f));
+	applyFilter(m_gausBlurFilter, m_shadowMapTempTargets[shadowMapIndex], &m_shadowMaps[shadowMapIndex]);
 }
 
-void RenderingEngine::applyFilter(Shader* filter, Texture* source, Texture* destination)
+void RenderingEngine::applyFilter(const Shader& filter, const Texture& source, const Texture* destination)
 {
-	if(source == destination)
+	if(&source == destination)
 	{
 		fprintf(stderr, "destination and source cannot be the same\n");
 		return;
@@ -226,7 +185,7 @@ void RenderingEngine::applyFilter(Shader* filter, Texture* source, Texture* dest
 
 	if(destination == 0)
 	{
-		Window::bindAsRenderTarget();
+		m_window->bindAsRenderTarget();
 	}
 	else
 	{
@@ -235,38 +194,43 @@ void RenderingEngine::applyFilter(Shader* filter, Texture* source, Texture* dest
 
 	setTexture("filterTexture", source);
 
-	m_altCamera->setProjection(Matrix4().initIdentity());
-	m_altCamera->getTransform().setPosition(Vector3::ZERO);
-	m_altCamera->getTransform().setRotation(Quaternion(Vector3(0, 1, 0), GameMath::toRadians(180.0f)));
+	m_altCamera.setProjection(Matrix4().initIdentity());
+	m_altCamera.getTransform()->setPosition(Vector3::ZERO);
+	m_altCamera.getTransform()->setRotation(Quaternion(Vector3(0, 1, 0), GameMath::toRadians(180.0f)));
 	
-	Camera* temp = m_mainCamera;
-	m_mainCamera = m_altCamera;
+	//const Camera* temp = m_mainCamera;
+	//m_mainCamera = m_altCamera;
 
 	glClear(GL_DEPTH_BUFFER_BIT);
-	filter->bind();
-	filter->updateUniforms(m_planeTransform, *m_planeMaterial, this);
-	m_planeMesh->draw();
+	filter.bind();
+	filter.updateUniforms(m_planeTransform, m_planeMaterial, *this, m_altCamera);
+	m_planeMesh.draw();
 	
-	m_mainCamera = temp;
+	//m_mainCamera = temp;
 	setTexture("filterTexture", 0);
 }
 
-Light* RenderingEngine::getActiveLight()
+void RenderingEngine::setSamplerSlot(const std::string& name, unsigned int value)
 {
-	return m_activeLight;
+	m_samplerMap[name] = value;
 }
 
-Camera& RenderingEngine::getMainCamera()
+const Light& RenderingEngine::getActiveLight() const
 {
-	return *m_mainCamera;
+	return *m_activeLight;
 }
 
-unsigned int RenderingEngine::getSamplerSlot(std::string& samplerName)
+//const Camera& RenderingEngine::getMainCamera() const
+//{
+//	return *m_mainCamera;
+//}
+
+unsigned int RenderingEngine::getSamplerSlot(std::string& samplerName) const
 {
-	return m_samplerMap[samplerName];
+	return m_samplerMap.find(samplerName)->second;
 }
 
-Matrix4 RenderingEngine::getLightMatrix()
+const Matrix4& RenderingEngine::getLightMatrix() const
 {
 	return m_lightMatrix;
 }

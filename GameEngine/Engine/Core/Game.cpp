@@ -2,26 +2,14 @@
 #include "../Rendering/RenderingEngine.h"
 #include "Game.h"
 
-Game::Game()
-{
-}
-
-Game::~Game()
-{
-}
-
-void Game::init()
-{
-}
-
 void Game::addToScene(GameObject* object)
 {
 	rootObject.addChild(object);
 }
 
-void Game::input(float delta)
+void Game::processInput(const Input& input, float delta)
 {
-	rootObject.inputAll(delta);
+	rootObject.processInputAll(input, delta);
 }
 
 void Game::update(float delta)
@@ -29,9 +17,9 @@ void Game::update(float delta)
 	rootObject.updateAll(delta);
 }
 
-void Game::render(RenderingEngine* renderingEngine)
+void Game::render(RenderingEngine* renderingEngine, const Camera& camera)
 {
-	renderingEngine->render(&rootObject);
+	renderingEngine->render(rootObject, camera);
 }
 
 GameObject& Game::getRoot()

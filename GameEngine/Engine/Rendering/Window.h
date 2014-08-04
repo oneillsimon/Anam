@@ -2,28 +2,40 @@
 #define WINDOW_H
 
 #include <string>
+#include <SDL2/SDL.h>
+#include "../Core/Input.h"
 
 class Window
 {
 private:
-	static int width;
-	static int height;
-	static std::string title;
+	int m_width;
+	int m_height;
+	std::string m_title;
+	SDL_Window* m_window;
+	SDL_GLContext m_glContext;
+	Input m_input;
+	bool m_isCloseRequested;
+
+	Window(const Window& other) : m_input(this) {}
+	void operator =(const Window& other) {}
 
 public:
-	static void create(int width, int height, const std::string& title);
-	static void render();
-	static void dispose();
-	static void bindAsRenderTarget();
+	Window(int width, int height, const std::string& title);
+	virtual ~Window();
 
-	static bool isCloseRequested();
+	void update();
+	void swapBuffers();
+	void bindAsRenderTarget() const;
+	void setFullScreen(bool b);
 
-	static int getWidth();
-	static int getHeight();
-	static float getAspectRatio();
-	static std::string getTitle();
-
-	static void setFullscreen(bool value);
+	int getWidth() const;
+	int getHeight() const;
+	const std::string& getTitle() const;
+	float getAspectRatio() const;
+	Vector2 getCentre() const;
+	SDL_Window* getWindow();
+	const Input& getInput() const;
+	bool isCloseRequested() const;
 };
 
 #endif

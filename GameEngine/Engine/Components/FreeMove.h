@@ -2,7 +2,6 @@
 #define FREEMOVE_H
 
 #include "../Core/Math3D.h"
-#include "../Core/Input.h"
 #include "GameComponent.h"
 
 class FreeMove : public GameComponent
@@ -19,7 +18,7 @@ private:
 
 public:
 	FreeMove(float speed = 10.0f, int forwardKey = Input::KEY_W, int backwardKey = Input::KEY_S, int leftKey = Input::KEY_A, int rightKey = Input::KEY_D);
-	virtual void input(float delta);
+	virtual void processInput(const Input& input, float delta);
 };
 
 #endif
