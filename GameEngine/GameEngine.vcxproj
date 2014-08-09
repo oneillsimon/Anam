@@ -21,6 +21,7 @@
     <ClInclude Include="Engine\Core\CoreEngine.h" />
     <ClInclude Include="Engine\Core\Game.h" />
     <ClInclude Include="Engine\Core\GameMath.h" />
+    <ClInclude Include="Engine\Core\Profiling.h" />
     <ClInclude Include="Engine\Core\Util.h" />
     <ClInclude Include="Engine\Core\Transform.h" />
     <ClInclude Include="Engine\Core\Time.h" />
@@ -50,6 +51,7 @@
     <ClCompile Include="Engine\Components\MeshRenderer.cpp" />
     <ClCompile Include="Engine\Core\CoreEngine.cpp" />
     <ClCompile Include="Engine\Core\Game.cpp" />
+    <ClCompile Include="Engine\Core\Profiling.cpp" />
     <ClCompile Include="Engine\Core\Vector2.cpp" />
     <ClCompile Include="Engine\Core\Vector3.cpp" />
     <ClCompile Include="Engine\Core\Matrix4.cpp" />

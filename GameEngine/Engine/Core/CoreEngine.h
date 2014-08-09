@@ -2,6 +2,7 @@
 #define COREENGINE_H
 
 #include <string>
+#include "Profiling.h"
 #include "../Rendering/RenderingEngine.h"
 
 class Game;
@@ -18,8 +19,11 @@ private:
 	Window* m_window;
 	const Camera* m_mainCamera;
 
+	ProfileTimer m_windowUpdateTimer;
+	ProfileTimer m_swapBufferTimer;
+	ProfileTimer m_sleepTimer;
+
 	void run();
-	void run2();
 
 	void operator =(const CoreEngine& coreEgine) {};
 

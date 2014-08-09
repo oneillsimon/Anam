@@ -9,41 +9,13 @@
 #include "Material.h"
 #include "Mesh.h"
 #include "Window.h"
+#include "../Core/Profiling.h"
 
 class GameObject;
 
 class RenderingEngine : public MappedValues
 {
 private:
-	//static const int s_numShadowMaps = 10;
-
-	//const Window* m_window;
-	//const Camera* m_mainCamera;
-	//const Light* m_activeLight;
-	//Shader m_defaultShader;
-	//Shader m_shadowMapShader;
-	//Shader m_nullFilter;
-	//Shader m_gausBlurFilter;
-	//Matrix4 m_lightMatrix;
-
-	//Camera m_altCamera;
-	//GameObject* m_altCameraObj;
-
-	//Material* m_planeMaterial;
-	//Transform m_planeTransform;
-	//Mesh* m_planeMesh;
-	////Texture* m_tempTarget;
-
-	//Texture m_shadowMaps[s_numShadowMaps];
-	//Texture m_shadowMapsTempTargets[s_numShadowMaps];
-
-	//std::vector<const Light*> m_lights;
-	//std::map<std::string, unsigned int> m_samplerMap;
-
-	//static const Matrix4 s_biasMatrix;
-
-	//void operator =(RenderingEngine& renderingEngine) {}
-
 	static const int NUM_SHADOW_MAPS = 10;
 	static const Matrix4 BIAS_MATRIX;
 
@@ -69,6 +41,9 @@ private:
 	std::vector<const Light*> m_lights;
 	std::map<std::string, unsigned int> m_samplerMap;
 
+	ProfileTimer m_renderProfileTimer;
+	ProfileTimer m_windowSyncProfileTimer;
+
 	void blurShadowMap(int shadowMapIndex, float blur);
 	void applyFilter(const Shader& filter, const Texture& source, const Texture* destination);
 
@@ -87,6 +62,9 @@ public:
 	{
 		throw uniformType + " is not supported by the rendering engine";
 	}
+
+	double displayRenderTime(double divisor);
+	double displayWindowSyncTime(double divisor);
 
 	//const Camera& getMainCamera() const;
 	const Light& getActiveLight() const;

@@ -63,6 +63,8 @@ RenderingEngine::RenderingEngine(const Window& window) :
 
 void RenderingEngine::render(const GameObject& object, const Camera& mainCamera)
 {
+	m_renderProfileTimer.startInvocation();
+
 	//m_window->bindAsRenderTarget();
 	getTexture("displayTexture").bindAsRenderTarget();
 
@@ -153,7 +155,12 @@ void RenderingEngine::render(const GameObject& object, const Camera& mainCamera)
 	}
 
 	setVector3("inverseFilterTextureSize", Vector3(1.0f / getTexture("displayTexture").getWidth(), 1.0f / getTexture("displayTexture").getHeight(), 0.0f));
+
+	m_renderProfileTimer.stopInvocation();
+
+	m_windowSyncProfileTimer.startInvocation();
 	applyFilter(m_fxaaFilter, getTexture("displayTexture"), 0);
+	m_windowSyncProfileTimer.stopInvocation();
 }
 
 void RenderingEngine::addLight(const Light& light)
@@ -208,6 +215,16 @@ void RenderingEngine::applyFilter(const Shader& filter, const Texture& source, c
 	
 	//m_mainCamera = temp;
 	setTexture("filterTexture", 0);
+}
+
+double RenderingEngine::displayRenderTime(double divisor)
+{
+	return m_renderProfileTimer.displayAndReset("Render Time: ", divisor);
+}
+
+double RenderingEngine::displayWindowSyncTime(double divisor)
+{
+	return m_windowSyncProfileTimer.displayAndReset("Window Sync Time: ", divisor);
 }
 
 void RenderingEngine::setSamplerSlot(const std::string& name, unsigned int value)

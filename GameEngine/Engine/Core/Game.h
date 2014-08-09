@@ -1,12 +1,16 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include "Profiling.h"
 #include "GameObject.h"
 #include "CoreEngine.h"
 
 class Game
 {
 private:
+	ProfileTimer m_inputProfileTimer;
+	ProfileTimer m_updateProfileTimer;
+
 	void operator =(Game& game) {}
 
 protected:
@@ -21,6 +25,9 @@ public:
 	virtual void processInput(const Input& input, float delta);
 	virtual void update(float delta);
 	virtual void render(RenderingEngine* renderingEngine, const Camera& camera);
+
+	double displayInputTime(double divisor);
+	double displayUpdateTime(double divisor);
 
 	GameObject& getRoot();
 

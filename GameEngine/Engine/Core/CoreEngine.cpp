@@ -45,7 +45,7 @@ void CoreEngine::start()
 		return;
 	}
 
-	run2();
+	run();
 }
 
 void CoreEngine::stop()
@@ -82,7 +82,20 @@ void CoreEngine::run()
 
 		if(frameCounter > 1.0)
 		{
-			printf("%d\n", frames);
+			double totalTime = (1000.0 * frameCounter) / (double)frames;
+			double totalRecordedTime = 0.0;
+
+			totalRecordedTime += m_game->displayInputTime((double)frames);
+			totalRecordedTime += m_game->displayUpdateTime((double)frames);
+			totalRecordedTime += m_renderingEngine->displayRenderTime((double)frames);
+			totalRecordedTime += m_renderingEngine->displayWindowSyncTime((double)frames);
+			totalRecordedTime += m_windowUpdateTimer.displayAndReset("Window Update Time: ", (double)frames);
+			totalRecordedTime += m_swapBufferTimer.displayAndReset("Buffer Swap Time: ", (double)frames);
+			totalRecordedTime += m_sleepTimer.displayAndReset("Sleep Time: ", (double)frames);
+			
+			printf("Other time: %f ms\n", totalTime - totalRecordedTime);
+			printf("Total time: %f ms\n\n", totalTime);
+			
 			frames = 0;
 			frameCounter = 0;
 		}
@@ -91,12 +104,14 @@ void CoreEngine::run()
 		{
 			render = true;
 
+			m_windowUpdateTimer.startInvocation();
 			if(m_window->isCloseRequested())
 			{
 				stop();
 			}
 
 			m_window->update();
+			m_windowUpdateTimer.stopInvocation();
 
 			m_game->processInput(m_window->getInput(), (float)m_frameRate);
 			m_game->update((float)m_frameRate);
@@ -107,72 +122,18 @@ void CoreEngine::run()
 		if(render)
 		{
 			m_game->render(m_renderingEngine, *m_mainCamera);
+
+			m_swapBufferTimer.startInvocation();
 			m_window->swapBuffers();
+			m_swapBufferTimer.stopInvocation();
+
 			frames++;
 		}
 		else
 		{
-			Util::sleep(0);
-		}
-	}
-}
-
-void CoreEngine::run2()
-{
-	m_isRunning = true;
-
-	m_game->init(*m_window);
-
-	double lastTime = Time::getTime();
-	double unprocessedTime = 0;
-	double frameCounter = 0;
-	int frames = 0;
-
-	while(m_isRunning)
-	{
-		bool render = false;
-
-		double startTime = Time::getTime();
-		double passedTime = startTime - lastTime;
-		lastTime = startTime;
-
-		unprocessedTime += passedTime;
-		frameCounter += passedTime;
-
-		if(frameCounter >= 1.0)
-		{
-			//printf("%i\n",frames);
-			printf("%f ms\n",1000.0/((double)frames));
-			frames = 0;
-			frameCounter = 0;
-		}
-
-		while(unprocessedTime > m_frameRate)
-		{
-			render = true;
-
-			if(m_window->isCloseRequested())
-			{
-				stop();
-			}
-
-			m_window->update();
-
-			m_game->processInput(m_window->getInput(), (float)m_frameRate);
-			m_game->update((float)m_frameRate);
-
-			unprocessedTime -= m_frameRate;
-		}
-
-		if(render)
-		{
-			m_game->render(m_renderingEngine, *m_mainCamera);
-			m_window->swapBuffers();
-			frames++;
-		}
-		else
-		{
+			m_sleepTimer.startInvocation();
 			Util::sleep(1);
+			m_sleepTimer.stopInvocation();
 		}
 	}
 }
