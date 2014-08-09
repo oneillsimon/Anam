@@ -28,12 +28,12 @@ void FreeLook::processInput(const Input& input, float delta)
 
 		if(rotY)
 		{
-			getTransform()->rotate(Vector3(0, 1, 0), GameMath::toRadians(delta.getX() * m_sensitivity));
+			getTransform()->rotate(Vector3(0.0f, 1.0f, 0.0f), (float)GameMath::toRadians(delta.getX() * m_sensitivity));
 		}
 
 		if(rotX)
 		{
-			getTransform()->rotate(getTransform()->getRotation().getRight(), GameMath::toRadians(delta.getY() * m_sensitivity));
+			getTransform()->rotate(getTransform()->getRotation().getRight(), (float)GameMath::toRadians(delta.getY() * m_sensitivity));
 		}
 
 		if(rotX || rotY)

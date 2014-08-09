@@ -50,7 +50,7 @@ bool Input::getMouseUp(int button) const
 
 Vector2 Input::getMousePosition() const
 {
-	return Vector2(m_mouseX, m_mouseY);
+	return Vector2((float)m_mouseX, (float)m_mouseY);
 }
 
 void Input::setKey(int keyCode, bool value)

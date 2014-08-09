@@ -40,8 +40,8 @@ const Vector4& MappedValues::getVector4(const std::string& name) const
 	{
 		return it->second;
 	}
-
-	return Vector4(0, 0, 0, 0);
+	
+	return Vector4();
 }
 
 float MappedValues::getFloat(const std::string& name) const
