@@ -2,10 +2,10 @@
 #include "../Components/GameComponent.h"
 #include "GameObject.h"
 
-GameObject::GameObject(const Vector3& position, const Quaternion& rotation, float scale)
+GameObject::GameObject(const Vector3& position, const Quaternion& rotation, float scale) :
+	m_transform(position, rotation, scale),
+	m_coreEngine(0)
 {
-	m_transform = Transform(position, rotation, scale);
-	m_coreEngine = 0;
 }
 
 

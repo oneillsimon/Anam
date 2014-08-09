@@ -24,13 +24,12 @@ void TestGame::init(const Window& window)
 
 	IndexedModel square;
 	{
-	square.addVertex(1.0f, -1.0f, 0.0f); square.addTexCoord(1.0f, 1.0f);
-	square.addVertex(1.0f, 1.0f, 0.0f); square.addTexCoord(1.0f, 0.0f);
-	square.addVertex(-1.0f, -1.0f, 0.0f); square.addTexCoord(0.0f, 1.0f);
-	square.addVertex(-1.0f, 1.0f, 0.0f); square.addTexCoord(0.0f, 0.0f);
-	square.addFace(0, 1, 2); square.addFace(2, 1, 3);
+		square.addVertex(1.0f, -1.0f, 0.0f);  square.addTexCoord(Vector2(1.0f, 1.0f));
+		square.addVertex(1.0f, 1.0f, 0.0f);   square.addTexCoord(Vector2(1.0f, 0.0f));
+		square.addVertex(-1.0f, -1.0f, 0.0f); square.addTexCoord(Vector2(0.0f, 1.0f));
+		square.addVertex(-1.0f, 1.0f, 0.0f);  square.addTexCoord(Vector2(0.0f, 0.0f));
+		square.addFace(0, 1, 2); square.addFace(2, 1, 3);
 	}
-
 	Mesh customMesh("square", square.finalize());
 
 	/*GameObject* objTerrain = new GameObject(Vector3(0, -1, 5), Quaternion(), 32.0f);
@@ -41,7 +40,7 @@ void TestGame::init(const Window& window)
 	addToScene((new GameObject(Vector3(0, -1, 5), Quaternion(), 32.0f))
 		->addComponent(new MeshRenderer(Mesh("terrain02.obj"), Material("bricks"))));
 
-	addToScene((new GameObject(Vector3(0, -1, 5), Quaternion(), 32.0f))
+	addToScene((new GameObject(Vector3(1, 1, 1), Quaternion(Vector3(1, 0, 0), GameMath::toRadians(-45)), 32.0f))
 		->addComponent(new FreeLook(window.getCentre()))
 		->addComponent(new FreeMove(10.0f, Input::KEY_W, Input::KEY_S, Input::KEY_A, Input::KEY_D))
 		->addComponent(new CameraComponent(Matrix4().initPerspective(GameMath::toRadians(70.0f), window.getAspectRatio(), 0.1f, 1000.0f))));
@@ -49,7 +48,7 @@ void TestGame::init(const Window& window)
 	addToScene((new GameObject(Vector3(7,0,7)))
 		->addComponent(new PointLight(Colour(0,255,0), 0.4f, Attenuation(0,0,1))));
 
-	addToScene((new GameObject(Vector3(), Quaternion(Vector3(1,0,0), GameMath::toRadians(-45))))
+	addToScene((new GameObject(Vector3(100, 100, 100), Quaternion(Vector3(1,0,0), GameMath::toRadians(-45))))
 		->addComponent(new DirectionalLight(Colour(255,255,255), 0.4f, 10, 80.0f, 1.0f)));
 
 	addToScene((new GameObject(Vector3(20,-11.0f,5), Quaternion(Vector3(1,0,0), GameMath::toRadians(-60.0f)) * Quaternion(Vector3(0,1,0), GameMath::toRadians(90.0f))))
@@ -57,6 +56,7 @@ void TestGame::init(const Window& window)
 		
 	addToScene((new GameObject(Vector3(0, 2, 0), Quaternion(Vector3(0,1,0), 0.4f), 1.0f))
 		->addComponent(new MeshRenderer(Mesh("plane3.obj"), Material("bricks2")))
+		->addComponent(new FreeMove(10.0f, Input::KEY_UP, Input::KEY_DOWN, Input::KEY_LEFT, Input::KEY_RIGHT))
 		->addChild((new GameObject(Vector3(0, 0, 25)))
 			->addComponent(new MeshRenderer(Mesh("plane3.obj"), Material("bricks2")))));
 	
@@ -76,15 +76,3 @@ int main()
 
 	return 0;
 }
-
-//int main()
-//{
-//	/*TestGame game;
-//	CoreEngine engine(800, 600, 120, &game);
-//	engine.createWindow("Game Engine");
-//	engine.start();*/
-//
-//	TestGame game;
-//	
-//	return 0;
-//}

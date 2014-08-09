@@ -17,8 +17,7 @@ public:
 	static const Vector2 ZERO;
 	static const Vector2 ONE;
 
-	Vector2();
-	Vector2(float x, float y);
+	Vector2(float x = 0.0f, float y = 0.0f);
 	~Vector2();
 
 	float length() const;
@@ -62,8 +61,7 @@ public:
 
 	static const Vector3 GRAVITY;
 
-	Vector3();
-	Vector3(float x, float y, float z);
+	Vector3(float x = 0.0f, float y = 0.0f, float z = 0.0f);
 	~Vector3();
 
 	float length() const;
@@ -121,8 +119,7 @@ protected:
 	mutable float w;
 
 public:
-	Vector4();
-	Vector4(float x, float y, float z, float w);
+	Vector4(float x = 0.0f, float y = 0.0f, float z = 0.0f, float w = 0.0f);
 	~Vector4();
 
 	float max() const;

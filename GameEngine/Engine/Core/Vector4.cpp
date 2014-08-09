@@ -2,11 +2,6 @@
 #include <algorithm>
 #include "Math3D.h"
 
-Vector4::Vector4()
-{
-	Vector4(0, 0, 0, 0);
-}
-
 Vector4::Vector4(float x, float y, float z, float w)
 {
 	this->x = x;
