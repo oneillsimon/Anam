@@ -67,12 +67,60 @@ void TestGame::init(const Window& window)
 		->addComponent(new MeshRenderer(Mesh("square"), Material("bricks2"))));
 }
 
+#include <iostream>
+#include "Engine\Physics\BoundingSphere.h"
+#include "Engine\Physics\AABB.h"
+#include "Engine\Physics\Plane.h"
+
 int main()
 {
-	TestGame game;
+	BoundingSphere sphere1(Vector3(0, 0, 0), 1.0f);
+	BoundingSphere sphere2(Vector3(0, 3, 0), 1.0f);
+	BoundingSphere sphere3(Vector3(0, 0, 2), 1.0f);
+	BoundingSphere sphere4(Vector3(1, 0, 0), 1.0f);
+
+	IntersectionData sphere1IntSphere2 = sphere1.intersectBoundingSphere(sphere2);
+	IntersectionData sphere1IntSphere3 = sphere1.intersectBoundingSphere(sphere3);
+	IntersectionData sphere1IntSphere4 = sphere1.intersectBoundingSphere(sphere4);
+
+	std::cout << "Sphere1 intersect Sphere2: " << sphere1IntSphere2.getDoesIntersect() << ", Distance: " << sphere1IntSphere2.getDistance() <<std::endl;
+	std::cout << "Sphere1 intersect Sphere3: " << sphere1IntSphere3.getDoesIntersect() << ", Distance: " << sphere1IntSphere3.getDistance() <<std::endl;
+	std::cout << "Sphere1 intersect Sphere4: " << sphere1IntSphere4.getDoesIntersect() << ", Distance: " << sphere1IntSphere4.getDistance() <<std::endl;
+
+	AABB aabb1(Vector3(0, 0, 0), Vector3(1, 1, 1));
+	AABB aabb2(Vector3(1, 1, 1), Vector3(2, 2, 2));
+	AABB aabb3(Vector3(1, 0, 0), Vector3(2, 1, 1));
+	AABB aabb4(Vector3(0, 0, -2), Vector3(1, 1, -1));
+	AABB aabb5(Vector3(0, 0.5f, 0), Vector3(1, 1.5f, 1));
+
+	IntersectionData aabb1Intaabb2 = aabb1.intersectAABB(aabb2);
+	IntersectionData aabb1Intaabb3 = aabb1.intersectAABB(aabb3);
+	IntersectionData aabb1Intaabb4 = aabb1.intersectAABB(aabb4);
+	IntersectionData aabb1Intaabb5 = aabb1.intersectAABB(aabb5);
+
+	std::cout << "AABB1 intersect AABB2: " << aabb1Intaabb2.getDoesIntersect() << ", Distance: " << aabb1Intaabb2.getDistance() << std::endl;
+	std::cout << "AABB1 intersect AABB3: " << aabb1Intaabb3.getDoesIntersect() << ", Distance: " << aabb1Intaabb3.getDistance() << std::endl;
+	std::cout << "AABB1 intersect AABB4: " << aabb1Intaabb4.getDoesIntersect() << ", Distance: " << aabb1Intaabb4.getDistance() << std::endl;
+	std::cout << "AABB1 intersect AABB5: " << aabb1Intaabb5.getDoesIntersect() << ", Distance: " << aabb1Intaabb5.getDistance() << std::endl;
+
+	Plane plane1(Vector3(0, 1, 0), 0);
+
+	IntersectionData plane1IntSphere1 = plane1.intersectSphere(sphere1);
+	IntersectionData plane1IntSphere2 = plane1.intersectSphere(sphere2);
+	IntersectionData plane1IntSphere3 = plane1.intersectSphere(sphere3);
+	IntersectionData plane1IntSphere4 = plane1.intersectSphere(sphere4);
+
+	std::cout << "Plane 1 intersect Sphere1: " << plane1IntSphere1.getDoesIntersect() << ", Distance: " << plane1IntSphere1.getDistance() << std::endl;
+	std::cout << "Plane 1 intersect Sphere2: " << plane1IntSphere2.getDoesIntersect() << ", Distance: " << plane1IntSphere2.getDistance() << std::endl;
+	std::cout << "Plane 1 intersect Sphere3: " << plane1IntSphere3.getDoesIntersect() << ", Distance: " << plane1IntSphere3.getDistance() << std::endl;
+	std::cout << "Plane 1 intersect Sphere4: " << plane1IntSphere4.getDoesIntersect() << ", Distance: " << plane1IntSphere4.getDistance() << std::endl;
+
+	getchar();
+
+	/*TestGame game;
 	CoreEngine engine(800, 600, 60, &game);
 	engine.createWindow("Game ENGINE");
 	engine.start();
 
-	return 0;
+	return 0;*/
 }
