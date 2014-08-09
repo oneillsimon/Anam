@@ -29,6 +29,10 @@
     <ClInclude Include="Engine\Core\SDLWrapper.h" />
     <ClInclude Include="Engine\Core\GameObject.h" />
     <ClInclude Include="Engine\GameEngine.h" />
+    <ClInclude Include="Engine\Physics\AABB.h" />
+    <ClInclude Include="Engine\Physics\BoundingSphere.h" />
+    <ClInclude Include="Engine\Physics\IntersectionData.h" />
+    <ClInclude Include="Engine\Physics\Plane.h" />
     <ClInclude Include="Engine\Rendering\Colour.h" />
     <ClInclude Include="Engine\Rendering\MappedValues.h" />
     <ClInclude Include="Engine\Rendering\Material.h" />
@@ -61,6 +65,10 @@
     <ClCompile Include="Engine\Core\SDLWrapper.cpp" />
     <ClCompile Include="Engine\Core\GameObject.cpp" />
     <ClCompile Include="Engine\Core\Vector4.cpp" />
+    <ClCompile Include="Engine\Physics\AABB.cpp" />
+    <ClCompile Include="Engine\Physics\BoundingSphere.cpp" />
+    <ClCompile Include="Engine\Physics\IntersectionData.cpp" />
+    <ClCompile Include="Engine\Physics\Plane.cpp" />
     <ClCompile Include="Engine\Rendering\Colour.cpp" />
     <ClCompile Include="Engine\Rendering\MappedValues.cpp" />
     <ClCompile Include="Engine\Rendering\Material.cpp" />

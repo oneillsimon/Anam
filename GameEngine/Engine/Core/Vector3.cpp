@@ -38,6 +38,17 @@ float Vector3::max() const
 	return std::max(x, std::max(y, z));
 }
 
+Vector3 Vector3::max(const Vector3& v) const
+{
+	Vector3 result;
+
+	result.x = std::max(x, v.x);
+	result.y = std::max(y, v.y);
+	result.z = std::max(z, v.z);
+
+	return result;
+}
+
 Vector3 Vector3::cross(const Vector3& v) const
 {
 	float x_ = y * v.getZ() - z * v.getY();

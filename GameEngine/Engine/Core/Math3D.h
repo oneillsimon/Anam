@@ -68,6 +68,7 @@ public:
 	float squareLength() const;
 	float dot(const Vector3& v) const;
 	float max() const;
+	Vector3 max(const Vector3& v) const;
 	Vector3 cross(const Vector3& v) const;
 	Vector3 normalised() const;
 	Vector3 inversed() const;
