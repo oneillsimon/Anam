@@ -7,6 +7,7 @@
 #include <sstream>
 
 #include "../Core/Util.h"
+#include "../Core/Profiling.h"
 #include "Shader.h"
 #include "../Components/Lighting.h"
 #include "RenderingEngine.h"
@@ -21,6 +22,12 @@ static std::string loadShader(const std::string& fileName);
 
 ShaderData::ShaderData(const std::string& fileName)
 {
+	std::string actualFileName = fileName;
+
+#if PROFILING_DISABLE_SHADING != 0
+	actualFileName = "nullShader";
+#endif
+
 	m_program = glCreateProgram();
 
 	if(m_program == 0)
@@ -29,8 +36,8 @@ ShaderData::ShaderData(const std::string& fileName)
 		exit(1);
 	}
 
-	std::string vertexShaderText = loadShader(fileName + ".vs");
-	std::string fragmentShaderText = loadShader(fileName + ".fs");
+	std::string vertexShaderText = loadShader(actualFileName + ".vs");
+	std::string fragmentShaderText = loadShader(actualFileName + ".fs");
 
 	addVertexShader(vertexShaderText);
 	addFragmentShader(fragmentShaderText);

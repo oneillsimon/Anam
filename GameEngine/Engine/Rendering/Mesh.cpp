@@ -5,6 +5,7 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
+#include "../Core/Profiling.h"
 #include "Mesh.h"
 
 std::map<std::string, MeshData*>Mesh::resourceMap;
@@ -262,7 +263,10 @@ MeshData::~MeshData()
 void MeshData::draw() const
 {
 	glBindVertexArray(m_vertexArrayObject);
+
+#if PROFILING_DISABLE_MESH_DRAWING == 0
 	glDrawElements(GL_TRIANGLES, m_drawCount, GL_UNSIGNED_INT, 0);
+#endif
 }
 
 Mesh::Mesh(const std::string& filename)
