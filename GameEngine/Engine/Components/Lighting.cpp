@@ -54,15 +54,6 @@ Light::Light(const Colour& colour, float intensity, const Shader& shader) :
 
 Light::~Light()
 {
-	/*if(m_shader)
-	{
-		delete m_shader;
-	}
-
-	if(m_shadowInfo)
-	{
-		delete m_shadowInfo;
-	}*/
 }
 
 void Light::addToCoreEngine(CoreEngine* coreEngine) const
@@ -97,11 +88,6 @@ const float Light::getIntensity() const
 {
 	return m_intensity;
 }
-
-//void Light::setShader(const Shader& shader)
-//{
-//	m_shader = shader;
-//}
 
 void Light::setShadowInfo(const ShadowInfo& shadowInfo)
 {
@@ -158,7 +144,6 @@ void Attenuation::setExponent(float exponent)
 DirectionalLight::DirectionalLight(const Colour& colour, float intensity, int shadowMapSizedAsPowerOf2, float shadowArea, float shadowSoftness, float lightBleedReductionAmount, float minVariance)
 	: Light(colour, intensity, Shader("forward-directional"))
 {
-	//setShader(Shader("forward-directional"));
 	m_halfShadowArea = shadowArea / 2;
 
 	if(shadowMapSizedAsPowerOf2 != 0)
@@ -169,8 +154,6 @@ DirectionalLight::DirectionalLight(const Colour& colour, float intensity, int sh
 
 ShadowCameraTransform DirectionalLight::calculateShadowCameraTransform(const Vector3& mainCameraPosition, const Quaternion& mainCameraRotation) const
 {
-	//return Light::calculateShadowCameraTransform(mainCameraPosition, mainCameraRotation);
-
 	ShadowCameraTransform result;
 	result.position = mainCameraPosition + mainCameraRotation.getForward() * m_halfShadowArea;
 	result.rotation = getTransform().getTransformedRotation();
@@ -197,8 +180,6 @@ PointLight::PointLight(const Colour& colour, float intensity, const Attenuation&
 	float c = attenuation.getConstant() - COLOUR_DEPTH * intensity * colour.max();
 
 	m_range = (-b + sqrtf(b * b - 4 * a * c)) / ( 2 * a);
-
-	//setShader(Shader("forward-point"));
 }
 
 PointLight::PointLight(const Colour& colour, float intensity, const Attenuation& attenuation, const Shader& shader)
@@ -237,7 +218,6 @@ SpotLight::SpotLight(const Colour& colour, float intensity, const Attenuation& a
 	: PointLight(colour, intensity, attenuation, Shader("forward-spot"))
 {
 	m_fov = fov;
-	//setShader(Shader("forward-spot"));
 
 	if(shadowMapSizedAsPowerOf2 != 0)
 	{

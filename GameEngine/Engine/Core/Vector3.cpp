@@ -135,11 +135,6 @@ void Vector3::setZ(float z)
 	this->z = z;
 }
 
-//Vector3& Vector3::operator =(const Vector3& v)
-//{
-//	return Vector3(v);
-//}
-
 Vector3 Vector3::operator +(const Vector3& v) const
 {
 	return Vector3(x + v.getX(), y + v.getY(), z + v.getZ());

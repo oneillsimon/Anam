@@ -160,10 +160,6 @@ Vector3 Matrix4::transform(const Vector3& v) const
 	res.setZ(res.getZ() + m[2][2] * v.getZ());
 
 	return res;
-
-	/*return Vector3(m[0][0] * v.getX() + m[1][0] + v.getY() + m[2][0] * v.getZ() + m[3][0],
-				   m[0][1] * v.getX() + m[1][1] + v.getY() + m[2][1] * v.getZ() + m[3][1],
-				   m[0][2] * v.getX() + m[1][2] + v.getY() + m[2][2] * v.getZ() + m[3][2]);*/
 }
 
 float** Matrix4::getM()

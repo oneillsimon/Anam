@@ -14,11 +14,6 @@ Quaternion::Quaternion(const Vector3& axis, float angle)
 	float sinHalfAngle = sinf(angle / 2);
 	float cosHalfAngle = cosf(angle / 2);
 
-	/*Quaternion(axis.getX() * sinHalfAngle,
-			   axis.getY() * sinHalfAngle,
-			   axis.getZ() * sinHalfAngle,
-			   cosHalfAngle);*/
-
 	x = axis.getX() * sinHalfAngle;
 	y = axis.getY() * sinHalfAngle;
 	z = axis.getZ() * sinHalfAngle;
@@ -111,7 +106,6 @@ Quaternion Quaternion::nlerp(Quaternion destination, float lerpFactor, bool shor
 
 Quaternion Quaternion::slerp(Quaternion destination, float lerpFactor, bool shortest)
 {
-	//const float epsilon = 1e3.0f;
 	const float epsilon = 1000.0f;
 		
 	float cos_ = this->dot(destination);

@@ -56,7 +56,6 @@ public:
 
 	void render(const GameObject& object, const Camera& mainCamera);
 	void addLight(const Light& light);
-	//void addCamera(const Camera& camera);
 
 	virtual void updateUniformStruct(const Transform& transform, const Material& material, const Shader& shader, std::string& uniformName, std::string& uniformType) const
 	{
@@ -66,7 +65,6 @@ public:
 	double displayRenderTime(double divisor);
 	double displayWindowSyncTime(double divisor);
 
-	//const Camera& getMainCamera() const;
 	const Light& getActiveLight() const;
 	unsigned int getSamplerSlot(std::string& samplerName) const;
 	const Matrix4& getLightMatrix() const;

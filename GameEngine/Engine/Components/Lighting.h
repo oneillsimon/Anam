@@ -46,7 +46,6 @@ private:
 
 protected:
 	void setShadowInfo(const ShadowInfo& shadowInfo);
-	//void setShader(const Shader& shader);
 
 public:
 	Light(const Colour& colour, float intensity, const Shader& shader);

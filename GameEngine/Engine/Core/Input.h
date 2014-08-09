@@ -10,9 +10,6 @@ class Window;
 
 class Input
 {
-	//static const int NUM_MOUSE_BUTTONS = 256;
-	//static const int NUM_KEYS = 512;
-
 private:
 	bool m_inputs[NUM_KEYS];
 	bool m_downKeys[NUM_KEYS];

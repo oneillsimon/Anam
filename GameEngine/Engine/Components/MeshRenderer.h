@@ -16,12 +16,7 @@ public:
 	MeshRenderer(const Mesh& mesh, const Material& material) :
 		m_mesh(mesh), m_material(material) {};
 
-	virtual void render(const Shader& shader, const  RenderingEngine& renderingEngine, const Camera& camera) const
-	{
-		shader.bind();
-		shader.updateUniforms(getTransform(), m_material, renderingEngine, camera);
-		m_mesh.draw();
-	}
+	virtual void render(const Shader& shader, const  RenderingEngine& renderingEngine, const Camera& camera) const;
 };
 
 #endif

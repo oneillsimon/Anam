@@ -32,11 +32,6 @@ void TestGame::init(const Window& window)
 	}
 	Mesh customMesh("square", square.finalize());
 
-	/*GameObject* objTerrain = new GameObject(Vector3(0, -1, 5), Quaternion(), 32.0f);
-	objTerrain->addComponent(new MeshRenderer(Mesh("terrain02.obj"), Material("bricks.jpg")));
-
-	addToScene(objTerrain);*/
-
 	addToScene((new GameObject(Vector3(0, -1, 5), Quaternion(), 32.0f))
 		->addComponent(new MeshRenderer(Mesh("terrain02.obj"), Material("bricks"))));
 
@@ -117,10 +112,10 @@ int main()
 
 	getchar();
 
-	/*TestGame game;
+	TestGame game;
 	CoreEngine engine(800, 600, 60, &game);
 	engine.createWindow("Game ENGINE");
 	engine.start();
 
-	return 0;*/
+	return 0;
 }

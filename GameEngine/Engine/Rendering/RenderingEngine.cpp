@@ -65,7 +65,6 @@ void RenderingEngine::render(const GameObject& object, const Camera& mainCamera)
 {
 	m_renderProfileTimer.startInvocation();
 
-	//m_window->bindAsRenderTarget();
 	getTexture("displayTexture").bindAsRenderTarget();
 
 	glClearColor(0, 0, 0, 0);
@@ -108,9 +107,6 @@ void RenderingEngine::render(const GameObject& object, const Camera& mainCamera)
 			
 			bool flipFaces = shadowInfo.getFlipFaces();
 
-			//const Camera* temp = m_mainCamera;
-			//m_mainCamera = m_altCamera;
-
 			if(flipFaces)
 			{
 				glCullFace(GL_FRONT);
@@ -122,8 +118,6 @@ void RenderingEngine::render(const GameObject& object, const Camera& mainCamera)
 			{
 				glCullFace(GL_BACK);
 			}
-
-			//m_mainCamera = temp;
 
 			float shadowSoftness = shadowInfo.getShadowSoftness();
 
@@ -139,7 +133,6 @@ void RenderingEngine::render(const GameObject& object, const Camera& mainCamera)
 			setFloat("shadowLightBleedingReduction", 0.0f);
 		}
 		
-		//m_window->bindAsRenderTarget();
 		getTexture("displayTexture").bindAsRenderTarget();
 
 		glEnable(GL_BLEND);
@@ -167,11 +160,6 @@ void RenderingEngine::addLight(const Light& light)
 {
 	m_lights.push_back(&light);
 }
-
-//void RenderingEngine::addCamera(const Camera& camera)
-//{
-//	m_mainCamera = &camera;
-//}
 
 void RenderingEngine::blurShadowMap(int shadowMapIndex, float blur)
 {
@@ -204,16 +192,12 @@ void RenderingEngine::applyFilter(const Shader& filter, const Texture& source, c
 	m_altCamera.setProjection(Matrix4().initIdentity());
 	m_altCamera.getTransform()->setPosition(Vector3::ZERO);
 	m_altCamera.getTransform()->setRotation(Quaternion(Vector3(0, 1, 0), GameMath::toRadians(180.0f)));
-	
-	//const Camera* temp = m_mainCamera;
-	//m_mainCamera = m_altCamera;
 
 	glClear(GL_DEPTH_BUFFER_BIT);
 	filter.bind();
 	filter.updateUniforms(m_planeTransform, m_planeMaterial, *this, m_altCamera);
 	m_planeMesh.draw();
 	
-	//m_mainCamera = temp;
 	setTexture("filterTexture", 0);
 }
 
@@ -236,11 +220,6 @@ const Light& RenderingEngine::getActiveLight() const
 {
 	return *m_activeLight;
 }
-
-//const Camera& RenderingEngine::getMainCamera() const
-//{
-//	return *m_mainCamera;
-//}
 
 unsigned int RenderingEngine::getSamplerSlot(std::string& samplerName) const
 {

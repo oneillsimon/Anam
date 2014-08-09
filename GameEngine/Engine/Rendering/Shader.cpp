@@ -428,11 +428,6 @@ void ShaderData::addUniform(const std::string& uniformName, const std::string& u
 	assert(location != GL_INVALID_VALUE);
 
 	m_uniformMap.insert(std::pair<std::string, unsigned int>(uniformName, location));
-
-	if(location > 100)
-	{
-		int brl = 0;
-	}
 }
 
 void ShaderData::compileShader()

@@ -223,8 +223,6 @@ MeshData::MeshData(const IndexedModel& model) :
 
 	glGenVertexArrays(1, &m_vertexArrayObject);
 	glBindVertexArray(m_vertexArrayObject);
-	//glGenVertexArrays(1, &m_vertexArrayObject);
-	//glBindVertexArray(m_vertexArrayObject);
 
 	glGenBuffers(NUM_BUFFERS, m_vertexArrayBuffers);
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexArrayBuffers[POSITION_VB]);

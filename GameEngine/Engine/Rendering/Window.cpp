@@ -37,7 +37,7 @@ Window::Window(int width, int height, const std::string& title)
 
 	if(res != GLEW_OK)
 	{
-		// Error
+		fprintf(stderr, "Error int glewInit()");
 	}
 }
 
