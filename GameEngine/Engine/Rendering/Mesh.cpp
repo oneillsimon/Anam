@@ -151,9 +151,9 @@ void IndexedModel::calculateTangents()
 		Vector3 edge1 = m_positions[i1] - m_positions[i0];
 		Vector3 edge2 = m_positions[i2] - m_positions[i0];
 
-		float deltaU1 = m_texCoords[i2].getX() - m_texCoords[i0].getX();
+		float deltaU1 = m_texCoords[i1].getX() - m_texCoords[i0].getX();
 		float deltaU2 = m_texCoords[i2].getX() - m_texCoords[i0].getX();
-		float deltaV1 = m_texCoords[i2].getY() - m_texCoords[i0].getY();
+		float deltaV1 = m_texCoords[i1].getY() - m_texCoords[i0].getY();
 		float deltaV2 = m_texCoords[i2].getY() - m_texCoords[i0].getY();
 
 		float dividend = (deltaU1 * deltaV2 - deltaU2 * deltaV1);
