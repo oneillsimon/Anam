@@ -30,7 +30,7 @@ Material::Material(const Material& material)
 Material::Material(const std::string& materialName,
 				   const Texture& diffuse,
 				   float specularIntensity,
-				   float specularPower,
+				   float specularExponent,
 				   const Texture& normalMap,
 				   const Texture& displacementMap,
 				   float dispMapScale,
@@ -43,7 +43,7 @@ Material::Material(const std::string& materialName,
 
 	m_materialData->setTexture("diffuse", diffuse);
 	m_materialData->setFloat("specularIntensity", specularIntensity);
-	m_materialData->setFloat("specularExponent", specularPower);
+	m_materialData->setFloat("specularExponent", specularExponent);
 	m_materialData->setTexture("normalMap", normalMap);
 	m_materialData->setTexture("displacementMap", displacementMap);
 

@@ -25,7 +25,7 @@ public:
 	Material(const std::string& materialName,
 			 const Texture& diffuse,
 			 float specularIntensity,
-			 float specularPower,
+			 float specularExponent,
 			 const Texture& normalMap = Texture("default_normal.jpg"),
 			 const Texture& displacementMap = Texture("default_disp.png"),
 			 float dispMapScale = 0.0f,
