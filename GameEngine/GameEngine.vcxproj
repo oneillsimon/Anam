@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Comhpháirteanna.h" />
     <ClInclude Include="Engine\Components\Camera.h" />
     <ClInclude Include="Engine\Components\FreeLook.h" />
     <ClInclude Include="Engine\Components\FreeMove.h" />
@@ -28,7 +29,9 @@
     <ClInclude Include="Engine\Core\Input.h" />
     <ClInclude Include="Engine\Core\SDLWrapper.h" />
     <ClInclude Include="Engine\Core\GameObject.h" />
+    <ClInclude Include="Engine\Croí.h" />
     <ClInclude Include="Engine\GameEngine.h" />
+    <ClInclude Include="Engine\Grafaic.h" />
     <ClInclude Include="Engine\Physics\AABB.h" />
     <ClInclude Include="Engine\Physics\BoundingSphere.h" />
     <ClInclude Include="Engine\Physics\IntersectionData.h" />
@@ -45,6 +48,7 @@
     <ClInclude Include="Engine\Rendering\Texture.h" />
     <ClInclude Include="Engine\Rendering\Vertex.h" />
     <ClInclude Include="Engine\Rendering\Window.h" />
+    <ClInclude Include="Inneall.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Components\Camera.cpp" />

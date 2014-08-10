@@ -233,5 +233,17 @@
     <ClInclude Include="Engine\Physics\Plane.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Grafaic.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Comhpháirteanna.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Croí.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Inneall.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

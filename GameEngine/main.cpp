@@ -1,7 +1,4 @@
 #include "Engine\GameEngine.h"
-#include "Engine\Core\GameMath.h"
-#include "Engine\Components\FreeLook.h"
-#include "Engine\Components\FreeMove.h"
 
 #undef main
 
