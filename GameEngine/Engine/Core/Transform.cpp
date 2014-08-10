@@ -68,7 +68,7 @@ bool Transform::hasChanged()
 		return true;
 	}
 
-	return true;
+	return false;
 }
 
 void Transform::lookAt(const Vector3& point, const Vector3& up)
