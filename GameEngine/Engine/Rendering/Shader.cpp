@@ -210,6 +210,10 @@ void Shader::updateUniforms(const Transform& transform, const Material& material
 			{
 				setUniform(uniformName, material.getFloat(uniformName));
 			}
+			else if(uniformType == "vec4")
+			{
+				setUniform(uniformName, material.getVector4(uniformName));
+			}
 			else
 			{
 				throw uniformType + " is not supported by the Material class";

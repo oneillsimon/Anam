@@ -1,3 +1,4 @@
+#include "Colour.h"
 #include "Material.h"
 
 std::map<std::string, MaterialData*> Material::s_resourceMap;
@@ -34,7 +35,8 @@ Material::Material(const std::string& materialName,
 				   const Texture& normalMap,
 				   const Texture& displacementMap,
 				   float dispMapScale,
-				   float dispMapOffset)
+				   float dispMapOffset,
+				   Colour colour)
 {
 	m_materialName = materialName;
 
@@ -50,6 +52,7 @@ Material::Material(const std::string& materialName,
 	float bias = dispMapScale / 2.0f;
 	m_materialData->setFloat("displacementMapScale", dispMapScale);
 	m_materialData->setFloat("displacementMapBias", -bias + bias * dispMapOffset);
+	m_materialData->setVector4("colour", colour);
 }
 
 Material::~Material()
@@ -80,6 +83,11 @@ void Material::setTexture(const std::string& name, const Texture& value)
 	m_materialData->setTexture(name, value);
 }
 
+void Material::setVector4(const std::string& name, const Vector4& value)
+{
+	m_materialData->setVector4(name, value);
+}
+
 const Vector3& Material::getVector3(const std::string& name) const
 {
 	return m_materialData->getVector3(name);
@@ -93,4 +101,9 @@ float Material::getFloat(const std::string& name) const
 const Texture& Material::getTexture(const std::string& name) const
 {
 	return m_materialData->getTexture(name);
+}
+
+const Vector4& Material::getVector4(const std::string& name) const
+{
+	return m_materialData->getVector4(name);
 }

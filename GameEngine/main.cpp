@@ -18,16 +18,17 @@ void TestGame::init(const Window& window)
 {
 	Material bricks("bricks", Texture("bricks.jpg"), 0.5f, 4, Texture("bricks_normal.jpg"), Texture("bricks_disp.png"), 0.03f, -0.5f);
 	Material bricks2("bricks2", Texture("bricks2.jpg"), 1, 8, Texture("bricks2_normal.jpg"), Texture("bricks2_disp.jpg"), 0.04f, -1.0f);
+	MeshRenderer* terrainRenderer = new MeshRenderer(Mesh("terrain02.obj"), Material("bricks"));
 
-	IndexedModel square;
+	IndexedModel cube;
 	{
-		square.addVertex(1.0f, -1.0f, 0.0f);  square.addTexCoord(Vector2(1.0f, 1.0f));
-		square.addVertex(1.0f, 1.0f, 0.0f);   square.addTexCoord(Vector2(1.0f, 0.0f));
-		square.addVertex(-1.0f, -1.0f, 0.0f); square.addTexCoord(Vector2(0.0f, 1.0f));
-		square.addVertex(-1.0f, 1.0f, 0.0f);  square.addTexCoord(Vector2(0.0f, 0.0f));
-		square.addFace(0, 1, 2); square.addFace(2, 1, 3);
+		cube.addVertex(1.0f, -1.0f, 0.0f);  cube.addTexCoord(Vector2(1.0f, 1.0f));
+		cube.addVertex(1.0f, 1.0f, 0.0f);   cube.addTexCoord(Vector2(1.0f, 0.0f));
+		cube.addVertex(-1.0f, -1.0f, 0.0f); cube.addTexCoord(Vector2(0.0f, 1.0f));
+		cube.addVertex(-1.0f, 1.0f, 0.0f);  cube.addTexCoord(Vector2(0.0f, 0.0f));
+		cube.addFace(0, 1, 2); cube.addFace(2, 1, 3);
 	}
-	Mesh customMesh("square", square.finalize());
+	Mesh customMesh("cube", cube.finalize());
 
 	addToScene((new GameObject(Vector3(0, -1, 5), Quaternion(), 32.0f))
 		->addComponent(new MeshRenderer(Mesh("terrain02.obj"), Material("bricks"))));
@@ -56,7 +57,7 @@ void TestGame::init(const Window& window)
 		->addComponent(new MeshRenderer(Mesh("cube.obj"), Material("bricks2"))));
 		
 	addToScene((new GameObject(Vector3(0,0,7), Quaternion(), 1.0f))
-		->addComponent(new MeshRenderer(Mesh("square"), Material("bricks2"))));
+		->addComponent(new MeshRenderer(Mesh("cube"), Material("bricks2"))));
 }
 
 #include <iostream>

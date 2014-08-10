@@ -13,9 +13,11 @@ uniform sampler2D displacementMap;
 uniform float displacementMapScale;
 uniform float displacementMapBias;
 
+uniform vec4 colour;
+
 void main()
 {
 	vec3 directionToEye = normalize(C_eyePos - worldPos0);
 	vec2 texCoords = CalcParallaxTexCoords(displacementMap, tbnMatrix, directionToEye, texCoord0, displacementMapScale, displacementMapBias);
-	gl_FragColor = texture2D(diffuse, texCoords) * vec4(R_ambient, 1);
+	gl_FragColor = texture2D(diffuse, texCoords) * vec4(R_ambient, 1) * colour * colour.a;
 }
