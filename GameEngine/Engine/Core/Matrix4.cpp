@@ -145,7 +145,7 @@ Matrix4 Matrix4::initRotation(const Vector3& forward, const Vector3& up, const V
 
 Vector3 Matrix4::transform(const Vector3& v) const
 {
-	Vector3 res = Vector3::ZERO;
+	Vector3 res = Vector3();
 
 	res.setX(res.getX() + m[0][0] * v.getX());
 	res.setX(res.getX() + m[1][0] * v.getY());

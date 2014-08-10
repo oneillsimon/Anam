@@ -2,11 +2,6 @@
 #include <algorithm>
 #include "Math3D.h"
 
-const Vector3 Vector3::ZERO = Vector3(0, 0, 0);
-const Vector3 Vector3::ONE = Vector3(1, 1, 1);
-
-const Vector3 Vector3::GRAVITY = Vector3(0, -9.81f, 0);
-
 Vector3::Vector3(float x, float y, float z)
 {
 	this->x = x;

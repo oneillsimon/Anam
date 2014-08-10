@@ -20,7 +20,7 @@ private:
 	mutable bool m_intialisedOldStuff;
 
 public:
-	Transform(const Vector3& position = Vector3::ZERO, const Quaternion& rotation = Quaternion(0, 0, 0, 1), float scale = 1.0f);
+	Transform(const Vector3& position = Vector3(), const Quaternion& rotation = Quaternion(0, 0, 0, 1), float scale = 1.0f);
 	~Transform();
 
 	bool hasChanged();

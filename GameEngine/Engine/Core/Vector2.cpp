@@ -3,9 +3,6 @@
 #include "GameMath.h"
 #include "Math3D.h"
 
-const Vector2 Vector2::ZERO = Vector2(0, 0);
-const Vector2 Vector2::ONE = Vector2(1, 1);
-
 Vector2::Vector2(float x, float y)
 {
 	this->x = x;

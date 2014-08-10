@@ -25,7 +25,7 @@ protected:
 	virtual void render(const Shader& shader, const RenderingEngine& renderingEngine, const Camera& camera) const;
 
 public:
-	GameObject(const Vector3& position = Vector3::ZERO, const Quaternion& rotation = Quaternion(0, 0, 0, 1), float scale = 1.0f);
+	GameObject(const Vector3& position = Vector3(), const Quaternion& rotation = Quaternion(0, 0, 0, 1), float scale = 1.0f);
 	~GameObject();
 
 	GameObject* addChild(GameObject* child);

@@ -29,7 +29,7 @@ const Vector3& MappedValues::getVector3(const std::string& name) const
 		return it->second;
 	}
 
-	return Vector3::ZERO;
+	return Vector3();
 }
 
 const Vector4& MappedValues::getVector4(const std::string& name) const

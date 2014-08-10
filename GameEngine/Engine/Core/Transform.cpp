@@ -25,7 +25,7 @@ void Transform::update()
 	}
 	else
 	{
-		oldPosition = m_position + Vector3::ONE;
+		oldPosition = m_position + Vector3(1.0f, 1.0f, 1.0f);
 		oldRotation = m_rotation * 0.5f;
 		oldScale = m_scale + 1;
 

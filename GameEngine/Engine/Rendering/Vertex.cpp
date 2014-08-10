@@ -6,7 +6,7 @@ Vertex::Vertex(Vector3 position, Vector2 texCoord, Vector3 normal)
 	m_position = position;
 	m_texCoord = texCoord;
 	m_normal = normal;
-	m_tangent = Vector3::ZERO;
+	m_tangent = Vector3();
 }
 
 Vertex::Vertex(Vector3 position, Vector2 texCoord, Vector3 normal, Vector3 tangent)

@@ -19,7 +19,7 @@ RenderingEngine::RenderingEngine(const Window& window) :
 	m_nullFilter(("filter-null")),
 	m_gausBlurFilter("filter-gausBlur7x1"),
 	m_fxaaFilter("filter-fxaa"),
-	m_altCameraTransform(Vector3::ZERO, Quaternion(Vector3(0.0f, 1.0f, 0.0f), (float)GameMath::toRadians(180.0f))),
+	m_altCameraTransform(Vector3(), Quaternion(Vector3(0.0f, 1.0f, 0.0f), (float)GameMath::toRadians(180.0f))),
 	m_altCamera(Matrix4().initIdentity(), &m_altCameraTransform)
 {
 	setSamplerSlot("diffuse", 0);
@@ -190,7 +190,7 @@ void RenderingEngine::applyFilter(const Shader& filter, const Texture& source, c
 	setTexture("filterTexture", source);
 
 	m_altCamera.setProjection(Matrix4().initIdentity());
-	m_altCamera.getTransform()->setPosition(Vector3::ZERO);
+	m_altCamera.getTransform()->setPosition(Vector3());
 	m_altCamera.getTransform()->setRotation(Quaternion(Vector3(0.0f, 1.0, 0.0f), (float)GameMath::toRadians(180.0f)));
 
 	glClear(GL_DEPTH_BUFFER_BIT);

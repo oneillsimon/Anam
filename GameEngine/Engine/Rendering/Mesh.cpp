@@ -77,7 +77,7 @@ IndexedModel IndexedModel::finalize()
 	{
 		for(unsigned int i = 0; i < m_positions.size(); i++)
 		{
-			m_texCoords.push_back(Vector2::ZERO);
+			m_texCoords.push_back(Vector2());
 		}
 	}
 
@@ -108,7 +108,7 @@ void IndexedModel::calculateNormals()
 
 	for(unsigned int i = 0; i < m_positions.size(); i++)
 	{
-		m_normals.push_back(Vector3::ZERO);
+		m_normals.push_back(Vector3());
 	}
 
 	for(unsigned int i = 0; i < m_indices.size(); i += 3)
@@ -140,7 +140,7 @@ void IndexedModel::calculateTangents()
 
 	for(unsigned int i = 0; i < m_positions.size(); i++)
 	{
-		m_tangents.push_back(Vector3::ZERO);
+		m_tangents.push_back(Vector3());
 	}
 
 	for(unsigned int i = 0; i < m_indices.size(); i += 3)
@@ -170,7 +170,7 @@ void IndexedModel::calculateTangents()
 			f = 1.0f / dividend;
 		}
 
-		Vector3 tangent = Vector3::ZERO;
+		Vector3 tangent = Vector3();
 
 		tangent.setX(f * (deltaV2 * edge1.getX() - deltaV1 * edge2.getX()));
 		tangent.setY(f * (deltaV2 * edge1.getY() - deltaV1 * edge2.getY()));
