@@ -30,6 +30,7 @@
     <ClInclude Include="Engine\Core\SDLWrapper.h" />
     <ClInclude Include="Engine\Core\GameObject.h" />
     <ClInclude Include="Engine\Croí.h" />
+    <ClInclude Include="Engine\Fisic.h" />
     <ClInclude Include="Engine\GameEngine.h" />
     <ClInclude Include="Engine\Grafaic.h" />
     <ClInclude Include="Engine\Physics\AABB.h" />

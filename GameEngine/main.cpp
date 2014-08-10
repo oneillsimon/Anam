@@ -1,4 +1,4 @@
-#include "Engine\GameEngine.h"
+#include "Inneall.h"
 
 #undef main
 
@@ -61,9 +61,6 @@ void TestGame::init(const Window& window)
 }
 
 #include <iostream>
-#include "Engine\Physics\BoundingSphere.h"
-#include "Engine\Physics\AABB.h"
-#include "Engine\Physics\Plane.h"
 
 int main()
 {
