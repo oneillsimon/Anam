@@ -46,8 +46,6 @@ void Transform::rotate(const Quaternion& rotation)
 
 bool Transform::hasChanged()
 {
-	// TODO: fix this method
-
 	if(m_parent != 0 && m_parent->hasChanged())
 	{
 		return true;
