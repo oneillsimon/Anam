@@ -8,7 +8,7 @@
 
 class MappedValues
 {
-private:
+protected:
 	std::map<std::string, Vector3> vector3Map;
 	std::map<std::string, Vector4> vector4Map;
 	std::map<std::string, float> floatMap;

@@ -3,6 +3,19 @@
 
 std::map<std::string, MaterialData*> Material::s_resourceMap;
 
+const Colour& MaterialData::getColour(const std::string& name) const
+{
+	std::map<std::string, Vector4>::const_iterator it = vector4Map.find(name);
+
+	if(it != vector4Map.end())
+	{
+		Vector4 v = it->second;
+		return Colour(v.getX(), v.getY(), v.getZ(), v.getW());
+	}
+	
+	return Colour();
+}
+
 Material::Material(const std::string& materialName) :
 	m_materialName(materialName)
 {
@@ -106,4 +119,9 @@ const Texture& Material::getTexture(const std::string& name) const
 const Vector4& Material::getVector4(const std::string& name) const
 {
 	return m_materialData->getVector4(name);
+}
+
+const Colour& Material::getColour(const std::string& name) const
+{
+	return m_materialData->getColour(name);
 }

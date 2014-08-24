@@ -9,6 +9,7 @@
 class MaterialData : public ReferenceCounter, public MappedValues
 {
 public:
+	const Colour& getColour(const std::string& name) const;
 private:
 };
 
@@ -43,6 +44,7 @@ public:
 	float getFloat(const std::string& name) const;
 	const Texture& getTexture(const std::string& name) const;
 	const Vector4& getVector4(const std::string& name) const;
+	const Colour& getColour(const std::string& name) const;
 
 	void operator =(Material& material) {}
 };
