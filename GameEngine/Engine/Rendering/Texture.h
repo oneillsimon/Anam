@@ -6,7 +6,6 @@
 #include <GL/glew.h>
 #include "ReferenceCounter.h"
 
-
 class TextureData : public ReferenceCounter
 {
 private:

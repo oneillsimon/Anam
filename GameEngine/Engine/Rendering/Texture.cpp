@@ -7,6 +7,9 @@
 
 std::map<std::string, TextureData*> Texture::resourceMap;
 
+const std::string texture_directory = "./res/textures/";
+const std::string texture_default = "default.png";
+
 TextureData::TextureData(GLenum textureTarget, int width, int height, int numTextures, unsigned char** data, GLfloat* filters, GLenum* internalFormat, GLenum* basicFormat, bool clamp, GLenum* attachments)
 {
 	m_textureID = new GLuint[numTextures];
@@ -187,11 +190,12 @@ Texture::Texture(std::string fileName, GLenum textureTarget, GLfloat filter, GLe
 	else
 	{
 		int x, y, bytesPerPixel;
-		unsigned char* data = stbi_load(("./res/textures/" + fileName).c_str(), &x, &y, &bytesPerPixel, 4);
+		unsigned char* data = stbi_load((texture_directory + fileName).c_str(), &x, &y, &bytesPerPixel, 4);
 
 		if(data == NULL)
 		{
-			std::cerr << "Unable to load texture: " << fileName << std::endl;
+			std::cout << "Could not find image resource: " << fileName << "\n--Using default image instead\n" << std::endl;
+			data = stbi_load((texture_directory + texture_default).c_str(), &x, &y, &bytesPerPixel, 4);
 		}
 
 		GLfloat i = GL_LINEAR_MIPMAP_LINEAR;

@@ -18,6 +18,8 @@
     <ClInclude Include="Engine\Components\GameComponent.h" />
     <ClInclude Include="Engine\Components\Lighting.h" />
     <ClInclude Include="Engine\Components\MeshRenderer.h" />
+    <ClInclude Include="Engine\Components\PhysicsEngineComponent.h" />
+    <ClInclude Include="Engine\Components\PhysicsObjectComponent.h" />
     <ClInclude Include="Engine\Core\Math3D.h" />
     <ClInclude Include="Engine\Core\CoreEngine.h" />
     <ClInclude Include="Engine\Core\Game.h" />
@@ -35,7 +37,10 @@
     <ClInclude Include="Engine\Grafaic.h" />
     <ClInclude Include="Engine\Physics\AABB.h" />
     <ClInclude Include="Engine\Physics\BoundingSphere.h" />
+    <ClInclude Include="Engine\Physics\Collider.h" />
     <ClInclude Include="Engine\Physics\IntersectionData.h" />
+    <ClInclude Include="Engine\Physics\PhysicsEngine.h" />
+    <ClInclude Include="Engine\Physics\PhysicsObject.h" />
     <ClInclude Include="Engine\Physics\Plane.h" />
     <ClInclude Include="Engine\Rendering\Colour.h" />
     <ClInclude Include="Engine\Rendering\MappedValues.h" />
@@ -58,6 +63,8 @@
     <ClCompile Include="Engine\Components\GameComponent.cpp" />
     <ClCompile Include="Engine\Components\Lighting.cpp" />
     <ClCompile Include="Engine\Components\MeshRenderer.cpp" />
+    <ClCompile Include="Engine\Components\PhysicsEngineComponent.cpp" />
+    <ClCompile Include="Engine\Components\PhysicsObjectComponent.cpp" />
     <ClCompile Include="Engine\Core\CoreEngine.cpp" />
     <ClCompile Include="Engine\Core\Game.cpp" />
     <ClCompile Include="Engine\Core\Profiling.cpp" />
@@ -72,7 +79,10 @@
     <ClCompile Include="Engine\Core\Vector4.cpp" />
     <ClCompile Include="Engine\Physics\AABB.cpp" />
     <ClCompile Include="Engine\Physics\BoundingSphere.cpp" />
+    <ClCompile Include="Engine\Physics\Collider.cpp" />
     <ClCompile Include="Engine\Physics\IntersectionData.cpp" />
+    <ClCompile Include="Engine\Physics\PhysicsEngine.cpp" />
+    <ClCompile Include="Engine\Physics\PhysicsObject.cpp" />
     <ClCompile Include="Engine\Physics\Plane.cpp" />
     <ClCompile Include="Engine\Rendering\Colour.cpp" />
     <ClCompile Include="Engine\Rendering\MappedValues.cpp" />

@@ -29,7 +29,8 @@ RenderingEngine::RenderingEngine(const Window& window) :
 
 	setSamplerSlot("filterTexture", 0);
 
-	setVector3("ambient", Vector3(0.2f, 0.2f, 0.2f));
+	float ambience = 1.0f;
+	setVector3("ambient", Vector3(ambience, ambience, ambience));
 
 	setFloat("fxaaSpanMax", 8.0f);
 	setFloat("fxaaReduceMin", 1.0f / 128.0f);
