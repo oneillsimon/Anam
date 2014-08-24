@@ -2,14 +2,15 @@
 #define GAMEOBJECT_H
 
 #include <vector>
-#include "Transform.h"
-#include "../Core/Input.h"
 
+#include "Input.h"
+#include "Transform.h"
+
+class Camera;
 class CoreEngine;
 class GameComponent;
-class Shader;
 class RenderingEngine;
-class Camera;
+class Shader;
 
 class GameObject
 {

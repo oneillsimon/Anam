@@ -1,7 +1,8 @@
 #include <iostream>
-#include <cassert>
-#include "Time.h"
+
 #include "Profiling.h"
+#include "Time.h"
+
 
 ProfileTimer::ProfileTimer()
 {

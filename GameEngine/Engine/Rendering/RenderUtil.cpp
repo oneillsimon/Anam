@@ -1,4 +1,5 @@
 #include <GL/glew.h>
+
 #include "RenderUtil.h"
 
 void RenderUtil::clearScreen()

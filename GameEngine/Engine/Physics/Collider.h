@@ -1,9 +1,8 @@
 #ifndef COLLIDER_H
 #define COLLIDER_H
 
-#include "IntersectionData.h"
-#include "../Core/Math3D.h"
 #include "../Core/ReferenceCounter.h"
+#include "IntersectionData.h"
 
 class Collider : public ReferenceCounter
 {

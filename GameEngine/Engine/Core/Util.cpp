@@ -1,4 +1,5 @@
 #include <SDL2/SDL.h>
+
 #include "Util.h"
 
 void Util::sleep(int milliseconds)

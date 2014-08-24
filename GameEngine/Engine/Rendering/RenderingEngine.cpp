@@ -1,11 +1,5 @@
-#include "GL/glew.h"
-#include "Window.h"
-#include "../Core/GameObject.h"
-#include "Shader.h"
-#include "RenderingEngine.h"
-#include "Mesh.h"
 #include "../Core/GameMath.h"
-#include "../Core/Math3D.h"
+#include "RenderingEngine.h"
 
 const Matrix4 RenderingEngine::BIAS_MATRIX = Matrix4().initScale(0.5f, 0.5f, 0.5f) * Matrix4().initTranslation(1.0f, 1.0f, 1.0f);
 

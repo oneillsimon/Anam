@@ -1,8 +1,8 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
-#include <string>
 #include <SDL2/SDL.h>
+
 #include "../Core/Input.h"
 
 class Window

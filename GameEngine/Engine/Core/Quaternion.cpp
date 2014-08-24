@@ -1,4 +1,5 @@
 #include <cmath>
+
 #include "Math3D.h"
 
 Quaternion::Quaternion(float x, float y, float z, float w)

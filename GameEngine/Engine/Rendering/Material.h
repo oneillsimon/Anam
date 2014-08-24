@@ -2,10 +2,9 @@
 #define MATERIAL_H
 
 #include <map>
-#include "Texture.h"
+
 #include "MappedValues.h"
 #include "Colour.h"
-#include "../Core/Math3D.h"
 
 class MaterialData : public ReferenceCounter, public MappedValues
 {

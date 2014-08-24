@@ -1,5 +1,5 @@
 #include <SDL2/SDL.h>
-#include <iostream>
+
 #include "SDLWrapper.h"
 
 static SDL_Window* window;

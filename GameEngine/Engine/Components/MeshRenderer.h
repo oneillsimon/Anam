@@ -2,7 +2,6 @@
 #define MESHRENDERER_H
 
 #include "../Rendering/Mesh.h"
-#include "../Rendering/Material.h"
 #include "../Rendering/Shader.h"
 #include "GameComponent.h"
 

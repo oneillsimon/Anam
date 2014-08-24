@@ -1,11 +1,8 @@
 #ifndef LIGHTING_H
 #define LIGHTING_H
 
-#include "../Core/Math3D.h"
 #include "../Rendering/Shader.h"
 #include "GameComponent.h"
-
-class CoreEngine;
 
 class ShadowInfo
 {

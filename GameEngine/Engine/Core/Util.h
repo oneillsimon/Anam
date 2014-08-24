@@ -1,8 +1,8 @@
 #ifndef UTIL_H
 #define UTIL_H
 
-#include <vector>
 #include <string>
+#include <vector>
 
 namespace Util
 {

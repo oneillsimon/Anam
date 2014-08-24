@@ -1,7 +1,6 @@
 #ifndef FREELOOK_H
 #define FREELOOK_H
 
-#include "../Core/Math3D.h"
 #include "GameComponent.h"
 
 class FreeLook : public GameComponent

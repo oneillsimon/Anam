@@ -1,9 +1,8 @@
 #ifndef PLANE_H
 #define PLANE_H
 
-#include "../Core/Math3D.h"
-#include "IntersectionData.h"
 #include "BoundingSphere.h"
+#include "IntersectionData.h"
 
 class Plane
 {

@@ -2,6 +2,7 @@
 #define MAPPEDVALUES_H
 
 #include <map>
+
 #include "../Core/Math3D.h"
 #include "Texture.h"
 

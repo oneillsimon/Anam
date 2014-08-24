@@ -1,17 +1,10 @@
 #ifndef RENDERINGENGINE_H
 #define RENDERINGENGINE_H
 
-#include <vector>
-#include <map>
-#include "../Components/Camera.h"
 #include "../Components/Lighting.h"
-#include "MappedValues.h"
-#include "Material.h"
+#include "../Core/Profiling.h"
 #include "Mesh.h"
 #include "Window.h"
-#include "../Core/Profiling.h"
-
-class GameObject;
 
 class RenderingEngine : public MappedValues
 {

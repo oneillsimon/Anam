@@ -1,4 +1,5 @@
 #include <math.h>
+
 #include "Plane.h"
 
 Plane::Plane(const Vector3& normal, float distance) :

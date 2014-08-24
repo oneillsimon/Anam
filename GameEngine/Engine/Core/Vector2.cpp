@@ -1,5 +1,6 @@
-#include <cmath>
 #include <algorithm>
+#include <cmath>
+
 #include "GameMath.h"
 #include "Math3D.h"
 

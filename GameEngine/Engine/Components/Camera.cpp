@@ -1,5 +1,4 @@
 #include "../Core/CoreEngine.h"
-#include "../Rendering/RenderingEngine.h"
 #include "Camera.h"
 
 Camera::Camera(const Matrix4& projection, Transform* transform)

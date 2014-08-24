@@ -1,7 +1,6 @@
-#include "../Core/Math3D.h"
-#include "PhysicsObject.h"
-
 #include <iostream>
+
+#include "PhysicsObject.h"
 
 PhysicsObject::PhysicsObject(Collider* collider, const Vector3& velocity) :
 	m_position(collider->getCentre()),

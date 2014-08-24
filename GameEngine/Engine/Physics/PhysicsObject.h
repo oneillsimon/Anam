@@ -1,8 +1,7 @@
 #ifndef PHYSICSOBJECT_H
 #define PHYSICSOBJECT_H
 
-#include "../Core/Math3D.h"
-#include "BoundingSphere.h"
+#include "Collider.h"
 
 class PhysicsObject
 {

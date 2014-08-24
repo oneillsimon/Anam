@@ -1,5 +1,5 @@
-#include "BoundingSphere.h"
 #include "Collider.h"
+#include "BoundingSphere.h"
 
 Collider::Collider(int type) :
 	ReferenceCounter(),

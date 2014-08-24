@@ -1,5 +1,4 @@
 #include "Vertex.h"
-#include <stdio.h>
 
 Vertex::Vertex(Vector3 position, Vector2 texCoord, Vector3 normal)
 {

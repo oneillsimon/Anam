@@ -1,6 +1,6 @@
-#include <Windows.h>
 #include <iostream>
-#include <time.h>
+#include <Windows.h>
+
 #include "Time.h"
 
 static double g_freq;

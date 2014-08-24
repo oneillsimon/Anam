@@ -2,8 +2,9 @@
 #define COREENGINE_H
 
 #include <string>
-#include "Profiling.h"
+
 #include "../Rendering/RenderingEngine.h"
+#include "Profiling.h"
 
 class Game;
 

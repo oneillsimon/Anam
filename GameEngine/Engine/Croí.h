@@ -8,10 +8,10 @@
 #include "Core\Input.h"
 #include "Core\Math3D.h"
 #include "Core\Profiling.h"
+#include "Core\ReferenceCounter.h"
 #include "Core\SDLWrapper.h"
 #include "Core\Time.h"
 #include "Core\Transform.h"
 #include "Core\Util.h"
-#include "Core\ReferenceCounter.h"
 
 #endif

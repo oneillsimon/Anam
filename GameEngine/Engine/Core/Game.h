@@ -1,8 +1,6 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include "Profiling.h"
-#include "GameObject.h"
 #include "CoreEngine.h"
 
 class Game

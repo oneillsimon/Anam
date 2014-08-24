@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <stdlib.h>
+
 #include "GameMath.h"
 
 double GameMath::toRadians(double d)

@@ -1,9 +1,8 @@
 #ifndef BOUNDINGSPHERE_H
 #define BOUNDINGSPHERE_H
 
-#include "../Core/Math3D.h"
-#include "IntersectionData.h"
 #include "Collider.h"
+#include "IntersectionData.h"
 
 class BoundingSphere : public Collider
 {

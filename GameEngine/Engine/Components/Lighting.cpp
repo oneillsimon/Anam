@@ -1,5 +1,4 @@
 #include "../Core/CoreEngine.h"
-#include "../Rendering/RenderingEngine.h"
 #include "Lighting.h"
 
 #define COLOUR_DEPTH 256

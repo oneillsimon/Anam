@@ -1,5 +1,3 @@
-#include <iostream>
-#include "../Rendering/RenderingEngine.h"
 #include "Game.h"
 
 void Game::addToScene(GameObject* object)

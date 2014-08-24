@@ -1,5 +1,6 @@
-#include <cmath>
 #include <algorithm>
+#include <cmath>
+
 #include "Math3D.h"
 
 Vector4::Vector4(float x, float y, float z, float w)

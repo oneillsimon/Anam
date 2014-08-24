@@ -1,13 +1,12 @@
 #ifndef MESH_H
 #define MESH_H
 
-#include <string>
+#include <GL/glew.h>
 #include <map>
 #include <vector>
-#include <GL/glew.h>
+
 #include "../Core/ReferenceCounter.h"
 #include "Vertex.h"
-#include "../Core/Math3D.h"
 
 class IndexedModel
 {

@@ -1,15 +1,7 @@
-#include <cassert>
 #include <fstream>
 #include <iostream>
-#include <cstdlib>
-#include <GL\glew.h>
-#include <cstring>
-#include <sstream>
 
 #include "../Core/Util.h"
-#include "../Core/Profiling.h"
-#include "Shader.h"
-#include "../Components/Lighting.h"
 #include "RenderingEngine.h"
 
 std::map<std::string, ShaderData*> Shader::m_resourceMap;
@@ -428,8 +420,6 @@ void ShaderData::addUniform(const std::string& uniformName, const std::string& u
 	}
 
 	unsigned int location = glGetUniformLocation(m_program, uniformName.c_str());
-
-	assert(location != GL_INVALID_VALUE);
 
 	m_uniformMap.insert(std::pair<std::string, unsigned int>(uniformName, location));
 }

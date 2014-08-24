@@ -1,7 +1,8 @@
 #include <cstring>
 #include <SDL2/SDL.h>
-#include "SDLWrapper.h"
+
 #include "Input.h"
+#include "SDLWrapper.h"
 
 Input::Input(Window* window)
 {

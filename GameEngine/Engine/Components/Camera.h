@@ -1,7 +1,6 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include "../Core/Math3D.h"
 #include "GameComponent.h"
 
 class Camera

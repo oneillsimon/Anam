@@ -1,12 +1,7 @@
 #ifndef GAMECOMPONENT_H
 #define GAMECOMPONENT_H
 
-#include "../Core/Transform.h"
 #include "../Core/GameObject.h"
-#include "../Core/Input.h"
-
-class Shader;
-class RenderingEngine;
 
 class GameComponent
 {

@@ -2,19 +2,15 @@
 #define SHADER_H
 
 #include <map>
-#include <vector>
 #include <string>
+#include <vector>
 
-#include "../Core/ReferenceCounter.h"
-#include "../Core/Math3D.h"
-#include "Material.h"
-#include "../Core/Transform.h"
 #include "../Components/Camera.h"
-#include "Colour.h"
+#include "Material.h"
 
-class RenderingEngine;
 class DirectionalLight;
 class PointLight;
+class RenderingEngine;
 class SpotLight;
 
 struct TypedData

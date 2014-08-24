@@ -1,11 +1,7 @@
-#include <stdio.h>
-#include "Time.h"
-#include "../Rendering/Window.h"
-#include "Input.h"
-#include "Util.h"
-#include "Game.h"
 #include "CoreEngine.h"
-#include "../Rendering/RenderUtil.h"
+#include "Game.h"
+#include "Time.h"
+#include "Util.h"
 
 CoreEngine::CoreEngine(int width, int height, double frameRate, Game* game)
 {

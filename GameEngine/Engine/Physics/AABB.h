@@ -1,7 +1,6 @@
 #ifndef AABB_H
 #define AABB_H
 
-#include "../Core/Math3D.h"
 #include "IntersectionData.h"
 
 class AABB

@@ -1,9 +1,6 @@
 #ifndef MATH3D_H
 #define MATH3D_H
 
-class Vector3;
-class Vector4;
-class Matrix4;
 class Quaternion;
 
 class Vector2

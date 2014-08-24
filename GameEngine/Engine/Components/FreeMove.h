@@ -1,7 +1,6 @@
 #ifndef FREEMOVE_H
 #define FREEMOVE_H
 
-#include "../Core/Math3D.h"
 #include "GameComponent.h"
 
 class FreeMove : public GameComponent
