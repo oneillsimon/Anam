@@ -14,7 +14,7 @@ IntersectionData AABB::intersectAABB(const AABB& other) const
 
 	float maxDistance = distances.max();
 
-	return IntersectionData(maxDistance < 0, maxDistance);
+	return IntersectionData(maxDistance < 0, distances);
 }
 
 const Vector3& AABB::getMinExtents() const

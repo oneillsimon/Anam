@@ -3,8 +3,9 @@
 
 #include "../Core/Math3D.h"
 #include "IntersectionData.h"
+#include "Collider.h"
 
-class BoundingSphere
+class BoundingSphere : public Collider
 {
 private:
 	Vector3 m_center;
@@ -14,8 +15,9 @@ public:
 	BoundingSphere(Vector3 center, float radius);
 
 	IntersectionData intersectBoundingSphere(const BoundingSphere& other);
+	virtual void transform(const Vector3& translation);
 
-	const Vector3 getCenter() const;
+	virtual Vector3 getCentre() const;
 	const float getRadius() const;
 
 	void setCenter(Vector3 center);

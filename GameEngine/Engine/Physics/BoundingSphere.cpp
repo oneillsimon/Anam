@@ -1,21 +1,30 @@
 #include "BoundingSphere.h"
 
-BoundingSphere::BoundingSphere(Vector3 center, float radius)
+BoundingSphere::BoundingSphere(Vector3 center, float radius) :
+	Collider(Collider::TYPE_SPHERE),
+	m_center(center),
+	m_radius(radius)
 {
-	m_center = center;
-	m_radius = radius;
 }
 
 IntersectionData BoundingSphere::intersectBoundingSphere(const BoundingSphere& other)
 {
 	float radiusDistance = m_radius + other.getRadius();
-	float centerDistance = (other.getCenter() - m_center).length();
+	Vector3 direction = (other.getCentre() - m_center);
+	float centerDistance = direction.length();
+	direction /= centerDistance;
+
 	float distance = centerDistance - radiusDistance;
 
-	return IntersectionData(centerDistance < radiusDistance, distance);
+	return IntersectionData(distance < 0, direction * distance);
 }
 
-const Vector3 BoundingSphere::getCenter() const
+void BoundingSphere::transform(const Vector3& translation)
+{
+	m_center += translation;
+}
+
+Vector3 BoundingSphere::getCentre() const
 {
 	return m_center;
 }

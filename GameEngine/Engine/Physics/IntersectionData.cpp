@@ -1,9 +1,9 @@
 #include "IntersectionData.h"
 
-IntersectionData::IntersectionData(bool doesIntersect, float distance)
+IntersectionData::IntersectionData(const bool doesIntersect, const Vector3 direction) :
+	m_doesIntersect(doesIntersect),
+	m_direction(direction)
 {
-	m_doesIntersect = doesIntersect;
-	m_distance = distance;
 }
 
 bool IntersectionData::getDoesIntersect() const
@@ -11,7 +11,12 @@ bool IntersectionData::getDoesIntersect() const
 	return m_doesIntersect;
 }
 
+Vector3 IntersectionData::getDirection() const
+{
+	return m_direction;
+}
+
 float IntersectionData::getDistance() const
 {
-	return m_distance;
+	return m_direction.length();
 }

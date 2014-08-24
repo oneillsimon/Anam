@@ -1,16 +1,19 @@
 #ifndef INTERSECTIONDATA_H
 #define INTERSECTIONDATA_H
 
+#include "../Core/Math3D.h"
+
 class IntersectionData
 {
 private:
-	bool m_doesIntersect;
-	float m_distance;
+	const bool m_doesIntersect;
+	const Vector3 m_direction;
 
 public:
-	IntersectionData(const bool doesIntersect, const float distance);
+	IntersectionData(const bool doesIntersect, const Vector3 direction);
 
 	bool getDoesIntersect() const;
+	Vector3 getDirection() const;
 	float getDistance() const;
 };
 
