@@ -16,10 +16,10 @@ Plane Plane::normalised() const
 
 IntersectionData Plane::intersectSphere(const BoundingSphere& sphere) const
 {
-	float distanceFromSphereCenter = fabs(m_normal.dot(sphere.getCenter()) + m_distance);
+	float distanceFromSphereCenter = fabs(m_normal.dot(sphere.getCentre()) + m_distance);
 	float distanceFromSphere = distanceFromSphereCenter - sphere.getRadius();
 
-	return IntersectionData(distanceFromSphere < 0, distanceFromSphere);
+	return IntersectionData(distanceFromSphere < 0, m_normal * distanceFromSphere);
 }
 
 const Vector3& Plane::getNormal() const
