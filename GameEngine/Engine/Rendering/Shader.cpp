@@ -204,7 +204,7 @@ void Shader::updateUniforms(const Transform& transform, const Material& material
 			}
 			else if(uniformType == "vec4")
 			{
-				setUniform(uniformName, material.getVector4(uniformName));
+				setUniform(uniformName, material.getColour(uniformName).toGLSLVec4());
 			}
 			else
 			{
@@ -242,13 +242,13 @@ void Shader::setUniform(const std::string& uniformName, const Vector4& value) co
 void Shader::setUniformDirectionalLight(const std::string& uniformName, const DirectionalLight& light) const
 {
 	setUniform(uniformName + ".direction", light.getTransform().getTransformedRotation().getForward());
-	setUniform(uniformName + ".base.color", light.getColour().getRGB());
+	setUniform(uniformName + ".base.color", light.getColour().toGLSLVec4().getRGB());
 	setUniform(uniformName + ".base.intensity", light.getIntensity());
 }
 
 void Shader::setUniformPointLight(const std::string& uniformName, const PointLight& light) const
 {
-	setUniform(uniformName + ".base.color", light.getColour().getRGB());
+	setUniform(uniformName + ".base.color", light.getColour().toGLSLVec4().getRGB());
 	setUniform(uniformName + ".base.intensity", light.getIntensity());
 	setUniform(uniformName + ".atten.constant", light.getAttenuation().getConstant());
 	setUniform(uniformName + ".atten.linear", light.getAttenuation().getLinear());
@@ -259,7 +259,7 @@ void Shader::setUniformPointLight(const std::string& uniformName, const PointLig
 
 void Shader::setUniformSpotLight(const std::string& uniformName, const SpotLight& light) const
 {
-	setUniform(uniformName + ".pointLight.base.color", light.getColour().getRGB());
+	setUniform(uniformName + ".pointLight.base.color", light.getColour().toGLSLVec4().getRGB());
 	setUniform(uniformName + ".pointLight.base.intensity", light.getIntensity());
 	setUniform(uniformName + ".pointLight.atten.constant", light.getAttenuation().getConstant());
 	setUniform(uniformName + ".pointLight.atten.linear", light.getAttenuation().getLinear());

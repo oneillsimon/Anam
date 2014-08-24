@@ -1,12 +1,12 @@
 #include "Colour.h"
 
 Colour::Colour()
-	: Vector4(0, 0, 0, 1)
+	: Vector4(0, 0, 0, 255)
 {
 }
 
 Colour::Colour(float r, float g, float b, float a)
-	: Vector4(r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f)
+	: Vector4(r, g, b, a)
 {
 }
 
@@ -19,7 +19,7 @@ Colour::Colour(int hex)
 	w = c.getA();
 }
 
-Colour Colour::hexToRGBA(int hex)
+Colour Colour::hexToRGBA(int hex) const
 {
 	int r = (hex >> 24) & 0xFF;
 	int g = (hex >> 16) & 0xFF;
@@ -32,6 +32,11 @@ Colour Colour::hexToRGBA(int hex)
 int Colour::RGBAtoHex(float r, float g, float b, float a)
 {
 	return ((int)x << 24) + ((int)y << 16) + ((int)z << 8) + (int)w;
+}
+
+Colour Colour::toGLSLVec4() const
+{
+	return Colour(x / 255.0f, y / 255.0f, z / 255.0f, w / 255.0f);
 }
 
 Vector3 Colour::getRGB() const
