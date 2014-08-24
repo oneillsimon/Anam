@@ -1,4 +1,3 @@
-#include "../Core/GameMath.h"
 #include "FreeLook.h"
 
 bool mouseLocked = false;
@@ -27,12 +26,12 @@ void FreeLook::processInput(const Input& input, float delta)
 
 		if(rotY)
 		{
-			getTransform()->rotate(Vector3(0.0f, 1.0f, 0.0f), (float)GameMath::toRadians(delta.getX() * m_sensitivity));
+			getTransform()->rotate(Vector3(0.0f, 1.0f, 0.0f), (float)toRadians(delta.getX() * m_sensitivity));
 		}
 
 		if(rotX)
 		{
-			getTransform()->rotate(getTransform()->getRotation().getRight(), (float)GameMath::toRadians(delta.getY() * m_sensitivity));
+			getTransform()->rotate(getTransform()->getRotation().getRight(), (float)toRadians(delta.getY() * m_sensitivity));
 		}
 
 		if(rotX || rotY)

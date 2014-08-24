@@ -1,4 +1,3 @@
-#include "../Core/GameMath.h"
 #include "RenderingEngine.h"
 
 const Matrix4 RenderingEngine::BIAS_MATRIX = Matrix4().initScale(0.5f, 0.5f, 0.5f) * Matrix4().initTranslation(1.0f, 1.0f, 1.0f);
@@ -13,7 +12,7 @@ RenderingEngine::RenderingEngine(const Window& window) :
 	m_nullFilter(("filter-null")),
 	m_gausBlurFilter("filter-gausBlur7x1"),
 	m_fxaaFilter("filter-fxaa"),
-	m_altCameraTransform(Vector3(), Quaternion(Vector3(0.0f, 1.0f, 0.0f), (float)GameMath::toRadians(180.0f))),
+	m_altCameraTransform(Vector3(), Quaternion(Vector3(0.0f, 1.0f, 0.0f), (float)toRadians(180.0f))),
 	m_altCamera(Matrix4().initIdentity(), &m_altCameraTransform)
 {
 	setSamplerSlot("diffuse", 0);
@@ -42,8 +41,8 @@ RenderingEngine::RenderingEngine(const Window& window) :
 	//glEnable(GL_MULTISAMPLE);
 
 	m_planeTransform.setScale(1.0f);
-	m_planeTransform.rotate(Quaternion(Vector3(1.0f, 0.0f, 0.0f), (float)GameMath::toRadians(90.0f)));
-	m_planeTransform.rotate(Quaternion(Vector3(0.0f, 0.0f, 1.0f), (float)GameMath::toRadians(180.0f)));
+	m_planeTransform.rotate(Quaternion(Vector3(1.0f, 0.0f, 0.0f), (float)toRadians(90.0f)));
+	m_planeTransform.rotate(Quaternion(Vector3(0.0f, 0.0f, 1.0f), (float)toRadians(180.0f)));
 
 	for(int i = 0; i < NUM_SHADOW_MAPS; i++)
 	{
@@ -186,7 +185,7 @@ void RenderingEngine::applyFilter(const Shader& filter, const Texture& source, c
 
 	m_altCamera.setProjection(Matrix4().initIdentity());
 	m_altCamera.getTransform()->setPosition(Vector3());
-	m_altCamera.getTransform()->setRotation(Quaternion(Vector3(0.0f, 1.0, 0.0f), (float)GameMath::toRadians(180.0f)));
+	m_altCamera.getTransform()->setRotation(Quaternion(Vector3(0.0f, 1.0, 0.0f), (float)toRadians(180.0f)));
 
 	glClear(GL_DEPTH_BUFFER_BIT);
 	filter.bind();

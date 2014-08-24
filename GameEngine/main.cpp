@@ -40,19 +40,19 @@ void TestGame::init(const Window& window)
 	/*addToScene((new GameObject(Vector3(0, -1, 5), Quaternion(), 32.0f))
 		->addComponent(new MeshRenderer(Mesh("terrain02.obj"), Material("bricks"))));*/
 
-	addToScene((new GameObject(Vector3(1, 1, 1), Quaternion(Vector3(1, 0, 0), GameMath::toRadians(-45)), 32.0f))
+	addToScene((new GameObject(Vector3(1, 1, 1), Quaternion(Vector3(1, 0, 0), toRadians(-45.0)), 32.0f))
 		->addComponent(new FreeLook(window.getCentre()))
 		->addComponent(new FreeMove(10.0f, Input::KEY_W, Input::KEY_S, Input::KEY_A, Input::KEY_D))
-		->addComponent(new CameraComponent(Matrix4().initPerspective(GameMath::toRadians(70.0f), window.getAspectRatio(), 0.1f, 1000.0f))));
+		->addComponent(new CameraComponent(Matrix4().initPerspective(toRadians(70.0f), window.getAspectRatio(), 0.1f, 1000.0f))));
 	
 	/*addToScene((new GameObject(Vector3(7,0,7)))
 		->addComponent(new PointLight(Colour(0,255,0), 0.4f, Attenuation(0,0,1))));*/
 
-	addToScene((new GameObject(Vector3(100, 100, 100), Quaternion(Vector3(1,0,0), GameMath::toRadians(-45))))
+	addToScene((new GameObject(Vector3(100, 100, 100), Quaternion(Vector3(1,0,0), toRadians(-45))))
 		->addComponent(new DirectionalLight(Colour(255,255,255), 0.4f, 10, 80.0f, 1.0f)));
 
-	/*addToScene((new GameObject(Vector3(20,-11.0f,5), Quaternion(Vector3(1,0,0), GameMath::toRadians(-60.0f)) * Quaternion(Vector3(0,1,0), GameMath::toRadians(90.0f))))
-		->addComponent(new SpotLight(Colour(0,255,255), 0.4f, Attenuation(0,0,0.02f), GameMath::toRadians(91.1f), 7, 1.0f, 0.5f)));*/
+	/*addToScene((new GameObject(Vector3(20,-11.0f,5), Quaternion(Vector3(1,0,0), toRadians(-60.0f)) * Quaternion(Vector3(0,1,0), toRadians(90.0f))))
+		->addComponent(new SpotLight(Colour(0,255,255), 0.4f, Attenuation(0,0,0.02f), toRadians(91.1f), 7, 1.0f, 0.5f)));*/
 		
 	/*addToScene((new GameObject(Vector3(0, 2, 0), Quaternion(Vector3(0,1,0), 0.4f), 1.0f))
 		->addComponent(new MeshRenderer(Mesh("plane3.obj"), Material("bricks2")))
@@ -60,7 +60,7 @@ void TestGame::init(const Window& window)
 		->addChild((new GameObject(Vector3(0, 0, 25)))
 			->addComponent(new MeshRenderer(Mesh("plane3.obj"), Material("bricks2")))));*/
 	
-	/*addToScene((new GameObject(Vector3(24,-12,5), Quaternion(Vector3(0,1,0), GameMath::toRadians(30.0f))))
+	/*addToScene((new GameObject(Vector3(24,-12,5), Quaternion(Vector3(0,1,0), toRadians(30.0f))))
 		->addComponent(new MeshRenderer(Mesh("cube.obj"), Material("bricks2"))));
 		
 	addToScene((new GameObject(Vector3(0,0,7), Quaternion(), 1.0f))

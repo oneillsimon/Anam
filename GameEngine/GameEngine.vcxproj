@@ -23,7 +23,6 @@
     <ClInclude Include="Engine\Core\Math3D.h" />
     <ClInclude Include="Engine\Core\CoreEngine.h" />
     <ClInclude Include="Engine\Core\Game.h" />
-    <ClInclude Include="Engine\Core\GameMath.h" />
     <ClInclude Include="Engine\Core\Profiling.h" />
     <ClInclude Include="Engine\Core\Util.h" />
     <ClInclude Include="Engine\Core\Transform.h" />
@@ -71,7 +70,6 @@
     <ClCompile Include="Engine\Core\Vector2.cpp" />
     <ClCompile Include="Engine\Core\Vector3.cpp" />
     <ClCompile Include="Engine\Core\Matrix4.cpp" />
-    <ClCompile Include="Engine\Core\GameMath.cpp" />
     <ClCompile Include="Engine\Core\Quaternion.cpp" />
     <ClCompile Include="Engine\Core\Input.cpp" />
     <ClCompile Include="Engine\Core\SDLWrapper.cpp" />

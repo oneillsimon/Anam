@@ -1,6 +1,10 @@
 #ifndef MATH3D_H
 #define MATH3D_H
 
+#define PI 3.14159265358979323846264338327950288419716939937510
+#define toRadians(x) (float)(x * PI / 180.0f)
+#define random(min, max) min + (rand() % (int)(max - min + 1));
+
 class Quaternion;
 
 class Vector2

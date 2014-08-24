@@ -1,7 +1,6 @@
 #include <algorithm>
 #include <cmath>
 
-#include "GameMath.h"
 #include "Math3D.h"
 
 Vector2::Vector2(float x, float y)
@@ -48,7 +47,7 @@ Vector2 Vector2::inversed() const
 
 Vector2 Vector2::rotate(float angle)
 {
-	double radians = GameMath::toRadians(angle);
+	double radians = toRadians(angle);
 	double cosine = cos(radians);
 	double sine = sin(radians);
 

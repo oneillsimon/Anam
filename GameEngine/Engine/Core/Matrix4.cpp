@@ -1,6 +1,5 @@
 #include <cmath>
 
-#include "GameMath.h"
 #include "Math3D.h"
 
 Matrix4::Matrix4()
@@ -50,9 +49,9 @@ Matrix4 Matrix4::initRotation(float x, float y, float z)
 	Matrix4 rotY = Matrix4();
 	Matrix4 rotZ = Matrix4();
 
-	x = (float)GameMath::toRadians(x);
-	y = (float)GameMath::toRadians(y);
-	z = (float)GameMath::toRadians(z);
+	x = (float)toRadians(x);
+	y = (float)toRadians(y);
+	z = (float)toRadians(z);
 
 	rotX.m[0][0] = 1;		rotX.m[1][0] = 0;		rotX.m[2][0] = 0;		rotX.m[3][0] = 0;
 	rotX.m[0][1] = 0;		rotX.m[1][1] = cos(x);	rotX.m[2][1] = -sin(x);	rotX.m[3][1] = 0;
