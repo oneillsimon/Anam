@@ -88,6 +88,11 @@ Vector3 Vector3::lerp(const Vector3& destination, float lerpFactor) const
 	return destination - *this * lerpFactor + *this;
 }
 
+Vector3 Vector3::reflect(const Vector3& normal) const
+{
+	return *this - (normal * (this->dot(normal) * 2));
+}
+
 Vector3 Vector3::absolute()
 {
 	return Vector3(abs(x), abs(y), abs(z));

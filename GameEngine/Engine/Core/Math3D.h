@@ -73,6 +73,7 @@ public:
 	Vector3 inversed() const;
 	Vector3 rotate(const Vector3& axis, float angle) const;
 	Vector3 rotate(const Quaternion& rotation) const;
+	Vector3 reflect(const Vector3& normal) const;
 	Vector3 lerp(const Vector3& destination, float lerpFactor) const;
 	Vector3 absolute();
 	void addScaledVector3(const Vector3& v, float scale);
