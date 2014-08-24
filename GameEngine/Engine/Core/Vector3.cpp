@@ -56,7 +56,7 @@ Vector3 Vector3::cross(const Vector3& v) const
 
 Vector3 Vector3::normalised() const
 {
-	const float l = length();
+	float l = length();
 	return Vector3(x / l, y / l, z / l);
 }
 

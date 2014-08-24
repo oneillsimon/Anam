@@ -15,9 +15,20 @@ Vector4::~Vector4()
 {
 }
 
+float Vector4::length() const
+{
+	return sqrtf(x * x + y * y + z * z + w * w);
+}
+
 float Vector4::max() const
 {
 	return std::max(x, std::max(y, std::max(z, w)));
+}
+
+Vector4 Vector4::normalised() const
+{
+	float l = length();
+	return Vector4(x / l, y / l, z / l, w / l);
 }
 
 float Vector4::getX() const
