@@ -12,5 +12,6 @@
 #include "Core\Time.h"
 #include "Core\Transform.h"
 #include "Core\Util.h"
+#include "Core\ReferenceCounter.h"
 
 #endif

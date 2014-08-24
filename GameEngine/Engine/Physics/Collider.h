@@ -3,7 +3,7 @@
 
 #include "IntersectionData.h"
 #include "../Core/Math3D.h"
-#include "../Rendering/ReferenceCounter.h"
+#include "../Core/ReferenceCounter.h"
 
 class Collider : public ReferenceCounter
 {

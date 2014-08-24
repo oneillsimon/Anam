@@ -5,7 +5,6 @@
 #include "Rendering\MappedValues.h"
 #include "Rendering\Material.h"
 #include "Rendering\Mesh.h"
-#include "Rendering\ReferenceCounter.h"
 #include "Rendering\RenderingEngine.h"
 #include "Rendering\RenderUtil.h"
 #include "Rendering\Shader.h"

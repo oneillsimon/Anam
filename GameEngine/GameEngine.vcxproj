@@ -46,7 +46,7 @@
     <ClInclude Include="Engine\Rendering\MappedValues.h" />
     <ClInclude Include="Engine\Rendering\Material.h" />
     <ClInclude Include="Engine\Rendering\Mesh.h" />
-    <ClInclude Include="Engine\Rendering\ReferenceCounter.h" />
+    <ClInclude Include="Engine\Core\ReferenceCounter.h" />
     <ClInclude Include="Engine\Rendering\RenderingEngine.h" />
     <ClInclude Include="Engine\Rendering\RenderUtil.h" />
     <ClInclude Include="Engine\Rendering\Shader.h" />
@@ -88,7 +88,7 @@
     <ClCompile Include="Engine\Rendering\MappedValues.cpp" />
     <ClCompile Include="Engine\Rendering\Material.cpp" />
     <ClCompile Include="Engine\Rendering\Mesh.cpp" />
-    <ClCompile Include="Engine\Rendering\ReferenceCounter.cpp" />
+    <ClCompile Include="Engine\Core\ReferenceCounter.cpp" />
     <ClCompile Include="Engine\Rendering\RenderingEngine.cpp" />
     <ClCompile Include="Engine\Rendering\RenderUtil.cpp" />
     <ClCompile Include="Engine\Rendering\Shader.cpp" />

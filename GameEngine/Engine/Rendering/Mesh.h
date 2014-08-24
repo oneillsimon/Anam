@@ -5,7 +5,7 @@
 #include <map>
 #include <vector>
 #include <GL/glew.h>
-#include "ReferenceCounter.h"
+#include "../Core/ReferenceCounter.h"
 #include "Vertex.h"
 #include "../Core/Math3D.h"
 

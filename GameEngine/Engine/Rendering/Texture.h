@@ -4,7 +4,7 @@
 #include <string>
 #include <map>
 #include <GL/glew.h>
-#include "ReferenceCounter.h"
+#include "../Core/ReferenceCounter.h"
 
 class TextureData : public ReferenceCounter
 {
