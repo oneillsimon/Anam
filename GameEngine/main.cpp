@@ -1,5 +1,10 @@
 #include "Inneall.h"
 
+#include <iostream>
+
+#include "Engine\Components\PhysicsEngineComponent.h"
+#include "Engine\Components\PhysicsObjectComponent.h"
+
 #undef main
 
 class TestGame : public Game
@@ -14,9 +19,11 @@ private:
 	void operator =(const TestGame& other) {}
 };
 
+static void tests();
+
 void TestGame::init(const Window& window)
 {
-	Material bricks("bricks", Texture("bricks.jpg"), 0.5f, 4, Texture("bricks_normal.jpg"), Texture("bricks_disp.png"), 0.03f, -0.5f);
+	Material bricks("bricks", Texture("bricks.jpg"), 0.5f, 4, Texture("bricks_normal.jpg"), Texture("bricks_disp.png"), 0.03f, -0.5f, Colour(255, 0, 0, 512));
 	Material bricks2("bricks2", Texture("bricks2.jpg"), 1, 8, Texture("bricks2_normal.jpg"), Texture("bricks2_disp.jpg"), 0.04f, -1.0f);
 	MeshRenderer* terrainRenderer = new MeshRenderer(Mesh("terrain02.obj"), Material("bricks"));
 
@@ -30,39 +37,69 @@ void TestGame::init(const Window& window)
 	}
 	Mesh customMesh("cube", cube.finalize());
 
-	addToScene((new GameObject(Vector3(0, -1, 5), Quaternion(), 32.0f))
-		->addComponent(new MeshRenderer(Mesh("terrain02.obj"), Material("bricks"))));
+	/*addToScene((new GameObject(Vector3(0, -1, 5), Quaternion(), 32.0f))
+		->addComponent(new MeshRenderer(Mesh("terrain02.obj"), Material("bricks"))));*/
 
 	addToScene((new GameObject(Vector3(1, 1, 1), Quaternion(Vector3(1, 0, 0), GameMath::toRadians(-45)), 32.0f))
 		->addComponent(new FreeLook(window.getCentre()))
 		->addComponent(new FreeMove(10.0f, Input::KEY_W, Input::KEY_S, Input::KEY_A, Input::KEY_D))
 		->addComponent(new CameraComponent(Matrix4().initPerspective(GameMath::toRadians(70.0f), window.getAspectRatio(), 0.1f, 1000.0f))));
 	
-	addToScene((new GameObject(Vector3(7,0,7)))
-		->addComponent(new PointLight(Colour(0,255,0), 0.4f, Attenuation(0,0,1))));
+	/*addToScene((new GameObject(Vector3(7,0,7)))
+		->addComponent(new PointLight(Colour(0,255,0), 0.4f, Attenuation(0,0,1))));*/
 
 	addToScene((new GameObject(Vector3(100, 100, 100), Quaternion(Vector3(1,0,0), GameMath::toRadians(-45))))
 		->addComponent(new DirectionalLight(Colour(255,255,255), 0.4f, 10, 80.0f, 1.0f)));
 
-	addToScene((new GameObject(Vector3(20,-11.0f,5), Quaternion(Vector3(1,0,0), GameMath::toRadians(-60.0f)) * Quaternion(Vector3(0,1,0), GameMath::toRadians(90.0f))))
-		->addComponent(new SpotLight(Colour(0,255,255), 0.4f, Attenuation(0,0,0.02f), GameMath::toRadians(91.1f), 7, 1.0f, 0.5f)));
+	/*addToScene((new GameObject(Vector3(20,-11.0f,5), Quaternion(Vector3(1,0,0), GameMath::toRadians(-60.0f)) * Quaternion(Vector3(0,1,0), GameMath::toRadians(90.0f))))
+		->addComponent(new SpotLight(Colour(0,255,255), 0.4f, Attenuation(0,0,0.02f), GameMath::toRadians(91.1f), 7, 1.0f, 0.5f)));*/
 		
-	addToScene((new GameObject(Vector3(0, 2, 0), Quaternion(Vector3(0,1,0), 0.4f), 1.0f))
+	/*addToScene((new GameObject(Vector3(0, 2, 0), Quaternion(Vector3(0,1,0), 0.4f), 1.0f))
 		->addComponent(new MeshRenderer(Mesh("plane3.obj"), Material("bricks2")))
 		->addComponent(new FreeMove(10.0f, Input::KEY_UP, Input::KEY_DOWN, Input::KEY_LEFT, Input::KEY_RIGHT))
 		->addChild((new GameObject(Vector3(0, 0, 25)))
-			->addComponent(new MeshRenderer(Mesh("plane3.obj"), Material("bricks2")))));
+			->addComponent(new MeshRenderer(Mesh("plane3.obj"), Material("bricks2")))));*/
 	
-	addToScene((new GameObject(Vector3(24,-12,5), Quaternion(Vector3(0,1,0), GameMath::toRadians(30.0f))))
+	/*addToScene((new GameObject(Vector3(24,-12,5), Quaternion(Vector3(0,1,0), GameMath::toRadians(30.0f))))
 		->addComponent(new MeshRenderer(Mesh("cube.obj"), Material("bricks2"))));
 		
 	addToScene((new GameObject(Vector3(0,0,7), Quaternion(), 1.0f))
-		->addComponent(new MeshRenderer(Mesh("cube"), Material("bricks2"))));
+		->addComponent(new MeshRenderer(Mesh("cube"), Material("bricks2"))));*/
+
+	//TODO: temp
+	PhysicsEngine physicsEngine;
+	physicsEngine.addObject(PhysicsObject(new BoundingSphere(Vector3(0.5f, 0, 0), 1.0f), Vector3(0, 0, 1)));
+	physicsEngine.addObject(PhysicsObject(new BoundingSphere(Vector3(0, 0, 10), 1.0f), Vector3(0, 0, -1)));
+
+	PhysicsEngineComponent* physicsEngineComponent = new PhysicsEngineComponent(physicsEngine);
+
+	for(int i = 0; i < physicsEngineComponent->getPhysicsEngine().getNumObjects(); i++)
+	{
+		addToScene((new GameObject(Vector3(0, 0, 0), Quaternion(), 1.0f))
+			->addComponent(new PhysicsObjectComponent(&physicsEngineComponent->getPhysicsEngine().getObject(i)))
+			->addComponent(new MeshRenderer(Mesh("sphere.obj"), Material("bricks2")))
+			->addComponent(new FreeLook(window.getCentre()))
+			->addComponent(new FreeMove(10.0f, Input::KEY_I * i, Input::KEY_K * i, Input::KEY_J * i, Input::KEY_L * i)));
+	}
+
+	addToScene((new GameObject())->addComponent(physicsEngineComponent));
 }
 
-#include <iostream>
-
 int main()
+{
+	//tests();
+
+	//getchar();
+
+	TestGame game;
+	CoreEngine engine(800, 600, 60, &game);
+	engine.createWindow("Game ENGINE");
+	engine.start();
+
+	return 0;
+}
+
+void tests()
 {
 	BoundingSphere sphere1(Vector3(0, 0, 0), 1.0f);
 	BoundingSphere sphere2(Vector3(0, 3, 0), 1.0f);
@@ -104,13 +141,4 @@ int main()
 	std::cout << "Plane 1 intersect Sphere2: " << plane1IntSphere2.getDoesIntersect() << ", Distance: " << plane1IntSphere2.getDistance() << std::endl;
 	std::cout << "Plane 1 intersect Sphere3: " << plane1IntSphere3.getDoesIntersect() << ", Distance: " << plane1IntSphere3.getDistance() << std::endl;
 	std::cout << "Plane 1 intersect Sphere4: " << plane1IntSphere4.getDoesIntersect() << ", Distance: " << plane1IntSphere4.getDistance() << std::endl;
-
-	getchar();
-
-	TestGame game;
-	CoreEngine engine(800, 600, 60, &game);
-	engine.createWindow("Game ENGINE");
-	engine.start();
-
-	return 0;
 }
