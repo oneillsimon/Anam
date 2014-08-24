@@ -161,8 +161,11 @@ private:
 
 public:
 	Colour();
-	Colour(float r, float g, float b);
-	Colour(float r, float g, float b, float a);
+	Colour(float r, float g, float b, float a = 255.0f);
+	Colour(int hex);
+
+	Colour hexToRGBA(int hex);
+	int RGBAtoHex(float r, float g, float b, float a);
 
 	Vector3 getRGB() const;
 

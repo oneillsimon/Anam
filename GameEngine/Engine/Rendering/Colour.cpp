@@ -5,14 +5,33 @@ Colour::Colour()
 {
 }
 
-Colour::Colour(float r, float g, float b)
-	: Vector4(r / 255.0f, g / 255.0f, b / 255.0f, 1)
-{
-}
-
 Colour::Colour(float r, float g, float b, float a)
 	: Vector4(r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f)
 {
+}
+
+Colour::Colour(int hex)
+{
+	Colour c = hexToRGBA(hex);
+	x = c.getR();
+	y = c.getG();
+	z = c.getB();
+	w = c.getA();
+}
+
+Colour Colour::hexToRGBA(int hex)
+{
+	int r = (hex >> 24) & 0xFF;
+	int g = (hex >> 16) & 0xFF;
+	int b = (hex >> 8) & 0xFF;
+	int a = (hex >> 0) & 0xFF;
+
+	return Colour(r, g, b, a);
+}
+
+int Colour::RGBAtoHex(float r, float g, float b, float a)
+{
+	return ((int)x << 24) + ((int)y << 16) + ((int)z << 8) + (int)w;
 }
 
 Vector3 Colour::getRGB() const
