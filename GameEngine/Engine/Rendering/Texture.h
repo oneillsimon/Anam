@@ -34,6 +34,7 @@ public:
 
 	int getWidth() const;
 	int getHeight() const;
+	GLuint* getId() const;
 };
 
 class Texture
@@ -57,6 +58,7 @@ public:
 
 	int getWidth() const;
 	int getHeight() const;
+	GLuint* getId() const;
 };
 
 #endif

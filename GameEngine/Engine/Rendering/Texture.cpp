@@ -1,8 +1,9 @@
-#include <iostream>
 #include <cassert>
-#include "stb_image.h"
+#include <iostream>
+
 #include "../Core/Math3D.h"
 #include "../Core/Profiling.h"
+#include "stb_image.h"
 #include "Texture.h"
 
 std::map<std::string, TextureData*> Texture::resourceMap;
@@ -176,6 +177,11 @@ int TextureData::getHeight() const
 	return m_height;
 }
 
+GLuint* TextureData::getId() const
+{
+	return m_textureID;
+}
+
 Texture::Texture(std::string fileName, GLenum textureTarget, GLfloat filter, GLenum internalFormat, GLenum basicFormat, bool clamp, GLenum attachment)
 {
 	m_fileName = fileName;
@@ -253,6 +259,11 @@ int Texture::getWidth() const
 int Texture::getHeight() const
 {
 	return m_textureData->getHeight(); 
+}
+
+GLuint* Texture::getId() const
+{
+	return m_textureData->getId();
 }
 
 void Texture::operator =(Texture t)
