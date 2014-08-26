@@ -13,7 +13,7 @@ void SpriteAnimator::update(float delta)
 
 	if(true && m_timer > m_speed)
 	{
-		m_spriteSheet.cycleUp(delta);
+		m_spriteSheet.cycleLeft();
 		m_timer = 0;
 	}
 }

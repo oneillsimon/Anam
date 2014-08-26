@@ -34,12 +34,66 @@ SpriteSheet::SpriteSheet(const std::string& spriteName, const Material& material
 	resourceMap.insert(std::pair<std::string, MeshData*>(spriteName, m_meshData));
 }
 
-void SpriteSheet::cycleUp(float delta)
+void SpriteSheet::cycleUp()
 {
-	Vector2 tL = m_indexedModel.getTexCoords()[0];
+	Vector2 current = m_indexedModel.getTexCoords()[0];
+	Vector2 amount = Vector2(0.0f, -(m_spriteHeight / m_diffuseTexture.getHeight()));
+
+	if(current.getY() <= m_spriteHeight)
+	{
+		amount = amount - 1;
+	}
+
+	m_indexedModel.addToTexCoords(0, amount);
+	m_indexedModel.addToTexCoords(1, amount);
+	m_indexedModel.addToTexCoords(2, amount);
+	m_indexedModel.addToTexCoords(3, amount);
+
+	m_meshData->updateTextureBuffer(m_indexedModel);
+}
+
+void SpriteSheet::cycleDown()
+{
+	Vector2 current = m_indexedModel.getTexCoords()[0];
 	Vector2 amount = Vector2(0.0f, m_spriteHeight / m_diffuseTexture.getHeight());
 
-	if(tL.getY() >= (m_spriteCountY - 1) * m_spriteHeight)
+	if(current.getY() >= (m_spriteCountY - 1) * m_spriteHeight)
+	{
+		amount = amount - 1;
+	}
+
+	m_indexedModel.addToTexCoords(0, amount);
+	m_indexedModel.addToTexCoords(1, amount);
+	m_indexedModel.addToTexCoords(2, amount);
+	m_indexedModel.addToTexCoords(3, amount);
+
+	m_meshData->updateTextureBuffer(m_indexedModel);
+}
+
+void SpriteSheet::cycleLeft()
+{
+	Vector2 current = m_indexedModel.getTexCoords()[0];
+	Vector2 amount = Vector2(-(m_spriteWidth / m_diffuseTexture.getWidth()), 0.0f);
+
+	if(current.getX() <= m_spriteWidth)
+	{
+		amount = amount - 1;
+	}
+
+	m_indexedModel.addToTexCoords(0, amount);
+	m_indexedModel.addToTexCoords(1, amount);
+	m_indexedModel.addToTexCoords(2, amount);
+	m_indexedModel.addToTexCoords(3, amount);
+
+	m_meshData->updateTextureBuffer(m_indexedModel);
+}
+
+void SpriteSheet::cycleRight()
+{
+	Vector2 current = m_indexedModel.getTexCoords()[0];
+	Vector2 amount = Vector2(m_spriteWidth / m_diffuseTexture.getWidth(), 0.0f);
+
+	if(current.getX() >= (m_spriteCountX - 1) * m_spriteWidth)
 	{
 		amount = amount - 1;
 	}

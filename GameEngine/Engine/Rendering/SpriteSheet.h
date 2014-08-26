@@ -14,14 +14,15 @@ private:
 	float m_spriteWidth;
 	float m_spriteHeight;
 	Texture m_diffuseTexture;
+	Vector2 m_currentTexCoords;
 
 public:
 	SpriteSheet(const std::string& spriteName, const Material& material, int spritesX, int spritesY);
 	
-	void cycleUp(float delta);
-	void cycleDown(float delta);
-	void cycleLeft(float delta);
-	void cycleRight(float delta);
+	void cycleUp();
+	void cycleDown();
+	void cycleLeft();
+	void cycleRight();
 
 	Material getMaterial() const;
 };
