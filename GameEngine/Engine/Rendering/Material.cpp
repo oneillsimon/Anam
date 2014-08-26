@@ -125,3 +125,8 @@ const Colour& Material::getColour(const std::string& name) const
 {
 	return m_materialData->getColour(name);
 }
+
+const Texture& Material::getDiffuseTexture() const
+{
+	return getTexture("diffuse");
+}

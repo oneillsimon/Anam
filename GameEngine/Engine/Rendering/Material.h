@@ -45,6 +45,7 @@ public:
 	const Texture& getTexture(const std::string& name) const;
 	const Vector4& getVector4(const std::string& name) const;
 	const Colour& getColour(const std::string& name) const;
+	const Texture& getDiffuseTexture() const;
 
 	void operator =(Material& material) {}
 };
