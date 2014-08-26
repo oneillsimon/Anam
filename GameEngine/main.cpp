@@ -30,7 +30,8 @@ void TestGame::init(const Window& window)
 	Material bricks("bricks", Texture("bricks.jpg"), 0.5f, 4, Texture("bricks_normal.jpg"), Texture("bricks_disp.png"), 0.03f, -0.5f, COLOUR_LIGHT_STEEL_BLUE);
 	Material bricks_("bricks_", Texture("bricks.jpg"), 0.5f, 4, Texture("bricks_normal.jpg"), Texture("bricks_disp.png"), 0.03f, -0.5f, COLOUR_FOREST_GREEN);
 	Material bricks2("bricks2", Texture("bricks2.jpg"), 1, 8, Texture("bricks2_normal.jpg"), Texture("bricks2_disp.jpg"), 0.04f, -1.0f);
-	Material blank("blank", Texture(""));
+	Material blank("blank", Texture("white.png"));
+	Material default("default", Texture(""));
 	MeshRenderer* terrainRenderer = new MeshRenderer(Mesh("terrain02.obj"), Material("bricks"));
 
 	//IndexedModel cube;
@@ -56,9 +57,7 @@ void TestGame::init(const Window& window)
 	dirLightObj->getTransform()->rotate(Quaternion());
 	dirLightObj->addComponent(new DirectionalLight(COLOUR_WHITE, 0.4f, 10, 80.0f, 1.0f));
 
-	SpriteSheet spriteSheet("someSprite", Material("blank"), 8, 8);
-	//spriteSheet.cycleUp();
-	//spriteSheet.cycleUp();
+	SpriteSheet spriteSheet("someSprite", Material("default"), 8, 8);
 
 	GameObject* planeObj = new GameObject();
 	planeObj->getTransform()->setPosition(Vector3(0, 0, 2));
@@ -66,8 +65,8 @@ void TestGame::init(const Window& window)
 	planeObj->addComponent(new SpriteRenderer(spriteSheet));
 	planeObj->addComponent(new SpriteAnimator(spriteSheet, 500, true));
 
-	/*addToScene((new GameObject(Vector3(0, -1, 5), Quaternion(), 32.0f))
-		->addComponent(new MeshRenderer(Mesh("terrain02.obj"), Material("bricks"))));*/
+	addToScene((new GameObject(Vector3(0, -1, 5), Quaternion(), 32.0f))
+		->addComponent(new MeshRenderer(Mesh("terrain02.obj"), Material("bricks"))));
 	
 	/*addToScene((new GameObject(Vector3(7,0,7)))
 		->addComponent(new PointLight(Colour(0,255,0), 0.4f, Attenuation(0,0,1))));*/

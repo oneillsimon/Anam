@@ -6,9 +6,10 @@
 #include <vector>
 
 #include "../Core/ReferenceCounter.h"
+#include "Shader.h"
 #include "Vertex.h"
 
-class Material;
+#define MESH_DRAW_WIREFRAMES 0
 
 class IndexedModel
 {
@@ -67,6 +68,7 @@ private:
 	GLuint m_vertexArrayObject;
 	GLuint m_vertexArrayBuffers[NUM_BUFFERS];
 	int m_drawCount;
+	Shader m_wireFrameShader;
 
 	MeshData(MeshData& other) {}
 	void operator =(MeshData& meshData) {}
@@ -78,13 +80,15 @@ public:
 	void updateTextureBuffer(const IndexedModel& model);
 
 	void draw(int primitive) const;
+	void drawWireFrame() const;
+
+	Shader getWireFrameShader() const;
 };
 
 class Mesh
 {
 protected:
 	static std::map<std::string, MeshData*> resourceMap;
-
 	std::string m_fileName;
 	MeshData* m_meshData;
 	
@@ -96,6 +100,9 @@ public:
 	virtual ~Mesh();
 
 	void draw(int primitive = GL_TRIANGLES) const;
+	void drawWireFrame() const;
+
+	MeshData& getMeshData() const;
 	
 	void operator =(Mesh& mesh) {}
 };

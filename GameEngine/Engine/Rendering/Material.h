@@ -15,7 +15,7 @@ private:
 
 class Material
 {
-private:
+protected:
 	static std::map<std::string, MaterialData*> s_resourceMap;
 	MaterialData* m_materialData;
 	std::string m_materialName;

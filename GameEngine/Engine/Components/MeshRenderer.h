@@ -7,7 +7,7 @@
 
 class MeshRenderer : public GameComponent
 {
-private:
+protected:
 	Mesh m_mesh;
 	Material m_material;
 

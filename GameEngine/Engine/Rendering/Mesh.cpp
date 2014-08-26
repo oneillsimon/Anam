@@ -219,7 +219,8 @@ const std::vector<Vector3>& IndexedModel::getTangents() const
 
 MeshData::MeshData(const IndexedModel& model) :
 	ReferenceCounter(),
-	m_drawCount(model.getIndices().size())
+	m_drawCount(model.getIndices().size()),
+	m_wireFrameShader("forward-colour")
 {
 	if(!model.isValid())
 	{
@@ -271,11 +272,25 @@ void MeshData::updateTextureBuffer(const IndexedModel& model)
 
 void MeshData::draw(int primitive) const
 {
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glBindVertexArray(m_vertexArrayObject);
 
 #if PROFILING_DISABLE_MESH_DRAWING == 0
 	glDrawElements(primitive, m_drawCount, GL_UNSIGNED_INT, 0);
 #endif
+}
+
+void MeshData::drawWireFrame() const
+{
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glPolygonOffset(-10, -10);
+	glBindVertexArray(m_vertexArrayObject);
+	glDrawElements(GL_TRIANGLES, m_drawCount, GL_UNSIGNED_INT, 0);
+}
+
+Shader MeshData::getWireFrameShader() const
+{
+	return m_wireFrameShader;
 }
 
 Mesh::Mesh()
@@ -386,4 +401,14 @@ Mesh::~Mesh()
 void Mesh::draw(int primitive) const
 {
 	m_meshData->draw(primitive);
+}
+
+void Mesh::drawWireFrame() const
+{
+	m_meshData->drawWireFrame();
+}
+
+MeshData& Mesh::getMeshData() const
+{
+	return *m_meshData;
 }
