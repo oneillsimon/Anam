@@ -20,6 +20,8 @@
     <ClInclude Include="Engine\Components\MeshRenderer.h" />
     <ClInclude Include="Engine\Components\PhysicsEngineComponent.h" />
     <ClInclude Include="Engine\Components\PhysicsObjectComponent.h" />
+    <ClInclude Include="Engine\Components\SpriteAnimator.h" />
+    <ClInclude Include="Engine\Components\SpriteRenderer.h" />
     <ClInclude Include="Engine\Core\Math3D.h" />
     <ClInclude Include="Engine\Core\CoreEngine.h" />
     <ClInclude Include="Engine\Core\Game.h" />
@@ -49,6 +51,7 @@
     <ClInclude Include="Engine\Rendering\RenderingEngine.h" />
     <ClInclude Include="Engine\Rendering\RenderUtil.h" />
     <ClInclude Include="Engine\Rendering\Shader.h" />
+    <ClInclude Include="Engine\Rendering\SpriteSheet.h" />
     <ClInclude Include="Engine\Rendering\stb_image.h" />
     <ClInclude Include="Engine\Rendering\Texture.h" />
     <ClInclude Include="Engine\Rendering\Vertex.h" />
@@ -64,6 +67,8 @@
     <ClCompile Include="Engine\Components\MeshRenderer.cpp" />
     <ClCompile Include="Engine\Components\PhysicsEngineComponent.cpp" />
     <ClCompile Include="Engine\Components\PhysicsObjectComponent.cpp" />
+    <ClCompile Include="Engine\Components\SpriteAnimator.cpp" />
+    <ClCompile Include="Engine\Components\SpriteRenderer.cpp" />
     <ClCompile Include="Engine\Core\CoreEngine.cpp" />
     <ClCompile Include="Engine\Core\Game.cpp" />
     <ClCompile Include="Engine\Core\Profiling.cpp" />
@@ -90,6 +95,7 @@
     <ClCompile Include="Engine\Rendering\RenderingEngine.cpp" />
     <ClCompile Include="Engine\Rendering\RenderUtil.cpp" />
     <ClCompile Include="Engine\Rendering\Shader.cpp" />
+    <ClCompile Include="Engine\Rendering\SpriteSheet.cpp" />
     <ClCompile Include="Engine\Rendering\stb_image.c" />
     <ClCompile Include="Engine\Rendering\Texture.cpp" />
     <ClCompile Include="Engine\Rendering\Vertex.cpp" />

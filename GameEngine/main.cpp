@@ -5,6 +5,10 @@
 #include "Engine\Components\PhysicsEngineComponent.h"
 #include "Engine\Components\PhysicsObjectComponent.h"
 
+#include "Engine\Rendering\SpriteSheet.h"
+#include "Engine\Components\SpriteRenderer.h"
+#include "Engine\Components\SpriteAnimator.h"
+
 #undef main
 
 class TestGame : public Game
@@ -23,34 +27,53 @@ static void tests();
 
 void TestGame::init(const Window& window)
 {
-	Material bricks("bricks", Texture("white.png"), 0.5f, 4, Texture("bricks_normal.jpg"), Texture("bricks_disp.png"), 0.03f, -0.5f, Colour(0xFF00FFFF));
-	Material bricks_("bricks_", Texture("white.png"), 0.5f, 4, Texture("bricks_normal.jpg"), Texture("bricks_disp.png"), 0.03f, -0.5f, COLOUR_CORAL);
+	Material bricks("bricks", Texture("bricks.jpg"), 0.5f, 4, Texture("bricks_normal.jpg"), Texture("bricks_disp.png"), 0.03f, -0.5f, COLOUR_LIGHT_STEEL_BLUE);
+	Material bricks_("bricks_", Texture("bricks.jpg"), 0.5f, 4, Texture("bricks_normal.jpg"), Texture("bricks_disp.png"), 0.03f, -0.5f, COLOUR_FOREST_GREEN);
 	Material bricks2("bricks2", Texture("bricks2.jpg"), 1, 8, Texture("bricks2_normal.jpg"), Texture("bricks2_disp.jpg"), 0.04f, -1.0f);
+	Material blank("blank", Texture(""));
 	MeshRenderer* terrainRenderer = new MeshRenderer(Mesh("terrain02.obj"), Material("bricks"));
 
-	IndexedModel cube;
-	{
-		cube.addVertex(1.0f, -1.0f, 0.0f);  cube.addTexCoord(Vector2(1.0f, 1.0f));
-		cube.addVertex(1.0f, 1.0f, 0.0f);   cube.addTexCoord(Vector2(1.0f, 0.0f));
-		cube.addVertex(-1.0f, -1.0f, 0.0f); cube.addTexCoord(Vector2(0.0f, 1.0f));
-		cube.addVertex(-1.0f, 1.0f, 0.0f);  cube.addTexCoord(Vector2(0.0f, 0.0f));
-		cube.addFace(0, 1, 2); cube.addFace(2, 1, 3);
-	}
-	Mesh customMesh("cube", cube.finalize());
+	//IndexedModel cube;
+	//{
+	//	//cube.addVertex(1.0f, -1.0f, 0.0f);  cube.addTexCoord(Vector2(1.0f, 1.0f));
+	//	//cube.addVertex(1.0f, 1.0f, 0.0f);   cube.addTexCoord(Vector2(1.0f, 0.0f));
+	//	//cube.addVertex(-1.0f, -1.0f, 0.0f); cube.addTexCoord(Vector2(0.0f, 1.0f));
+	//	//cube.addVertex(-1.0f, 1.0f, 0.0f);  cube.addTexCoord(Vector2(0.0f, 0.0f));
+	//	cube.addVertex(1.0f, -1.0f, 0.0f);  cube.addTexCoord(Vector2(1.0f / 3.0f, 1.0f / 3.0f));
+	//	cube.addVertex(1.0f, 1.0f, 0.0f);   cube.addTexCoord(Vector2(1.0f / 3.0f, 0.0f / 3.0f));
+	//	cube.addVertex(-1.0f, -1.0f, 0.0f); cube.addTexCoord(Vector2(0.0f / 3.0f, 1.0f / 3.0f));
+	//	cube.addVertex(-1.0f, 1.0f, 0.0f);  cube.addTexCoord(Vector2(0.0f / 3.0f, 0.0f / 3.0f));
+	//	cube.addFace(0, 1, 2); cube.addFace(2, 1, 3);
+	//}
+	//Mesh customMesh("cube", cube.finalize());
+
+	GameObject* cameraObj = new GameObject();
+	cameraObj->addComponent(new FreeLook(window.getCentre()));
+	cameraObj->addComponent(new FreeMove());
+	cameraObj->addComponent(new CameraComponent(Matrix4().initPerspective(toRadians(70.0f), window.getAspectRatio(), 0.1f, 1000.0f)));
+
+	GameObject* dirLightObj = new GameObject(Vector3(0, 0, 0), Quaternion(), 2);
+	dirLightObj->getTransform()->rotate(Quaternion());
+	dirLightObj->addComponent(new DirectionalLight(COLOUR_WHITE, 0.4f, 10, 80.0f, 1.0f));
+
+	SpriteSheet spriteSheet("someSprite", Material("blank"), 8, 8);
+	//spriteSheet.cycleUp();
+	//spriteSheet.cycleUp();
+
+	GameObject* planeObj = new GameObject();
+	planeObj->getTransform()->setPosition(Vector3(0, 0, 2));
+	planeObj->getTransform()->rotate(Quaternion(Vector3(1, 0, 0), toRadians(-180)));
+	planeObj->addComponent(new SpriteRenderer(spriteSheet));
+	planeObj->addComponent(new SpriteAnimator(spriteSheet, 500, true));
 
 	/*addToScene((new GameObject(Vector3(0, -1, 5), Quaternion(), 32.0f))
 		->addComponent(new MeshRenderer(Mesh("terrain02.obj"), Material("bricks"))));*/
-
-	addToScene((new GameObject(Vector3(1, 1, 1), Quaternion(Vector3(1, 0, 0), toRadians(-45.0)), 32.0f))
-		->addComponent(new FreeLook(window.getCentre()))
-		->addComponent(new FreeMove(10.0f, Input::KEY_W, Input::KEY_S, Input::KEY_A, Input::KEY_D))
-		->addComponent(new CameraComponent(Matrix4().initPerspective(toRadians(70.0f), window.getAspectRatio(), 0.1f, 1000.0f))));
 	
 	/*addToScene((new GameObject(Vector3(7,0,7)))
 		->addComponent(new PointLight(Colour(0,255,0), 0.4f, Attenuation(0,0,1))));*/
 
-	/*addToScene((new GameObject(Vector3(100, 100, 100), Quaternion(Vector3(1,0,0), toRadians(-45))))
-		->addComponent(new DirectionalLight(COLOUR_WHITE, 0.4f, 10, 80.0f, 1.0f)));*/
+	addToScene((new GameObject(Vector3(100, 100, 100), Quaternion(Vector3(1,0,0), toRadians(-45))))
+		->addComponent(new DirectionalLight(COLOUR_CORNFLOWER_BLUE, 0.4f, 10, 80.0f, 1.0f)));
 
 	/*addToScene((new GameObject(Vector3(20,-11.0f,5), Quaternion(Vector3(1,0,0), toRadians(-60.0f)) * Quaternion(Vector3(0,1,0), toRadians(90.0f))))
 		->addComponent(new SpotLight(Colour(0,255,255), 0.4f, Attenuation(0,0,0.02f), toRadians(91.1f), 7, 1.0f, 0.5f)));*/
@@ -69,8 +92,8 @@ void TestGame::init(const Window& window)
 
 	//TODO: temp
 	PhysicsEngine physicsEngine;
-	physicsEngine.addObject(PhysicsObject(new BoundingSphere(Vector3(0.5f, 0, 0), 2.0f), Vector3(0, 0, 1)));
-	physicsEngine.addObject(PhysicsObject(new BoundingSphere(Vector3(0, 0, 10), 1.0f), Vector3(0, 0, -1)));
+	//physicsEngine.addObject(PhysicsObject(new BoundingSphere(Vector3(0.5f, 0, 0), 2.0f), Vector3(0, 0, 1)));
+	//physicsEngine.addObject(PhysicsObject(new BoundingSphere(Vector3(0, 0, 10), 1.0f), Vector3(0, 0, -1)));
 
 	PhysicsEngineComponent* physicsEngineComponent = new PhysicsEngineComponent(physicsEngine);
 
@@ -86,7 +109,11 @@ void TestGame::init(const Window& window)
 			->addComponent(new MeshRenderer(Mesh("sphere.obj"), Material("bricks_"))));
 	}
 
-	addToScene((new GameObject())->addComponent(physicsEngineComponent));
+	//addToScene((new GameObject())->addComponent(physicsEngineComponent));
+
+	addToScene(cameraObj);
+	addToScene(dirLightObj);
+	addToScene(planeObj);
 }
 
 int main()
@@ -94,24 +121,10 @@ int main()
 	//tests();
 	//getchar();
 
-
-
 	TestGame game;
 	CoreEngine engine(800, 600, 60, &game);
 	engine.createWindow("Game ENGINE");
 	engine.start();
-
-	return 0;
-}
-
-int hexToRGB(int hex)
-{
-	int r = (hex >> 24) & 0xFF;
-	int g = (hex >> 16) & 0xFF;
-	int b = (hex >> 8) & 0xFF;
-	int a = (hex >> 0) & 0xFF;
-
-	std::cout << "R: " << r << " G: " << g << " B: " << b << " A: " << a << std::endl;
 
 	return 0;
 }
