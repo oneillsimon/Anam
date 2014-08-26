@@ -5,6 +5,14 @@
 #define toRadians(x) (float)(x * PI / 180.0f)
 #define random(min, max) min + (rand() % (int)(max - min + 1));
 
+#define AXIS_X Vector3(1, 0, 0)
+#define AXIS_Y Vector3(0, 1, 0)
+#define AXIS_Z Vector3(0, 0, 1)
+#define AXIS_XY Vector3(1, 1, 0)
+#define AXIS_XZ Vector3(1, 0, 1)
+#define AXIS_YZ Vector3(0, 1, 1)
+#define AXIS_XYZ Vector3(1, 1, 1)
+
 class Quaternion;
 
 class Vector2
