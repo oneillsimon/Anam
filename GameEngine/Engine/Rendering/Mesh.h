@@ -8,6 +8,8 @@
 #include "../Core/ReferenceCounter.h"
 #include "Vertex.h"
 
+class Material;
+
 class IndexedModel
 {
 private:
@@ -45,6 +47,8 @@ public:
 
 	void addFace(unsigned int vertexIndex0, unsigned int vertexIndex1, unsigned int vertexIndex2);
 
+	void addToTexCoords(int index, const Vector2& value);
+
 	const std::vector<unsigned int>& getIndices() const;
 	const std::vector<Vector3>& getPositions() const;
 	const std::vector<Vector2>& getTexCoords() const;
@@ -71,7 +75,9 @@ public:
 	MeshData(const IndexedModel& model);
 	virtual ~MeshData();
 	
-	void draw() const;
+	void updateTextureBuffer(const IndexedModel& model);
+
+	void draw(int primitive) const;
 };
 
 class Mesh
@@ -83,12 +89,13 @@ protected:
 	MeshData* m_meshData;
 	
 public:
-	Mesh(const std::string& fileName = "cube.obj");
+	Mesh();
+	Mesh(const std::string& fileName);
 	Mesh(const std::string& meshName, const IndexedModel& model);
 	Mesh(const Mesh& mesh);
 	virtual ~Mesh();
 
-	void draw() const;
+	void draw(int primitive = GL_TRIANGLES) const;
 	
 	void operator =(Mesh& mesh) {}
 };

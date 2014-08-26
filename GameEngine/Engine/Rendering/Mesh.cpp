@@ -187,6 +187,11 @@ void IndexedModel::calculateTangents()
 	}
 }
 
+void IndexedModel::addToTexCoords(int index, const Vector2& value)
+{
+	m_texCoords[index] = m_texCoords[index] + value;
+}
+
 const std::vector<unsigned int>& IndexedModel::getIndices() const
 {
 	return m_indices;
@@ -258,13 +263,25 @@ MeshData::~MeshData()
 	glDeleteVertexArrays(1, &m_vertexArrayObject);
 }
 
-void MeshData::draw() const
+void MeshData::updateTextureBuffer(const IndexedModel& model)
+{
+	glBindBuffer(GL_ARRAY_BUFFER, m_vertexArrayBuffers[TEXTCOORD_VB]);
+	glBufferData(GL_ARRAY_BUFFER, model.getTexCoords().size() * sizeof(model.getTexCoords()[0]), &model.getTexCoords()[0], GL_STATIC_DRAW);
+}
+
+void MeshData::draw(int primitive) const
 {
 	glBindVertexArray(m_vertexArrayObject);
 
 #if PROFILING_DISABLE_MESH_DRAWING == 0
-	glDrawElements(GL_TRIANGLES, m_drawCount, GL_UNSIGNED_INT, 0);
+	glDrawElements(primitive, m_drawCount, GL_UNSIGNED_INT, 0);
 #endif
+}
+
+Mesh::Mesh()
+{
+	m_fileName = "";
+	m_meshData = 0;
 }
 
 Mesh::Mesh(const std::string& filename)
@@ -366,7 +383,7 @@ Mesh::~Mesh()
 	}
 }
 
-void Mesh::draw() const
+void Mesh::draw(int primitive) const
 {
-	m_meshData->draw();
+	m_meshData->draw(primitive);
 }
