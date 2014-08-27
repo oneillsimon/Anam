@@ -1,9 +1,11 @@
 #include "AABB.h"
 
 AABB::AABB(const Vector3& minExtents, const Vector3& maxExtents) :
+	Collider(Collider::TYPE_AABB, "cube.obj"),
 	m_minExtents(minExtents),
 	m_maxExtents(maxExtents)
 {
+	m_scale = minExtents - maxExtents;
 }
 
 IntersectionData AABB::intersectAABB(const AABB& other) const

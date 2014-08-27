@@ -1,9 +1,10 @@
 #ifndef AABB_H
 #define AABB_H
 
+#include "Collider.h"
 #include "IntersectionData.h"
 
-class AABB
+class AABB : public Collider
 {
 private:
 	const Vector3 m_minExtents;

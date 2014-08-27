@@ -1,10 +1,11 @@
 #include "BoundingSphere.h"
 
 BoundingSphere::BoundingSphere(Vector3 center, float radius) :
-	Collider(Collider::TYPE_SPHERE),
+	Collider(Collider::TYPE_SPHERE, "sphere.obj"),
 	m_center(center),
 	m_radius(radius)
 {
+	m_scale = Vector3(radius, radius, radius);
 }
 
 IntersectionData BoundingSphere::intersectBoundingSphere(const BoundingSphere& other)

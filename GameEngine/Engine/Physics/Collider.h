@@ -2,12 +2,17 @@
 #define COLLIDER_H
 
 #include "../Core/ReferenceCounter.h"
+#include "../Rendering/Mesh.h"
 #include "IntersectionData.h"
 
 class Collider : public ReferenceCounter
 {
 private:
 	int m_type;
+
+protected:
+	Mesh m_mesh;
+	Vector3 m_scale;
 
 public:
 	enum
@@ -17,7 +22,7 @@ public:
 		TYPE_SIZE
 	};
 
-	Collider(int type);
+	Collider(int type, const std::string& meshName = "");
 
 	IntersectionData intersect(const Collider& collider) const;
 	virtual void transform(const Vector3& translation) {};
@@ -25,6 +30,8 @@ public:
 	int getType() const;
 
 	virtual Vector3 getCentre() const;
+	Mesh getMesh() const;
+	Vector3 getScale() const;
 };
 
 #endif
