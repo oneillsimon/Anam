@@ -11,7 +11,7 @@ protected:
 public:
 	virtual ~GameComponent() {};
 
-	virtual void processInput(const Input& input, float delta) {}
+	virtual void input(const Input& input, float delta) {}
 	virtual void update(float delta) {}
 	virtual void render(const Shader& shader, const RenderingEngine& renderingEngine, const Camera& camera) const {}
 

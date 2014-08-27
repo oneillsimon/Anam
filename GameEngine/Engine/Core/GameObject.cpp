@@ -43,13 +43,13 @@ GameObject* GameObject::addComponent(GameComponent* component)
 	return this;
 }
 
-void GameObject::processInputAll(const Input& input, float delta)
+void GameObject::inputAll(const Input& input, float delta)
 {
-	processInput(input, delta);
+	this->input(input, delta);
 
 	for(unsigned int i = 0; i < m_children.size(); i++)
 	{
-		m_children[i]->processInputAll(input, delta);
+		m_children[i]->inputAll(input, delta);
 	}
 }
 
@@ -73,13 +73,13 @@ void GameObject::renderAll(const Shader& shader, const RenderingEngine& renderin
 	}
 }
 
-void GameObject::processInput(const Input& input, float delta)
+void GameObject::input(const Input& input, float delta)
 {
 	m_transform.update();
 
 	for(unsigned int i = 0; i < m_components.size(); i++)
 	{
-		m_components[i]->processInput(input, delta);
+		m_components[i]->input(input, delta);
 	}
 }
 

@@ -21,7 +21,7 @@ private:
 	std::vector<GameComponent*> m_components;
 
 protected:
-	virtual void processInput(const Input& input, float delta);
+	virtual void input(const Input& input, float delta);
 	virtual void update(float delta);
 	virtual void render(const Shader& shader, const RenderingEngine& renderingEngine, const Camera& camera) const;
 
@@ -32,7 +32,7 @@ public:
 	GameObject* addChild(GameObject* child);
 	GameObject* addComponent(GameComponent* component);
 
-	void processInputAll(const Input& input, float delta);
+	void inputAll(const Input& input, float delta);
 	void updateAll(float delta);
 	void renderAll(const Shader& shader, const RenderingEngine& renderingEngine, const Camera& camera) const;
 

@@ -8,7 +8,7 @@ void Game::addToScene(GameObject* object)
 void Game::processInput(const Input& input, float delta)
 {
 	m_inputProfileTimer.startInvocation();
-	rootObject.processInputAll(input, delta);
+	rootObject.inputAll(input, delta);
 	m_inputProfileTimer.stopInvocation();
 }
 
