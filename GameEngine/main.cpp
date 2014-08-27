@@ -63,7 +63,7 @@ void TestGame::init(const Window& window)
 	planeObj->getTransform()->setPosition(Vector3(0, 0, 2));
 	planeObj->getTransform()->rotate(Quaternion(Vector3(1, 0, 0), toRadians(-180)));
 	planeObj->addComponent(new SpriteRenderer(spriteSheet));
-	planeObj->addComponent(new SpriteAnimator(spriteSheet, 500, true));
+	planeObj->addComponent(new SpriteAnimator(spriteSheet, 250, true));
 
 	addToScene((new GameObject(Vector3(0, -1, 5), Quaternion(), 32.0f))
 		->addComponent(new MeshRenderer(Mesh("terrain02.obj"), Material("bricks"))));
@@ -72,7 +72,7 @@ void TestGame::init(const Window& window)
 		->addComponent(new PointLight(Colour(0,255,0), 0.4f, Attenuation(0,0,1))));*/
 
 	addToScene((new GameObject(Vector3(100, 100, 100), Quaternion(Vector3(1,0,0), toRadians(-45))))
-		->addComponent(new DirectionalLight(COLOUR_CORNFLOWER_BLUE, 0.4f, 10, 80.0f, 1.0f)));
+		->addComponent(new DirectionalLight(COLOUR_WHITE, 0.4f, 10, 80.0f, 1.0f)));
 
 	/*addToScene((new GameObject(Vector3(20,-11.0f,5), Quaternion(Vector3(1,0,0), toRadians(-60.0f)) * Quaternion(Vector3(0,1,0), toRadians(90.0f))))
 		->addComponent(new SpotLight(Colour(0,255,255), 0.4f, Attenuation(0,0,0.02f), toRadians(91.1f), 7, 1.0f, 0.5f)));*/
@@ -91,24 +91,19 @@ void TestGame::init(const Window& window)
 
 	//TODO: temp
 	PhysicsEngine physicsEngine;
-	//physicsEngine.addObject(PhysicsObject(new BoundingSphere(Vector3(0.5f, 0, 0), 2.0f), Vector3(0, 0, 1)));
-	//physicsEngine.addObject(PhysicsObject(new BoundingSphere(Vector3(0, 0, 10), 1.0f), Vector3(0, 0, -1)));
+	physicsEngine.addObject(PhysicsObject(new BoundingSphere(Vector3(0, 0, -10), 1.0f), Vector3(0, 0, 2)));
+	physicsEngine.addObject(PhysicsObject(new BoundingSphere(Vector3(0.5f, 0, 10), 1.0f), Vector3(0, 0, -2)));
 
 	PhysicsEngineComponent* physicsEngineComponent = new PhysicsEngineComponent(physicsEngine);
 
 	for(int i = 0; i < physicsEngineComponent->getPhysicsEngine().getNumObjects(); i++)
 	{
-		if(i == 0)
-		addToScene((new GameObject(Vector3(0, 0, 0), Quaternion(), 2.0f))
+		addToScene((new GameObject(Vector3(0, 0, 0), Quaternion(), 1.0f))
 			->addComponent(new PhysicsObjectComponent(&physicsEngineComponent->getPhysicsEngine().getObject(i)))
 			->addComponent(new MeshRenderer(Mesh("sphere.obj"), Material("bricks"))));
-		else
-			addToScene((new GameObject(Vector3(0, 0, 0), Quaternion(), 1.0f))
-			->addComponent(new PhysicsObjectComponent(&physicsEngineComponent->getPhysicsEngine().getObject(i)))
-			->addComponent(new MeshRenderer(Mesh("sphere.obj"), Material("bricks_"))));
 	}
 
-	//addToScene((new GameObject())->addComponent(physicsEngineComponent));
+	addToScene((new GameObject())->addComponent(physicsEngineComponent));
 
 	addToScene(cameraObj);
 	addToScene(dirLightObj);

@@ -102,9 +102,7 @@ public:
 	void draw(int primitive = GL_TRIANGLES) const;
 	void drawWireFrame() const;
 
-	MeshData& getMeshData() const;
-	
-	void operator =(Mesh& mesh) {}
+	Shader getWireFrameShader() const;
 };
 
 #endif

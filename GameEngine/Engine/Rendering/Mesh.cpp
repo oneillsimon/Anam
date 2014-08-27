@@ -408,7 +408,7 @@ void Mesh::drawWireFrame() const
 	m_meshData->drawWireFrame();
 }
 
-MeshData& Mesh::getMeshData() const
+Shader Mesh::getWireFrameShader() const
 {
-	return *m_meshData;
+	return m_meshData->getWireFrameShader();
 }
