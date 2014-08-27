@@ -50,7 +50,7 @@ public:
 	void render(const GameObject& object, const Camera& mainCamera);
 	void addLight(const Light& light);
 
-	virtual void updateUniformStruct(const Transform& transform, const Material& material, const Shader& shader, std::string& uniformName, std::string& uniformType) const
+	virtual void updateUniformStruct(const Transform& transform, const Shader& shader, std::string& uniformName, std::string& uniformType) const
 	{
 		throw uniformType + " is not supported by the rendering engine";
 	}

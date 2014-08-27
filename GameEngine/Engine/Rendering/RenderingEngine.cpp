@@ -190,7 +190,7 @@ void RenderingEngine::applyFilter(const Shader& filter, const Texture& source, c
 
 	glClear(GL_DEPTH_BUFFER_BIT);
 	filter.bind();
-	filter.updateUniforms(m_planeTransform, m_planeMaterial, *this, m_altCamera);
+	filter.updateUniforms(m_planeTransform, *this, m_altCamera, m_planeMaterial);
 	m_planeMesh.draw();
 	
 	setTexture("filterTexture", 0);

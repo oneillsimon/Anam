@@ -23,7 +23,7 @@ public:
 
 	const Vector3& getPosition() const;
 	const Vector3& getVelocity() const;
-	const Collider& getCollider();
+	const Collider& getCollider() const;
 
 	void setVelocity(const Vector3& velocity);
 

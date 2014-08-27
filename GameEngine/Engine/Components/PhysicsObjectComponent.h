@@ -13,6 +13,7 @@ public:
 	PhysicsObjectComponent(const PhysicsObject* object);
 
 	virtual void update(float delta);
+	virtual void render(const Shader& shader, const RenderingEngine& renderingEngine, const Camera& camera) const;
 };
 
 #endif

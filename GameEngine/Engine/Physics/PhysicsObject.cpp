@@ -42,7 +42,7 @@ const Vector3& PhysicsObject::getVelocity() const
 	return m_velocity;
 }
 
-const Collider& PhysicsObject::getCollider()
+const Collider& PhysicsObject::getCollider() const
 {
 	Vector3 translationAmount = m_position - m_oldPosition;
 	m_oldPosition = m_position;
