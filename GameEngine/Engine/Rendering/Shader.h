@@ -72,7 +72,8 @@ public:
 	virtual ~Shader();
 
 	void bind() const;
-	void updateUniforms(const Transform& transform, const Material& material, const RenderingEngine& renderingEngine, const Camera& camera) const;
+	void updateUniforms(const Transform& transform, const RenderingEngine& renderingEngine, const Camera& camera) const;
+	void updateUniforms(const Transform& transform, const RenderingEngine& renderingEngine, const Camera& camera, const Material& material) const;
 	void setUniform(const std::string& fileName, int value) const;
 	void setUniform(const std::string& fileName, float value) const;
 	void setUniform(const std::string& fileName, const Matrix4& value) const;

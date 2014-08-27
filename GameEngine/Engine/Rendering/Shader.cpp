@@ -111,7 +111,7 @@ void Shader::bind() const
 	glUseProgram(m_shaderData->getProgram());
 }
 
-void Shader::updateUniforms(const Transform& transform, const Material& material, const RenderingEngine& renderingEngine, const Camera& camera) const
+void Shader::updateUniforms(const Transform& transform, const RenderingEngine& renderingEngine, const Camera& camera, const Material& material) const
 {
 	Matrix4 worldMatrix = transform.getTransformation();
 	Matrix4 projectedMatrix = camera.getViewProjection() * worldMatrix;
@@ -157,7 +157,7 @@ void Shader::updateUniforms(const Transform& transform, const Material& material
 			}
 			else
 			{
-				renderingEngine.updateUniformStruct(transform, material, *this, uniformName, uniformType);
+				renderingEngine.updateUniformStruct(transform, *this, uniformName, uniformType);
 			}
 		}
 		else if(uniformType == "sampler2D")
@@ -210,6 +210,92 @@ void Shader::updateUniforms(const Transform& transform, const Material& material
 			{
 				throw uniformType + " is not supported by the Material class";
 			}
+		}
+	}
+}
+
+void Shader::updateUniforms(const Transform& transform, const RenderingEngine& renderingEngine, const Camera& camera) const
+{
+	Matrix4 worldMatrix = transform.getTransformation();
+	Matrix4 projectedMatrix = camera.getViewProjection() * worldMatrix;
+
+	for(unsigned int i = 0; i < m_shaderData->getUniformNames().size(); i++)
+	{
+		std::string uniformName = m_shaderData->getUniformNames()[i];
+		std::string uniformType = m_shaderData->getUniformTypes()[i];
+
+		if(uniformName.substr(0, 2) == "R_")
+		{
+			std::string unprefixedName = uniformName.substr(2, uniformName.length());
+
+			if(unprefixedName == "lightMatrix")
+			{
+				setUniform(uniformName, renderingEngine.getLightMatrix() * worldMatrix);
+			}
+			else if(uniformType == "sampler2D")
+			{
+				int samplerSlot = renderingEngine.getSamplerSlot(unprefixedName);
+				renderingEngine.getTexture(unprefixedName).bind(samplerSlot);
+				setUniform(uniformName, samplerSlot);
+			}
+			else if(uniformType == "vec3")
+			{
+				setUniform(uniformName, renderingEngine.getVector3(unprefixedName));
+			}
+			else if(uniformType == "float")
+			{
+				setUniform(uniformName, renderingEngine.getFloat(unprefixedName));
+			}
+			else if(uniformType == "DirectionalLight")
+			{
+				setUniformDirectionalLight(uniformName, *(const DirectionalLight*)&renderingEngine.getActiveLight());
+			}
+			else if(uniformType == "PointLight")
+			{
+				setUniformPointLight(uniformName, *(const PointLight*)&renderingEngine.getActiveLight());
+			}
+			else if(uniformType == "SpotLight")
+			{
+				setUniformSpotLight(uniformName, *(const SpotLight*)&renderingEngine.getActiveLight());
+			}
+			else
+			{
+				renderingEngine.updateUniformStruct(transform, *this, uniformName, uniformType);
+			}
+		}
+		else if(uniformType == "sampler2D")
+		{
+			int samplerSlot = renderingEngine.getSamplerSlot(uniformName);
+			setUniform(uniformName, samplerSlot);
+		}
+		else if(uniformName.substr(0, 2) == "T_")
+		{
+			if(uniformName == "T_MVP")
+			{
+				setUniform(uniformName, projectedMatrix);
+			}
+			else if(uniformName == "T_model")
+			{
+				setUniform(uniformName, worldMatrix);
+			}
+			else
+			{
+				throw "Invalid transform uniform: " + uniformName;
+			}
+		}
+		else if(uniformName.substr(0, 2) == "C_")
+		{
+			if(uniformName == "C_eyePos")
+			{
+				setUniform(uniformName, camera.getTransform().getTransformedPosition());
+			}
+			else
+			{
+				throw "invalid camera uniform: " + uniformName;
+			}
+		}
+		else
+		{
 		}
 	}
 }
