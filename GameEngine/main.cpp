@@ -118,7 +118,10 @@ int main()
 	TestGame game;
 	CoreEngine engine(800, 600, 60, &game);
 	engine.createWindow("Game ENGINE");
-	engine.start();
+	//engine.start();
+
+	std::cout << glGetString(GL_VERSION) << std::endl;
+	getchar();
 
 	return 0;
 }
