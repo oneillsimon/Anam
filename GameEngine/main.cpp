@@ -114,30 +114,62 @@ void TestGame::init2(const Window& window)
 
 #include "Engine\Physics_\Particle.h"
 #include "Engine\Physics_\Physics_Component.h"
+#include "Engine\Rendering\Shape.h"
 
 void TestGame::init(const Window& window)
 {
-	GameObject* cameraObj = new GameObject(Vector3(0, 0, -2));
+	GameObject* cameraObj = new GameObject(Vector3(0, 0, -20));
 	cameraObj->addComponent(new FreeLook(window.getCentre()));
 	cameraObj->addComponent(new FreeMove());
 	cameraObj->addComponent(new CameraComponent(Matrix4().initPerspective(toRadians(70.0f), window.getAspectRatio(), 0.1f, 1000.0f)));
 
-	Particle p;
-	p.setVelocity(Vector3(0, 30, 10.0f));
-	p.setAcceleration(Vector3(0, -20.0f, 0.0f));
-	p.setDamping(0.99f);
-	p.setMass(200.0f);
-	p.setPosition(Vector3());
+	Mesh mesh = Mesh("terrain02.obj");
+	Material white("default", TEXTURE_BLANK, COLOUR_LIME);
+	SpriteSheet spriteSheet = SpriteSheet("", white, 1, 1); 
 
-	Material white("default", Texture("white.png"), COLOUR_LIME);
-	SpriteSheet spriteSheet = SpriteSheet("", white, 8, 8); 
+	Square testSqaure = Square(COLOUR_YELLOW);
+
+	//Particle p(testSqaure);
+	//p.setVelocity(Vector3(0, 30, 10.0f));
+	//p.setAcceleration(Vector3(0, -20.0f, 0.0f));
+	//p.setDamping(0.99f);
+	//p.setMass(200.0f);
+	//p.setPosition(Vector3());
 
 	GameObject* particleObj = new GameObject();
-	//particleObj->addComponent(new TestComp(p));
-	particleObj->addComponent(new SpriteRenderer(spriteSheet));
+	
+
+	for(int i = 0; i < 20; i++)
+	{
+		Particle p = Particle(Square(getRandomColour(COLOUR_LIME)));
+
+		float x = random(-10.0f, 10.0f);
+		float y = random(30.0f, 50.0f);
+		float z = 0.0f;
+
+		Vector3 vel = Vector3(x, y, z);
+
+		y = random(-20.0f, -5.0f);
+
+		p.setVelocity(vel);
+		p.setAcceleration(Vector3(0, y, 0.0f));
+		p.setDamping(0.99f);
+		p.setMass(200.0f);
+		p.setPosition(Vector3(0, 0, 20));
+
+		particleObj->addComponent(new TestComp(p));
+
+	}
+	//particleObj->addComponent(new SpriteRenderer(spriteSheet));
+	//particleObj->addComponent(new SpriteRenderer(testSqaure));
+
+	GameObject* dirLightObj = new GameObject(Vector3(0, 0, 0), Quaternion(), 2);
+	dirLightObj->getTransform()->rotate(Quaternion());
+	dirLightObj->addComponent(new DirectionalLight(COLOUR_WHITE, 0.4f, 10, 80.0f, 1.0f));
 
 	addToScene(cameraObj);
 	addToScene(particleObj);
+	//addToScene(dirLightObj);
 }
 
 int main()

@@ -7,6 +7,8 @@
 
 #include "../Core/ReferenceCounter.h"
 
+#define TEXTURE_BLANK Texture("white.png")
+
 class TextureData : public ReferenceCounter
 {
 private:

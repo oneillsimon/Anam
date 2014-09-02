@@ -50,6 +50,7 @@
     <ClInclude Include="Engine\Rendering\RenderingEngine.h" />
     <ClInclude Include="Engine\Rendering\RenderUtil.h" />
     <ClInclude Include="Engine\Rendering\Shader.h" />
+    <ClInclude Include="Engine\Rendering\Shape.h" />
     <ClInclude Include="Engine\Rendering\SpriteSheet.h" />
     <ClInclude Include="Engine\Rendering\stb_image.h" />
     <ClInclude Include="Engine\Rendering\Texture.h" />
@@ -96,6 +97,8 @@
     <ClCompile Include="Engine\Rendering\RenderingEngine.cpp" />
     <ClCompile Include="Engine\Rendering\RenderUtil.cpp" />
     <ClCompile Include="Engine\Rendering\Shader.cpp" />
+    <ClCompile Include="Engine\Rendering\Shape.cpp" />
+    <ClCompile Include="Engine\Rendering\Square.cpp" />
     <ClCompile Include="Engine\Rendering\SpriteSheet.cpp" />
     <ClCompile Include="Engine\Rendering\stb_image.c" />
     <ClCompile Include="Engine\Rendering\Texture.cpp" />
@@ -105,6 +108,9 @@
     <ClCompile Include="Engine\Core\Util.cpp" />
     <ClCompile Include="Engine\Core\Transform.cpp" />
     <ClCompile Include="Engine\Core\Time.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Engine\Notes.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{16E65E01-C797-467B-B712-294221533D00}</ProjectGuid>
