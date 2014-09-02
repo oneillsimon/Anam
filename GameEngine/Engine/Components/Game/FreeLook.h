@@ -1,7 +1,7 @@
 #ifndef FREELOOK_H
 #define FREELOOK_H
 
-#include "GameComponent.h"
+#include "../GameComponent.h"
 
 class FreeLook : public GameComponent
 {

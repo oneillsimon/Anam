@@ -1,9 +1,9 @@
 #ifndef MESHRENDERER_H
 #define MESHRENDERER_H
 
-#include "../Rendering/Mesh.h"
-#include "../Rendering/Shader.h"
-#include "GameComponent.h"
+#include "../../Rendering/Mesh.h"
+#include "../../Rendering/Shader.h"
+#include "../GameComponent.h"
 
 class MeshRenderer : public GameComponent
 {

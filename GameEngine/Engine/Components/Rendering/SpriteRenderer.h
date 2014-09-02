@@ -2,7 +2,7 @@
 #define SPRITERENDERER_H
 
 #include "MeshRenderer.h"
-#include "../Rendering/SpriteSheet.h"
+#include "../../Rendering/SpriteSheet.h"
 
 class SpriteRenderer : public MeshRenderer
 {

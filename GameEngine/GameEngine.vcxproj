@@ -12,16 +12,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Comhpháirteanna.h" />
-    <ClInclude Include="Engine\Components\Camera.h" />
-    <ClInclude Include="Engine\Components\FreeLook.h" />
-    <ClInclude Include="Engine\Components\FreeMove.h" />
+    <ClInclude Include="Engine\Components\Game\Camera.h" />
+    <ClInclude Include="Engine\Components\Game\FreeLook.h" />
+    <ClInclude Include="Engine\Components\Game\FreeMove.h" />
     <ClInclude Include="Engine\Components\GameComponent.h" />
-    <ClInclude Include="Engine\Components\Lighting.h" />
-    <ClInclude Include="Engine\Components\MeshRenderer.h" />
-    <ClInclude Include="Engine\Components\PhysicsEngineComponent.h" />
-    <ClInclude Include="Engine\Components\PhysicsObjectComponent.h" />
-    <ClInclude Include="Engine\Components\SpriteAnimator.h" />
-    <ClInclude Include="Engine\Components\SpriteRenderer.h" />
+    <ClInclude Include="Engine\Components\Rendering\Lighting.h" />
+    <ClInclude Include="Engine\Components\Rendering\MeshRenderer.h" />
+    <ClInclude Include="Engine\Components\Physics\PhysicsEngineComponent.h" />
+    <ClInclude Include="Engine\Components\Physics\PhysicsObjectComponent.h" />
+    <ClInclude Include="Engine\Components\Rendering\SpriteAnimator.h" />
+    <ClInclude Include="Engine\Components\Rendering\SpriteRenderer.h" />
     <ClInclude Include="Engine\Core\Math3D.h" />
     <ClInclude Include="Engine\Core\CoreEngine.h" />
     <ClInclude Include="Engine\Core\Game.h" />
@@ -56,16 +56,16 @@
     <ClInclude Include="Inneall.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Engine\Components\Camera.cpp" />
-    <ClCompile Include="Engine\Components\FreeLook.cpp" />
-    <ClCompile Include="Engine\Components\FreeMove.cpp" />
+    <ClCompile Include="Engine\Components\Game\Camera.cpp" />
+    <ClCompile Include="Engine\Components\Game\FreeLook.cpp" />
+    <ClCompile Include="Engine\Components\Game\FreeMove.cpp" />
     <ClCompile Include="Engine\Components\GameComponent.cpp" />
-    <ClCompile Include="Engine\Components\Lighting.cpp" />
-    <ClCompile Include="Engine\Components\MeshRenderer.cpp" />
-    <ClCompile Include="Engine\Components\PhysicsEngineComponent.cpp" />
-    <ClCompile Include="Engine\Components\PhysicsObjectComponent.cpp" />
-    <ClCompile Include="Engine\Components\SpriteAnimator.cpp" />
-    <ClCompile Include="Engine\Components\SpriteRenderer.cpp" />
+    <ClCompile Include="Engine\Components\Rendering\Lighting.cpp" />
+    <ClCompile Include="Engine\Components\Rendering\MeshRenderer.cpp" />
+    <ClCompile Include="Engine\Components\Physics\PhysicsEngineComponent.cpp" />
+    <ClCompile Include="Engine\Components\Physics\PhysicsObjectComponent.cpp" />
+    <ClCompile Include="Engine\Components\Rendering\SpriteAnimator.cpp" />
+    <ClCompile Include="Engine\Components\Rendering\SpriteRenderer.cpp" />
     <ClCompile Include="Engine\Core\CoreEngine.cpp" />
     <ClCompile Include="Engine\Core\Game.cpp" />
     <ClCompile Include="Engine\Core\Profiling.cpp" />

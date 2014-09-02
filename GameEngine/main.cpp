@@ -2,12 +2,12 @@
 
 #include <iostream>
 
-#include "Engine\Components\PhysicsEngineComponent.h"
-#include "Engine\Components\PhysicsObjectComponent.h"
+#include "Engine\Components\Physics\PhysicsEngineComponent.h"
+#include "Engine\Components\Physics\PhysicsObjectComponent.h"
 
 #include "Engine\Rendering\SpriteSheet.h"
-#include "Engine\Components\SpriteRenderer.h"
-#include "Engine\Components\SpriteAnimator.h"
+#include "Engine\Components\Rendering\SpriteRenderer.h"
+#include "Engine\Components\Rendering\SpriteAnimator.h"
 
 #undef main
 
@@ -91,7 +91,7 @@ void TestGame::init(const Window& window)
 
 	//TODO: temp
 	PhysicsEngine physicsEngine;
-	physicsEngine.addObject(PhysicsObject(new BoundingSphere(Vector3(0, 0, -10), 1.0f), Vector3(0, 0, 2)));
+	physicsEngine.addObject(PhysicsObject(new BoundingSphere(Vector3(-0.5f, 0, -10), 1.0f), Vector3(0, 0, 2)));
 	physicsEngine.addObject(PhysicsObject(new BoundingSphere(Vector3(0.5f, 0, 10), 1.0f), Vector3(0, 0, -2)));
 
 	PhysicsEngineComponent* physicsEngineComponent = new PhysicsEngineComponent(physicsEngine);

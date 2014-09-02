@@ -1,8 +1,8 @@
 #ifndef SPRITEANIMATOR_H
 #define SPRITEANIMATOR_H
 
-#include "../Rendering/SpriteSheet.h"
-#include "GameComponent.h"
+#include "../../Rendering/SpriteSheet.h"
+#include "../GameComponent.h"
 
 class SpriteAnimator : public GameComponent
 {

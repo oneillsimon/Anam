@@ -1,7 +1,7 @@
 #ifndef RENDERINGENGINE_H
 #define RENDERINGENGINE_H
 
-#include "../Components/Lighting.h"
+#include "../Components/Rendering/Lighting.h"
 #include "../Core/Profiling.h"
 #include "Mesh.h"
 #include "Window.h"

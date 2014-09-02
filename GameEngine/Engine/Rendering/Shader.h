@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-#include "../Components/Camera.h"
+#include "../Components/Game/Camera.h"
 #include "Material.h"
 
 class DirectionalLight;
