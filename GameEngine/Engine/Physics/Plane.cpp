@@ -1,6 +1,6 @@
 #include <math.h>
 
-#include "Plane.h"
+#include "Collider.h"
 
 Plane::Plane(const Vector3& normal, float distance) :
 	m_normal(normal),

@@ -1,6 +1,6 @@
 #include<GL\glew.h>
 
-#include "../Physics/BoundingSphere.h"
+#include "../Physics/Collider.h"
 #include "PhysicsObjectComponent.h"
 
 PhysicsObjectComponent::PhysicsObjectComponent(const PhysicsObject* object) :

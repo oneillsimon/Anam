@@ -1,4 +1,4 @@
-#include "BoundingSphere.h"
+#include "Collider.h"
 
 BoundingSphere::BoundingSphere(Vector3 center, float radius) :
 	Collider(Collider::TYPE_SPHERE, "sphere.obj"),

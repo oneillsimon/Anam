@@ -1,5 +1,4 @@
 #include "Collider.h"
-#include "BoundingSphere.h"
 
 Collider::Collider(int type, const std::string& meshName) :
 	ReferenceCounter(),
