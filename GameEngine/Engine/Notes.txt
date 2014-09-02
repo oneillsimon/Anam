@@ -1,0 +1,1 @@
+- Shape class extends SpriteSheet because it requires the same draw methods (disbling and enabling GL_CULLFACE). Does this make sense?
