@@ -9,7 +9,7 @@
 #include "Shader.h"
 #include "Vertex.h"
 
-#define MESH_DRAW_WIREFRAMES 1
+#define MESH_DRAW_WIREFRAMES 0
 
 class IndexedModel
 {
