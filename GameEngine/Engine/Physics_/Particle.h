@@ -20,7 +20,8 @@ public:
 	Particle(const Shape& shape);
 
 	void integrate(float delta);
-	void resetAcummulators() const;
+	void addForce(const Vector3& force);
+	void resetAcummulator() const;
 
 	Vector3 getPosition() const;
 	Vector3 getVelocity() const;

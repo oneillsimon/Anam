@@ -129,39 +129,15 @@ void TestGame::init(const Window& window)
 
 	Square testSqaure = Square(COLOUR_YELLOW);
 
-	//Particle p(testSqaure);
-	//p.setVelocity(Vector3(0, 30, 10.0f));
-	//p.setAcceleration(Vector3(0, -20.0f, 0.0f));
-	//p.setDamping(0.99f);
-	//p.setMass(200.0f);
-	//p.setPosition(Vector3());
+	Particle p(testSqaure);
+	p.setVelocity(Vector3(0, 0, 0.0f));
+	p.setAcceleration(Vector3(0, 0.0f, 0.0f));
+	p.setDamping(0.99f);
+	p.setMass(200.0f);
+	p.setPosition(Vector3());
 
 	GameObject* particleObj = new GameObject();
-	
-
-	for(int i = 0; i < 20; i++)
-	{
-		Particle p = Particle(Square(getRandomColour(COLOUR_LIME)));
-
-		float x = random(-10.0f, 10.0f);
-		float y = random(30.0f, 50.0f);
-		float z = 0.0f;
-
-		Vector3 vel = Vector3(x, y, z);
-
-		y = random(-20.0f, -5.0f);
-
-		p.setVelocity(vel);
-		p.setAcceleration(Vector3(0, y, 0.0f));
-		p.setDamping(0.99f);
-		p.setMass(200.0f);
-		p.setPosition(Vector3(0, 0, 20));
-
-		particleObj->addComponent(new TestComp(p));
-
-	}
-	//particleObj->addComponent(new SpriteRenderer(spriteSheet));
-	//particleObj->addComponent(new SpriteRenderer(testSqaure));
+	particleObj->addComponent(new TestComp(p));
 
 	GameObject* dirLightObj = new GameObject(Vector3(0, 0, 0), Quaternion(), 2);
 	dirLightObj->getTransform()->rotate(Quaternion());

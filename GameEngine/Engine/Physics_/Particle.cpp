@@ -20,11 +20,18 @@ void Particle::integrate(float delta)
 
 	// Impose drag
 	m_velocity *= powf(m_damping, delta);
+
+	resetAcummulator();
 }
 
-void Particle::resetAcummulators() const
+void Particle::addForce(const Vector3& force)
 {
-	m_forceAccumulated = 0;
+	m_forceAccumulated += force;
+}
+
+void Particle::resetAcummulator() const
+{
+	m_forceAccumulated = Vector3();
 }
 
 Vector3 Particle::getPosition() const

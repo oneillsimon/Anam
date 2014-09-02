@@ -5,6 +5,14 @@ TestComp::TestComp(const Particle& particle) :
 {
 }
 
+void TestComp::input(const Input& input, float delta)
+{
+	if(input.getKey(Input::KEY_F))
+	{
+		particle.addForce(Vector3(0.0f, 0.0f, 1000.0f));
+	}
+}
+
 void TestComp::update(float delta)
 {
 	//getTransform()->setPosition(particle.getPosition());
