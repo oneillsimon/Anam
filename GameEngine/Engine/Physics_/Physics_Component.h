@@ -12,6 +12,7 @@ private:
 public:
 	TestComp(const Particle& particle);
 	virtual void update(float delta);
+	virtual void render(const Shader& shader, const RenderingEngine& renderingEngine, const Camera& camera) const;
 };
 
 #endif

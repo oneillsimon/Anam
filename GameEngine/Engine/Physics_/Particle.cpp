@@ -2,6 +2,11 @@
 
 #include "Particle.h"
 
+Particle::Particle(const Shape& shape) :
+	m_shape(shape)
+{
+}
+
 void Particle::integrate(float delta)
 {
 	// Update positoion linearly
@@ -15,6 +20,11 @@ void Particle::integrate(float delta)
 
 	// Impose drag
 	m_velocity *= powf(m_damping, delta);
+}
+
+void Particle::resetAcummulators() const
+{
+	m_forceAccumulated = 0;
 }
 
 Vector3 Particle::getPosition() const
@@ -45,6 +55,11 @@ float Particle::getInversMass()
 Vector3 Particle::getAccumulatedForce() const
 {
 	return m_forceAccumulated;
+}
+
+Shape Particle::getShape() const
+{
+	return m_shape;
 }
 
 void Particle::setPosition(const Vector3& position)
