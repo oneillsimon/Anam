@@ -43,13 +43,13 @@ Material::Material(const Material& material)
 
 Material::Material(const std::string& materialName,
 				   const Texture& diffuse,
+				   Colour colour,
 				   float specularIntensity,
 				   float specularExponent,
 				   const Texture& normalMap,
 				   const Texture& displacementMap,
 				   float dispMapScale,
-				   float dispMapOffset,
-				   Colour colour)
+				   float dispMapOffset)
 {
 	m_materialName = materialName;
 

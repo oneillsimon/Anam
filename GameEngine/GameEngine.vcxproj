@@ -40,6 +40,8 @@
     <ClInclude Include="Engine\Physics\IntersectionData.h" />
     <ClInclude Include="Engine\Physics\PhysicsEngine.h" />
     <ClInclude Include="Engine\Physics\PhysicsObject.h" />
+    <ClInclude Include="Engine\Physics_\Particle.h" />
+    <ClInclude Include="Engine\Physics_\Physics_Component.h" />
     <ClInclude Include="Engine\Rendering\Colour.h" />
     <ClInclude Include="Engine\Rendering\MappedValues.h" />
     <ClInclude Include="Engine\Rendering\Material.h" />
@@ -84,6 +86,8 @@
     <ClCompile Include="Engine\Physics\PhysicsEngine.cpp" />
     <ClCompile Include="Engine\Physics\PhysicsObject.cpp" />
     <ClCompile Include="Engine\Physics\Plane.cpp" />
+    <ClCompile Include="Engine\Physics_\Particle.cpp" />
+    <ClCompile Include="Engine\Physics_\Physics_Component.cpp" />
     <ClCompile Include="Engine\Rendering\Colour.cpp" />
     <ClCompile Include="Engine\Rendering\MappedValues.cpp" />
     <ClCompile Include="Engine\Rendering\Material.cpp" />

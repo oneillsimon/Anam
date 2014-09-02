@@ -17,6 +17,7 @@ public:
 	TestGame() { }
 	
 	virtual void init(const Window& window);
+	virtual void init2(const Window& window);
 protected:
 private:
 	TestGame(const TestGame& other) {}
@@ -25,13 +26,13 @@ private:
 
 static void tests();
 
-void TestGame::init(const Window& window)
+void TestGame::init2(const Window& window)
 {
-	Material bricks("bricks", Texture("bricks.jpg"), 0.5f, 4, Texture("bricks_normal.jpg"), Texture("bricks_disp.png"), 0.03f, -0.5f, COLOUR_LIGHT_STEEL_BLUE);
-	Material bricks_("bricks_", Texture("bricks.jpg"), 0.5f, 4, Texture("bricks_normal.jpg"), Texture("bricks_disp.png"), 0.03f, -0.5f, COLOUR_FOREST_GREEN);
-	Material bricks2("bricks2", Texture("bricks2.jpg"), 1, 8, Texture("bricks2_normal.jpg"), Texture("bricks2_disp.jpg"), 0.04f, -1.0f);
+	Material bricks("bricks", Texture("bricks.jpg"), COLOUR_ALICE_BLUE, 0.5f, 4, Texture("bricks_normal.jpg"), Texture("bricks_disp.png"), 0.03f, -0.5f);
+	Material bricks_("bricks_", Texture("bricks.jpg"), COLOUR_ALICE_BLUE, 0.5f, 4, Texture("bricks_normal.jpg"), Texture("bricks_disp.png"), 0.03f, -0.5f);
+	Material bricks2("bricks2", Texture("bricks2.jpg"), COLOUR_WHITE, 1, 8, Texture("bricks2_normal.jpg"), Texture("bricks2_disp.jpg"), 0.04f, -1.0f);
 	Material blank("blank", Texture("white.png"));
-	Material default("default", Texture(""));
+	Material default("default", Texture(""), COLOUR_GREEN);
 	MeshRenderer* terrainRenderer = new MeshRenderer(Mesh("terrain02.obj"), Material("bricks"));
 
 	//IndexedModel cube;
@@ -108,6 +109,35 @@ void TestGame::init(const Window& window)
 	addToScene(cameraObj);
 	addToScene(dirLightObj);
 	addToScene(planeObj);
+}
+
+
+#include "Engine\Physics_\Particle.h"
+#include "Engine\Physics_\Physics_Component.h"
+
+void TestGame::init(const Window& window)
+{
+	GameObject* cameraObj = new GameObject(Vector3(0, 0, -2));
+	cameraObj->addComponent(new FreeLook(window.getCentre()));
+	cameraObj->addComponent(new FreeMove());
+	cameraObj->addComponent(new CameraComponent(Matrix4().initPerspective(toRadians(70.0f), window.getAspectRatio(), 0.1f, 1000.0f)));
+
+	Particle p;
+	p.setVelocity(Vector3(0, 30, 10.0f));
+	p.setAcceleration(Vector3(0, -20.0f, 0.0f));
+	p.setDamping(0.99f);
+	p.setMass(200.0f);
+	p.setPosition(Vector3());
+
+	Material white("default", Texture("white.png"), COLOUR_LIME);
+	SpriteSheet spriteSheet = SpriteSheet("", white, 8, 8); 
+
+	GameObject* particleObj = new GameObject();
+	//particleObj->addComponent(new TestComp(p));
+	particleObj->addComponent(new SpriteRenderer(spriteSheet));
+
+	addToScene(cameraObj);
+	addToScene(particleObj);
 }
 
 int main()
