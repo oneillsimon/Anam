@@ -181,4 +181,7 @@ public:
 	void setA(float w);
 };
 
+Colour getRandomColour();
+Colour getRandomColour(Colour mix);
+
 #endif

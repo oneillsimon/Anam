@@ -1,3 +1,6 @@
+#include <stdlib.h>
+
+#include "../Core/Math3D.h"
 #include "Colour.h"
 
 Colour::Colour()
@@ -82,4 +85,24 @@ void Colour::setB(float b)
 void Colour::setA(float a)
 {
 	this->w = a;
+}
+
+Colour getRandomColour()
+{
+	int r = random(0, 255);
+	int g = random(0, 255);
+	int b = random(0, 255);
+
+	return Colour(r, g, b);
+}
+
+Colour getRandomColour(Colour mix)
+{
+	Colour c = getRandomColour();
+
+	c.setR((c.getR() + mix.getR()) / 2);
+	c.setG((c.getG() + mix.getG()) / 2);
+	c.setB((c.getB() + mix.getB()) / 2);
+
+	return c;
 }
