@@ -26,13 +26,13 @@ public:
 	Material(const Material& material);
 	Material(const std::string& materialName,
 			 const Texture& diffuse,
+			 Colour colour = Colour(255, 255, 255),
 			 float specularIntensity = 1.0f,
 			 float specularExponent = 8.0f,
 			 const Texture& normalMap = Texture("default_normal.jpg"),
 			 const Texture& displacementMap = Texture("default_disp.png"),
 			 float dispMapScale = 0.0f,
-			 float dispMapOffset = 0.0f,
-			 Colour colour = Colour(255, 255, 255));
+			 float dispMapOffset = 0.0f);
 	virtual ~Material();
 
 	void setVector3(const std::string& name, const Vector3& value);
