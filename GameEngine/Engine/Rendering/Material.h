@@ -6,6 +6,8 @@
 #include "MappedValues.h"
 #include "Colour.h"
 
+#define MATERIAL_DEFAULT Material("defaultMaterial", TEXTURE_BLANK)
+
 class MaterialData : public ReferenceCounter, public MappedValues
 {
 public:
