@@ -9,7 +9,7 @@ FreeLook::FreeLook(const Vector2 windowCentre, float sensitivity, int unlockMous
 	m_unlockMouseKey = unlockMouseKey;
 }
 
-void FreeLook::processInput(const Input& input, float delta)
+void FreeLook::input(const Input& input, float delta)
 {
 	if(input.getKey(m_unlockMouseKey))
 	{

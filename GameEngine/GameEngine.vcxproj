@@ -36,13 +36,10 @@
     <ClInclude Include="Engine\Fisic.h" />
     <ClInclude Include="Engine\GameEngine.h" />
     <ClInclude Include="Engine\Grafaic.h" />
-    <ClInclude Include="Engine\Physics\AABB.h" />
-    <ClInclude Include="Engine\Physics\BoundingSphere.h" />
     <ClInclude Include="Engine\Physics\Collider.h" />
     <ClInclude Include="Engine\Physics\IntersectionData.h" />
     <ClInclude Include="Engine\Physics\PhysicsEngine.h" />
     <ClInclude Include="Engine\Physics\PhysicsObject.h" />
-    <ClInclude Include="Engine\Physics\Plane.h" />
     <ClInclude Include="Engine\Rendering\Colour.h" />
     <ClInclude Include="Engine\Rendering\MappedValues.h" />
     <ClInclude Include="Engine\Rendering\Material.h" />

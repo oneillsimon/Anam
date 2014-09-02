@@ -5,7 +5,7 @@ FreeMove::FreeMove(float speed, int forwardKey, int backwardKey, int leftKey, in
 {
 }
 
-void FreeMove::processInput(const Input& input, float delta)
+void FreeMove::input(const Input& input, float delta)
 {
 	float moveAmount = speed * delta;
 

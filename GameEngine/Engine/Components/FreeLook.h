@@ -12,7 +12,7 @@ private:
 
 public:
 	FreeLook(const Vector2 windowCentre, float sensitivity = 0.5f, int unlockMouseKey = Input::KEY_ESCAPE);
-	virtual void processInput(const Input& input, float delta);
+	virtual void input(const Input& input, float delta);
 };
 
 #endif

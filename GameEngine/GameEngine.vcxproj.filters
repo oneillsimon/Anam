@@ -233,16 +233,7 @@
     <ClInclude Include="Engine\Core\Profiling.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Physics\BoundingSphere.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Physics\IntersectionData.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Physics\AABB.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Physics\Plane.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Grafaic.h">
