@@ -42,7 +42,7 @@ dlldata.c
 *_i.h
 *.ilk
 *.meta
-*.obj
+#*.obj
 *.pch
 *.pdb
 *.pgc
@@ -191,7 +191,7 @@ FakesAssemblies/
 *.slo
 *.lo
 *.o
-*.obj
+#*.obj
 
 # Compiled Dynamic libraries
 *.so
