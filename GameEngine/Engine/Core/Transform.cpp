@@ -97,6 +97,11 @@ Vector3 Transform::getTransformedPosition() const
 	return Vector3(getParentMatrix().transform(m_position));
 }
 
+Vector3 Transform::getTransformedPoint(const Vector3& point) const
+{
+	return Vector3(getParentMatrix().transform(point));
+}
+
 Quaternion Transform::getTransformedRotation() const
 {
 	Quaternion parentRotation = Quaternion(0, 0, 0, 1);
@@ -107,6 +112,11 @@ Quaternion Transform::getTransformedRotation() const
 	}
 
 	return parentRotation * m_rotation;
+}
+
+Vector3 Transform::getAxisVector(unsigned int index)
+{
+	return 
 }
 
 Transform* Transform::getParent()

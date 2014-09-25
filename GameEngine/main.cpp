@@ -114,11 +114,13 @@ void TestGame::init2(const Window& window)
 
 #include "Engine\Physics_\Particle.h"
 #include "Engine\Physics_\Physics_Component.h"
+#include "Engine\Physics_\PFGen.h"
+#include "Engine\Physics_\CollideCoarse.h"
 #include "Engine\Rendering\Shape.h"
 
 void TestGame::init(const Window& window)
 {
-	GameObject* cameraObj = new GameObject(Vector3(0, 0, -20));
+	GameObject* cameraObj = new GameObject(Vector3(0, 0, 0));
 	cameraObj->addComponent(new FreeLook(window.getCentre()));
 	cameraObj->addComponent(new FreeMove());
 	cameraObj->addComponent(new CameraComponent(Matrix4().initPerspective(toRadians(70.0f), window.getAspectRatio(), 0.1f, 1000.0f)));
@@ -127,24 +129,22 @@ void TestGame::init(const Window& window)
 	Material white("default", TEXTURE_BLANK, COLOUR_LIME);
 	SpriteSheet spriteSheet = SpriteSheet("", white, 1, 1); 
 
-	Square testSqaure = Square(COLOUR_YELLOW);
-
-	Particle p(testSqaure);
-	p.setVelocity(Vector3(0, 0, 0.0f));
-	p.setAcceleration(Vector3(0, 0.0f, 0.0f));
-	p.setDamping(0.99f);
-	p.setMass(200.0f);
-	p.setPosition(Vector3());
-
-	GameObject* particleObj = new GameObject();
-	particleObj->addComponent(new TestComp(p));
-
 	GameObject* dirLightObj = new GameObject(Vector3(0, 0, 0), Quaternion(), 2);
 	dirLightObj->getTransform()->rotate(Quaternion());
 	dirLightObj->addComponent(new DirectionalLight(COLOUR_WHITE, 0.4f, 10, 80.0f, 1.0f));
 
+	RigidBody* rigidBody = new RigidBody();
+	rigidBody->m_linearDamping = 0.1f;
+	rigidBody->m_angularDamping = 0.5f;
+	rigidBody->m_inverseMass = 1.0f / 200.0f;
+
+	GameObject* rigidBodyObj = new  GameObject(Vector3(0, -0.1f, 5));
+	rigidBodyObj->getTransform()->setScale(0.2f);
+	rigidBodyObj->addComponent(new MeshRenderer(mesh, MATERIAL_DEFAULT));
+	rigidBodyObj->addComponent(rigidBody);
+
 	addToScene(cameraObj);
-	addToScene(particleObj);
+	addToScene(rigidBodyObj);
 	//addToScene(dirLightObj);
 }
 

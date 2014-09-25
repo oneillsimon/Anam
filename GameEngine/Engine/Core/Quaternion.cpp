@@ -197,6 +197,24 @@ Quaternion Quaternion::operator +(const Quaternion& q) const
 	return Quaternion(x + q.getX(), y + q.getY(), z + q.getZ(), w + q.getW());
 }
 
+Quaternion Quaternion::operator +(const Vector3& v) const
+{
+	Quaternion q(v.getX(), v.getY(), v.getZ(), 0.0f);
+	q = q * *this;
+
+	float x_ = x;
+	float y_ = y;
+	float z_ = z;
+	float w_ = w;
+
+	x_ += q.getX() * (0.5f);
+	y_ += q.getY() * (0.5f);
+	z_ += q.getZ() * (0.5f);
+	w_ += q.getW() * (0.5f);
+
+	return Quaternion(x_, y_, z_, w_);
+}
+
 Quaternion Quaternion::operator -(const Quaternion& q) const
 {
 	return Quaternion(x - q.getX(), y - q.getY(), z - q.getZ(), w - q.getW());

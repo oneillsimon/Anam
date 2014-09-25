@@ -18,6 +18,7 @@ private:
 
 public:
 	Particle(const Shape& shape);
+	Particle(const Particle& other);
 
 	void integrate(float delta);
 	void addForce(const Vector3& force);
@@ -26,8 +27,9 @@ public:
 	Vector3 getPosition() const;
 	Vector3 getVelocity() const;
 	Vector3 getAcceleration() const;
-	float getDamping();
-	float getInversMass();
+	float getDamping() const;
+	float getInverseMass() const;
+	float getMass();
 	Vector3 getAccumulatedForce() const;
 	Shape getShape() const;
 
@@ -36,6 +38,8 @@ public:
 	void setAcceleration(const Vector3& acceleration);
 	void setDamping(float damping);
 	void setMass(float mass);
+
+	Particle operator =(const Particle& other);
 };
 
 #endif

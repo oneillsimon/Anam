@@ -32,6 +32,7 @@ public:
 	Quaternion getLookAtRotation(const Vector3& point, const Vector3& up);
 	Matrix4 getTransformation() const;
 	Vector3 getTransformedPosition() const;
+	Vector3 getTransformedPoint(const Vector3& point) const;
 	Quaternion getTransformedRotation() const;
 
 	Transform* getParent();

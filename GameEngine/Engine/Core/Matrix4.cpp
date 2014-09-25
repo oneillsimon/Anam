@@ -162,6 +162,56 @@ Vector3 Matrix4::transform(const Vector3& v) const
 	return res;
 }
 
+void Matrix4::setInverse(const Matrix4& m)
+{
+	// TODO: make this work for 4x4 matrix, this treat matrix4 as matrix3, ignoring 4th row and column
+
+	float t4 = m.getAt(0, 0) * m.getAt(1, 1);
+	float t6 = m.getAt(0, 0) * m.getAt(2, 1);
+	float t8 = m.getAt(1, 0) * m.getAt(0, 1);
+	float t10 = m.getAt(2, 0) * m.getAt(0, 1);
+	float t12 = m.getAt(1, 0) * m.getAt(0, 2);
+	float t14 = m.getAt(2, 0) * m.getAt(0, 2);
+
+	float t16 = (t4 * m.getAt(2, 2) - t6 * m.getAt(1, 2) - t8 * m.getAt(2, 2) + t10 * m.getAt(1, 2) + t12 * m.getAt(2, 1) - t14 * m.getAt(1, 1));
+
+	if(t16 == 0.0f)
+	{
+		return;
+	}
+
+	float t17 = 1.0f / t16;
+
+	m.setAt(0, 0, (m.getAt(1, 1) * m.getAt(2, 2) - m.getAt(2, 1) * m.getAt(1, 2)) * t17);
+	m.setAt(1, 0, (m.getAt(1, 0) * m.getAt(2, 2) - m.getAt(2, 0) * m.getAt(1, 2)) * t17);
+	m.setAt(2, 0, (m.getAt(1, 0) * m.getAt(2, 1) - m.getAt(2, 0) * m.getAt(1, 1)) * t17);
+	m.setAt(0, 1, (m.getAt(0, 1) * m.getAt(2, 2) - m.getAt(2, 1) * m.getAt(0, 2)) * t17);
+	m.setAt(1, 1, (m.getAt(0, 0) * m.getAt(2, 2) - t14) * t17);
+	m.setAt(2, 1, -(t6 - t10) * t17);
+	m.setAt(0, 2, (m.getAt(0, 1) * m.getAt(1, 2) - m.getAt(1, 1) * m.getAt(0, 2)) * t17);
+	m.setAt(1, 2, -(m.getAt(0, 0) * m.getAt(1, 2) - t12) * t17);
+	m.setAt(2, 2, (t4 - t8) * t17);
+}
+
+Vector3 Matrix4::getAxisVector(unsigned int index) const
+{
+	return Vector3(m[index][0], m[index][1], m[index][2]);
+}
+
+Vector3 Matrix4::transformInverse(const Vector3& v) const
+{
+	Vector3 temp = v;
+	temp.setX(temp.getX() - m[3][0]);
+	temp.setY(temp.getY() - m[3][1]);
+	temp.setZ(temp.getZ() - m[3][2]);
+
+	float x_ = temp.getX() * m[0][0] + temp.getY() * m[0][1] + temp.getZ() * m[0][2];
+	float y_ = temp.getX() * m[1][0] + temp.getY() * m[1][1] + temp.getZ() * m[1][2];
+	float z_ = temp.getX() * m[2][0] + temp.getY() * m[2][1] + temp.getZ() * m[2][2];
+
+	return Vector3(x_, y_, z_);
+}
+
 float** Matrix4::getM()
 {
 	float** res = (float**)m;
@@ -177,7 +227,7 @@ float** Matrix4::getM()
 	return res;
 }
 
-float Matrix4::getAt(int x, int y)
+float Matrix4::getAt(int x, int y) const
 {
 	return m[x][y];
 }
@@ -193,7 +243,7 @@ void Matrix4::set(float** m)
 	}
 }
 
-void Matrix4::setAt(int x, int y, float value)
+void Matrix4::setAt(int x, int y, float value) const
 {
 	m[x][y] = value;
 }

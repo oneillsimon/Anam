@@ -87,6 +87,8 @@ public:
 	Vector3 absolute();
 	void addScaledVector3(const Vector3& v, float scale);
 
+	float byVector3ToFloat(const Vector3& v) const;
+
 	float getX() const;
 	float getY() const;
 	float getZ() const;
@@ -151,7 +153,7 @@ public:
 class Matrix4
 {
 private:
-	float m[4][4];
+	mutable float m[4][4];
 
 public:
 	Matrix4();
@@ -167,12 +169,17 @@ public:
 	Matrix4 initRotation(const Vector3& forward, const Vector3& up);
 	Matrix4 initRotation(const Vector3& forward, const Vector3& up, const Vector3& right);
 	Vector3 transform(const Vector3& v) const;
+	void setInverse(const Matrix4& m);
+
+	//From cyclone
+	Vector3 getAxisVector(unsigned int index) const;
+	Vector3 transformInverse(const Vector3& v) const;
 
 	float** getM();
-	float getAt(int x, int y);
+	float getAt(int x, int y) const;
 
 	void set(float** m);
-	void setAt(int x, int y, float value);
+	void setAt(int x, int y, float value) const;
 
 	Matrix4 operator *(const Matrix4& m) const;
 	const float* operator [](int index) const { return m[index]; };
@@ -217,6 +224,7 @@ public:
 	void setW(float w);
 
 	Quaternion operator +(const Quaternion& q) const;
+	Quaternion operator +(const Vector3& v) const;
 	Quaternion operator -(const Quaternion& q) const;
 	Quaternion operator *(const Quaternion& q) const;
 	Quaternion operator *(const Vector3& v) const;

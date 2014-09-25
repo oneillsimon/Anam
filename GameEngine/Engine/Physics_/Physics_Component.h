@@ -3,14 +3,17 @@
 
 #include "../Components/GameComponent.h"
 #include "Particle.h"
+#include "PFGen.h"
 
 class TestComp : public GameComponent
 {
 private:
-	Particle particle;
+	ParticleForceRegistry* m_registry;
 
 public:
-	TestComp(const Particle& particle);
+	TestComp(ParticleForceRegistry* registry);
+	~TestComp();
+
 	virtual void input(const Input& input, float delta);
 	virtual void update(float delta);
 	virtual void render(const Shader& shader, const RenderingEngine& renderingEngine, const Camera& camera) const;

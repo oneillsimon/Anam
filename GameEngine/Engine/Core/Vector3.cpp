@@ -106,6 +106,11 @@ void Vector3::addScaledVector3(const Vector3& v, float scale)
 	z += (v.getZ() * scale);
 }
 
+float Vector3::byVector3ToFloat(const Vector3& v) const
+{
+	return x * v.getX() + y * v.getY() + z * getZ();
+}
+
 float Vector3::getX() const
 {
 	return x;

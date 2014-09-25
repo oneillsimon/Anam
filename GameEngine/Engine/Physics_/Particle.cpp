@@ -7,6 +7,17 @@ Particle::Particle(const Shape& shape) :
 {
 }
 
+Particle::Particle(const Particle& other) :
+	m_acceleration(other.getAcceleration()),
+	m_damping(other.getDamping()),
+	m_forceAccumulated(other.getAccumulatedForce()),
+	m_inverseMass(other.getInverseMass()),
+	m_position(other.getPosition()),
+	m_shape(other.getShape()),
+	m_velocity(other.getVelocity())
+{
+}
+
 void Particle::integrate(float delta)
 {
 	// Update positoion linearly
@@ -49,14 +60,19 @@ Vector3 Particle::getAcceleration() const
 	return m_acceleration;
 }
 
-float Particle::getDamping()
+float Particle::getDamping() const
 {
 	return m_damping;
 }
 
-float Particle::getInversMass()
+float Particle::getInverseMass() const
 {
 	return m_inverseMass;
+}
+
+float Particle::getMass()
+{
+	return 1.0f / m_inverseMass;
 }
 
 Vector3 Particle::getAccumulatedForce() const
@@ -92,4 +108,16 @@ void Particle::setDamping(float damping)
 void Particle::setMass(float mass)
 {
 	m_inverseMass = 1.0f / mass;
+}
+
+Particle Particle::operator =(const Particle& particle)
+{
+	m_acceleration = particle.getAcceleration();
+	m_damping = particle.getDamping();
+	m_forceAccumulated = particle.getAccumulatedForce();
+	m_inverseMass = particle.getInverseMass();
+	m_position = particle.getPosition();
+	m_shape = particle.getShape();
+	m_velocity = particle.getVelocity();
+	return *this;
 }
