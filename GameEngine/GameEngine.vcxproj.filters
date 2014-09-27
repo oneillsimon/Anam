@@ -339,4 +339,9 @@
   <ItemGroup>
     <Text Include="Engine\Notes.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\..\..\Downloads\braid-dino.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
 </Project>

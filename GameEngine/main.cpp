@@ -14,25 +14,26 @@
 class TestGame : public Game
 {
 public:
-	TestGame() { }
+	TestGame(){};
 	
 	virtual void init(const Window& window);
 	virtual void init2(const Window& window);
 protected:
 private:
-	TestGame(const TestGame& other) {}
-	void operator =(const TestGame& other) {}
+	//TestGame(const TestGame& other) {}
+	//void operator =(const TestGame& other) {}
 };
 
 static void tests();
 
-void TestGame::init2(const Window& window)
+void TestGame::init(const Window& window)
 {
 	Material bricks("bricks", Texture("bricks.jpg"), COLOUR_ALICE_BLUE, 0.5f, 4, Texture("bricks_normal.jpg"), Texture("bricks_disp.png"), 0.03f, -0.5f);
 	Material bricks_("bricks_", Texture("bricks.jpg"), COLOUR_ALICE_BLUE, 0.5f, 4, Texture("bricks_normal.jpg"), Texture("bricks_disp.png"), 0.03f, -0.5f);
 	Material bricks2("bricks2", Texture("bricks2.jpg"), COLOUR_WHITE, 1, 8, Texture("bricks2_normal.jpg"), Texture("bricks2_disp.jpg"), 0.04f, -1.0f);
 	Material blank("blank", Texture("white.png"));
-	Material default("default", Texture(""), COLOUR_GREEN);
+	Material default("default", Texture(""));
+	Material braid("braid", Texture("braid-dinosingle.png"));
 	MeshRenderer* terrainRenderer = new MeshRenderer(Mesh("terrain02.obj"), Material("bricks"));
 
 	//IndexedModel cube;
@@ -53,18 +54,21 @@ void TestGame::init2(const Window& window)
 	cameraObj->addComponent(new FreeLook(window.getCentre()));
 	cameraObj->addComponent(new FreeMove());
 	cameraObj->addComponent(new CameraComponent(Matrix4().initPerspective(toRadians(70.0f), window.getAspectRatio(), 0.1f, 1000.0f)));
+	cameraObj->getTransform()->setPosition(Vector3(0, 20, 0));
+	cameraObj->getTransform()->rotate(Quaternion(AXIS_X, toRadians(90)));
 
 	GameObject* dirLightObj = new GameObject(Vector3(0, 0, 0), Quaternion(), 2);
 	dirLightObj->getTransform()->rotate(Quaternion());
 	dirLightObj->addComponent(new DirectionalLight(COLOUR_WHITE, 0.4f, 10, 80.0f, 1.0f));
 
-	SpriteSheet spriteSheet("someSprite", Material("default"), 8, 8);
+	SpriteSheet spriteSheet("someSprite", braid, 12, 1);
+	spriteSheet.cycleDown();
 
 	GameObject* planeObj = new GameObject();
 	planeObj->getTransform()->setPosition(Vector3(0, 0, 2));
 	planeObj->getTransform()->rotate(Quaternion(Vector3(1, 0, 0), toRadians(-180)));
 	planeObj->addComponent(new SpriteRenderer(spriteSheet));
-	planeObj->addComponent(new SpriteAnimator(spriteSheet, 250, true));
+	planeObj->addComponent(new SpriteAnimator(spriteSheet, 50));
 
 	addToScene((new GameObject(Vector3(0, -1, 5), Quaternion(), 32.0f))
 		->addComponent(new MeshRenderer(Mesh("terrain02.obj"), Material("bricks"))));
@@ -91,21 +95,32 @@ void TestGame::init2(const Window& window)
 		->addComponent(new MeshRenderer(Mesh("cube"), Material("bricks2"))));*/
 
 	//TODO: temp
-	PhysicsEngine physicsEngine;
-	physicsEngine.addObject(PhysicsObject(new BoundingSphere(Vector3(-0.5f, 0, -10), 1.0f), Vector3(0, 0, 2)));
-	physicsEngine.addObject(PhysicsObject(new BoundingSphere(Vector3(0.5f, 0, 10), 1.0f), Vector3(0, 0, -2)));
+	//PhysicsEngine physicsEngine;
+	//PhysicsObject p1 = PhysicsObject(new BoundingSphere(Vector3(-0.5f, 0, -10), 1.0f), Vector3(0, 0, 20));
+	//PhysicsObject p2 = PhysicsObject(new BoundingSphere(Vector3(0.5f, 0, 10), 1.0f), Vector3(0, 0, -2));
+	//physicsEngine.addObject(p1);
+	//physicsEngine.addObject(p2);
 
-	PhysicsEngineComponent* physicsEngineComponent = new PhysicsEngineComponent(physicsEngine);
+	//PhysicsEngineComponent* physicsEngineComponent = new PhysicsEngineComponent(physicsEngine);
 
-	for(int i = 0; i < physicsEngineComponent->getPhysicsEngine().getNumObjects(); i++)
-	{
-		addToScene((new GameObject(Vector3(0, 0, 0), Quaternion(), 1.0f))
-			->addComponent(new PhysicsObjectComponent(&physicsEngineComponent->getPhysicsEngine().getObject(i)))
-			->addComponent(new MeshRenderer(Mesh("sphere.obj"), Material("bricks"))));
-	}
+	//for(int i = 0; i < physicsEngineComponent->getPhysicsEngine().getNumObjects(); i++)
+	//{
+	//	addToScene((new GameObject(Vector3(0, 0, 0), Quaternion(), 1))
+	//		->addComponent(new PhysicsObjectComponent(&physicsEngineComponent->getPhysicsEngine().getObject(i))));
+	//		//->addComponent(new MeshRenderer(Mesh("sphere.obj"), Material("bricks"))));
+	//}
 
-	addToScene((new GameObject())->addComponent(physicsEngineComponent));
+	//addToScene((new GameObject())->addComponent(physicsEngineComponent));
 
+	GameObject* collTest1 = new PhysicsObject(Vector3(0, 0, 10));
+	collTest1->addComponent(new BoundingSphere(Vector3(0, 0, 10), 5));
+
+	GameObject* collTest2 = new PhysicsObject(Vector3(0, 0, -10));
+	collTest2->addComponent(new BoundingSphere(Vector3(0, 0, -10), 2));
+	collTest2->addComponent(new FreeMove(10, Input::KEY_NUM8, Input::KEY_NUM5, Input::KEY_NUM4, Input::KEY_NUM6));
+
+	addToScene(collTest1);
+	addToScene(collTest2);
 	addToScene(cameraObj);
 	addToScene(dirLightObj);
 	addToScene(planeObj);
@@ -118,7 +133,7 @@ void TestGame::init2(const Window& window)
 #include "Engine\Physics_\CollideCoarse.h"
 #include "Engine\Rendering\Shape.h"
 
-void TestGame::init(const Window& window)
+void TestGame::init2(const Window& window)
 {
 	GameObject* cameraObj = new GameObject(Vector3(0, 0, 0));
 	cameraObj->addComponent(new FreeLook(window.getCentre()));
@@ -126,7 +141,7 @@ void TestGame::init(const Window& window)
 	cameraObj->addComponent(new CameraComponent(Matrix4().initPerspective(toRadians(70.0f), window.getAspectRatio(), 0.1f, 1000.0f)));
 
 	Mesh mesh = Mesh("terrain02.obj");
-	Material white("default", TEXTURE_BLANK, COLOUR_LIME);
+	Material white("default", TEXTURE_BLANK, COLOUR_ALICE_BLUE);
 	SpriteSheet spriteSheet = SpriteSheet("", white, 1, 1); 
 
 	GameObject* dirLightObj = new GameObject(Vector3(0, 0, 0), Quaternion(), 2);
@@ -135,17 +150,17 @@ void TestGame::init(const Window& window)
 
 	RigidBody* rigidBody = new RigidBody();
 	rigidBody->m_linearDamping = 0.1f;
-	rigidBody->m_angularDamping = 0.5f;
+	rigidBody->m_angularDamping = 0.9f;
 	rigidBody->m_inverseMass = 1.0f / 200.0f;
 
 	GameObject* rigidBodyObj = new  GameObject(Vector3(0, -0.1f, 5));
 	rigidBodyObj->getTransform()->setScale(0.2f);
-	rigidBodyObj->addComponent(new MeshRenderer(mesh, MATERIAL_DEFAULT));
+	rigidBodyObj->addComponent(new MeshRenderer(mesh, white));
 	rigidBodyObj->addComponent(rigidBody);
 
 	addToScene(cameraObj);
 	addToScene(rigidBodyObj);
-	//addToScene(dirLightObj);
+	addToScene(dirLightObj);
 }
 
 int main()
@@ -153,8 +168,8 @@ int main()
 	//tests();
 	//getchar();
 
-	TestGame game;
-	CoreEngine engine(800, 600, 60, &game);
+	TestGame test;
+	CoreEngine engine(800, 600, 60, &test);
 	engine.createWindow("Game ENGINE");
 	engine.start();
 
