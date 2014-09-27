@@ -9,7 +9,12 @@ void RigidBody::input(const Input& input, float delta)
 
 	if(input.getKey(Input::KEY_L))
 	{
-		addAngularForce(Vector3(0, 50, 0));
+		addAngularForce(Vector3(50, 50, 50));
+	}
+
+	if(input.getKey(Input::KEY_K))
+	{
+		addAngularForce(Vector3(50, 0, 0));
 	}
 
 	if(input.getKey(Input::KEY_M))

@@ -15,12 +15,13 @@ class Shader;
 class GameObject
 {
 private:
-	Transform m_transform;
 	CoreEngine* m_coreEngine;
 	std::vector<GameObject*> m_children;
 	std::vector<GameComponent*> m_components;
 
 protected:
+	Transform m_transform;
+
 	virtual void input(const Input& input, float delta);
 	virtual void update(float delta);
 	virtual void render(const Shader& shader, const RenderingEngine& renderingEngine, const Camera& camera) const;

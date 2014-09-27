@@ -1,6 +1,6 @@
 #include "SpriteAnimator.h"
 
-SpriteAnimator::SpriteAnimator(const SpriteSheet& spriteSheet, float every, bool upCondition) :
+SpriteAnimator::SpriteAnimator(const SpriteSheet& spriteSheet, float every) :
 	m_spriteSheet(spriteSheet),
 	m_speed(every)
 {

@@ -1,14 +1,16 @@
 #ifndef COLLIDER_H
 #define COLLIDER_H
 
+#include "../Components/GameComponent.h"
 #include "../Core/ReferenceCounter.h"
 #include "../Rendering/Mesh.h"
 #include "IntersectionData.h"
 
-class Collider : public ReferenceCounter
+class Collider : public ReferenceCounter, public GameComponent
 {
 private:
 	int m_type;
+	mutable bool m_isColliding;
 
 protected:
 	Mesh m_mesh;
@@ -22,12 +24,18 @@ public:
 		TYPE_SIZE
 	};
 
+	std::string easyId = "";
+
 	Collider(int type, const std::string& meshName = "");
+
+	virtual void update(float delta);
+	virtual void render(const Shader& shader, const RenderingEngine& renderingEngine, const Camera& camera) const;
 
 	IntersectionData intersect(const Collider& collider) const;
 	virtual void transform(const Vector3& translation) {};
 
 	int getType() const;
+	bool getIsColliding() const;
 
 	virtual Vector3 getCentre() const;
 	Mesh getMesh() const;

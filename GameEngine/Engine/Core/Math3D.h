@@ -170,6 +170,7 @@ public:
 	Matrix4 initRotation(const Vector3& forward, const Vector3& up, const Vector3& right);
 	Vector3 transform(const Vector3& v) const;
 	void setInverse(const Matrix4& m);
+	void setComponents(const Vector3& v1, const Vector3& v2, const Vector3& v3);
 
 	//From cyclone
 	Vector3 getAxisVector(unsigned int index) const;

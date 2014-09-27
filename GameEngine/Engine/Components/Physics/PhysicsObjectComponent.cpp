@@ -10,7 +10,7 @@ PhysicsObjectComponent::PhysicsObjectComponent(const PhysicsObject* object) :
 
 void PhysicsObjectComponent::update(float delta)
 {
-	getTransform()->setPosition(m_physicsObject->getPosition());
+	//getTransform()->setPosition(m_physicsObject->getPosition());
 }
 
 void PhysicsObjectComponent::render(const Shader& shader, const RenderingEngine& renderingEngine, const Camera& camera) const
@@ -20,6 +20,15 @@ void PhysicsObjectComponent::render(const Shader& shader, const RenderingEngine&
 
 	m_physicsObject->getCollider().getMesh().getWireFrameShader().bind();
 	m_physicsObject->getCollider().getMesh().getWireFrameShader().updateUniforms(t, renderingEngine, camera);
-	m_physicsObject->getCollider().getMesh().getWireFrameShader().setUniform("wireFrameColour", COLOUR_YELLOW.toGLSLVec4());
+	
+	if(m_physicsObject->getCollider().getIsColliding())
+	{
+		m_physicsObject->getCollider().getMesh().getWireFrameShader().setUniform("wireFrameColour", COLOUR_YELLOW.toGLSLVec4());
+	}
+	else
+	{
+		m_physicsObject->getCollider().getMesh().getWireFrameShader().setUniform("wireFrameColour", COLOUR_WHITE.toGLSLVec4());
+	}
+	
 	m_physicsObject->getCollider().getMesh().drawWireFrame();
 }

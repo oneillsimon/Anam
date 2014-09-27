@@ -11,6 +11,7 @@ CoreEngine::CoreEngine(int width, int height, double frameRate, Game* game)
 	m_frameRate = 1.0 / frameRate;
 	m_game = game;
 	m_renderingEngine = 0;
+	m_physicsEngine = 0;
 
 	m_game->setEngine(this);
 }
@@ -32,6 +33,7 @@ void CoreEngine::createWindow(const std::string& title)
 {
 	m_window = new Window(m_width, m_height, title);
 	m_renderingEngine = new RenderingEngine(*m_window);
+	m_physicsEngine = new PhysicsEngine();
 }
 
 void CoreEngine::start()
@@ -112,6 +114,8 @@ void CoreEngine::run()
 			m_game->processInput(m_window->getInput(), (float)m_frameRate);
 			m_game->update((float)m_frameRate);
 
+			m_physicsEngine->simulate((float)m_frameRate);
+
 			unproccessedTime -= m_frameRate;
 		}
 
@@ -137,6 +141,11 @@ void CoreEngine::run()
 RenderingEngine* CoreEngine::getRenderingEngine()
 {
 	return m_renderingEngine;
+}
+
+PhysicsEngine* CoreEngine::getPhysicsEngine()
+{
+	return m_physicsEngine;
 }
 
 void CoreEngine::setCamera(const Camera& camera)

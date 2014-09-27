@@ -3,6 +3,7 @@
 
 #include <string>
 
+#include "../Physics/PhysicsEngine.h"
 #include "../Rendering/RenderingEngine.h"
 #include "Profiling.h"
 
@@ -17,6 +18,7 @@ private:
 	double m_frameRate;
 	Game* m_game;
 	RenderingEngine* m_renderingEngine;
+	PhysicsEngine* m_physicsEngine;
 	Window* m_window;
 	const Camera* m_mainCamera;
 
@@ -38,6 +40,7 @@ public:
 	void stop();
 
 	RenderingEngine* getRenderingEngine();
+	PhysicsEngine* getPhysicsEngine();
 
 	void setCamera(const Camera& camera);
 };

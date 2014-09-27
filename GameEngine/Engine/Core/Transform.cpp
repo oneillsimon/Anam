@@ -114,11 +114,6 @@ Quaternion Transform::getTransformedRotation() const
 	return parentRotation * m_rotation;
 }
 
-Vector3 Transform::getAxisVector(unsigned int index)
-{
-	return 
-}
-
 Transform* Transform::getParent()
 {
 	return m_parent;

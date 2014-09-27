@@ -193,6 +193,13 @@ void Matrix4::setInverse(const Matrix4& m)
 	m.setAt(2, 2, (t4 - t8) * t17);
 }
 
+void Matrix4::setComponents(const Vector3& v1, const Vector3& v2, const Vector3& v3)
+{
+	m[0][0] = v1.getX(); m[1][0] = v1.getY(); m[2][0] = v1.getZ();
+	m[0][1] = v2.getX(); m[1][1] = v2.getY(); m[2][1] = v2.getZ();
+	m[0][2] = v3.getX(); m[1][2] = v3.getY(); m[2][2] = v3.getZ();
+}
+
 Vector3 Matrix4::getAxisVector(unsigned int index) const
 {
 	return Vector3(m[index][0], m[index][1], m[index][2]);

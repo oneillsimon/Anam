@@ -12,7 +12,7 @@ private:
 	float m_timer;
 
 public:
-	SpriteAnimator(const SpriteSheet& spriteSheet, float every, bool upCondition);
+	SpriteAnimator(const SpriteSheet& spriteSheet, float every);
 
 	virtual void update(float delta);
 };
