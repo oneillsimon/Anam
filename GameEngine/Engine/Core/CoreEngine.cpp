@@ -111,10 +111,10 @@ void CoreEngine::run()
 			m_window->update();
 			m_windowUpdateTimer.stopInvocation();
 
-			//m_game->processInput(m_window->getInput(), (float)m_frameRate);
+			m_game->processInput(m_window->getInput(), (float)m_frameRate);
 			m_game->update((float)m_frameRate);
 
-			//m_game->integrate(m_physicsEngine, (float)m_frameRate);
+			m_game->integrate(m_physicsEngine, (float)m_frameRate);
 
 			unproccessedTime -= m_frameRate;
 		}
