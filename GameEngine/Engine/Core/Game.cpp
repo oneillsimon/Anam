@@ -19,6 +19,11 @@ void Game::update(float delta)
 	m_updateProfileTimer.stopInvocation();
 }
 
+void Game::integrate(PhysicsEngine* physicsEngine, float delta)
+{
+	physicsEngine->simulate(rootObject, delta);
+}
+
 void Game::render(RenderingEngine* renderingEngine, const Camera& camera)
 {
 	renderingEngine->render(rootObject, camera);

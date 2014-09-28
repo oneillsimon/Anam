@@ -14,7 +14,7 @@ public:
 	PhysicsEngine();
 
 	void addObject(const PhysicsObject& object);
-	void simulate(float delta);
+	void simulate(const GameObject& object, float delta);
 	void handleCollisions();
 
 	//TODO: temp

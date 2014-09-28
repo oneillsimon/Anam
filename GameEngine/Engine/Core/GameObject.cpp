@@ -63,6 +63,16 @@ void GameObject::updateAll(float delta)
 	}
 }
 
+void GameObject::integrateAll(float delta) const
+{
+	integrate(delta);
+
+	for(unsigned int i = 0; i < m_children.size(); i++)
+	{
+		m_children[i]->integrateAll(delta);
+	}
+}
+
 void GameObject::renderAll(const Shader& shader, const RenderingEngine& renderingEgine, const Camera& camera) const
 {
 	render(shader, renderingEgine, camera);
@@ -88,6 +98,14 @@ void GameObject::update(float delta)
 	for(unsigned int i = 0; i < m_components.size(); i++)
 	{
 		m_components[i]->update(delta);
+	}
+}
+
+void GameObject::integrate(float delta) const
+{
+	for(unsigned int i = 0; i < m_components.size(); i++)
+	{
+		m_components[i]->integrate(delta);
 	}
 }
 
