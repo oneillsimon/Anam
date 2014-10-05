@@ -117,6 +117,11 @@ void GameObject::render(const Shader& shader, const RenderingEngine& renderingEn
 	}
 }
 
+std::vector<GameObject*> GameObject::getChildren() const
+{
+	return m_children;
+}
+
 std::vector<GameObject*> GameObject::getAllAttached()
 {
 	std::vector<GameObject*> result;
@@ -134,6 +139,11 @@ std::vector<GameObject*> GameObject::getAllAttached()
 Transform* GameObject::getTransform()
 {
 	return &m_transform;
+}
+
+CoreEngine* GameObject::getEngine() const
+{
+	return m_coreEngine;
 }
 
 void GameObject::setEngine(CoreEngine* engine)

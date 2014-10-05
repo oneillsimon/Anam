@@ -19,15 +19,16 @@
 //	m_collider->addReference();
 //}
 
-PhysicsObject::PhysicsObject(const Vector3& position, const Quaternion& rotation, float scale)
-	: GameObject(position, rotation, scale)
+PhysicsObject::PhysicsObject(const Vector3& position, const Quaternion& rotation, float scale, Vector3 velocity)
+	: GameObject(position, rotation, scale),
+	m_collider(0)
 {
-
+	m_velocity = velocity;
 }
 
 PhysicsObject::~PhysicsObject()
 {
-	if(m_collider->removeReference())
+	if(m_collider)
 	{
 		delete m_collider;
 	}
@@ -36,6 +37,11 @@ PhysicsObject::~PhysicsObject()
 void PhysicsObject::integrate(float delta)
 {
 	m_transform.setPosition(m_transform.getPosition() + m_velocity * delta);
+}
+
+void PhysicsObject::render(const Shader& shader, const RenderingEngine& renderingEngine, const Camera& camera) const
+{
+	m_collider->render(shader, renderingEngine, camera);
 }
 
 //const Vector3& PhysicsObject::getPosition() const
@@ -59,6 +65,12 @@ const Collider& PhysicsObject::getCollider() const
 void PhysicsObject::setVelocity(const Vector3& velocity)
 {
 	m_velocity = velocity;
+}
+
+void PhysicsObject::setCollider(Collider* collider)
+{
+	m_collider = collider;
+	m_collider->setParent(this);
 }
 
 PhysicsObject PhysicsObject::operator =(PhysicsObject other)

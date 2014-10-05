@@ -9,6 +9,8 @@
 #include "Engine\Components\Rendering\SpriteRenderer.h"
 #include "Engine\Components\Rendering\SpriteAnimator.h"
 
+#include "Engine\Components\TestComponent.h"
+
 #undef main
 
 class TestGame : public Game
@@ -112,15 +114,21 @@ void TestGame::init(const Window& window)
 
 	//addToScene((new GameObject())->addComponent(physicsEngineComponent));
 
-	GameObject* collTest1 = new PhysicsObject(Vector3(0, 0, 10));
-	collTest1->addComponent(new BoundingSphere(Vector3(0, 0, 10), 5));
+	PhysicsObject* collTest1 = new PhysicsObject(Vector3(0.5f, 0, 20));
+	collTest1->setVelocity(Vector3(0, 0, -2));
+	collTest1->setCollider(new BoundingSphere(1));
+	//collTest1->addComponent(new MeshRenderer(Mesh("cube.obj"), MATERIAL_DEFAULT));
+	//collTest1->setCollider(new AABB(Vector3(-0.5f, -0.5f, -0.5f), Vector3(0.5f, 0.5f, 0.5f)));
 
-	GameObject* collTest2 = new PhysicsObject(Vector3(0, 0, -10));
-	collTest2->addComponent(new BoundingSphere(Vector3(0, 0, -10), 2));
-	collTest2->addComponent(new FreeMove(10, Input::KEY_NUM8, Input::KEY_NUM5, Input::KEY_NUM4, Input::KEY_NUM6));
+	PhysicsObject* collTest2 = new PhysicsObject(Vector3(0, 0, 0));
+	collTest2->setVelocity(Vector3(0, 0, 2));
+	collTest2->setCollider(new BoundingSphere(1));
+	//collTest2->setCollider(new AABB(Vector3(-0.5f, -0.5f, -0.5f), Vector3(0.5f, 0.5f, 0.5f)));
 
-	addToScene(collTest1);
-	addToScene(collTest2);
+	//collTest2->addComponent(new FreeMove(10, Input::KEY_NUM8, Input::KEY_NUM5, Input::KEY_NUM4, Input::KEY_NUM6));
+
+	addToScene2(collTest1);
+	addToScene2(collTest2);
 	addToScene(cameraObj);
 	addToScene(dirLightObj);
 	addToScene(planeObj);
@@ -174,48 +182,4 @@ int main()
 	engine.start();
 
 	return 0;
-}
-
-void tests()
-{
-	BoundingSphere sphere1(Vector3(0, 0, 0), 1.0f);
-	BoundingSphere sphere2(Vector3(0, 3, 0), 1.0f);
-	BoundingSphere sphere3(Vector3(0, 0, 2), 1.0f);
-	BoundingSphere sphere4(Vector3(1, 0, 0), 1.0f);
-
-	IntersectionData sphere1IntSphere2 = sphere1.intersectBoundingSphere(sphere2);
-	IntersectionData sphere1IntSphere3 = sphere1.intersectBoundingSphere(sphere3);
-	IntersectionData sphere1IntSphere4 = sphere1.intersectBoundingSphere(sphere4);
-
-	std::cout << "Sphere1 intersect Sphere2: " << sphere1IntSphere2.getDoesIntersect() << ", Distance: " << sphere1IntSphere2.getDistance() <<std::endl;
-	std::cout << "Sphere1 intersect Sphere3: " << sphere1IntSphere3.getDoesIntersect() << ", Distance: " << sphere1IntSphere3.getDistance() <<std::endl;
-	std::cout << "Sphere1 intersect Sphere4: " << sphere1IntSphere4.getDoesIntersect() << ", Distance: " << sphere1IntSphere4.getDistance() <<std::endl;
-
-	AABB aabb1(Vector3(0, 0, 0), Vector3(1, 1, 1));
-	AABB aabb2(Vector3(1, 1, 1), Vector3(2, 2, 2));
-	AABB aabb3(Vector3(1, 0, 0), Vector3(2, 1, 1));
-	AABB aabb4(Vector3(0, 0, -2), Vector3(1, 1, -1));
-	AABB aabb5(Vector3(0, 0.5f, 0), Vector3(1, 1.5f, 1));
-
-	IntersectionData aabb1Intaabb2 = aabb1.intersectAABB(aabb2);
-	IntersectionData aabb1Intaabb3 = aabb1.intersectAABB(aabb3);
-	IntersectionData aabb1Intaabb4 = aabb1.intersectAABB(aabb4);
-	IntersectionData aabb1Intaabb5 = aabb1.intersectAABB(aabb5);
-
-	std::cout << "AABB1 intersect AABB2: " << aabb1Intaabb2.getDoesIntersect() << ", Distance: " << aabb1Intaabb2.getDistance() << std::endl;
-	std::cout << "AABB1 intersect AABB3: " << aabb1Intaabb3.getDoesIntersect() << ", Distance: " << aabb1Intaabb3.getDistance() << std::endl;
-	std::cout << "AABB1 intersect AABB4: " << aabb1Intaabb4.getDoesIntersect() << ", Distance: " << aabb1Intaabb4.getDistance() << std::endl;
-	std::cout << "AABB1 intersect AABB5: " << aabb1Intaabb5.getDoesIntersect() << ", Distance: " << aabb1Intaabb5.getDistance() << std::endl;
-
-	Plane plane1(Vector3(0, 1, 0), 0);
-
-	IntersectionData plane1IntSphere1 = plane1.intersectSphere(sphere1);
-	IntersectionData plane1IntSphere2 = plane1.intersectSphere(sphere2);
-	IntersectionData plane1IntSphere3 = plane1.intersectSphere(sphere3);
-	IntersectionData plane1IntSphere4 = plane1.intersectSphere(sphere4);
-
-	std::cout << "Plane 1 intersect Sphere1: " << plane1IntSphere1.getDoesIntersect() << ", Distance: " << plane1IntSphere1.getDistance() << std::endl;
-	std::cout << "Plane 1 intersect Sphere2: " << plane1IntSphere2.getDoesIntersect() << ", Distance: " << plane1IntSphere2.getDistance() << std::endl;
-	std::cout << "Plane 1 intersect Sphere3: " << plane1IntSphere3.getDoesIntersect() << ", Distance: " << plane1IntSphere3.getDistance() << std::endl;
-	std::cout << "Plane 1 intersect Sphere4: " << plane1IntSphere4.getDoesIntersect() << ", Distance: " << plane1IntSphere4.getDistance() << std::endl;
 }

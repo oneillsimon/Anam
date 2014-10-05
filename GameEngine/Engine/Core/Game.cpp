@@ -5,6 +5,12 @@ void Game::addToScene(GameObject* object)
 	rootObject.addChild(object);
 }
 
+void Game::addToScene2(PhysicsObject* object)
+{
+	rootObject.addChild(object);
+	rootObject.getEngine()->getPhysicsEngine()->addObject(object);
+}
+
 void Game::processInput(const Input& input, float delta)
 {
 	m_inputProfileTimer.startInvocation();
@@ -21,7 +27,7 @@ void Game::update(float delta)
 
 void Game::integrate(PhysicsEngine* physicsEngine, float delta)
 {
-	physicsEngine->simulate(rootObject, delta);
+	physicsEngine->simulate(rootPhysicsObject, delta);
 }
 
 void Game::render(RenderingEngine* renderingEngine, const Camera& camera)
@@ -47,4 +53,5 @@ GameObject& Game::getRoot()
 void Game::setEngine(CoreEngine* coreEngine)
 {
 	rootObject.setEngine(coreEngine);
+	rootPhysicsObject.setEngine(coreEngine);
 }

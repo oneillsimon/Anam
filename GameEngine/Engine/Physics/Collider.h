@@ -21,14 +21,11 @@ public:
 	{
 		TYPE_SPHERE,
 		TYPE_AABB,
-		TYPE_SIZE
+		TYPE_PLANE
 	};
 
-	std::string easyId = "";
+	Collider(int type, const std::string& meshName);
 
-	Collider(int type, const std::string& meshName = "");
-
-	virtual void update(float delta);
 	virtual void render(const Shader& shader, const RenderingEngine& renderingEngine, const Camera& camera) const;
 
 	IntersectionData intersect(const Collider& collider) const;
@@ -37,7 +34,7 @@ public:
 	int getType() const;
 	bool getIsColliding() const;
 
-	virtual Vector3 getCentre() const;
+	Vector3 getCentre() const;
 	Mesh getMesh() const;
 	Vector3 getScale() const;
 };
@@ -59,19 +56,17 @@ public:
 class BoundingSphere : public Collider
 {
 private:
-	Vector3 m_center;
 	float m_radius;
 
 public:
-	BoundingSphere(Vector3 center, float radius);
+	BoundingSphere(float radius);
 
 	IntersectionData intersectBoundingSphere(const BoundingSphere& other);
+	IntersectionData intersectAABB(const AABB& other);
 	virtual void transform(const Vector3& translation);
 
-	virtual Vector3 getCentre() const;
 	const float getRadius() const;
 
-	void setCenter(Vector3 center);
 	void setRadius(float radius);
 };
 

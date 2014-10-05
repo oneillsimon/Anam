@@ -1,8 +1,7 @@
 #include "Collider.h"
 
-BoundingSphere::BoundingSphere(Vector3 center, float radius) :
+BoundingSphere::BoundingSphere(float radius) :
 	Collider(Collider::TYPE_SPHERE, "sphere.obj"),
-	m_center(center),
 	m_radius(radius)
 {
 	m_scale = Vector3(radius, radius, radius);
@@ -11,7 +10,7 @@ BoundingSphere::BoundingSphere(Vector3 center, float radius) :
 IntersectionData BoundingSphere::intersectBoundingSphere(const BoundingSphere& other)
 {
 	float radiusDistance = m_radius + other.getRadius();
-	Vector3 direction = (other.getCentre() - m_center);
+	Vector3 direction = (other.getCentre() - getCentre());
 	float centerDistance = direction.length();
 	direction /= centerDistance;
 
@@ -20,24 +19,22 @@ IntersectionData BoundingSphere::intersectBoundingSphere(const BoundingSphere& o
 	return IntersectionData(distance < 0, direction * distance);
 }
 
-void BoundingSphere::transform(const Vector3& translation)
+IntersectionData BoundingSphere::intersectAABB(const AABB& other)
 {
-	m_center += translation;
+	Vector3 direction = other.getCentre() - getCentre();
+	Vector3 closetest = direction;
+
+	return IntersectionData(false, Vector3());
 }
 
-Vector3 BoundingSphere::getCentre() const
+void BoundingSphere::transform(const Vector3& translation)
 {
-	return m_center;
+	m_parent->getTransform()->setPosition(m_parent->getTransform()->getPosition() + translation);
 }
 
 const float BoundingSphere::getRadius() const
 {
 	return m_radius;
-}
-
-void BoundingSphere::setCenter(Vector3 center)
-{
-	m_center = center;
 }
 
 void BoundingSphere::setRadius(float radius)

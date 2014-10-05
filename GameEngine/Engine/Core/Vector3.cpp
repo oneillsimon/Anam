@@ -91,6 +91,7 @@ Vector3 Vector3::lerp(const Vector3& destination, float lerpFactor) const
 
 Vector3 Vector3::reflect(const Vector3& normal) const
 {
+	//2*(V dot N)*N - V
 	return *this - (normal * (this->dot(normal) * 2));
 }
 
@@ -108,7 +109,7 @@ void Vector3::addScaledVector3(const Vector3& v, float scale)
 
 float Vector3::byVector3ToFloat(const Vector3& v) const
 {
-	return x * v.getX() + y * v.getY() + z * getZ();
+	return x * v.getX() + y * v.getY() + z * v.getZ();
 }
 
 float Vector3::getX() const

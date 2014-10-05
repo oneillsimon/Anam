@@ -39,9 +39,12 @@ public:
 	void integrateAll(float delta) const;
 	void renderAll(const Shader& shader, const RenderingEngine& renderingEngine, const Camera& camera) const;
 
+	std::vector<GameObject*> getChildren() const;
 	std::vector<GameObject*> getAllAttached();
 
 	Transform* getTransform();
+
+	CoreEngine* getEngine() const;
 
 	void setEngine(CoreEngine* engine);
 };

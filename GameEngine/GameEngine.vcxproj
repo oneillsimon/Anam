@@ -22,6 +22,7 @@
     <ClInclude Include="Engine\Components\Physics\PhysicsObjectComponent.h" />
     <ClInclude Include="Engine\Components\Rendering\SpriteAnimator.h" />
     <ClInclude Include="Engine\Components\Rendering\SpriteRenderer.h" />
+    <ClInclude Include="Engine\Components\TestComponent.h" />
     <ClInclude Include="Engine\Core\Math3D.h" />
     <ClInclude Include="Engine\Core\CoreEngine.h" />
     <ClInclude Include="Engine\Core\Game.h" />

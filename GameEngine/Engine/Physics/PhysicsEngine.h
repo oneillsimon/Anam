@@ -8,25 +8,16 @@
 class PhysicsEngine
 {
 private:
-	std::vector<PhysicsObject> m_objects;
+	std::vector<PhysicsObject*> m_objects;
 
 public:
 	PhysicsEngine();
 
-	void addObject(const PhysicsObject& object);
-	void simulate(const GameObject& object, float delta);
+	void addObject(PhysicsObject* object);
+	void simulate(const PhysicsObject& object, float delta);
 	void handleCollisions();
 
-	//TODO: temp
-	const PhysicsObject& getObject(unsigned int index) const
-	{
-		return m_objects[index];
-	}
-
-	unsigned int getNumObjects() const
-	{
-		return (unsigned int)m_objects.size();
-	}
+	PhysicsObject* getObject(unsigned int index) const;
 };
 
 #endif
