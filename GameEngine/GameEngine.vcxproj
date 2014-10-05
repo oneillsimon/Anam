@@ -23,6 +23,7 @@
     <ClInclude Include="Engine\Components\Rendering\SpriteAnimator.h" />
     <ClInclude Include="Engine\Components\Rendering\SpriteRenderer.h" />
     <ClInclude Include="Engine\Components\TestComponent.h" />
+    <ClInclude Include="Engine\Core\Lua.h" />
     <ClInclude Include="Engine\Core\Math3D.h" />
     <ClInclude Include="Engine\Core\CoreEngine.h" />
     <ClInclude Include="Engine\Core\Game.h" />
@@ -156,8 +157,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>Include;$(IncludePath)</IncludePath>
-    <LibraryPath>Lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\lua\5.2\include;Include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\lua\5.2\lib;Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>Include;$(IncludePath)</IncludePath>
@@ -170,8 +171,9 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;opengl32.lib;glu32.lib;glew32.lib;glew32mx.lib;glew32mxs.lib;glew32s.lib;assimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;opengl32.lib;glu32.lib;glew32.lib;glew32mx.lib;glew32mxs.lib;glew32s.lib;assimp.lib;lua5.2.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>NotSet</SubSystem>
+      <AdditionalLibraryDirectories>C:\lua\5.2\lua;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

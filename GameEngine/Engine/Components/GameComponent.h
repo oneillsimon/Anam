@@ -13,7 +13,6 @@ public:
 
 	virtual void input(const Input& input, float delta) {}
 	virtual void update(float delta) {}
-	virtual void integrate(float delta) {}
 	virtual void render(const Shader& shader, const RenderingEngine& renderingEngine, const Camera& camera) const {}
 
 	virtual void addToCoreEngine(CoreEngine* coreEngine) const {}

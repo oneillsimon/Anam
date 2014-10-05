@@ -338,6 +338,9 @@
     <ClInclude Include="Engine\Components\TestComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Core\Lua.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Engine\Notes.txt" />

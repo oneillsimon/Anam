@@ -24,7 +24,6 @@ protected:
 
 	virtual void input(const Input& input, float delta);
 	virtual void update(float delta);
-	virtual void integrate(float delta) const;
 	virtual void render(const Shader& shader, const RenderingEngine& renderingEngine, const Camera& camera) const;
 
 public:
@@ -36,7 +35,6 @@ public:
 
 	void inputAll(const Input& input, float delta);
 	void updateAll(float delta);
-	void integrateAll(float delta) const;
 	void renderAll(const Shader& shader, const RenderingEngine& renderingEngine, const Camera& camera) const;
 
 	std::vector<GameObject*> getChildren() const;
