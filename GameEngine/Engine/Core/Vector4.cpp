@@ -15,6 +15,26 @@ Vector4::~Vector4()
 {
 }
 
+void Vector4::registerMembers(const std::string& namespace_, lua_State* luaState)
+{
+	luabridge::getGlobalNamespace(luaState)
+		.beginNamespace(namespace_.c_str())
+		.beginClass<Vector4>("Vector4")
+		.addConstructor<void(*)(const float&, const float&, const float&, const float&)>()
+		.addFunction("length", &Vector4::length)
+		.addFunction("normalised", &Vector4::normalised)
+		.addFunction("getX", &Vector4::getX)
+		.addFunction("getY", &Vector4::getY)
+		.addFunction("getZ", &Vector4::getZ)
+		.addFunction("getW", &Vector4::getW)
+		.addFunction("setX", &Vector4::setX)
+		.addFunction("setY", &Vector4::setY)
+		.addFunction("setZ", &Vector4::setZ)
+		.addFunction("setW", &Vector4::setW)
+		.endClass()
+		.endNamespace();
+}
+
 float Vector4::length() const
 {
 	return sqrtf(x * x + y * y + z * z + w * w);

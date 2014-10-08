@@ -30,7 +30,7 @@ private:
 
 static void tests();
 
-void TestGame::init(const Window& window)
+void TestGame::init2(const Window& window)
 {
 	Material bricks("bricks", Texture("bricks.jpg"), COLOUR_ALICE_BLUE, 0.5f, 4, Texture("bricks_normal.jpg"), Texture("bricks_disp.png"), 0.03f, -0.5f);
 	Material bricks_("bricks_", Texture("bricks.jpg"), COLOUR_ALICE_BLUE, 0.5f, 4, Texture("bricks_normal.jpg"), Texture("bricks_disp.png"), 0.03f, -0.5f);
@@ -129,7 +129,7 @@ void TestGame::init(const Window& window)
 
 	//collTest2->addComponent(new FreeMove(10, Input::KEY_NUM8, Input::KEY_NUM5, Input::KEY_NUM4, Input::KEY_NUM6));
 
-	planeObj->addComponent(new Script("test.lua"));
+	//planeObj->addComponent(new Script("test.lua"));
 
 	addToScene2(collTest1);
 	addToScene2(collTest2);
@@ -145,7 +145,7 @@ void TestGame::init(const Window& window)
 #include "Engine\Physics_\CollideCoarse.h"
 #include "Engine\Rendering\Shape.h"
 
-void TestGame::init2(const Window& window)
+void TestGame::init(const Window& window)
 {
 	GameObject* cameraObj = new GameObject(Vector3(0, 0, 0));
 	cameraObj->addComponent(new FreeLook(window.getCentre()));
