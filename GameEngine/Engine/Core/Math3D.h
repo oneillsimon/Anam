@@ -13,13 +13,17 @@
 #define AXIS_YZ Vector3(0, 1, 1)
 #define AXIS_XYZ Vector3(1, 1, 1)
 
+#include "IScriptable.h"
+
 class Quaternion;
 
-class Vector2
+class Vector2 : public IScriptable
 {
 private:
 	float x;
 	float y;
+
+	//virtual void registerMembers(lua_State* luaState);
 
 public:
 	static const Vector2 ZERO;
@@ -56,7 +60,7 @@ public:
 	bool operator !=(const Vector2& v) const;
 };
 
-class Vector3
+class Vector3 : public IScriptable
 {
 private:
 	mutable float x;
@@ -64,6 +68,8 @@ private:
 	mutable float z;
 
 public:
+	static void registerMembers(lua_State* luaState);
+
 	static const Vector3 ZERO;
 	static const Vector3 ONE;
 
@@ -123,13 +129,15 @@ public:
 	bool operator !=(const Vector3& v) const;
 };
 
-class Vector4
+class Vector4 : public IScriptable
 {
 protected:
 	mutable float x;
 	mutable float y;
 	mutable float z;
 	mutable float w;
+
+	//virtual void registerMembers(lua_State* luaState);
 
 public:
 	Vector4(float x = 0.0f, float y = 0.0f, float z = 0.0f, float w = 0.0f);
@@ -150,10 +158,12 @@ public:
 	void setW(float w);
 };
 
-class Matrix4
+class Matrix4 : IScriptable
 {
 private:
 	mutable float m[4][4];
+
+	//virtual void registerMembers(lua_State* luaState);
 
 public:
 	Matrix4();
@@ -186,13 +196,15 @@ public:
 	const float* operator [](int index) const { return m[index]; };
 };
 
-class Quaternion
+class Quaternion : IScriptable
 {
 private:
 	float x;
 	float y;
 	float z;
 	float w;
+
+	//virtual void registerMembers(lua_State* luaState);
 
 public:
 	Quaternion(float x = 0.0f, float y = 0.0f, float z = 0.0f, float w = 1.0f);

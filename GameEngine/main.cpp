@@ -11,6 +11,8 @@
 
 #include "Engine\Components\TestComponent.h"
 
+#include "Engine\Core\Script.h"
+
 #undef main
 
 class TestGame : public Game
@@ -56,8 +58,8 @@ void TestGame::init(const Window& window)
 	cameraObj->addComponent(new FreeLook(window.getCentre()));
 	cameraObj->addComponent(new FreeMove());
 	cameraObj->addComponent(new CameraComponent(Matrix4().initPerspective(toRadians(70.0f), window.getAspectRatio(), 0.1f, 1000.0f)));
-	cameraObj->getTransform()->setPosition(Vector3(0, 20, 0));
-	cameraObj->getTransform()->rotate(Quaternion(AXIS_X, toRadians(90)));
+	//cameraObj->getTransform()->setPosition(Vector3(0, 20, 0));
+	//cameraObj->getTransform()->rotate(Quaternion(AXIS_X, toRadians(90)));
 
 	GameObject* dirLightObj = new GameObject(Vector3(0, 0, 0), Quaternion(), 2);
 	dirLightObj->getTransform()->rotate(Quaternion());
@@ -126,6 +128,8 @@ void TestGame::init(const Window& window)
 	//collTest2->setCollider(new AABB(Vector3(-0.5f, -0.5f, -0.5f), Vector3(0.5f, 0.5f, 0.5f)));
 
 	//collTest2->addComponent(new FreeMove(10, Input::KEY_NUM8, Input::KEY_NUM5, Input::KEY_NUM4, Input::KEY_NUM6));
+
+	planeObj->addComponent(new Script("test.lua"));
 
 	addToScene2(collTest1);
 	addToScene2(collTest2);

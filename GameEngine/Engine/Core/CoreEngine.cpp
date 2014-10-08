@@ -13,6 +13,9 @@ CoreEngine::CoreEngine(int width, int height, double frameRate, Game* game)
 	m_renderingEngine = 0;
 	m_physicsEngine = 0;
 
+	luaL_openlibs(Lua::luaState);
+	Lua::register_();
+
 	m_game->setEngine(this);
 }
 
@@ -26,6 +29,11 @@ CoreEngine::~CoreEngine()
 	if(m_renderingEngine)
 	{
 		delete m_renderingEngine;
+	}
+
+	if(Lua::luaState)
+	{
+		//lua_close(Lua::luaState);
 	}
 }
 

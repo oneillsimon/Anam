@@ -5,6 +5,7 @@
 
 #include "../Physics/PhysicsEngine.h"
 #include "../Rendering/RenderingEngine.h"
+#include "Lua.h"
 #include "Profiling.h"
 
 class Game;

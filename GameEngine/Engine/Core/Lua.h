@@ -8,4 +8,13 @@ extern "C"
 #include <lualib.h>
 }
 
+#include <LuaBridge.h>
+
+class Lua
+{
+public:
+	static lua_State* luaState;
+	static void register_();
+};
+
 #endif
