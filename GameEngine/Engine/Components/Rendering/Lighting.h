@@ -1,8 +1,8 @@
 #ifndef LIGHTING_H
 #define LIGHTING_H
 
+#include "../../Core/GameComponent.h"
 #include "../../Rendering/Shader.h"
-#include "../GameComponent.h"
 
 class ShadowInfo
 {

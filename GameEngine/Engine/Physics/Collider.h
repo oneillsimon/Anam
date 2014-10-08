@@ -1,7 +1,7 @@
 #ifndef COLLIDER_H
 #define COLLIDER_H
 
-#include "../Components/GameComponent.h"
+#include "../Core/GameComponent.h"
 #include "../Core/ReferenceCounter.h"
 #include "../Rendering/Mesh.h"
 #include "IntersectionData.h"

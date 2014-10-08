@@ -1,7 +1,7 @@
 #ifndef RIGIDBODY_H
 #define RIGIDBODY_H
 
-#include "../Components/GameComponent.h"
+#include "../Core/GameComponent.h"
 #include "../Core/Math3D.h"
 
 class RigidBody : public GameComponent

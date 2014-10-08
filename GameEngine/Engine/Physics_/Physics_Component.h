@@ -1,7 +1,7 @@
 #ifndef PHYSICS_COMPONENT_H
 #define PHYSICS_COMPONENT_H
 
-#include "../Components/GameComponent.h"
+#include "../Core/GameComponent.h"
 #include "Particle.h"
 #include "PFGen.h"
 

@@ -1,7 +1,7 @@
 #ifndef FREEMOVE_H
 #define FREEMOVE_H
 
-#include "../GameComponent.h"
+#include "../../Core/GameComponent.h"
 
 class FreeMove : public GameComponent
 {

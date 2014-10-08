@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "Input.h"
+#include "Lua.h"
 #include "Transform.h"
 
 class Camera;
@@ -42,7 +43,7 @@ public:
 
 	Transform* getTransform();
 
-	CoreEngine* getEngine() const;
+	CoreEngine* getEngine();
 
 	void setEngine(CoreEngine* engine);
 };

@@ -15,7 +15,7 @@
     <ClInclude Include="Engine\Components\Game\Camera.h" />
     <ClInclude Include="Engine\Components\Game\FreeLook.h" />
     <ClInclude Include="Engine\Components\Game\FreeMove.h" />
-    <ClInclude Include="Engine\Components\GameComponent.h" />
+    <ClInclude Include="Engine\Core\GameComponent.h" />
     <ClInclude Include="Engine\Components\Rendering\Lighting.h" />
     <ClInclude Include="Engine\Components\Rendering\MeshRenderer.h" />
     <ClInclude Include="Engine\Components\Physics\PhysicsEngineComponent.h" />
@@ -23,11 +23,13 @@
     <ClInclude Include="Engine\Components\Rendering\SpriteAnimator.h" />
     <ClInclude Include="Engine\Components\Rendering\SpriteRenderer.h" />
     <ClInclude Include="Engine\Components\TestComponent.h" />
+    <ClInclude Include="Engine\Core\IScriptable.h" />
     <ClInclude Include="Engine\Core\Lua.h" />
     <ClInclude Include="Engine\Core\Math3D.h" />
     <ClInclude Include="Engine\Core\CoreEngine.h" />
     <ClInclude Include="Engine\Core\Game.h" />
     <ClInclude Include="Engine\Core\Profiling.h" />
+    <ClInclude Include="Engine\Core\Script.h" />
     <ClInclude Include="Engine\Core\Util.h" />
     <ClInclude Include="Engine\Core\Transform.h" />
     <ClInclude Include="Engine\Core\Time.h" />
@@ -69,7 +71,7 @@
     <ClCompile Include="Engine\Components\Game\Camera.cpp" />
     <ClCompile Include="Engine\Components\Game\FreeLook.cpp" />
     <ClCompile Include="Engine\Components\Game\FreeMove.cpp" />
-    <ClCompile Include="Engine\Components\GameComponent.cpp" />
+    <ClCompile Include="Engine\Core\GameComponent.cpp" />
     <ClCompile Include="Engine\Components\Rendering\Lighting.cpp" />
     <ClCompile Include="Engine\Components\Rendering\MeshRenderer.cpp" />
     <ClCompile Include="Engine\Components\Physics\PhysicsEngineComponent.cpp" />
@@ -78,7 +80,9 @@
     <ClCompile Include="Engine\Components\Rendering\SpriteRenderer.cpp" />
     <ClCompile Include="Engine\Core\CoreEngine.cpp" />
     <ClCompile Include="Engine\Core\Game.cpp" />
+    <ClCompile Include="Engine\Core\Lua.cpp" />
     <ClCompile Include="Engine\Core\Profiling.cpp" />
+    <ClCompile Include="Engine\Core\Script.cpp" />
     <ClCompile Include="Engine\Core\Vector2.cpp" />
     <ClCompile Include="Engine\Core\Vector3.cpp" />
     <ClCompile Include="Engine\Core\Matrix4.cpp" />
@@ -128,6 +132,9 @@
   <ItemGroup>
     <Image Include="..\..\..\..\Downloads\braid-dino.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Engine\Scripts\test.lua" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{16E65E01-C797-467B-B712-294221533D00}</ProjectGuid>
     <RootNamespace>GameEngine</RootNamespace>
@@ -157,7 +164,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\lua\5.2\include;Include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\lua\LuaBridge;C:\lua\5.2\include;Include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\lua\5.2\lib;Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

@@ -1,4 +1,4 @@
-#include "GameComponent.h"
+#include "../Core/GameComponent.h"
 #include "../Physics/PhysicsObject.h"
 
 class TestComponent : public GameComponent

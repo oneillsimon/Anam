@@ -1,5 +1,5 @@
 #include "CoreEngine.h"
-#include "../Components/GameComponent.h"
+#include "GameComponent.h"
 #include "GameObject.h"
 
 GameObject::GameObject(const Vector3& position, const Quaternion& rotation, float scale) :
@@ -123,7 +123,7 @@ Transform* GameObject::getTransform()
 	return &m_transform;
 }
 
-CoreEngine* GameObject::getEngine() const
+CoreEngine* GameObject::getEngine()
 {
 	return m_coreEngine;
 }

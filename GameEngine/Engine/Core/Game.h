@@ -9,7 +9,7 @@ private:
 	ProfileTimer m_inputProfileTimer;
 	ProfileTimer m_updateProfileTimer;
 
-	void operator =(Game& game) {}
+	//void operator =(Game& game) {}
 
 protected:
 	GameObject rootObject;
