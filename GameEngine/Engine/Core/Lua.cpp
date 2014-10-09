@@ -6,5 +6,7 @@ lua_State* Lua::luaState = luaL_newstate();
 
 void Lua::register_()
 {
-	Vector3::registerMembers(Lua::luaState);
+	Vector2::registerMembers("Math", Lua::luaState);
+	Vector3::registerMembers("Math", Lua::luaState);
+	Vector4::registerMembers("Math", Lua::luaState);
 }

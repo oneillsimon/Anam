@@ -26,6 +26,8 @@ private:
 	//virtual void registerMembers(lua_State* luaState);
 
 public:
+	static void registerMembers(const std::string& namespace_, lua_State* luaState);
+
 	static const Vector2 ZERO;
 	static const Vector2 ONE;
 
@@ -68,7 +70,7 @@ private:
 	mutable float z;
 
 public:
-	static void registerMembers(lua_State* luaState);
+	static void registerMembers(const std::string& namespace_, lua_State* luaState);
 
 	static const Vector3 ZERO;
 	static const Vector3 ONE;
@@ -140,6 +142,26 @@ protected:
 	//virtual void registerMembers(lua_State* luaState);
 
 public:
+	static void registerMembers(const std::string namespace_, lua_State* luaState)
+	{
+		luabridge::getGlobalNamespace(luaState)
+			.beginNamespace(namespace_.c_str())
+			.beginClass<Vector4>("Vector4")
+			.addConstructor<void(*)(const float&, const float&, const float&, const float&)>()
+			.addFunction("length", &Vector4::length)
+			.addFunction("normalised", &Vector4::normalised)
+			.addFunction("getX", &Vector4::getX)
+			.addFunction("getY", &Vector4::getY)
+			.addFunction("getZ", &Vector4::getZ)
+			.addFunction("getW", &Vector4::getW)
+			.addFunction("setX", &Vector4::setX)
+			.addFunction("setY", &Vector4::setY)
+			.addFunction("setZ", &Vector4::setZ)
+			.addFunction("setW", &Vector4::setW)
+			.endClass()
+			.endNamespace();
+	}
+
 	Vector4(float x = 0.0f, float y = 0.0f, float z = 0.0f, float w = 0.0f);
 	~Vector4();
 	
