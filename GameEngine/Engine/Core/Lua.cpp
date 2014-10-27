@@ -10,6 +10,4 @@ void Lua::register_()
 {
 	Math3D::registerMembers("Math", Lua::luaState);
 	Transform::registerMembers("Core", Lua::luaState);
-	Script::registerMembers("Script", Lua::luaState);
-	GameObject::registerMembers("Object", Lua::luaState);
 }

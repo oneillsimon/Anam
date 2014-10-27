@@ -38,15 +38,20 @@ static void tests();
 
 void TestGame::init(const Window& window)
 {
-	Material braid("braid", Texture("braid-dinosingle.png"));
 	MeshRenderer* terrainRenderer = new MeshRenderer(Mesh("terrain02.obj"), MATERIAL_DEFAULT);
 	GameObject* terrainObj = new GameObject();
+	terrainObj->getTransform()->setPosition(Vector3(-20, -20, 20));
 	terrainObj->addComponent(terrainRenderer);
+
+	MeshRenderer* planeRenderer = new MeshRenderer(Mesh("plane.obj"), MATERIAL_DEFAULT);
+	GameObject* planeObj = new GameObject();
+	planeObj->getTransform()->setPosition(Vector3(10, -10, 20));
+	planeObj->addComponent(planeRenderer);
 
 
 	GameObject* cameraObj = new GameObject();
 	cameraObj->addComponent(new FreeLook(window.getCentre()));
-	cameraObj->getTransform()->rotate(AXIS_Y, toRadians(180));
+	//cameraObj->getTransform()->rotate(AXIS_Y, toRadians(180));
 	cameraObj->addComponent(new FreeMove());
 	cameraObj->addComponent(new CameraComponent(Matrix4().initPerspective(toRadians(70.0f), window.getAspectRatio(), 0.1f, 1000.0f)));
 
@@ -54,10 +59,13 @@ void TestGame::init(const Window& window)
 	dirLightObj->getTransform()->rotate(Quaternion());
 	dirLightObj->addComponent(new DirectionalLight(COLOUR_WHITE, 0.4f, 0, 80.0f, 1.0f));
 
+	terrainObj->addComponent(new Script("test.lua", 0.1f));
+	planeObj->addComponent(new Script("test.lua", 0.2f));
+
 	addToScene(cameraObj);
 	addToScene(dirLightObj);
-	terrainObj->getTransform()->setScale(32);
 	addToScene(terrainObj);
+	addToScene(planeObj);
 }
 
 int main()

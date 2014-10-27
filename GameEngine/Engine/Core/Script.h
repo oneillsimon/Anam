@@ -10,20 +10,11 @@
 class Script : public GameComponent
 {
 private:
-	//lua_State* m_luaState;
 	std::string scriptName;
+	float m_speed;
 
 public:
-	static void registerMembers(const std::string& namespace_, lua_State* luaState)
-	{
-		luabridge::getGlobalNamespace(luaState)
-			.beginNamespace(namespace_.c_str())
-			.beginClass<Script>("Script")
-			.endClass()
-			.endNamespace();
-	}
-
-	Script(const std::string& script);
+	Script(const std::string& script, float s);
 	~Script();
 
 	virtual void input(const Input& input, float delta);

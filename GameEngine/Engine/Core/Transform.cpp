@@ -14,7 +14,7 @@ void Transform::registerMembers(const std::string& namespace_, lua_State* luaSta
 
 Vector3 Transform::getPositionLua() const
 {
-	return m_position;
+	return Transform::getPosition();
 }
 
 Transform::Transform(const Vector3& position, const Quaternion& rotation, float scale)

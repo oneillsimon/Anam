@@ -28,25 +28,6 @@ protected:
 	virtual void render(const Shader& shader, const RenderingEngine& renderingEngine, const Camera& camera) const;
 
 public:
-	static void registerMembers(const std::string& namespace_, lua_State* luaState)
-	{
-		luabridge::getGlobalNamespace(luaState)
-			.beginNamespace(namespace_.c_str())
-			.beginClass<GameObject>("GameObject")
-			.addConstructor<void(*)(const Vector3&, const Quaternion&, const float&)>()
-			.addFunction("transform", &GameObject::getTransform)
-			.addFunction("parentTransform", &GameObject::parent)
-			.addFunction("getX_", &GameObject::getX_)
-			.endClass()
-			.endNamespace();
-	}
-
-	RefCountedPtr<Transform> parent()
-	{
-		static RefCountedPtr<Transform> a(getTransform());
-		return a;
-	}
-
 	GameObject(const Vector3& position = Vector3(), const Quaternion& rotation = Quaternion(0, 0, 0, 1), float scale = 1.0f);
 	~GameObject();
 
