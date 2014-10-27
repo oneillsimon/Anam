@@ -1,5 +1,22 @@
 #include "Transform.h"
 
+void Transform::registerMembers(const std::string& namespace_, lua_State* luaState)
+{
+	luabridge::getGlobalNamespace(luaState)
+		.beginNamespace(namespace_.c_str())
+		.beginClass<Transform>("Transform")
+		.addConstructor<void(*)(const Vector3&, const Quaternion&, const float&)>()
+		.addFunction("setPosition", &Transform::setPosition)
+		.addFunction("getPosition", &Transform::getPositionLua)
+		.endClass()
+		.endNamespace();
+}
+
+Vector3 Transform::getPositionLua() const
+{
+	return m_position;
+}
+
 Transform::Transform(const Vector3& position, const Quaternion& rotation, float scale)
 {
 	m_position = position;

@@ -87,6 +87,7 @@ private:
 public:
 	DirectionalLight(const Colour& colour, float intensity, int shadowMapSizedAsPowerOf2 = 10, float shadowArea = 80, float shadowSoftness = 0.25f, float lightBleedReductionAmount = 0.2f, float minVariance = 0.00002f);
 
+	virtual void update(float delta);
 	virtual ShadowCameraTransform calculateShadowCameraTransform(const Vector3& mainCameraPosition, const Quaternion& mainCamerRotation) const;
 };
 

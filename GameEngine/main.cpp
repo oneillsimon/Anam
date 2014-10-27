@@ -13,6 +13,13 @@
 
 #include "Engine\Core\Script.h"
 
+#include "Engine\Physics_\Particle.h"
+#include "Engine\Physics_\Physics_Component.h"
+#include "Engine\Physics_\PFGen.h"
+#include "Engine\Physics_\CollideCoarse.h"
+#include "Engine\Rendering\Shape.h"
+#include "Engine\Physics\PhysicsComponent.h"
+
 #undef main
 
 class TestGame : public Game
@@ -21,7 +28,6 @@ public:
 	TestGame(){};
 	
 	virtual void init(const Window& window);
-	virtual void init2(const Window& window);
 protected:
 private:
 	//TestGame(const TestGame& other) {}
@@ -38,7 +44,9 @@ void TestGame::init(const Window& window)
 	Material blank("blank", Texture("white.png"));
 	Material default("default", Texture(""));
 	Material braid("braid", Texture("braid-dinosingle.png"));
-	MeshRenderer* terrainRenderer = new MeshRenderer(Mesh("terrain02.obj"), Material("bricks"));
+	MeshRenderer* terrainRenderer = new MeshRenderer(Mesh("terrain02.obj"), blank);
+	GameObject* terrainObj = new GameObject();
+	terrainObj->addComponent(terrainRenderer);
 
 	//IndexedModel cube;
 	//{
@@ -63,40 +71,41 @@ void TestGame::init(const Window& window)
 
 	GameObject* dirLightObj = new GameObject(Vector3(0, 0, 0), Quaternion(), 2);
 	dirLightObj->getTransform()->rotate(Quaternion());
-	dirLightObj->addComponent(new DirectionalLight(COLOUR_WHITE, 0.4f, 10, 80.0f, 1.0f));
+	dirLightObj->addComponent(new DirectionalLight(COLOUR_WHITE, 0.04f, 10, 80.0f, 1.0f));
 
 	SpriteSheet spriteSheet("someSprite", braid, 12, 1);
 	spriteSheet.cycleDown();
 
-	GameObject* planeObj = new GameObject();
-	planeObj->getTransform()->setPosition(Vector3(0, 0, 2));
-	planeObj->getTransform()->rotate(Quaternion(Vector3(1, 0, 0), toRadians(-180)));
+	PhysicsObject* planeObj = new PhysicsObject();
+	planeObj->getTransform()->setPosition(Vector3(0, 10, 20));
+	planeObj->getTransform()->rotate(Quaternion(Vector3(1, 0, 0), toRadians(-90)));
 	planeObj->addComponent(new SpriteRenderer(spriteSheet));
 	planeObj->addComponent(new SpriteAnimator(spriteSheet, 50));
 
-	addToScene((new GameObject(Vector3(0, -1, 5), Quaternion(), 32.0f))
-		->addComponent(new MeshRenderer(Mesh("terrain02.obj"), Material("bricks"))));
-	
-	/*addToScene((new GameObject(Vector3(7,0,7)))
-		->addComponent(new PointLight(Colour(0,255,0), 0.4f, Attenuation(0,0,1))));*/
+	//!!!
+	//addToScene((new GameObject(Vector3(0, -1, 5), Quaternion(), 32.0f))
+	//	->addComponent(new MeshRenderer(Mesh("terrain02.obj"), Material("bricks"))));
+	//
+	///*addToScene((new GameObject(Vector3(7,0,7)))
+	//	->addComponent(new PointLight(Colour(0,255,0), 0.4f, Attenuation(0,0,1))));*/
 
-	addToScene((new GameObject(Vector3(100, 100, 100), Quaternion(Vector3(1,0,0), toRadians(-45))))
-		->addComponent(new DirectionalLight(COLOUR_WHITE, 0.4f, 10, 80.0f, 1.0f)));
+	/*addToScene((new GameObject(Vector3(100, 100, 100), Quaternion(Vector3(1,0,0), toRadians(-45))))
+		->addComponent(new DirectionalLight(COLOUR_WHITE, 0.4f, 10, 80.0f, 1.0f)));*/
 
 	/*addToScene((new GameObject(Vector3(20,-11.0f,5), Quaternion(Vector3(1,0,0), toRadians(-60.0f)) * Quaternion(Vector3(0,1,0), toRadians(90.0f))))
 		->addComponent(new SpotLight(Colour(0,255,255), 0.4f, Attenuation(0,0,0.02f), toRadians(91.1f), 7, 1.0f, 0.5f)));*/
 		
-	/*addToScene((new GameObject(Vector3(0, 2, 0), Quaternion(Vector3(0,1,0), 0.4f), 1.0f))
+	addToScene((new GameObject(Vector3(0, 2, 0), Quaternion(Vector3(0,1,0), 0.4f), 1.0f))
 		->addComponent(new MeshRenderer(Mesh("plane3.obj"), Material("bricks2")))
 		->addComponent(new FreeMove(10.0f, Input::KEY_UP, Input::KEY_DOWN, Input::KEY_LEFT, Input::KEY_RIGHT))
 		->addChild((new GameObject(Vector3(0, 0, 25)))
-			->addComponent(new MeshRenderer(Mesh("plane3.obj"), Material("bricks2")))));*/
+			->addComponent(new MeshRenderer(Mesh("plane3.obj"), Material("bricks2")))));
 	
-	/*addToScene((new GameObject(Vector3(24,-12,5), Quaternion(Vector3(0,1,0), toRadians(30.0f))))
+	addToScene((new GameObject(Vector3(24,-12,5), Quaternion(Vector3(0,1,0), toRadians(30.0f))))
 		->addComponent(new MeshRenderer(Mesh("cube.obj"), Material("bricks2"))));
 		
-	addToScene((new GameObject(Vector3(0,0,7), Quaternion(), 1.0f))
-		->addComponent(new MeshRenderer(Mesh("cube"), Material("bricks2"))));*/
+	//addToScene((new GameObject(Vector3(0,0,7), Quaternion(), 1.0f))
+	//	->addComponent(new MeshRenderer(Mesh("cube"), Material("bricks2"))));
 
 	//TODO: temp
 	//PhysicsEngine physicsEngine;
@@ -129,50 +138,38 @@ void TestGame::init(const Window& window)
 
 	//collTest2->addComponent(new FreeMove(10, Input::KEY_NUM8, Input::KEY_NUM5, Input::KEY_NUM4, Input::KEY_NUM6));
 
-	planeObj->addComponent(new Script("test.lua"));
+	//planeObj->addComponent(new Script("test.lua"));
+	planeObj->addComponent(new FreeMove(10, Input::KEY_UP, Input::KEY_DOWN, Input::KEY_LEFT, Input::KEY_RIGHT));
 
-	addToScene2(collTest1);
-	addToScene2(collTest2);
-	addToScene(cameraObj);
-	addToScene(dirLightObj);
-	addToScene(planeObj);
-}
-
-
-#include "Engine\Physics_\Particle.h"
-#include "Engine\Physics_\Physics_Component.h"
-#include "Engine\Physics_\PFGen.h"
-#include "Engine\Physics_\CollideCoarse.h"
-#include "Engine\Rendering\Shape.h"
-
-void TestGame::init2(const Window& window)
-{
-	GameObject* cameraObj = new GameObject(Vector3(0, 0, 0));
-	cameraObj->addComponent(new FreeLook(window.getCentre()));
-	cameraObj->addComponent(new FreeMove());
-	cameraObj->addComponent(new CameraComponent(Matrix4().initPerspective(toRadians(70.0f), window.getAspectRatio(), 0.1f, 1000.0f)));
-
-	Mesh mesh = Mesh("terrain02.obj");
-	Material white("default", TEXTURE_BLANK, COLOUR_ALICE_BLUE);
-	SpriteSheet spriteSheet = SpriteSheet("", white, 1, 1); 
-
-	GameObject* dirLightObj = new GameObject(Vector3(0, 0, 0), Quaternion(), 2);
-	dirLightObj->getTransform()->rotate(Quaternion());
-	dirLightObj->addComponent(new DirectionalLight(COLOUR_WHITE, 0.4f, 10, 80.0f, 1.0f));
-
-	RigidBody* rigidBody = new RigidBody();
+	RigidBody* rigidBody = new RigidBody(4);
 	rigidBody->m_linearDamping = 0.1f;
 	rigidBody->m_angularDamping = 0.9f;
-	rigidBody->m_inverseMass = 1.0f / 200.0f;
 
-	GameObject* rigidBodyObj = new  GameObject(Vector3(0, -0.1f, 5));
-	rigidBodyObj->getTransform()->setScale(0.2f);
-	rigidBodyObj->addComponent(new MeshRenderer(mesh, white));
-	rigidBodyObj->addComponent(rigidBody);
+	planeObj->setRigidBody(rigidBody);
+	planeObj->setCollider(new BoundingSphere(2));
 
+	//addToScene2(collTest1);
+	//addToScene2(collTest2);
 	addToScene(cameraObj);
-	addToScene(rigidBodyObj);
 	addToScene(dirLightObj);
+	addToScene2(planeObj);
+	terrainObj->getTransform()->setScale(32);
+	addToScene(terrainObj);
+
+	PhysicsObject* planeObj2 = new PhysicsObject();
+	planeObj2->getTransform()->setPosition(Vector3(0, -10, 20));
+	planeObj2->getTransform()->rotate(Quaternion(Vector3(1, 0, 0), toRadians(-90)));
+	planeObj2->addComponent(new SpriteRenderer(spriteSheet));
+	planeObj2->addComponent(new SpriteAnimator(spriteSheet, 50));
+
+	RigidBody* rigidBody2 = new RigidBody(-1);
+	rigidBody2->m_linearDamping = 0.1f;
+	rigidBody2->m_angularDamping = 0.9f;
+
+	planeObj2->setRigidBody(rigidBody2);
+	planeObj2->setCollider(new BoundingSphere(2));
+
+	addToScene2(planeObj2);
 }
 
 int main()

@@ -1,6 +1,8 @@
 #include "Script.h"
 #include "Math3D.h"
 
+static void injectIntoLua(lua_State* luaState, GameObject* t);
+
 Script::Script(const std::string& script) :
 	scriptName("Engine/Scripts/" + script)
 {
@@ -9,6 +11,13 @@ Script::Script(const std::string& script) :
 		const char* err = lua_tostring(Lua::luaState, -1);
 		printf("%s\n", err);
 	}
+
+	GameObject* tetsP = new GameObject(Vector3(101, 102, 103));
+	//luabridge::setGlobal(Lua::luaState, tetsP, "testP");
+	//luabridge::push<GameObject * const>(Lua::luaState, tetsP);
+	//lua_setglobal(Lua::luaState, "testP");
+	
+	injectIntoLua(Lua::luaState, tetsP);
 }
 
 Script::~Script()
@@ -36,4 +45,24 @@ void Script::update(float delta)
 
 void Script::render(const Shader& shader, const RenderingEngine& renderingEngine, const Camera& camera) const
 {
+}
+
+static void injectIntoLua(lua_State* luaState, GameObject* t)
+{
+	// push pointer to class in global registry
+	//lua_pushlightuserdata(luaState, (void*)&t);
+	lua_pushlightuserdata(luaState, "testP");
+
+	// push value
+	GameObject g;
+	g.getTransform()->getPosition().setX(449);
+	luabridge::push(Lua::luaState, &g);
+	lua_setglobal(Lua::luaState, "gg");
+
+	//luabridge::setGlobal(Lua::luaState, g, "gg");
+
+	//lua_pushlightuserdata(luaState, (void*)i);
+	//luabridge::setGlobal(Lua::luaState, i, "pushh");
+
+	//lua_settable(luaState, LUA_REGISTRYINDEX);
 }

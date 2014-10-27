@@ -192,6 +192,26 @@ float Quaternion::getW() const
 	return w;
 }
 
+void Quaternion::setX(float x)
+{
+	this->x = x;
+}
+
+void Quaternion::setY(float y)
+{
+	this->y = y;
+}
+
+void Quaternion::setZ(float z)
+{
+	this->z = z;
+}
+
+void Quaternion::setW(float w)
+{
+	this->w = w;
+}
+
 Quaternion Quaternion::operator +(const Quaternion& q) const
 {
 	return Quaternion(x + q.getX(), y + q.getY(), z + q.getZ(), w + q.getW());

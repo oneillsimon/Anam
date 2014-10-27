@@ -36,11 +36,13 @@ PhysicsObject::~PhysicsObject()
 
 void PhysicsObject::integrate(float delta)
 {
-	m_transform.setPosition(m_transform.getPosition() + m_velocity * delta);
+	m_rigidBody->update(delta);
+	//m_transform.setPosition(m_transform.getPosition() + m_velocity * delta);
 }
 
 void PhysicsObject::render(const Shader& shader, const RenderingEngine& renderingEngine, const Camera& camera) const
 {
+	GameObject::render(shader, renderingEngine, camera);
 	m_collider->render(shader, renderingEngine, camera);
 }
 
@@ -49,17 +51,22 @@ void PhysicsObject::render(const Shader& shader, const RenderingEngine& renderin
 //	return m_position;
 //}
 
-const Vector3& PhysicsObject::getVelocity() const
+Vector3 PhysicsObject::getVelocity() const
 {
 	return m_velocity;
 }
 
-const Collider& PhysicsObject::getCollider() const
+Collider* PhysicsObject::getCollider()
 {
 	//Vector3 translationAmount = m_position - m_oldPosition;
 	//m_oldPosition = m_position;
 	//m_collider->transform(translationAmount);
-	return *m_collider;
+	return m_collider;
+}
+
+RigidBody* PhysicsObject::getRigidBody()
+{
+	return m_rigidBody;
 }
 
 void PhysicsObject::setVelocity(const Vector3& velocity)
@@ -71,6 +78,12 @@ void PhysicsObject::setCollider(Collider* collider)
 {
 	m_collider = collider;
 	m_collider->setParent(this);
+}
+
+void PhysicsObject::setRigidBody(RigidBody* rigidBody)
+{
+	m_rigidBody = rigidBody;
+	m_rigidBody->setParent(this);
 }
 
 PhysicsObject PhysicsObject::operator =(PhysicsObject other)

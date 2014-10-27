@@ -1,12 +1,15 @@
 #include "Lua.h"
 
 #include "Math3D.h"
+#include "Transform.h"
+#include "Script.h"
 
 lua_State* Lua::luaState = luaL_newstate();
 
 void Lua::register_()
 {
-	Vector2::registerMembers("Math", Lua::luaState);
-	Vector3::registerMembers("Math", Lua::luaState);
-	Vector4::registerMembers("Math", Lua::luaState);
+	Math3D::registerMembers("Math", Lua::luaState);
+	Transform::registerMembers("Core", Lua::luaState);
+	Script::registerMembers("Script", Lua::luaState);
+	GameObject::registerMembers("Object", Lua::luaState);
 }

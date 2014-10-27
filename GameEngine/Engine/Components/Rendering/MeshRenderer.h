@@ -16,6 +16,10 @@ public:
 		m_mesh(mesh), m_material(material) {};
 
 	virtual void render(const Shader& shader, const  RenderingEngine& renderingEngine, const Camera& camera) const;
+
+	virtual void update(float delta) {
+		m_material.setVector4("colour", getRandomColour());
+	}
 };
 
 #endif

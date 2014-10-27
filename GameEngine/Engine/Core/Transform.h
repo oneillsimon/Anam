@@ -1,6 +1,8 @@
 #ifndef TRANSFORM_H
 #define TRANSFORM_H
 
+#include <RefCountedPtr.h>
+
 #include "Math3D.h"
 
 class Transform
@@ -20,6 +22,8 @@ private:
 	mutable bool m_intialisedOldStuff;
 
 public:
+	static void registerMembers(const std::string& namespace_, lua_State* luaState);
+
 	Transform(const Vector3& position = Vector3(), const Quaternion& rotation = Quaternion(0, 0, 0, 1), float scale = 1.0f);
 	~Transform();
 
@@ -44,6 +48,9 @@ public:
 	Quaternion& getRotation();
 	const Vector3& getScale() const;
 	Vector3& getScale();
+
+	// TEMP
+	Vector3 getPositionLua() const;
 
 	void setParent(Transform* parent);
 	void setParentMatrix(Matrix4 parentMatrix);

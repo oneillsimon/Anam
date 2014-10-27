@@ -1,5 +1,19 @@
 #include "RigidBody.h"
 
+RigidBody::RigidBody(float mass)
+{
+	if(mass == -1)
+	{
+		m_hasInfiniteMass = true;
+	}
+	else
+	{
+		m_hasInfiniteMass = false;
+	}
+
+	m_inverseMass = 1.0f / mass;
+}
+
 void RigidBody::input(const Input& input, float delta)
 {
 	if(input.getKey(Input::KEY_P))
@@ -26,11 +40,17 @@ void RigidBody::input(const Input& input, float delta)
 
 void RigidBody::update(float delta)
 {
+	addLinearForce(Vector3(0, -0.98f, 0));
 	integrate(delta);
 }
 
 void RigidBody::integrate(float delta)
 {
+	if(m_hasInfiniteMass)
+	{
+		return;
+	}
+
 	m_acceleration += m_forceAccum * m_inverseMass;
 	Vector3 angularAcceleration = m_torqueAccum * m_inverseMass;
 

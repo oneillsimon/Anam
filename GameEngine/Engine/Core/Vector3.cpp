@@ -14,31 +14,6 @@ Vector3::~Vector3()
 {
 }
 
-void Vector3::registerMembers(const std::string& namespace_, lua_State* luaState)
-{
-	luabridge::getGlobalNamespace(luaState)
-		.beginNamespace(namespace_.c_str())
-		.beginClass<Vector3>("Vector3")
-		.addConstructor<void(*)(const float&, const float&, const float&)>()
-		.addFunction("length", &Vector3::length)
-		.addFunction("squareLength", &Vector3::squareLength)
-		.addFunction("dot", &Vector3::dot)
-		.addFunction("cross", &Vector3::cross)
-		.addFunction("normalised", &Vector3::normalised)
-		.addFunction("inversed", &Vector3::inversed)
-		.addFunction("reflect", &Vector3::reflect)
-		.addFunction("lerp", &Vector3::lerp)
-		.addFunction("absolute", &Vector3::absolute)
-		.addFunction("getX", &Vector3::getX)
-		.addFunction("getY", &Vector3::getY)
-		.addFunction("getZ", &Vector3::getZ)
-		.addFunction("setX", &Vector3::setX)
-		.addFunction("setY", &Vector3::setY)
-		.addFunction("setZ", &Vector3::setZ)
-		.endClass()
-		.endNamespace();
-}
-
 float Vector3::length() const
 {
 	return sqrtf(squareLength());

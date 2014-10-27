@@ -14,6 +14,15 @@ private:
 	std::string scriptName;
 
 public:
+	static void registerMembers(const std::string& namespace_, lua_State* luaState)
+	{
+		luabridge::getGlobalNamespace(luaState)
+			.beginNamespace(namespace_.c_str())
+			.beginClass<Script>("Script")
+			.endClass()
+			.endNamespace();
+	}
+
 	Script(const std::string& script);
 	~Script();
 

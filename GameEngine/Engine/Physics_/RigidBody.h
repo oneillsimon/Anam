@@ -13,9 +13,12 @@ public:
 	Vector3 m_rotation;
 	float m_linearDamping;
 	float m_angularDamping;
+	bool m_hasInfiniteMass;
 
 	Vector3 m_forceAccum;
 	Vector3 m_torqueAccum;
+
+	RigidBody(float mass);
 
 	virtual void input(const Input& input, float delta);
 	virtual void update(float delta);
