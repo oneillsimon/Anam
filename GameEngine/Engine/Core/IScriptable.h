@@ -1,6 +1,11 @@
+#ifndef ISCRIPTABLE_H
+#define ISCRIPTABLE_H
+
 #include "Lua.h"
 
 class IScriptable
 {
-	static void registerMembers(lua_State* luaState){};
+	virtual void registerMembers(const std::string& namespace_, lua_State* luaState){};
 };
+
+#endif
