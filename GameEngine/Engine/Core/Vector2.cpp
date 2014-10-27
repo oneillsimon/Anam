@@ -13,28 +13,6 @@ Vector2::~Vector2()
 {
 }
 
-void Vector2::registerMembers(const std::string& namespace_, lua_State* luaState)
-{
-	luabridge::getGlobalNamespace(luaState)
-		.beginNamespace(namespace_.c_str())
-		.beginClass<Vector2>("Vector2")
-		.addConstructor<void(*)(const float&, const float&)>()
-		.addFunction("length", &Vector2::length)
-		.addFunction("dot", &Vector2::dot)
-		.addFunction("cross", &Vector2::cross)
-		.addFunction("normalised", &Vector2::normalised)
-		.addFunction("inversed", &Vector2::inversed)
-		.addFunction("rotate", &Vector2::rotate)
-		.addFunction("lerp", &Vector2::lerp)
-		.addFunction("getX", &Vector2::getX)
-		.addFunction("getY", &Vector2::getY)
-		.addFunction("setX", &Vector2::setX)
-		.addFunction("setY", &Vector2::setY)
-		.endClass()
-		.endNamespace();
-}
-
-
 float Vector2::length() const
 {
 	return sqrtf(x * x + y * y);
@@ -80,27 +58,6 @@ Vector2 Vector2::lerp(const Vector2& destination, float lerpFactor) const
 {
 	return destination - *this * lerpFactor + *this;
 }
-
-//void Vector2::registerMembers(const std::string& namespace_, lua_State* luaState)
-//{
-//	luabridge::getGlobalNamespace(luaState)
-//		.beginNamespace(namespace_.c_str())
-//		.beginClass<Vector2>("Vector2")
-//		.addConstructor<void(*)(const float&, const float&)>()
-//		.addFunction("length", &Vector2::length)
-//		.addFunction("dot", &Vector2::dot)
-//		.addFunction("cross", &Vector2::cross)
-//		.addFunction("normalised", &Vector2::normalised)
-//		.addFunction("inversed", &Vector2::inversed)
-//		.addFunction("rotate", &Vector2::rotate)
-//		.addFunction("lerp", &Vector2::lerp)
-//		.addFunction("getX", &Vector2::getX)
-//		.addFunction("getY", &Vector2::getY)
-//		.addFunction("setX", &Vector2::setX)
-//		.addFunction("setY", &Vector2::setY)
-//		.endClass()
-//		.endNamespace();
-//}
 
 float Vector2::getX() const
 {

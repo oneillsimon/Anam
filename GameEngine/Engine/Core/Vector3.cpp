@@ -14,10 +14,10 @@ Vector3::~Vector3()
 {
 }
 
-void Vector3::registerMembers(const std::string& namespace_, lua_State* luaState)
+void Vector3::registerMembers(lua_State* luaState)
 {
 	luabridge::getGlobalNamespace(luaState)
-		.beginNamespace(namespace_.c_str())
+		.beginNamespace("Math")
 		.beginClass<Vector3>("Vector3")
 		.addConstructor<void(*)(const float&, const float&, const float&)>()
 		.addFunction("length", &Vector3::length)

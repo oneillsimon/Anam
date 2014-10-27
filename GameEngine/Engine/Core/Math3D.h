@@ -23,6 +23,8 @@ private:
 	float x;
 	float y;
 
+	//virtual void registerMembers(lua_State* luaState);
+
 public:
 	static const Vector2 ZERO;
 	static const Vector2 ONE;
@@ -38,7 +40,6 @@ public:
 	Vector2 inversed() const;
 	Vector2 rotate(float angle);
 	Vector2 lerp(const Vector2& destination, float lerpFactor) const;
-	virtual void registerMembers(const std::string& namespace_, lua_State* luaState);
 
 	float getX() const;
 	float getY() const;
@@ -67,6 +68,8 @@ private:
 	mutable float z;
 
 public:
+	static void registerMembers(lua_State* luaState);
+
 	static const Vector3 ZERO;
 	static const Vector3 ONE;
 
@@ -89,7 +92,6 @@ public:
 	Vector3 lerp(const Vector3& destination, float lerpFactor) const;
 	Vector3 absolute();
 	void addScaledVector3(const Vector3& v, float scale);
-	virtual void registerMembers(const std::string& namespace_, lua_State* luaState);
 
 	float byVector3ToFloat(const Vector3& v) const;
 
@@ -135,6 +137,8 @@ protected:
 	mutable float z;
 	mutable float w;
 
+	//virtual void registerMembers(lua_State* luaState);
+
 public:
 	Vector4(float x = 0.0f, float y = 0.0f, float z = 0.0f, float w = 0.0f);
 	~Vector4();
@@ -142,8 +146,6 @@ public:
 	float length() const;
 	float max() const;
 	Vector4 normalised() const;
-
-	virtual void registerMembers(const std::string& namespace_, lua_State* luaState);
 
 	float getX() const;
 	float getY() const;
@@ -156,10 +158,12 @@ public:
 	void setW(float w);
 };
 
-class Matrix4
+class Matrix4 : IScriptable
 {
 private:
 	mutable float m[4][4];
+
+	//virtual void registerMembers(lua_State* luaState);
 
 public:
 	Matrix4();
@@ -175,7 +179,6 @@ public:
 	Matrix4 initRotation(const Vector3& forward, const Vector3& up);
 	Matrix4 initRotation(const Vector3& forward, const Vector3& up, const Vector3& right);
 	Vector3 transform(const Vector3& v) const;
-
 	void setInverse(const Matrix4& m);
 	void setComponents(const Vector3& v1, const Vector3& v2, const Vector3& v3);
 
@@ -193,13 +196,15 @@ public:
 	const float* operator [](int index) const { return m[index]; };
 };
 
-class Quaternion
+class Quaternion : IScriptable
 {
 private:
 	float x;
 	float y;
 	float z;
 	float w;
+
+	//virtual void registerMembers(lua_State* luaState);
 
 public:
 	Quaternion(float x = 0.0f, float y = 0.0f, float z = 0.0f, float w = 1.0f);
@@ -214,7 +219,6 @@ public:
 	Quaternion nlerp(Quaternion destination, float lerpFactor, bool shortest);
 	Quaternion slerp(Quaternion destination, float lerpFactor, bool shortest);
 	Matrix4 toRotationMatrix() const;
-
 	Vector3 getForward() const;
 	Vector3 getBackward() const;
 	Vector3 getUp() const;
