@@ -151,11 +151,6 @@ DirectionalLight::DirectionalLight(const Colour& colour, float intensity, int sh
 	}
 }
 
-void DirectionalLight::update(float delta) {
-	//m_parent->getTransform()->rotate(Quaternion(AXIS_Z, delta / 5.0f));
-	setColour(getRandomColour(COLOUR_ORANGE));
-}
-
 ShadowCameraTransform DirectionalLight::calculateShadowCameraTransform(const Vector3& mainCameraPosition, const Quaternion& mainCameraRotation) const
 {
 	ShadowCameraTransform result;
