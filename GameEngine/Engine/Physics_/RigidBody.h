@@ -18,7 +18,7 @@ public:
 	Vector3 m_forceAccum;
 	Vector3 m_torqueAccum;
 
-	RigidBody(float mass);
+	RigidBody(float mass, float linear = 1, float angular = 2);
 
 	virtual void input(const Input& input, float delta);
 	virtual void update(float delta);

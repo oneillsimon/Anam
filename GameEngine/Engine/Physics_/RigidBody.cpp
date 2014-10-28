@@ -1,6 +1,8 @@
 #include "RigidBody.h"
 
-RigidBody::RigidBody(float mass)
+RigidBody::RigidBody(float mass, float linear, float angular) :
+m_linearDamping(linear),
+m_angularDamping(angular)
 {
 	if(mass == -1)
 	{
@@ -28,7 +30,7 @@ void RigidBody::input(const Input& input, float delta)
 
 	if(input.getKey(Input::KEY_K))
 	{
-		addAngularForce(Vector3(50, 0, 0));
+		addAngularForce(Vector3(0, 5, 0));
 	}
 
 	if(input.getKey(Input::KEY_M))
@@ -40,8 +42,9 @@ void RigidBody::input(const Input& input, float delta)
 
 void RigidBody::update(float delta)
 {
-	addLinearForce(Vector3(0, -0.98f, 0));
+	//addLinearForce(Vector3(0, -0.98f, 0));
 	integrate(delta);
+	//printf("x: %s, y: %s, z: %s\n", m_parent->getTransform()->getPosition().getX(), m_parent->getTransform()->getPosition().getY(), m_parent->getTransform()->getPosition().getZ());
 }
 
 void RigidBody::integrate(float delta)

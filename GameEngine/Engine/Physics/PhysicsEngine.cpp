@@ -16,7 +16,7 @@ void PhysicsEngine::simulate(const PhysicsObject& object, float delta)
 		m_objects[i]->integrate(delta);
 	}
 
-	handleCollisions();
+	//handleCollisions();
 }
 
 void PhysicsEngine::handleCollisions()
@@ -34,7 +34,7 @@ void PhysicsEngine::handleCollisions()
 
 				//m_objects[i]->setVelocity(Vector3(m_objects[i]->getVelocity().reflect(otherDirection)));
 				//m_objects[j]->setVelocity(Vector3(m_objects[j]->getVelocity().reflect(direction)));
-				m_objects[i]->getRigidBody()->addLinearForce(direction * 10);
+				//m_objects[i]->getRigidBody()->addLinearForce(direction * 10);
 			}
 		}
 	}

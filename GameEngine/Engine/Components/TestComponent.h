@@ -7,10 +7,15 @@ public:
 	int number;
 	PhysicsObject obj;
 
-	TestComponent(const PhysicsObject& obj) :
-		obj(obj)
+	TestComponent()
 	{
 
+	}
+
+	virtual void update(float delta)
+	{
+		obj = *(PhysicsObject*)m_parent;
+		obj.getRigidBody()->addAngularForce(AXIS_Y * 5);
 	}
 
 	virtual void input(const Input& input, float delta)

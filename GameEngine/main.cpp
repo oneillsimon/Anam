@@ -38,8 +38,9 @@ static void tests();
 
 void TestGame::init(const Window& window)
 {
-	MeshRenderer* terrainRenderer = new MeshRenderer(Mesh("terrain02.obj"), MATERIAL_DEFAULT);
-	GameObject* terrainObj = new GameObject();
+	Material m = Material("", TEXTURE_BLANK, COLOUR_AQUA, 0.1f, 32.0f);
+	MeshRenderer* terrainRenderer = new MeshRenderer(Mesh("terrain02.obj"), m);
+	GameObject* terrainObj = new GameObject(Vector3());
 	terrainObj->getTransform()->setPosition(Vector3(-20, -20, 20));
 	terrainObj->addComponent(terrainRenderer);
 
@@ -59,8 +60,8 @@ void TestGame::init(const Window& window)
 	dirLightObj->getTransform()->rotate(Quaternion());
 	dirLightObj->addComponent(new DirectionalLight(COLOUR_WHITE, 0.4f, 0, 80.0f, 1.0f));
 
-	terrainObj->addComponent(new Script("test.lua", 0.1f));
-	planeObj->addComponent(new Script("test.lua", 0.2f));
+	terrainObj->addComponent(new Script("test.lua", 0.01f));
+	planeObj->addComponent(new Script("test.lua", 0.02f));
 
 	addToScene(cameraObj);
 	addToScene(dirLightObj);

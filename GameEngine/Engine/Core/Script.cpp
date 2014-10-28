@@ -7,9 +7,9 @@ Script::Script(const std::string& script, float s) :
 	scriptName("Engine/Scripts/" + script),
 	m_speed(s)
 {
-	if(luaL_dofile(Lua::luaState, scriptName.c_str()))
+	if(luaL_dofile(Lua::L, scriptName.c_str()))
 	{
-		const char* err = lua_tostring(Lua::luaState, -1);
+		const char* err = lua_tostring(Lua::L, -1);
 		printf("%s\n", err);
 	}
 
@@ -26,17 +26,17 @@ void Script::input(const Input& input, float delta)
 
 void Script::update(float delta)
 {
-	luabridge::setGlobal(Lua::luaState, m_parent->getTransform(), "transform");
-	luabridge::setGlobal(Lua::luaState, m_speed, "n");
+	luabridge::setGlobal(Lua::L, m_parent->getTransform(), "transform");
+	luabridge::setGlobal(Lua::L, m_speed, "n");
 
-	lua_getglobal(Lua::luaState, "update");
+	lua_getglobal(Lua::L, "update");
 
-	if(lua_isfunction(Lua::luaState, lua_gettop(Lua::luaState)))
+	if(lua_isfunction(Lua::L, lua_gettop(Lua::L)))
 	{
-		lua_call(Lua::luaState, 0, 0);
+		lua_call(Lua::L, 0, 0);
 	}
 
-	Transform t = (Transform)luabridge::getGlobal(Lua::luaState, "transform");
+	Transform t = (Transform)luabridge::getGlobal(Lua::L, "transform");
 	Vector3 p = t.getPosition();
 	Quaternion r = t.getRotation();
 	Vector3 s = t.getScale();
