@@ -8,6 +8,7 @@ void Transform::registerMembers(const std::string& namespace_, lua_State* luaSta
 		.addConstructor<void(*)(const Vector3&, const Quaternion&, const float&)>()
 		.addFunction("setPosition", &Transform::setPosition)
 		.addFunction("getPosition", &Transform::getPositionLua)
+		.addFunction("rotate", &Transform::rotateLua)
 		.endClass()
 		.endNamespace();
 }
@@ -15,6 +16,11 @@ void Transform::registerMembers(const std::string& namespace_, lua_State* luaSta
 Vector3 Transform::getPositionLua() const
 {
 	return Transform::getPosition();
+}
+
+void Transform::rotateLua(const Vector3& v, float f)
+{
+	rotate(v, f);
 }
 
 Transform::Transform(const Vector3& position, const Quaternion& rotation, float scale)

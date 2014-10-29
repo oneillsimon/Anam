@@ -11,10 +11,9 @@ class Script : public GameComponent
 {
 private:
 	std::string scriptName;
-	float m_speed;
 
 public:
-	Script(const std::string& script, float s);
+	Script(const std::string& script);
 	~Script();
 
 	virtual void input(const Input& input, float delta);

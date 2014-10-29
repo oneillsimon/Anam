@@ -373,5 +373,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\Scripts\test.lua" />
+    <None Include="Engine\Scripts\rotate.lua" />
   </ItemGroup>
 </Project>

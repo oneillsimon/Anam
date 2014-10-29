@@ -51,6 +51,7 @@ public:
 
 	// TEMP
 	Vector3 getPositionLua() const;
+	void rotateLua(const Vector3& v, float f);
 
 	void setParent(Transform* parent);
 	void setParentMatrix(Matrix4 parentMatrix);

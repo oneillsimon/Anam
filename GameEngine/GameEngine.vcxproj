@@ -136,6 +136,7 @@
     <Image Include="..\..\..\..\Downloads\braid-dino.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Engine\Scripts\rotate.lua" />
     <None Include="Engine\Scripts\test.lua" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

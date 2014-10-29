@@ -3,17 +3,14 @@
 
 static void injectIntoLua(lua_State* luaState, GameObject* t);
 
-Script::Script(const std::string& script, float s) :
-	scriptName("Engine/Scripts/" + script),
-	m_speed(s)
+Script::Script(const std::string& script) :
+	scriptName("Engine/Scripts/" + script)
 {
 	if(luaL_dofile(Lua::L, scriptName.c_str()))
 	{
 		const char* err = lua_tostring(Lua::L, -1);
 		printf("%s\n", err);
 	}
-
-	m_speed = s;
 }
 
 Script::~Script()
@@ -27,7 +24,6 @@ void Script::input(const Input& input, float delta)
 void Script::update(float delta)
 {
 	luabridge::setGlobal(Lua::L, m_parent->getTransform(), "transform");
-	luabridge::setGlobal(Lua::L, m_speed, "n");
 
 	lua_getglobal(Lua::L, "update");
 

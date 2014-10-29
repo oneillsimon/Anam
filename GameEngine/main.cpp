@@ -60,8 +60,9 @@ void TestGame::init(const Window& window)
 	dirLightObj->getTransform()->rotate(Quaternion());
 	dirLightObj->addComponent(new DirectionalLight(COLOUR_WHITE, 0.4f, 0, 80.0f, 1.0f));
 
-	terrainObj->addComponent(new Script("test.lua", 0.01f));
-	planeObj->addComponent(new Script("test.lua", 0.02f));
+	planeObj->addComponent(new Script("test.lua"));
+	terrainObj->addComponent(new Script("rotate.lua"));
+	
 
 	addToScene(cameraObj);
 	addToScene(dirLightObj);
