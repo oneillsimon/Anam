@@ -6,9 +6,15 @@ static void injectIntoLua(lua_State* luaState, GameObject* t);
 Script::Script(const std::string& script) :
 	scriptName("Engine/Scripts/" + script)
 {
-	if(luaL_dofile(Lua::L, scriptName.c_str()))
+	L = luaL_newstate();
+	luaL_openlibs(L);
+
+	Math3D::registerMembers("Math", L);
+	Transform::registerMembers("Core", L);
+
+	if(luaL_dofile(L, scriptName.c_str()))
 	{
-		const char* err = lua_tostring(Lua::L, -1);
+		const char* err = lua_tostring(L, -1);
 		printf("%s\n", err);
 	}
 }
@@ -23,16 +29,16 @@ void Script::input(const Input& input, float delta)
 
 void Script::update(float delta)
 {
-	luabridge::setGlobal(Lua::L, m_parent->getTransform(), "transform");
+	luabridge::setGlobal(L, m_parent->getTransform(), "transform");
 
-	lua_getglobal(Lua::L, "update");
+	lua_getglobal(L, "update");
 
-	if(lua_isfunction(Lua::L, lua_gettop(Lua::L)))
+	if(lua_isfunction(L, lua_gettop(L)))
 	{
-		lua_call(Lua::L, 0, 0);
+		lua_call(L, 0, 0);
 	}
 
-	Transform t = (Transform)luabridge::getGlobal(Lua::L, "transform");
+	Transform t = (Transform)luabridge::getGlobal(L, "transform");
 	Vector3 p = t.getPosition();
 	Quaternion r = t.getRotation();
 	Vector3 s = t.getScale();

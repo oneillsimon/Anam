@@ -11,6 +11,7 @@ class Script : public GameComponent
 {
 private:
 	std::string scriptName;
+	lua_State* L;
 
 public:
 	Script(const std::string& script);
