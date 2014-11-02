@@ -149,6 +149,13 @@
 class Colour : public Vector4
 {
 private:
+	float cyan;
+	float magenta;
+	float yellow;
+	float black;
+
+	void calculateCMYK();
+
 	float getX() const;
 	float getY() const;
 	float getZ() const;
@@ -163,7 +170,7 @@ public:
 	Colour();
 	Colour(float r, float g, float b, float a = 255.0f);
 	Colour(int hex);
-
+	
 	Colour hexToRGBA(int hex) const;
 	int RGBAtoHex(float r, float g, float b, float a);
 	Colour toGLSLVec4() const;
@@ -175,10 +182,19 @@ public:
 	float getB() const;
 	float getA() const;
 
+	float getCyan() const;
+	float getMagenta() const;
+	float getYellow() const;
+	float getKey() const;
+
+	Vector4 getCMYK() const;
+
 	void setR(float x);
 	void setG(float y);
 	void setB(float z);
 	void setA(float w);
+
+	Colour operator *(const Colour& c) const;
 };
 
 Colour getRandomColour();

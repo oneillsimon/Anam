@@ -38,36 +38,51 @@ static void tests();
 
 void TestGame::init(const Window& window)
 {
-	Material m = Material("", TEXTURE_BLANK, COLOUR_AQUA, 0.1f, 32.0f);
-	MeshRenderer* terrainRenderer = new MeshRenderer(Mesh("terrain02.obj"), m);
-	GameObject* terrainObj = new GameObject(Vector3());
-	terrainObj->getTransform()->setPosition(Vector3(-20, -20, 20));
-	terrainObj->addComponent(terrainRenderer);
-
-	MeshRenderer* planeRenderer = new MeshRenderer(Mesh("plane.obj"), MATERIAL_DEFAULT);
-	GameObject* planeObj = new GameObject();
-	planeObj->getTransform()->setPosition(Vector3(10, -10, 20));
-	planeObj->addComponent(planeRenderer);
-
-
 	GameObject* cameraObj = new GameObject();
+	cameraObj->getTransform()->getPosition().setX(2);
+	cameraObj->getTransform()->getPosition().setZ(0);
 	cameraObj->addComponent(new FreeLook(window.getCentre()));
 	//cameraObj->getTransform()->rotate(AXIS_Y, toRadians(180));
 	cameraObj->addComponent(new FreeMove());
 	cameraObj->addComponent(new CameraComponent(Matrix4().initPerspective(toRadians(70.0f), window.getAspectRatio(), 0.1f, 1000.0f)));
 
-	GameObject* dirLightObj = new GameObject(Vector3(0, 10, 0), Quaternion(), 2);
-	dirLightObj->getTransform()->rotate(Quaternion());
-	dirLightObj->addComponent(new DirectionalLight(COLOUR_WHITE, 0.4f, 0, 80.0f, 1.0f));
-
-	planeObj->addComponent(new Script("test.lua"));
-	terrainObj->addComponent(new Script("rotate.lua"));
-	
-
 	addToScene(cameraObj);
-	addToScene(dirLightObj);
-	addToScene(terrainObj);
-	addToScene(planeObj);
+	int y = 0;
+	int x = 2;
+
+	Colour c = COLOUR_AQUAMARINE;
+	Vector4 v = c.getCMYK();
+
+	GameObject* obj_ = new GameObject(Vector3(-4, y -1, 10));
+	SpriteSheet s = SpriteSheet("", Material("", TEXTURE_BLANK, c), 1, 1);
+	obj_->addComponent(new SpriteRenderer(s));
+	addToScene(obj_);
+
+	for(int i = 0; i < 5; i++)
+	{
+		if(i >= 5)
+		{
+			y = -2;
+		}
+
+		GameObject* obj = new GameObject(Vector3(x * i, y, 10));
+		SpriteSheet s = SpriteSheet("", Material("", TEXTURE_BLANK, getRandomColour(c)), 1, 1);
+		obj->addComponent(new SpriteRenderer(s));
+		addToScene(obj);
+	}
+
+	for(int i = 0; i < 5; i++)
+	{
+		if(i >= 5)
+		{
+			y = -2;
+		}
+
+		GameObject* obj = new GameObject(Vector3(x * i, y - 2, 10));
+		SpriteSheet s = SpriteSheet("", Material("", TEXTURE_BLANK, getRandomColour(c)), 1, 1);
+		obj->addComponent(new SpriteRenderer(s));
+		addToScene(obj);
+	}
 }
 
 int main()

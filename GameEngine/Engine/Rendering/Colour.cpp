@@ -6,20 +6,13 @@
 Colour::Colour()
 	: Vector4(0, 0, 0, 255)
 {
+	calculateCMYK();
 }
 
 Colour::Colour(float r, float g, float b, float a)
 	: Vector4(r, g, b, a)
 {
-}
-
-Colour::Colour(int hex)
-{
-	Colour c = hexToRGBA(hex);
-	x = c.getR();
-	y = c.getG();
-	z = c.getB();
-	w = c.getA();
+	calculateCMYK();
 }
 
 Colour Colour::hexToRGBA(int hex) const
@@ -30,6 +23,34 @@ Colour Colour::hexToRGBA(int hex) const
 	int a = (hex >> 0) & 0xFF;
 
 	return Colour(r, g, b, a);
+}
+
+Colour::Colour(int hex)
+{
+	Colour c = hexToRGBA(hex);
+	x = c.getR();
+	y = c.getG();
+	z = c.getB();
+	w = c.getA();
+
+	calculateCMYK();
+}
+
+void Colour::calculateCMYK()
+{
+	float r1 = x / 255.0f;
+	float g1 = y / 255.0f;
+	float b1 = z / 255.0f;
+
+	black = 1 - fmaxf(r1, fmaxf(g1, b1));
+	cyan = (1 - r1 - black) / (1 - black);
+	magenta = (1 - g1 - black) / (1 - black);
+	yellow = (1 - b1 - black) / (1 - black);
+
+	cyan *= 100.0f;
+	magenta *= 100.0f;
+	yellow *= 100.0f;
+	black *= 100.0f;
 }
 
 int Colour::RGBAtoHex(float r, float g, float b, float a)
@@ -67,6 +88,31 @@ float Colour::getA() const
 	return w;
 }
 
+float Colour::getCyan() const
+{
+	return cyan;
+}
+
+float Colour::getMagenta() const
+{
+	return magenta;
+}
+
+float Colour::getYellow() const
+{
+	return yellow;
+}
+
+float Colour::getKey() const
+{
+	return black;
+}
+
+Vector4 Colour::getCMYK() const
+{
+	return Vector4(cyan, magenta, yellow, black);
+}
+
 void Colour::setR(float r)
 {
 	this->x = r;
@@ -85,6 +131,12 @@ void Colour::setB(float b)
 void Colour::setA(float a)
 {
 	this->w = a;
+}
+
+Colour Colour::operator *(const Colour& c) const
+{
+	//return Colour(x * c.x, y * c.y, z * c.z, w * c.w);
+	return Colour(x * c.x, y * c.y, z * c.z, w * c.w);
 }
 
 Colour getRandomColour()
