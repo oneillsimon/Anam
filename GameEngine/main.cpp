@@ -9,7 +9,7 @@
 #include "Engine\Components\Rendering\SpriteRenderer.h"
 #include "Engine\Components\Rendering\SpriteAnimator.h"
 
-#include "Engine\Components\TestComponent.h"
+#include "Engine\Components\Game\Movement2D.h"
 
 #include "Engine\Core\Script.h"
 
@@ -57,6 +57,7 @@ void TestGame::init(const Window& window)
 	SpriteSheet s = SpriteSheet("", Material("", TEXTURE_BLANK, c), 1, 1);
 	obj_->addComponent(new SpriteRenderer(s));
 	obj_->addComponent(new Script("rotate.lua"));
+	obj_->addComponent(new Movement2D());
 
 	addToScene(obj_);
 

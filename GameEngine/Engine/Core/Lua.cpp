@@ -84,6 +84,5 @@ void Lua::registerMembers(lua_State* l)
 		.addFunction("setZ", &Quaternion::setZ)
 		.addFunction("setW", &Quaternion::setW)
 		.endClass()
-
 		.endNamespace();
 }
