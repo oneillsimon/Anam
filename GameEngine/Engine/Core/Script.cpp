@@ -9,8 +9,7 @@ Script::Script(const std::string& script) :
 	L = luaL_newstate();
 	luaL_openlibs(L);
 
-	Math3D::registerMembers("Math", L);
-	Transform::registerMembers("Core", L);
+	Lua::registerMembers(L);
 
 	if(luaL_dofile(L, scriptName.c_str()))
 	{

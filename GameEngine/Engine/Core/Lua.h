@@ -13,8 +13,7 @@ extern "C"
 class Lua
 {
 public:
-//	static lua_State* L;
-	static void register_();
+	static void registerMembers(lua_State* l);
 };
 
 #endif

@@ -56,6 +56,7 @@ void TestGame::init(const Window& window)
 	GameObject* obj_ = new GameObject(Vector3(-4, y -1, 10));
 	SpriteSheet s = SpriteSheet("", Material("", TEXTURE_BLANK, c), 1, 1);
 	obj_->addComponent(new SpriteRenderer(s));
+	obj_->addComponent(new Script("rotate.lua"));
 
 	addToScene(obj_);
 

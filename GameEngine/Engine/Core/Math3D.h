@@ -13,17 +13,9 @@
 #define AXIS_YZ Vector3(0, 1, 1)
 #define AXIS_XYZ Vector3(1, 1, 1)
 
-#include "IScriptable.h"
-
-class Math3D
-{
-public:
-	static void registerMembers(const std::string& namespace_, lua_State* luaState);
-};
-
 class Quaternion;
 
-class Vector2 : public IScriptable
+class Vector2
 {
 private:
 	float x;
@@ -64,7 +56,7 @@ public:
 	bool operator !=(const Vector2& v) const;
 };
 
-class Vector3 : public IScriptable
+class Vector3
 {
 private:
 	mutable float x;
@@ -131,7 +123,7 @@ public:
 	bool operator !=(const Vector3& v) const;
 };
 
-class Vector4 : public IScriptable
+class Vector4
 {
 protected:
 	mutable float x;
@@ -158,7 +150,7 @@ public:
 	void setW(float w);
 };
 
-class Matrix4 : IScriptable
+class Matrix4
 {
 private:
 	mutable float m[4][4];
@@ -194,7 +186,7 @@ public:
 	const float* operator [](int index) const { return m[index]; };
 };
 
-class Quaternion : IScriptable
+class Quaternion
 {
 private:
 	float x;

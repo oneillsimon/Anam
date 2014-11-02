@@ -23,7 +23,6 @@
     <ClInclude Include="Engine\Components\Rendering\SpriteAnimator.h" />
     <ClInclude Include="Engine\Components\Rendering\SpriteRenderer.h" />
     <ClInclude Include="Engine\Components\TestComponent.h" />
-    <ClInclude Include="Engine\Core\IScriptable.h" />
     <ClInclude Include="Engine\Core\Lua.h" />
     <ClInclude Include="Engine\Core\Math3D.h" />
     <ClInclude Include="Engine\Core\CoreEngine.h" />
@@ -82,7 +81,6 @@
     <ClCompile Include="Engine\Core\CoreEngine.cpp" />
     <ClCompile Include="Engine\Core\Game.cpp" />
     <ClCompile Include="Engine\Core\Lua.cpp" />
-    <ClCompile Include="Engine\Core\Math3D.cpp" />
     <ClCompile Include="Engine\Core\Profiling.cpp" />
     <ClCompile Include="Engine\Core\Script.cpp" />
     <ClCompile Include="Engine\Core\Vector2.cpp" />

@@ -22,8 +22,6 @@ private:
 	mutable bool m_intialisedOldStuff;
 
 public:
-	static void registerMembers(const std::string& namespace_, lua_State* luaState);
-
 	Transform(const Vector3& position = Vector3(), const Quaternion& rotation = Quaternion(0, 0, 0, 1), float scale = 1.0f);
 	~Transform();
 

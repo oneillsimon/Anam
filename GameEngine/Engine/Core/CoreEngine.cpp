@@ -13,9 +13,6 @@ CoreEngine::CoreEngine(int width, int height, double frameRate, Game* game)
 	m_renderingEngine = 0;
 	m_physicsEngine = 0;
 
-	//luaL_openlibs(Lua::L);
-	//Lua::register_();
-
 	m_game->setEngine(this);
 }
 
