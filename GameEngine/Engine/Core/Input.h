@@ -25,7 +25,7 @@ private:
 	Window* m_window;
 
 public:
-	enum
+	enum Mouse
 	{
 		LEFT_MOUSE = 1,
 		MIDDLE_MOUSE = 2,
@@ -34,7 +34,7 @@ public:
 		MOUSE_WHEEL_DOWN = 5
 	};
 
-	enum
+	enum Keyboard
 	{
 		KEY_UNKNOWN = 0,
 
