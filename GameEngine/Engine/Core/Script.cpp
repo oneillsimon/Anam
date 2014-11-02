@@ -4,7 +4,7 @@
 static void injectIntoLua(lua_State* luaState, GameObject* t);
 
 Script::Script(const std::string& script) :
-	scriptName("Engine/Scripts/" + script)
+	scriptName("res/scripts/" + script)
 {
 	L = luaL_newstate();
 	luaL_openlibs(L);

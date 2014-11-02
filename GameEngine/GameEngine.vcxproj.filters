@@ -372,7 +372,7 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Engine\Scripts\test.lua" />
-    <None Include="Engine\Scripts\rotate.lua" />
+    <None Include="res\Scripts\rotate.lua" />
+    <None Include="res\Scripts\test.lua" />
   </ItemGroup>
 </Project>
