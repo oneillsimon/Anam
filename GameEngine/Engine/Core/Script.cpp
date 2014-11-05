@@ -45,6 +45,9 @@ void Script::update(float delta)
 	m_parent->getTransform()->setPosition(p);
 	m_parent->getTransform()->setRotation(r);
 	m_parent->getTransform()->setScale(s);
+
+	lua_getglobal(L, "transform");
+	lua_pop(L, 1);
 }
 
 void Script::render(const Shader& shader, const RenderingEngine& renderingEngine, const Camera& camera) const
