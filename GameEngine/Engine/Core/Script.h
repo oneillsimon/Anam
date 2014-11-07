@@ -11,6 +11,8 @@ class Script : public GameComponent
 {
 private:
 	std::string scriptName;
+
+protected:
 	lua_State* L;
 
 public:

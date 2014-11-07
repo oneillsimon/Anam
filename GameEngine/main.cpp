@@ -12,6 +12,7 @@
 #include "Engine\Components\Game\Movement2D.h"
 
 #include "Engine\Core\Script.h"
+#include "Engine\Components\MoveScript.h"
 
 #include "Engine\Physics_\Particle.h"
 #include "Engine\Physics_\Physics_Component.h"
@@ -44,7 +45,7 @@ void TestGame::init(const Window& window)
 	cameraObj->addComponent(new FreeLook(window.getCentre()));
 	//cameraObj->getTransform()->rotate(AXIS_Y, toRadians(180));
 	cameraObj->addComponent(new FreeMove());
-	cameraObj->addComponent(new CameraComponent(Matrix4().initPerspective(toRadians(70.0f), window.getAspectRatio(), 0.1f, 1000.0f)));
+	cameraObj->addComponent(new CameraComponent(Matrix4().initPerspective(toRadians(90.0f), window.getAspectRatio(), 0.1f, 1000.0f)));
 
 	addToScene(cameraObj);
 	int y = 0;
@@ -57,6 +58,8 @@ void TestGame::init(const Window& window)
 	SpriteSheet s = SpriteSheet("", Material("", TEXTURE_BLANK, c), 1, 1);
 	obj_->addComponent(new SpriteRenderer(s));
 	obj_->addComponent(new Script("rotate.lua"));
+	obj_->addComponent(new MoveScript(Input::KEY_UP, Input::KEY_DOWN, Input::KEY_LEFT, Input::KEY_RIGHT, 0.1f));
+
 	obj_->addComponent(new Movement2D());
 
 	addToScene(obj_);
