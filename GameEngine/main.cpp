@@ -57,7 +57,7 @@ void TestGame::init(const Window& window)
 	SpriteSheet s = SpriteSheet("", Material("", TEXTURE_BLANK, c), 1, 1);
 	obj_->addComponent(new SpriteRenderer(s));
 	obj_->enableScripting();
-	obj_->addComponent(new Script("rotate.lua", obj_->scriptManager));
+	obj_->addComponent(new Script("rotate.lua", obj_->getScriptManager()));
 
 	obj_->addComponent(new Movement2D());
 
@@ -67,8 +67,8 @@ void TestGame::init(const Window& window)
 	SpriteSheet s_ = SpriteSheet("", Material("", TEXTURE_BLANK, c), 1, 1);
 	obj__->addComponent(new SpriteRenderer(s_));
 	obj__->enableScripting();
-	//obj__->addComponent(new Script("rotate.lua", obj__->scriptManager));
-	obj__->addComponent(new Script("test.lua", obj__->scriptManager));
+	obj__->addComponent(new Script("rotate.lua", obj__->getScriptManager()));
+	obj__->addComponent(new Script("test.lua", obj__->getScriptManager()));
 
 	addToScene(obj__);
 

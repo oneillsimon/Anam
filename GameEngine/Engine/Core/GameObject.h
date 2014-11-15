@@ -21,6 +21,8 @@ private:
 	std::vector<GameObject*> m_children;
 	std::vector<GameComponent*> m_components;
 
+	ScriptManager scriptManager;
+
 protected:
 	Transform m_transform;
 
@@ -29,7 +31,6 @@ protected:
 	virtual void render(const Shader& shader, const RenderingEngine& renderingEngine, const Camera& camera) const;
 
 public:
-	ScriptManager scriptManager;
 	GameObject(const Vector3& position = Vector3(), const Quaternion& rotation = Quaternion(0, 0, 0, 1), float scale = 1.0f);
 	~GameObject();
 
@@ -52,6 +53,7 @@ public:
 	void setEngine(CoreEngine* engine);
 
 	lua_State* getL();
+	ScriptManager& getScriptManager();
 };
 
 #endif
