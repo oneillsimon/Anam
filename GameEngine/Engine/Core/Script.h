@@ -13,7 +13,7 @@ class Script : public GameComponent
 private:
 	std::string scriptName;
 	std::ofstream finalScript;
-	std::string loadScript(const std::string& fileName, bool first, GameObject* parent);
+	void loadScript(const std::string& fileName, GameObject* parent);
 
 protected:
 public:

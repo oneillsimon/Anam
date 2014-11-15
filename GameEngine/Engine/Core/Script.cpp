@@ -7,11 +7,6 @@
 
 static void injectIntoLua(lua_State* luaState, GameObject* t);
 ProfileTimer Script::m_scriptTimer = ProfileTimer();
-std::string tt;
-static bool isFirstScript = true;
-static int pos;
-static std::vector<std::string> old_;
-static std::vector<std::string> new_;
 
 std::string addParts(std::vector<std::string> s);
 
@@ -19,7 +14,7 @@ Script::Script(const std::string& script, GameObject * p) :
 	scriptName("res/scripts/gen/" + p->getScriptName())
 {
 	finalScript.open(scriptName);
-	loadScript(script, true, p);
+	loadScript(script, p);
 
 	if(luaL_dofile(p->getL(), scriptName.c_str()));
 	{
@@ -63,10 +58,12 @@ void Script::render(const Shader& shader, const RenderingEngine& renderingEngine
 {
 }
 
-std::string Script::loadScript(const std::string& fileName, bool first, GameObject* parent)
+void Script::loadScript(const std::string& fileName, GameObject* parent)
 {
 	std::ifstream fileIn;
 	std::vector<std::string> lines;
+	std::vector<std::string> old_;
+	std::vector<std::string> new_;
 
 	fileIn.open(("./res/scripts/" + fileName).c_str());
 
@@ -101,8 +98,6 @@ std::string Script::loadScript(const std::string& fileName, bool first, GameObje
 				}
 			}
 
-			line = addParts(parts);
-			
 			for(int i = 0; i < parent->scriptHelper.getUpdateCode().size(); i++)
 			{
 				for(int j = 0; j < old_.size(); j++)
@@ -140,8 +135,6 @@ std::string Script::loadScript(const std::string& fileName, bool first, GameObje
 
 	fileIn.close();
 	finalScript.close();
-
-	return "";
 }
 
 std::string addParts(std::vector<std::string> s)
