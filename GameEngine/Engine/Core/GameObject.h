@@ -5,7 +5,7 @@
 
 #include "Input.h"
 #include "Lua.h"
-#include "ScriptHelper.h"
+#include "ScriptManager.h"
 #include "Transform.h"
 
 class Camera;
@@ -31,7 +31,7 @@ protected:
 	virtual void render(const Shader& shader, const RenderingEngine& renderingEngine, const Camera& camera) const;
 
 public:
-	ScriptHelper scriptHelper;
+	ScriptManager scriptManager;
 	GameObject(const Vector3& position = Vector3(), const Quaternion& rotation = Quaternion(0, 0, 0, 1), float scale = 1.0f);
 	~GameObject();
 

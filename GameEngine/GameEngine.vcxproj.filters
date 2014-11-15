@@ -198,7 +198,7 @@
     <ClCompile Include="Engine\Core\Matrix3.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Core\ScriptHelper.cpp">
+    <ClCompile Include="Engine\Core\ScriptManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -389,7 +389,7 @@
     <ClInclude Include="Engine\Collision\rtOBB.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Core\ScriptHelper.h">
+    <ClInclude Include="Engine\Core\ScriptManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

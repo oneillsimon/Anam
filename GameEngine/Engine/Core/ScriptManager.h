@@ -1,18 +1,18 @@
-#ifndef SCRIPTHELPER_H
-#define SCRIPTHELPER_H
+#ifndef SCRIPTMANAGER_H
+#define SCRIPTMANAGER_H
 
 #include <string>
 #include <vector>
 
-class ScriptHelper
+class ScriptManager
 {
 private:
 	std::vector<std::string> m_localCode;
 	std::vector<std::string> m_updateCode;
 
 public:
-	ScriptHelper();
-	~ScriptHelper();
+	ScriptManager();
+	~ScriptManager();
 
 	std::vector<std::string> getLocalCode() const;
 	std::vector<std::string> getUpdateCode() const;

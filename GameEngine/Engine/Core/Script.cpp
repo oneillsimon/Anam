@@ -82,7 +82,7 @@ void Script::loadScript(const std::string& fileName, GameObject* parent)
 				parts[1] = Util::split(fileName, '.')[0] + "_" + parts[1];
 				new_.push_back(parts[1]);
 				parts[0] = "";
-				parent->scriptHelper.addLocalCode(addParts(parts));
+				parent->scriptManager.addLocalCode(addParts(parts));
 			}
 			else if(parts[0] == "function")
 			{
@@ -92,34 +92,34 @@ void Script::loadScript(const std::string& fileName, GameObject* parent)
 					while(s != "end")
 					{
 						getline(fileIn, s);
-						parent->scriptHelper.addUpdateCode(s);
+						parent->scriptManager.addUpdateCode(s);
 					}
 				}
 			}
 
-			for(int i = 0; i < parent->scriptHelper.getUpdateCode().size(); i++)
+			for(int i = 0; i < parent->scriptManager.getUpdateCode().size(); i++)
 			{
 				for(int j = 0; j < old_.size(); j++)
 				{
-					std::string update = parent->scriptHelper.getUpdateCode()[i];
+					std::string update = parent->scriptManager.getUpdateCode()[i];
 					Util::findAndReplace(update, old_[j], new_[j]);
-					parent->scriptHelper.setUpdateCode(update, i);
+					parent->scriptManager.setUpdateCode(update, i);
 				}
 			}
 		}
 
-		for(int i = 0; i < parent->scriptHelper.getLocalCode().size(); i++)
+		for(int i = 0; i < parent->scriptManager.getLocalCode().size(); i++)
 		{
-			finalScript << parent->scriptHelper.getLocalCode()[i] << "\n";
+			finalScript << parent->scriptManager.getLocalCode()[i] << "\n";
 		}
 
 		finalScript << "function final_update()\n";
 
-		for(int i = 0; i < parent->scriptHelper.getUpdateCode().size(); i++)
+		for(int i = 0; i < parent->scriptManager.getUpdateCode().size(); i++)
 		{
-			if(parent->scriptHelper.getUpdateCode()[i] != "end")
+			if(parent->scriptManager.getUpdateCode()[i] != "end")
 			{
-				finalScript << parent->scriptHelper.getUpdateCode()[i] << "\n";
+				finalScript << parent->scriptManager.getUpdateCode()[i] << "\n";
 			}
 		}
 		finalScript << "end\n";
