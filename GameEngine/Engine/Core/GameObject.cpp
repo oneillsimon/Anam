@@ -128,6 +128,11 @@ CoreEngine* GameObject::getEngine()
 	return m_coreEngine;
 }
 
+void GameObject::setTransform(const Transform& t)
+{
+	m_transform = t;
+}
+
 void GameObject::setEngine(CoreEngine* engine)
 {
 	if(m_coreEngine != engine)

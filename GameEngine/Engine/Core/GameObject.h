@@ -48,6 +48,7 @@ public:
 	Transform* getTransform();
 	CoreEngine* getEngine();
 	
+	void setTransform(const Transform& t);
 	void setEngine(CoreEngine* engine);
 
 	lua_State* getL();
