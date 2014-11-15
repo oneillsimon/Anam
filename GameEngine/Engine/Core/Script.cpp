@@ -103,16 +103,13 @@ std::string Script::loadScript(const std::string& fileName, bool first, GameObje
 
 			line = addParts(parts);
 			
-			for(int i = 0; i < old_.size(); i++)
+			for(int i = 0; i < parent->scriptHelper.getUpdateCode().size(); i++)
 			{
-				for(int i = 0; i < parent->scriptHelper.getUpdateCode().size(); i++)
+				for(int j = 0; j < old_.size(); j++)
 				{
-					for(int j = 0; j < old_.size(); j++)
-					{
-						std::string update = parent->scriptHelper.getUpdateCode()[i];
-						Util::findAndReplace(update, old_[j], new_[j]);
-						parent->scriptHelper.setUpdateCode(update, i);
-					}
+					std::string update = parent->scriptHelper.getUpdateCode()[i];
+					Util::findAndReplace(update, old_[j], new_[j]);
+					parent->scriptHelper.setUpdateCode(update, i);
 				}
 			}
 		}
