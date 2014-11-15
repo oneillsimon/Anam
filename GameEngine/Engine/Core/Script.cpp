@@ -12,8 +12,6 @@ static bool isFirstScript = true;
 static int pos;
 static std::vector<std::string> old_;
 static std::vector<std::string> new_;
-//static std::vector<std::string> updateCode;
-//static std::vector<std::string> localCode;
 
 std::string addParts(std::vector<std::string> s);
 
@@ -23,7 +21,6 @@ Script::Script(const std::string& script, GameObject * p) :
 	finalScript.open(scriptName);
 	loadScript(script, true, p);
 
-	//if(luaL_dofile(p->getL(), scriptName.c_str()))
 	if(luaL_dofile(p->getL(), scriptName.c_str()));
 	{
 		const char* err = lua_tostring(p->getL(), -1);
@@ -43,8 +40,6 @@ void Script::input(const Input& input, float delta)
 void Script::update(float delta)
 {
 	m_scriptTimer.startInvocation();
-	//luabridge::setGlobal(m_parent->getL(), m_parent->getTransform(), (tt + "_transform").c_str());
-
 	lua_getglobal(m_parent->getL(), "final_update");
 	
 	if(lua_isfunction(m_parent->getL(), lua_gettop(m_parent->getL())))
@@ -92,10 +87,6 @@ std::string Script::loadScript(const std::string& fileName, bool first, GameObje
 				new_.push_back(parts[1]);
 				parts[0] = "";
 				parent->scriptHelper.addLocalCode(addParts(parts));
-				//localCode.push_back(addParts(parts));
-
-
-				//FIND AND REPLACE CODE HERE OF ENTIRE LUA FILE, NOT FINALSCRIPT.LUA
 			}
 			else if(parts[0] == "function")
 			{
@@ -106,50 +97,40 @@ std::string Script::loadScript(const std::string& fileName, bool first, GameObje
 					{
 						getline(fileIn, s);
 						parent->scriptHelper.addUpdateCode(s);
-						//updateCode.push_back(s);
 					}
 				}
 			}
 
 			line = addParts(parts);
 			
-			// FIXTHIS
 			for(int i = 0; i < old_.size(); i++)
 			{
 				for(int i = 0; i < parent->scriptHelper.getUpdateCode().size(); i++)
-				//for(int i = 0; i < updateCode.size(); i++)
 				{
 					for(int j = 0; j < old_.size(); j++)
 					{
 						std::string update = parent->scriptHelper.getUpdateCode()[i];
 						Util::findAndReplace(update, old_[j], new_[j]);
 						parent->scriptHelper.setUpdateCode(update, i);
-						//Util::findAndReplace(updateCode[i], old_[j], new_[j]);
 					}
 				}
 			}
 		}
 
 		for(int i = 0; i < parent->scriptHelper.getLocalCode().size(); i++)
-		//for(int i = 0; i < localCode.size(); i++)
 		{
 			finalScript << parent->scriptHelper.getLocalCode()[i] << "\n";
-			//finalScript << localCode[i] << "\n";
 		}
 
 		finalScript << "function final_update()\n";
 
 		for(int i = 0; i < parent->scriptHelper.getUpdateCode().size(); i++)
-		//for(int i = 0; i < updateCode.size(); i++)
 		{
 			if(parent->scriptHelper.getUpdateCode()[i] != "end")
-			//if(updateCode[i] != "end")
 			{
 				finalScript << parent->scriptHelper.getUpdateCode()[i] << "\n";
-				//finalScript << updateCode[i] << "\n";
 			}
 		}
-		//finalScript << "\tprint(\"jjjj\")\n";
 		finalScript << "end\n";
 	}
 	else
