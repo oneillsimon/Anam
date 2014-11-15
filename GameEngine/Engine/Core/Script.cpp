@@ -11,7 +11,7 @@ ProfileTimer Script::m_scriptTimer = ProfileTimer();
 std::string addParts(std::vector<std::string> s);
 
 Script::Script(const std::string& script, GameObject * p) :
-	scriptName("res/scripts/gen/" + p->getScriptName())
+	scriptName("res/scripts/gen/" + p->scriptManager.getScriptName())
 {
 	finalScript.open(scriptName);
 	loadScript(script, p);

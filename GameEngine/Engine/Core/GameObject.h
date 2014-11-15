@@ -20,8 +20,6 @@ private:
 	CoreEngine* m_coreEngine;
 	std::vector<GameObject*> m_children;
 	std::vector<GameComponent*> m_components;
-	lua_State* L;
-	std::string scriptname;
 
 protected:
 	Transform m_transform;
@@ -42,37 +40,17 @@ public:
 	void updateAll(float delta);
 	void renderAll(const Shader& shader, const RenderingEngine& renderingEngine, const Camera& camera) const;
 
+	void enableScripting();
+
 	std::vector<GameObject*> getChildren() const;
 	std::vector<GameObject*> getAllAttached();
 
 	Transform* getTransform();
-
 	CoreEngine* getEngine();
-
-	void enableScripting()
-	{
-		L = luaL_newstate();
-		luaL_openlibs(L);
-
-		Lua::registerMembers(L);
-
-		std::ostringstream address;
-		address << (void const *)this << ".lua";
-		scriptname = address.str();
-		luabridge::setGlobal(L, m_transform, "transform");
-	}
-
-	lua_State* getL()
-	{
-		return L;
-	}
-
-	std::string getScriptName()
-	{
-		return scriptname;
-	}
-
+	
 	void setEngine(CoreEngine* engine);
+
+	lua_State* getL();
 };
 
 #endif

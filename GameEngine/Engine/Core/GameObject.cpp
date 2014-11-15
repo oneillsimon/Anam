@@ -145,3 +145,14 @@ void GameObject::setEngine(CoreEngine* engine)
 		}
 	}
 }
+
+void GameObject::enableScripting()
+{
+	scriptManager.generateScriptName(this);
+	scriptManager.pushGlobal(m_transform, "transform");
+}
+
+lua_State* GameObject::getL()
+{
+	return scriptManager.getL();
+}

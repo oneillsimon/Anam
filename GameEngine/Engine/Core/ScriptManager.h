@@ -4,9 +4,14 @@
 #include <string>
 #include <vector>
 
+#include "Lua.h"
+
 class ScriptManager
 {
 private:
+	lua_State* L;
+	std::string scriptName;
+
 	std::vector<std::string> m_localCode;
 	std::vector<std::string> m_updateCode;
 
@@ -14,14 +19,25 @@ public:
 	ScriptManager();
 	~ScriptManager();
 
-	std::vector<std::string> getLocalCode() const;
-	std::vector<std::string> getUpdateCode() const;
-
 	void addLocalCode(const std::string& code);
 	void addUpdateCode(const std::string& code);
 
+	template<class T>
+	void pushGlobal(T t, const std::string& name)
+	{
+		luabridge::setGlobal(L, t, name.c_str());
+	}
+
+	void generateScriptName(void* object);
+
 	void setLocalCode(const std::string& code, int index);
 	void setUpdateCode(const std::string& code, int index);
+
+	lua_State* getL();
+
+	std::string getScriptName() const;
+	std::vector<std::string> getLocalCode() const;
+	std::vector<std::string> getUpdateCode() const;
 };
 
 #endif

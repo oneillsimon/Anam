@@ -73,9 +73,6 @@ void TestGame::init(const Window& window)
 
 	addToScene(obj__);
 
-	std::string sc = obj_->getScriptName();
-	std::string scsc = obj__->getScriptName();
-
 	for(int i = 0; i < 20; i++)
 	{
 		if(i >= 5)
