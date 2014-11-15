@@ -26,7 +26,7 @@ Script::Script(const std::string& script, ScriptManager& scriptManager) :
 
 Script::~Script()
 {
-	remove(scriptName.c_str());
+	remove(m_scriptName.c_str());
 }
 
 void Script::input(const Input& input, float delta)
@@ -105,19 +105,19 @@ void Script::loadScript(const std::string& fileName, ScriptManager& scriptManage
 
 		for(int i = 0; i < scriptManager.getLocalCode().size(); i++)
 		{
-			finalScript << scriptManager.getLocalCode()[i] << "\n";
+			m_finalScript << scriptManager.getLocalCode()[i] << "\n";
 		}
 
-		finalScript << "function final_update()\n";
+		m_finalScript << "function final_update()\n";
 
 		for(int i = 0; i < scriptManager.getUpdateCode().size(); i++)
 		{
 			if(scriptManager.getUpdateCode()[i] != "end")
 			{
-				finalScript << scriptManager.getUpdateCode()[i] << "\n";
+				m_finalScript << scriptManager.getUpdateCode()[i] << "\n";
 			}
 		}
-		finalScript << "end\n";
+		m_finalScript << "end\n";
 	}
 	else
 	{
@@ -128,7 +128,7 @@ void Script::loadScript(const std::string& fileName, ScriptManager& scriptManage
 	new_.clear();
 
 	fileIn.close();
-	finalScript.close();
+	m_finalScript.close();
 }
 
 std::string addParts(std::vector<std::string> s)

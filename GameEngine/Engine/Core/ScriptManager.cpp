@@ -2,9 +2,9 @@
 
 ScriptManager::ScriptManager()
 {
-	L = luaL_newstate();
-	luaL_openlibs(L);
-	Lua::registerMembers(L);
+	m_L = luaL_newstate();
+	luaL_openlibs(m_L);
+	Lua::registerMembers(m_L);
 }
 
 ScriptManager::~ScriptManager()
@@ -25,7 +25,7 @@ void ScriptManager::generateScriptName(void* object)
 {
 	std::ostringstream address;
 	address << (void const *)object << ".lua";
-	scriptName = address.str();
+	m_scriptName = address.str();
 }
 
 void ScriptManager::setLocalCode(const std::string& code, int index)
@@ -40,12 +40,12 @@ void ScriptManager::setUpdateCode(const std::string& code, int index)
 
 lua_State* ScriptManager::getL()
 {
-	return L;
+	return m_L;
 }
 
 std::string ScriptManager::getScriptName() const
 {
-	return scriptName;
+	return m_scriptName;
 }
 
 std::vector<std::string> ScriptManager::getLocalCode() const

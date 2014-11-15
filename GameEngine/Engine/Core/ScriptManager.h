@@ -25,7 +25,7 @@ public:
 	template<class T>
 	void setGlobal(T t, const std::string& name)
 	{
-		luabridge::setGlobal(L, t, name.c_str());
+		luabridge::setGlobal(m_L, t, name.c_str());
 	}
 
 	void generateScriptName(void* object);
