@@ -23,7 +23,7 @@ public:
 	void addUpdateCode(const std::string& code);
 
 	template<class T>
-	void pushGlobal(T t, const std::string& name)
+	void setGlobal(T t, const std::string& name)
 	{
 		luabridge::setGlobal(L, t, name.c_str());
 	}

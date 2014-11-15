@@ -44,7 +44,7 @@ void TestGame::init(const Window& window)
 	cameraObj->addComponent(new FreeLook(window.getCentre()));
 	//cameraObj->getTransform()->rotate(AXIS_Y, toRadians(180));
 	cameraObj->addComponent(new FreeMove());
-	cameraObj->addComponent(new CameraComponent(Matrix4().initPerspective(toRadians(90.0f), window.getAspectRatio(), 0.1f, 1000.0f)));
+	cameraObj->addComponent(new CameraComponent(Matrix4().initPerspective(toRadians(70.0f), window.getAspectRatio(), 0.1f, 1000.0f)));
 
 	addToScene(cameraObj);
 	int y = 0;
@@ -67,7 +67,7 @@ void TestGame::init(const Window& window)
 	SpriteSheet s_ = SpriteSheet("", Material("", TEXTURE_BLANK, c), 1, 1);
 	obj__->addComponent(new SpriteRenderer(s_));
 	obj__->enableScripting();
-	obj__->addComponent(new Script("rotate.lua", obj__->scriptManager));
+	//obj__->addComponent(new Script("rotate.lua", obj__->scriptManager));
 	obj__->addComponent(new Script("test.lua", obj__->scriptManager));
 
 	addToScene(obj__);
