@@ -11,6 +11,7 @@ ProfileTimer Script::m_scriptTimer = ProfileTimer();
 std::string addParts(std::vector<std::string> s);
 
 Script::Script(const std::string& script, ScriptManager& scriptManager) :
+	scriptManager(scriptManager),
 	scriptName("res/scripts/gen/" + scriptManager.getScriptName())
 {
 	finalScript.open(scriptName);
@@ -42,14 +43,7 @@ void Script::update(float delta)
 		lua_call(m_parent->getL(), 0, 0);
 	}
 
-	Transform t = (Transform)luabridge::getGlobal(m_parent->getL(), "transform");
-	Vector3 p = t.getPosition();
-	Quaternion r = t.getRotation();
-	Vector3 s = t.getScale();
-	
-	m_parent->getTransform()->setPosition(p);
-	m_parent->getTransform()->setRotation(r);
-	m_parent->getTransform()->setScale(s);
+	m_parent->setTransform((Transform)luabridge::getGlobal(m_parent->getL(), "transform"));
 
 	m_scriptTimer.stopInvocation();
 }

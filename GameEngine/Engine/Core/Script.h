@@ -11,6 +11,7 @@
 class Script : public GameComponent
 {
 private:
+	ScriptManager& scriptManager;
 	std::string scriptName;
 	std::ofstream finalScript;
 	void loadScript(const std::string& fileName, ScriptManager& scriptManager);
