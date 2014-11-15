@@ -11,12 +11,12 @@
 class Script : public GameComponent
 {
 private:
-	ScriptManager& scriptManager;
-	std::string scriptName;
-	std::ofstream finalScript;
+	ScriptManager& m_scriptManager;
+	std::string m_scriptName;
+	std::ofstream m_finalScript;
+
 	void loadScript(const std::string& fileName, ScriptManager& scriptManager);
 
-protected:
 public:
 	static ProfileTimer m_scriptTimer;
 

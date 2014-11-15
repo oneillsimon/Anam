@@ -11,13 +11,13 @@ ProfileTimer Script::m_scriptTimer = ProfileTimer();
 std::string addParts(std::vector<std::string> s);
 
 Script::Script(const std::string& script, ScriptManager& scriptManager) :
-	scriptManager(scriptManager),
-	scriptName("res/scripts/gen/" + scriptManager.getScriptName())
+	m_scriptManager(scriptManager),
+	m_scriptName("res/scripts/gen/" + scriptManager.getScriptName())
 {
-	finalScript.open(scriptName);
+	m_finalScript.open(m_scriptName);
 	loadScript(script, scriptManager);
 
-	if(luaL_dofile(scriptManager.getL(), scriptName.c_str()));
+	if(luaL_dofile(scriptManager.getL(), m_scriptName.c_str()));
 	{
 		const char* err = lua_tostring(scriptManager.getL(), -1);
 		printf("%s\n", err);

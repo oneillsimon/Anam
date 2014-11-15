@@ -9,8 +9,8 @@
 class ScriptManager
 {
 private:
-	lua_State* L;
-	std::string scriptName;
+	lua_State* m_L;
+	std::string m_scriptName;
 
 	std::vector<std::string> m_localCode;
 	std::vector<std::string> m_updateCode;
