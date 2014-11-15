@@ -121,6 +121,8 @@ public:
 
 	bool operator ==(const Vector3& v) const;
 	bool operator !=(const Vector3& v) const;
+
+	const float operator [](int index) const;
 };
 
 class Vector4
@@ -134,7 +136,7 @@ protected:
 public:
 	Vector4(float x = 0.0f, float y = 0.0f, float z = 0.0f, float w = 0.0f);
 	~Vector4();
-	
+
 	float length() const;
 	float max() const;
 	Vector4 normalised() const;
@@ -183,6 +185,27 @@ public:
 	void setAt(int x, int y, float value) const;
 
 	Matrix4 operator *(const Matrix4& m) const;
+	const float* operator [](int index) const { return m[index]; };
+};
+
+class Matrix3
+{
+private:
+	mutable float m[3][3];
+
+public:
+	Matrix3();
+	~Matrix3();
+
+	Matrix3 initIdentity();
+
+	float** getM();
+	float getAt(int x, int y) const;
+
+	void set(float** m);
+	void setAt(int x, int y, float value) const;
+
+	Matrix3 operator *(const Matrix3& m) const;
 	const float* operator [](int index) const { return m[index]; };
 };
 
