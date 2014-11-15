@@ -57,6 +57,8 @@ public:
 	void setRotation(const Quaternion& rotation);
 	void setScale(const Vector3& scale);
 	void setScale(float scale);
+
+	void operator =(const Transform& t);
 };
 
 #endif

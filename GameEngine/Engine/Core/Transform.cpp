@@ -193,3 +193,10 @@ void Transform::setScale(float scale)
 {
 	setScale(Vector3(scale, scale, scale));
 }
+
+void Transform::operator =(const Transform& t)
+{
+	setPosition(t.getPosition());
+	setRotation(t.getRotation());
+	setScale(t.getScale());
+}
