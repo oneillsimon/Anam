@@ -3,6 +3,8 @@
 #include "Time.h"
 #include "Util.h"
 
+#include "Script.h"
+
 CoreEngine::CoreEngine(int width, int height, double frameRate, Game* game)
 {
 	m_isRunning = false;
@@ -95,6 +97,7 @@ void CoreEngine::run()
 			totalRecordedTime += m_windowUpdateTimer.displayAndReset("Window Update Time: ", (double)frames);
 			totalRecordedTime += m_swapBufferTimer.displayAndReset("Buffer Swap Time: ", (double)frames);
 			totalRecordedTime += m_sleepTimer.displayAndReset("Sleep Time: ", (double)frames);
+			totalRecordedTime += Script::m_scriptTimer.displayAndReset("Script Time: ", (double)frames);
 			
 			printf("Other time: %f ms\n", totalTime - totalRecordedTime);
 			printf("Total time: %f ms\n\n", totalTime);

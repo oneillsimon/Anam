@@ -11,6 +11,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Collision\rtAABB.h" />
+    <ClInclude Include="Engine\Collision\rtCollisions.h" />
+    <ClInclude Include="Engine\Collision\rtOBB.h" />
+    <ClInclude Include="Engine\Collision\rtPlane.h" />
+    <ClInclude Include="Engine\Collision\rtSphere.h" />
     <ClInclude Include="Engine\Comhpháirteanna.h" />
     <ClInclude Include="Engine\Components\Game\Movement2D.h" />
     <ClInclude Include="Engine\Components\Game\Camera.h" />
@@ -31,6 +36,7 @@
     <ClInclude Include="Engine\Core\Game.h" />
     <ClInclude Include="Engine\Core\Profiling.h" />
     <ClInclude Include="Engine\Core\Script.h" />
+    <ClInclude Include="Engine\Core\ScriptHelper.h" />
     <ClInclude Include="Engine\Core\Util.h" />
     <ClInclude Include="Engine\Core\Transform.h" />
     <ClInclude Include="Engine\Core\Time.h" />
@@ -85,8 +91,10 @@
     <ClCompile Include="Engine\Core\CoreEngine.cpp" />
     <ClCompile Include="Engine\Core\Game.cpp" />
     <ClCompile Include="Engine\Core\Lua.cpp" />
+    <ClCompile Include="Engine\Core\Matrix3.cpp" />
     <ClCompile Include="Engine\Core\Profiling.cpp" />
     <ClCompile Include="Engine\Core\Script.cpp" />
+    <ClCompile Include="Engine\Core\ScriptHelper.cpp" />
     <ClCompile Include="Engine\Core\Vector2.cpp" />
     <ClCompile Include="Engine\Core\Vector3.cpp" />
     <ClCompile Include="Engine\Core\Matrix4.cpp" />

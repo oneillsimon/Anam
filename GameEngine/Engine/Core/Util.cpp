@@ -34,3 +34,16 @@ std::vector<std::string> Util::split(const std::string& s, char delim)
 
 	return elements;
 }
+
+void Util::findAndReplace(std::string& s, const std::string& what, const std::string& with)
+{
+	size_t pos = 0;
+	while((pos = s.find(what, pos)) != std::string::npos)
+	{
+		if(s.at(pos - 1) != with.at(with.length() - what.length() - 1))
+		{
+			s.replace(pos, what.length(), with);
+		}
+		pos += with.length();
+	}
+}

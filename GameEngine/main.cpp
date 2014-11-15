@@ -57,14 +57,26 @@ void TestGame::init(const Window& window)
 	GameObject* obj_ = new GameObject(Vector3(-4, y -1, 10));
 	SpriteSheet s = SpriteSheet("", Material("", TEXTURE_BLANK, c), 1, 1);
 	obj_->addComponent(new SpriteRenderer(s));
-	obj_->addComponent(new Script("rotate.lua"));
-	obj_->addComponent(new MoveScript(Input::KEY_UP, Input::KEY_DOWN, Input::KEY_LEFT, Input::KEY_RIGHT, 0.1f));
+	obj_->enableScripting();
+	obj_->addComponent(new Script("rotate.lua", obj_));
 
 	obj_->addComponent(new Movement2D());
 
 	addToScene(obj_);
 
-	for(int i = 0; i < 5; i++)
+	GameObject* obj__ = new GameObject(Vector3(-6, y - 5, 10));
+	SpriteSheet s_ = SpriteSheet("", Material("", TEXTURE_BLANK, c), 1, 1);
+	obj__->addComponent(new SpriteRenderer(s_));
+	obj__->enableScripting();
+	obj__->addComponent(new Script("rotate.lua", obj__));
+	obj__->addComponent(new Script("test.lua", obj__));
+
+	addToScene(obj__);
+
+	std::string sc = obj_->getScriptName();
+	std::string scsc = obj__->getScriptName();
+
+	for(int i = 0; i < 20; i++)
 	{
 		if(i >= 5)
 		{
@@ -77,7 +89,7 @@ void TestGame::init(const Window& window)
 		addToScene(obj);
 	}
 
-	for(int i = 0; i < 5; i++)
+	for(int i = 0; i < 20; i++)
 	{
 		if(i >= 5)
 		{

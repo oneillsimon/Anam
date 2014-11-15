@@ -14,7 +14,7 @@ private:
 	int key;
 
 public:
-	MoveScript(int up, int down, int left, int right, float speed);
+	MoveScript(int up, int down, int left, int right, float speed, GameObject* p);
 	virtual void input(const Input& input, float delta);
 	virtual void update(float delta);
 };

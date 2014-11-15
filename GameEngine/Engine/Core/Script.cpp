@@ -1,25 +1,39 @@
 #include "Script.h"
 #include "Math3D.h"
+#include "Util.h"
+
+#include <fstream>
+#include <iostream>
 
 static void injectIntoLua(lua_State* luaState, GameObject* t);
+ProfileTimer Script::m_scriptTimer = ProfileTimer();
+std::string tt;
+static bool isFirstScript = true;
+static int pos;
+static std::vector<std::string> old_;
+static std::vector<std::string> new_;
+//static std::vector<std::string> updateCode;
+//static std::vector<std::string> localCode;
 
-Script::Script(const std::string& script) :
-	scriptName("res/scripts/" + script)
+std::string addParts(std::vector<std::string> s);
+
+Script::Script(const std::string& script, GameObject * p) :
+	scriptName("res/scripts/gen/" + p->getScriptName())
 {
-	L = luaL_newstate();
-	luaL_openlibs(L);
+	finalScript.open(scriptName);
+	loadScript(script, true, p);
 
-	Lua::registerMembers(L);
-
-	if(luaL_dofile(L, scriptName.c_str()))
+	//if(luaL_dofile(p->getL(), scriptName.c_str()))
+	if(luaL_dofile(p->getL(), scriptName.c_str()));
 	{
-		const char* err = lua_tostring(L, -1);
+		const char* err = lua_tostring(p->getL(), -1);
 		printf("%s\n", err);
 	}
 }
 
 Script::~Script()
 {
+	remove(scriptName.c_str());
 }
 
 void Script::input(const Input& input, float delta)
@@ -28,16 +42,17 @@ void Script::input(const Input& input, float delta)
 
 void Script::update(float delta)
 {
-	luabridge::setGlobal(L, m_parent->getTransform(), "transform");
+	m_scriptTimer.startInvocation();
+	//luabridge::setGlobal(m_parent->getL(), m_parent->getTransform(), (tt + "_transform").c_str());
 
-	lua_getglobal(L, "update");
-
-	if(lua_isfunction(L, lua_gettop(L)))
+	lua_getglobal(m_parent->getL(), "final_update");
+	
+	if(lua_isfunction(m_parent->getL(), lua_gettop(m_parent->getL())))
 	{
-		lua_call(L, 0, 0);
+		lua_call(m_parent->getL(), 0, 0);
 	}
 
-	Transform t = (Transform)luabridge::getGlobal(L, "transform");
+	Transform t = (Transform)luabridge::getGlobal(m_parent->getL(), "transform");
 	Vector3 p = t.getPosition();
 	Quaternion r = t.getRotation();
 	Vector3 s = t.getScale();
@@ -46,10 +61,118 @@ void Script::update(float delta)
 	m_parent->getTransform()->setRotation(r);
 	m_parent->getTransform()->setScale(s);
 
-	lua_getglobal(L, "transform");
-	lua_pop(L, 1);
+	m_scriptTimer.stopInvocation();
 }
 
 void Script::render(const Shader& shader, const RenderingEngine& renderingEngine, const Camera& camera) const
 {
+}
+
+std::string Script::loadScript(const std::string& fileName, bool first, GameObject* parent)
+{
+	std::ifstream fileIn;
+	std::vector<std::string> lines;
+
+	fileIn.open(("./res/scripts/" + fileName).c_str());
+
+	std::string line;
+
+	if(fileIn.is_open())
+	{
+		while(fileIn.good())
+		{
+			getline(fileIn, line);
+			
+			std::vector<std::string> parts = Util::split(line, ' ');
+
+			if(parts[0] == "local")
+			{
+				old_.push_back(parts[1]);
+				parts[1] = Util::split(fileName, '.')[0] + "_" + parts[1];
+				new_.push_back(parts[1]);
+				parts[0] = "";
+				parent->scriptHelper.addLocalCode(addParts(parts));
+				//localCode.push_back(addParts(parts));
+
+
+				//FIND AND REPLACE CODE HERE OF ENTIRE LUA FILE, NOT FINALSCRIPT.LUA
+			}
+			else if(parts[0] == "function")
+			{
+				if(parts[1] == "update()")
+				{
+					std::string s;
+					while(s != "end")
+					{
+						getline(fileIn, s);
+						parent->scriptHelper.addUpdateCode(s);
+						//updateCode.push_back(s);
+					}
+				}
+			}
+
+			line = addParts(parts);
+			
+			// FIXTHIS
+			for(int i = 0; i < old_.size(); i++)
+			{
+				for(int i = 0; i < parent->scriptHelper.getUpdateCode().size(); i++)
+				//for(int i = 0; i < updateCode.size(); i++)
+				{
+					for(int j = 0; j < old_.size(); j++)
+					{
+						std::string update = parent->scriptHelper.getUpdateCode()[i];
+						Util::findAndReplace(update, old_[j], new_[j]);
+						parent->scriptHelper.setUpdateCode(update, i);
+						//Util::findAndReplace(updateCode[i], old_[j], new_[j]);
+					}
+				}
+			}
+		}
+
+		for(int i = 0; i < parent->scriptHelper.getLocalCode().size(); i++)
+		//for(int i = 0; i < localCode.size(); i++)
+		{
+			finalScript << parent->scriptHelper.getLocalCode()[i] << "\n";
+			//finalScript << localCode[i] << "\n";
+		}
+
+		finalScript << "function final_update()\n";
+
+		for(int i = 0; i < parent->scriptHelper.getUpdateCode().size(); i++)
+		//for(int i = 0; i < updateCode.size(); i++)
+		{
+			if(parent->scriptHelper.getUpdateCode()[i] != "end")
+			//if(updateCode[i] != "end")
+			{
+				finalScript << parent->scriptHelper.getUpdateCode()[i] << "\n";
+				//finalScript << updateCode[i] << "\n";
+			}
+		}
+		//finalScript << "\tprint(\"jjjj\")\n";
+		finalScript << "end\n";
+	}
+	else
+	{
+		std::cout << "Unable to load script " << fileName << std::endl;
+	}
+
+	old_.clear();
+	new_.clear();
+
+	fileIn.close();
+	finalScript.close();
+
+	return "";
+}
+
+std::string addParts(std::vector<std::string> s)
+{
+	std::string line;
+	for(int i = 0; i < s.size(); i++)
+	{
+		line += s[i] + " ";
+	}
+
+	return line;
 }
