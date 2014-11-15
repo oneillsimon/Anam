@@ -10,15 +10,15 @@ ProfileTimer Script::m_scriptTimer = ProfileTimer();
 
 std::string addParts(std::vector<std::string> s);
 
-Script::Script(const std::string& script, GameObject * p) :
-	scriptName("res/scripts/gen/" + p->scriptManager.getScriptName())
+Script::Script(const std::string& script, ScriptManager& scriptManager) :
+	scriptName("res/scripts/gen/" + scriptManager.getScriptName())
 {
 	finalScript.open(scriptName);
-	loadScript(script, p);
+	loadScript(script, scriptManager);
 
-	if(luaL_dofile(p->getL(), scriptName.c_str()));
+	if(luaL_dofile(scriptManager.getL(), scriptName.c_str()));
 	{
-		const char* err = lua_tostring(p->getL(), -1);
+		const char* err = lua_tostring(scriptManager.getL(), -1);
 		printf("%s\n", err);
 	}
 }
@@ -58,7 +58,7 @@ void Script::render(const Shader& shader, const RenderingEngine& renderingEngine
 {
 }
 
-void Script::loadScript(const std::string& fileName, GameObject* parent)
+void Script::loadScript(const std::string& fileName, ScriptManager& scriptManager)
 {
 	std::ifstream fileIn;
 	std::vector<std::string> old_;
@@ -82,7 +82,7 @@ void Script::loadScript(const std::string& fileName, GameObject* parent)
 				parts[1] = Util::split(fileName, '.')[0] + "_" + parts[1];
 				new_.push_back(parts[1]);
 				parts[0] = "";
-				parent->scriptManager.addLocalCode(addParts(parts));
+				scriptManager.addLocalCode(addParts(parts));
 			}
 			else if(parts[0] == "function")
 			{
@@ -92,34 +92,35 @@ void Script::loadScript(const std::string& fileName, GameObject* parent)
 					while(s != "end")
 					{
 						getline(fileIn, s);
-						parent->scriptManager.addUpdateCode(s);
+						scriptManager.addUpdateCode(s);
 					}
 				}
 			}
 
-			for(int i = 0; i < parent->scriptManager.getUpdateCode().size(); i++)
+			for(int i = 0; i < scriptManager.getUpdateCode().size(); i++)
 			{
 				for(int j = 0; j < old_.size(); j++)
 				{
-					std::string update = parent->scriptManager.getUpdateCode()[i];
+					std::string update = scriptManager.getUpdateCode()[i];
 					Util::findAndReplace(update, old_[j], new_[j]);
-					parent->scriptManager.setUpdateCode(update, i);
+					
+					scriptManager.setUpdateCode(update, i);
 				}
 			}
 		}
 
-		for(int i = 0; i < parent->scriptManager.getLocalCode().size(); i++)
+		for(int i = 0; i < scriptManager.getLocalCode().size(); i++)
 		{
-			finalScript << parent->scriptManager.getLocalCode()[i] << "\n";
+			finalScript << scriptManager.getLocalCode()[i] << "\n";
 		}
 
 		finalScript << "function final_update()\n";
 
-		for(int i = 0; i < parent->scriptManager.getUpdateCode().size(); i++)
+		for(int i = 0; i < scriptManager.getUpdateCode().size(); i++)
 		{
-			if(parent->scriptManager.getUpdateCode()[i] != "end")
+			if(scriptManager.getUpdateCode()[i] != "end")
 			{
-				finalScript << parent->scriptManager.getUpdateCode()[i] << "\n";
+				finalScript << scriptManager.getUpdateCode()[i] << "\n";
 			}
 		}
 		finalScript << "end\n";

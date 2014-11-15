@@ -192,9 +192,6 @@
     <ClCompile Include="Engine\Components\Game\Movement2D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Components\MoveScript.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Core\Matrix3.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -369,9 +366,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Components\Game\Movement2D.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Components\MoveScript.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Collision\rtCollisions.h">

@@ -13,13 +13,13 @@ class Script : public GameComponent
 private:
 	std::string scriptName;
 	std::ofstream finalScript;
-	void loadScript(const std::string& fileName, GameObject* parent);
+	void loadScript(const std::string& fileName, ScriptManager& scriptManager);
 
 protected:
 public:
 	static ProfileTimer m_scriptTimer;
 
-	Script(const std::string& script, GameObject* p);
+	Script(const std::string& script, ScriptManager& scriptManager);
 	~Script();
 
 	virtual void input(const Input& input, float delta);
