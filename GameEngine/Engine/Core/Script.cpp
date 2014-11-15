@@ -61,7 +61,6 @@ void Script::render(const Shader& shader, const RenderingEngine& renderingEngine
 void Script::loadScript(const std::string& fileName, GameObject* parent)
 {
 	std::ifstream fileIn;
-	std::vector<std::string> lines;
 	std::vector<std::string> old_;
 	std::vector<std::string> new_;
 
