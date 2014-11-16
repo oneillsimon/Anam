@@ -91,23 +91,22 @@ void Script::loadScript(const std::string& fileName, ScriptManager& scriptManage
 			{
 				if(parts[1] == "update()")
 				{
-					scriptManager.generateFunctionBody(fileIn, ScriptManager::FUNC_UPDATE);
+					scriptManager.generateFunctionBody(fileIn, FUNC_TYPE::UPDATE);
 				}
 				else
 				{
-					scriptManager.generateFunctionBody(fileIn, ScriptManager::FUNC_OTHER, addParts(parts));
+					scriptManager.generateFunctionBody(fileIn, FUNC_TYPE::OTHER, addParts(parts));
 				}
 			}
 
-			//for(int i = 0; i < scriptManager.getUpdateCode().size(); i++)
-			for(int i = 0; i < scriptManager.getFunctionCode(ScriptManager::FUNC_UPDATE).size(); i++)
+			for(int i = 0; i < scriptManager.getFunctionCode(FUNC_TYPE::UPDATE).size(); i++)
 			{
 				for(int j = 0; j < old_.size(); j++)
 				{
-					std::string update = scriptManager.getFunctionCode(ScriptManager::FUNC_UPDATE)[i];
+					std::string update = scriptManager.getFunctionCode(FUNC_TYPE::UPDATE)[i];
 					Util::findAndReplace(update, old_[j], new_[j]);
 					
-					scriptManager.setFunctionCode(update, i, ScriptManager::FUNC_UPDATE);
+					scriptManager.setFunctionCode(update, i, FUNC_TYPE::UPDATE);
 				}
 			}
 		}
@@ -144,18 +143,18 @@ void generateFinalScript(std::ofstream& file, ScriptManager& scriptManager)
 		file << scriptManager.getLocalCode()[i] << "\n";
 	}
 
-	for(int i = 0; i < scriptManager.getFunctionCode(ScriptManager::FUNC_OTHER).size(); i++)
+	for(int i = 0; i < scriptManager.getFunctionCode(FUNC_TYPE::OTHER).size(); i++)
 	{
-		file << scriptManager.getFunctionCode(ScriptManager::FUNC_OTHER)[i] << "\n";
+		file << scriptManager.getFunctionCode(FUNC_TYPE::OTHER)[i] << "\n";
 	}
 
 	file << "function final_update()\n";
 
-	for(int i = 0; i < scriptManager.getFunctionCode(ScriptManager::FUNC_UPDATE).size(); i++)
+	for(int i = 0; i < scriptManager.getFunctionCode(FUNC_TYPE::UPDATE).size(); i++)
 	{
-		if(scriptManager.getFunctionCode(ScriptManager::FUNC_UPDATE)[i] != "end")
+		if(scriptManager.getFunctionCode(FUNC_TYPE::UPDATE)[i] != "end")
 		{
-			file << scriptManager.getFunctionCode(ScriptManager::FUNC_UPDATE)[i] << "\n";
+			file << scriptManager.getFunctionCode(FUNC_TYPE::UPDATE)[i] << "\n";
 		}
 	}
 	file << "end\n";

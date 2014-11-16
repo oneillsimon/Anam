@@ -6,6 +6,14 @@
 
 #include "Lua.h"
 
+enum FUNC_TYPE
+{
+	INPUT,
+	UPDATE,
+	RENDER,
+	OTHER
+};
+
 class ScriptManager
 {
 private:
@@ -19,14 +27,6 @@ private:
 public:
 	ScriptManager();
 	~ScriptManager();
-
-	enum
-	{
-		FUNC_INPUT,
-		FUNC_UPDATE,
-		FUNC_RENDER,
-		FUNC_OTHER
-	};
 
 	void addFunctionCode(const std::string& code, int function);
 	void addLocalCode(const std::string& code);
