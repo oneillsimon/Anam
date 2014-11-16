@@ -9,6 +9,7 @@ static void injectIntoLua(lua_State* luaState, GameObject* t);
 ProfileTimer Script::m_scriptTimer = ProfileTimer();
 
 std::string addParts(std::vector<std::string> s);
+void generateFinalScript(std::ofstream& file, ScriptManager& scriptManager);
 
 Script::Script(const std::string& script, ScriptManager& scriptManager) :
 	m_scriptManager(scriptManager),
@@ -82,49 +83,36 @@ void Script::loadScript(const std::string& fileName, ScriptManager& scriptManage
 				old_.push_back(parts[1]);
 				parts[1] = Util::split(fileName, '.')[0] + "_" + parts[1];
 				new_.push_back(parts[1]);
-				parts[0] = "";
+				parts.erase(parts.begin());
+
 				scriptManager.addLocalCode(addParts(parts));
 			}
 			else if(parts[0] == "function")
 			{
 				if(parts[1] == "update()")
 				{
-					std::string s;
-					while(s != "end")
-					{
-						getline(fileIn, s);
-						scriptManager.addUpdateCode(s);
-					}
+					scriptManager.generateFunctionBody(fileIn, ScriptManager::FUNC_UPDATE);
+				}
+				else
+				{
+					scriptManager.generateFunctionBody(fileIn, ScriptManager::FUNC_OTHER, addParts(parts));
 				}
 			}
 
-			for(int i = 0; i < scriptManager.getUpdateCode().size(); i++)
+			//for(int i = 0; i < scriptManager.getUpdateCode().size(); i++)
+			for(int i = 0; i < scriptManager.getFunctionCode(ScriptManager::FUNC_UPDATE).size(); i++)
 			{
 				for(int j = 0; j < old_.size(); j++)
 				{
-					std::string update = scriptManager.getUpdateCode()[i];
+					std::string update = scriptManager.getFunctionCode(ScriptManager::FUNC_UPDATE)[i];
 					Util::findAndReplace(update, old_[j], new_[j]);
 					
-					scriptManager.setUpdateCode(update, i);
+					scriptManager.setFunctionCode(update, i, ScriptManager::FUNC_UPDATE);
 				}
 			}
 		}
 
-		for(int i = 0; i < scriptManager.getLocalCode().size(); i++)
-		{
-			m_finalScript << scriptManager.getLocalCode()[i] << "\n";
-		}
-
-		m_finalScript << "function final_update()\n";
-
-		for(int i = 0; i < scriptManager.getUpdateCode().size(); i++)
-		{
-			if(scriptManager.getUpdateCode()[i] != "end")
-			{
-				m_finalScript << scriptManager.getUpdateCode()[i] << "\n";
-			}
-		}
-		m_finalScript << "end\n";
+		generateFinalScript(m_finalScript, scriptManager);
 	}
 	else
 	{
@@ -147,4 +135,28 @@ std::string addParts(std::vector<std::string> s)
 	}
 
 	return line;
+}
+
+void generateFinalScript(std::ofstream& file, ScriptManager& scriptManager)
+{
+	for(int i = 0; i < scriptManager.getLocalCode().size(); i++)
+	{
+		file << scriptManager.getLocalCode()[i] << "\n";
+	}
+
+	for(int i = 0; i < scriptManager.getFunctionCode(ScriptManager::FUNC_OTHER).size(); i++)
+	{
+		file << scriptManager.getFunctionCode(ScriptManager::FUNC_OTHER)[i] << "\n";
+	}
+
+	file << "function final_update()\n";
+
+	for(int i = 0; i < scriptManager.getFunctionCode(ScriptManager::FUNC_UPDATE).size(); i++)
+	{
+		if(scriptManager.getFunctionCode(ScriptManager::FUNC_UPDATE)[i] != "end")
+		{
+			file << scriptManager.getFunctionCode(ScriptManager::FUNC_UPDATE)[i] << "\n";
+		}
+	}
+	file << "end\n";
 }

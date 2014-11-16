@@ -1,3 +1,6 @@
+#include <fstream>
+#include <iostream>
+
 #include "ScriptManager.h"
 
 ScriptManager::ScriptManager()
@@ -11,14 +14,39 @@ ScriptManager::~ScriptManager()
 {
 }
 
+void ScriptManager::addFunctionCode(const std::string& code, int function)
+{
+	switch(function)
+	{
+	case FUNC_INPUT:
+		break;
+	case FUNC_UPDATE:
+		m_updateCode.push_back(code);
+		break;
+	case FUNC_RENDER:
+		break;
+	case FUNC_OTHER:
+		m_otherCode.push_back(code);
+		break;
+	}
+}
+
 void ScriptManager::addLocalCode(const std::string& code)
 {
 	m_localCode.push_back(code);
 }
 
-void ScriptManager::addUpdateCode(const std::string& code)
+void ScriptManager::generateFunctionBody(std::ifstream& file, int function, const std::string& functionDeclartion)
 {
-	m_updateCode.push_back(code);
+	std::string s;
+
+	addFunctionCode(functionDeclartion, function);
+
+	while(s != "end")
+	{
+		getline(file, s);
+		addFunctionCode(s, function);
+	}
 }
 
 void ScriptManager::generateScriptName(void* object)
@@ -28,14 +56,26 @@ void ScriptManager::generateScriptName(void* object)
 	m_scriptName = address.str();
 }
 
+void ScriptManager::setFunctionCode(const std::string& code, int index, int function)
+{
+	switch(function)
+	{
+	case FUNC_INPUT:
+		break;
+	case FUNC_UPDATE:
+		m_updateCode[index] = code;
+		break;
+	case FUNC_RENDER:
+		break;
+	case FUNC_OTHER:
+		m_otherCode[index] = code;
+		break;
+	}
+}
+
 void ScriptManager::setLocalCode(const std::string& code, int index)
 {
 	m_localCode[index] = code;
-}
-
-void ScriptManager::setUpdateCode(const std::string& code, int index)
-{
-	m_updateCode[index] = code;
 }
 
 lua_State* ScriptManager::getL()
@@ -48,12 +88,24 @@ std::string ScriptManager::getScriptName() const
 	return m_scriptName;
 }
 
+std::vector<std::string> ScriptManager::getFunctionCode(int function) const
+{
+	switch(function)
+	{
+	case FUNC_INPUT:
+		break;
+	case FUNC_UPDATE:
+		return m_updateCode;
+		break;
+	case FUNC_RENDER:
+		break;
+	case FUNC_OTHER:
+		return m_otherCode;
+		break;
+	}
+}
+
 std::vector<std::string> ScriptManager::getLocalCode() const
 {
 	return m_localCode;
-}
-
-std::vector<std::string> ScriptManager::getUpdateCode() const
-{
-	return m_updateCode;
 }

@@ -5,8 +5,17 @@
 --	transform:setPosition(v)
 --end
 
+function printHello()
+	print("Hello World")
+end
+
+function add(n, m)
+	return n + m
+end
+
 local aor1 = Math.Vector3(0, 0, -1)
 function update()
-	--print("I am test.lua")
+	printHello()
+	print(add(4, 5))
 	transform:rotate(aor1, (5 * 3.14 / 180.0))
 end
