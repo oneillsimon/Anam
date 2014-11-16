@@ -5,7 +5,6 @@
 #include <fstream>
 #include <iostream>
 
-static void injectIntoLua(lua_State* luaState, GameObject* t);
 ProfileTimer Script::m_scriptTimer = ProfileTimer();
 
 std::string addParts(std::vector<std::string> s);
