@@ -37,10 +37,11 @@ void Script::update(float delta)
 {
 	m_scriptTimer.startInvocation();
 	lua_getglobal(m_parent->getL(), "final_update");
-	
+
 	if(lua_isfunction(m_parent->getL(), lua_gettop(m_parent->getL())))
 	{
-		lua_call(m_parent->getL(), 0, 0);
+		lua_pushnumber(m_parent->getL(), delta);
+		lua_call(m_parent->getL(), 1, 0);
 	}
 
 	Transform t = (Transform)luabridge::getGlobal(m_parent->getL(), "transform");
@@ -88,7 +89,7 @@ void Script::loadScript(const std::string& fileName, ScriptManager& scriptManage
 			}
 			else if(parts[0] == "function")
 			{
-				if(parts[1] == "update()")
+				if(parts[1] == "update(delta)")
 				{
 					scriptManager.generateFunctionBody(fileIn, FUNC_TYPE::UPDATE);
 				}
@@ -147,7 +148,7 @@ void generateFinalScript(std::ofstream& file, ScriptManager& scriptManager)
 		file << scriptManager.getFunctionCode(FUNC_TYPE::OTHER)[i] << "\n";
 	}
 
-	file << "function final_update()\n";
+	file << "function final_update(delta)\n";
 
 	for(int i = 0; i < scriptManager.getFunctionCode(FUNC_TYPE::UPDATE).size(); i++)
 	{

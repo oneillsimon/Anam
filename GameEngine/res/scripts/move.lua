@@ -9,7 +9,7 @@ end
 key = 1
 speed = 0.01
 
-function update()
+function update(delta)
 	print("I am move.lua")
 	--if key == 1 then
 	--	move(Math.Vector3(0, 1, 0), speed)

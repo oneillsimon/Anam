@@ -14,7 +14,7 @@ function add(n, m)
 end
 
 local aor1 = Math.Vector3(0, 0, -1)
-function update()
+function update(delta)
 	a = add(2, 4)
-	transform:rotate(aor1, (5 * 3.14 / 180.0))
+	transform:rotate(aor1, (90 * 3.14 / 180.0) * delta)
 end
