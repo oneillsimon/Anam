@@ -59,6 +59,8 @@ public:
 	void setScale(float scale);
 
 	void operator =(const Transform& t);
+	bool operator ==(const Transform& t);
+	bool operator !=(const Transform& t);
 };
 
 #endif

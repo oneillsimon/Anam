@@ -200,3 +200,15 @@ void Transform::operator =(const Transform& t)
 	setRotation(t.getRotation());
 	setScale(t.getScale());
 }
+
+bool Transform::operator ==(const Transform& t)
+{
+	return(m_position == t.getPosition() &&
+		   m_rotation == t.getRotation() &&
+		   m_scale == t.getScale());
+}
+
+bool Transform::operator !=(const Transform& t)
+{
+	return !(*this == t);
+}
