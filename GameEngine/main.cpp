@@ -57,11 +57,7 @@ void TestGame::init(const Window& window)
 	SpriteSheet s = SpriteSheet("", Material("", TEXTURE_BLANK, c), 1, 1);
 	obj_->addComponent(new SpriteRenderer(s));
 	obj_->enableScripting();
-	Script* script = new Script("rotate.lua", obj_->getScriptManager());
-	script->addParameter<float>(toRadians(12), "speed");
-
-	obj_->addComponent(script);
-
+	obj_->addComponent(new Script("test.lua", obj_->getScriptManager()));
 	obj_->addComponent(new Movement2D());
 
 	addToScene(obj_);
@@ -70,12 +66,7 @@ void TestGame::init(const Window& window)
 	SpriteSheet s_ = SpriteSheet("", Material("", TEXTURE_BLANK, c), 1, 1);
 	obj__->addComponent(new SpriteRenderer(s_));
 	obj__->enableScripting();
-	obj__->addComponent(new Script("test.lua", obj__->getScriptManager()));
-	Script* script__ = new Script("rotate.lua", obj__->getScriptManager());
-	script__->addParameter<float>(toRadians(0), "speed");
-	script__->addParameter<float>(toRadians(10), "speed2");
-	obj__->addComponent(script__);
-
+	//obj__->addComponent(new Script("rotate.lua", obj__->getScriptManager()));
 	addToScene(obj__);
 
 	for(int i = 0; i < 20; i++)

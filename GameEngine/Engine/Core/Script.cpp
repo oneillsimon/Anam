@@ -43,7 +43,14 @@ void Script::update(float delta)
 		lua_call(m_parent->getL(), 0, 0);
 	}
 
-	m_parent->setTransform((Transform)luabridge::getGlobal(m_parent->getL(), "transform"));
+	Transform t = (Transform)luabridge::getGlobal(m_parent->getL(), "transform");
+
+	if(*m_parent->getTransform() != t)
+	{
+		m_scriptManager.setGlobal(m_parent->getTransform(), "transform");
+	}
+
+	m_parent->setTransform(t);
 
 	m_scriptTimer.stopInvocation();
 }

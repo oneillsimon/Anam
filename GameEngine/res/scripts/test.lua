@@ -5,8 +5,8 @@
 --	transform:setPosition(v)
 --end
 
-local aor1 = Math.Vector3(0, 0, 1)
+local aor1 = Math.Vector3(0, 0, -1)
 function update()
 	--print("I am test.lua")
-	transform:rotate(aor1, speed2)
+	transform:rotate(aor1, (5 * 3.14 / 180.0))
 end
