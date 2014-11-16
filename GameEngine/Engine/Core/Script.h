@@ -23,6 +23,12 @@ public:
 	Script(const std::string& script, ScriptManager& scriptManager);
 	~Script();
 
+	template<class T>
+	void addParameter(T t, const std::string& name)
+	{
+		m_scriptManager.setGlobal(t, name);
+	}
+
 	virtual void input(const Input& input, float delta);
 	virtual void update(float delta);
 	virtual void render(const Shader& shader, const RenderingEngine& renderingEngine, const Camera& camera) const;
