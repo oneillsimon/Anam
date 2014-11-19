@@ -14,8 +14,20 @@ function add(n, m)
 end
 
 local aor1 = Math.Vector3(0, 0, -1)
+
+function input(delta)
+
+	if input:getKey(KEY_V) then
+		print("V key pressed")
+	end
+
+	if input:getMouse(RIGHT_MOUSE) then
+		print("right mouse clicked")
+	end
+
+end
+
 function update(delta)
-	printHello()
-	print(add(5, 1))
-	transform:rotate(aor1, (90 * 3.14 / 180.0) * delta)
+	--printHello()
+	--print(add(3, 4))
 end

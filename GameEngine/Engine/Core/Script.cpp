@@ -43,6 +43,15 @@ Script::~Script()
 
 void Script::input(const Input& input, float delta)
 {
+	lua_getglobal(m_parent->getL(), LUA_INPUT.c_str());
+
+	m_scriptManager.setGlobal(input, "input");
+
+	if(lua_isfunction(m_parent->getL(), lua_gettop(m_parent->getL())))
+	{
+		lua_pushnumber(m_parent->getL(), delta);
+		lua_call(m_parent->getL(), 1, 0);
+	}
 }
 
 void Script::update(float delta)

@@ -1,4 +1,4 @@
-function move(dir, amount)
+function moveTransform(dir, amount)
 	v = transform:getPosition()
 	v:setX(v:getX() + (amount * dir:getX()))
 	v:setY(v:getY() + (amount * dir:getY()))
@@ -6,18 +6,25 @@ function move(dir, amount)
 	transform:setPosition(v)
 end
 
-key = 1
-speed = 0.01
+local speed = 2
+
+function input(delta)
+	if input:getKey(KEY_UP) then
+		moveTransform(Math.Vector3(0, 1, 0), speed * delta)
+	end
+
+	if input:getKey(KEY_DOWN) then
+		moveTransform(Math.Vector3(0, -1, 0), speed * delta)
+	end
+
+	if input:getKey(KEY_LEFT) then
+		moveTransform(Math.Vector3(-1, 0, 0), speed * delta)
+	end
+
+	if input:getKey(KEY_RIGHT) then
+		moveTransform(Math.Vector3(1, 0, 0), speed * delta)
+	end
+end
 
 function update(delta)
-	print("I am move.lua")
-	--if key == 1 then
-	--	move(Math.Vector3(0, 1, 0), speed)
-	--elseif key == 2 then
-	--	move(Math.Vector3(0, -1, 0), speed)
-	--elseif key == 3 then
-	--	move(Math.Vector3(-1, 0, 0), speed)
-	--elseif key == 4 then
-	--	move(Math.Vector3(1, 0, 0), speed)
-	--end
 end
