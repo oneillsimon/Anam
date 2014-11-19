@@ -377,9 +377,9 @@ void registerKeys(lua_State* l)
 
 void registerMouse(lua_State* l)
 {
-	luabridge::setGlobal(l, static_cast<int>(Input::LEFT_MOUSE), "LEFT_MOUSE");
+	luabridge::setGlobal(l, static_cast<int>(Input::MOUSE_LEFT), "LEFT_MOUSE");
 	luabridge::setGlobal(l, static_cast<int>(Input::MIDDLE_MOUSE), "MIDDLE_MOUSE");
-	luabridge::setGlobal(l, static_cast<int>(Input::RIGHT_MOUSE), "RIGHT_MOUSE");
+	luabridge::setGlobal(l, static_cast<int>(Input::MOUSE_LEFT), "RIGHT_MOUSE");
 	luabridge::setGlobal(l, static_cast<int>(Input::MOUSE_WHEEL_UP), "MOUSE_WHEEL_UP");
 	luabridge::setGlobal(l, static_cast<int>(Input::MOUSE_WHEEL_DOWN), "MOUSE_WHEEL_DOWN");
 }

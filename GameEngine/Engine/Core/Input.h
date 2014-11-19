@@ -27,9 +27,9 @@ private:
 public:
 	enum Mouse
 	{
-		LEFT_MOUSE = 1,
+		MOUSE_LEFT = 1,
 		MIDDLE_MOUSE = 2,
-		RIGHT_MOUSE = 3,
+		MOUSE_RIGHT = 3,
 		MOUSE_WHEEL_UP = 4,
 		MOUSE_WHEEL_DOWN = 5
 	};

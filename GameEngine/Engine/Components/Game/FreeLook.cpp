@@ -42,7 +42,7 @@ void FreeLook::input(const Input& input, float delta)
 		}
 	}
 
-	if(input.getMouseDown(Input::LEFT_MOUSE))
+	if(input.getMouseDown(Input::MOUSE_LEFT))
 	{
 		input.setCursor(false);
 		input.setMousePosition(m_windowCentre);
