@@ -20,11 +20,6 @@ function input(delta)
 	if input:getKey(KEY_V) then
 		print("V key pressed")
 	end
-
-	if input:getMouse(RIGHT_MOUSE) then
-		print("right mouse clicked")
-	end
-
 end
 
 function update(delta)
