@@ -15,6 +15,7 @@ end
 
 local aor1 = Math.Vector3(0, 0, -1)
 function update(delta)
-	a = add(2, 4)
+	printHello()
+	print(add(5, 1))
 	transform:rotate(aor1, (90 * 3.14 / 180.0) * delta)
 end

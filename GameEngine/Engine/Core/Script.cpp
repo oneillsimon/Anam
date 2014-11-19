@@ -89,7 +89,7 @@ void Script::loadScript(const std::string& fileName, ScriptManager& scriptManage
 			getline(fileIn, line);
 			
 			std::vector<std::string> parts = Util::split(line, ' ');
-
+			
 			if(parts[0] == "local")
 			{
 				old_.push_back(parts[1]);
@@ -115,7 +115,16 @@ void Script::loadScript(const std::string& fileName, ScriptManager& scriptManage
 				}
 				else
 				{
-					scriptManager.generateFunctionBody(fileIn, FUNC_TYPE::OTHER, addParts(parts));
+					parts.erase(parts.begin());
+					std::string line_ = addParts(parts);
+					int paramsStart = line_.find('(');
+					std::string params = line_.substr(paramsStart, line_.length() - paramsStart);
+					line_ = line_.substr(0, paramsStart);
+					old_.push_back(line_);
+					line_ = Util::split(fileName, '.')[0] + "_" + line_;
+					new_.push_back(line_);
+
+					scriptManager.generateFunctionBody(fileIn, FUNC_TYPE::OTHER,  "function " + line_ + params);
 				}
 			}
 
