@@ -19,11 +19,13 @@ void ScriptManager::addFunctionCode(const std::string& code, int function)
 	switch(function)
 	{
 	case FUNC_TYPE::INPUT:
+		m_inputCode.push_back(code);
 		break;
 	case FUNC_TYPE::UPDATE:
 		m_updateCode.push_back(code);
 		break;
 	case FUNC_TYPE::RENDER:
+		m_renderCode.push_back(code);
 		break;
 	case FUNC_TYPE::OTHER:
 		m_otherCode.push_back(code);
@@ -61,11 +63,13 @@ void ScriptManager::setFunctionCode(const std::string& code, int index, int func
 	switch(function)
 	{
 	case FUNC_TYPE::INPUT:
+		m_inputCode[index] = code;
 		break;
 	case FUNC_TYPE::UPDATE:
 		m_updateCode[index] = code;
 		break;
 	case FUNC_TYPE::RENDER:
+		m_renderCode[index] = code;
 		break;
 	case FUNC_TYPE::OTHER:
 		m_otherCode[index] = code;
@@ -93,11 +97,13 @@ std::vector<std::string> ScriptManager::getFunctionCode(int function) const
 	switch(function)
 	{
 	case FUNC_TYPE::INPUT:
+		return m_inputCode;
 		break;
 	case FUNC_TYPE::UPDATE:
 		return m_updateCode;
 		break;
 	case FUNC_TYPE::RENDER:
+		return m_renderCode;
 		break;
 	case FUNC_TYPE::OTHER:
 		return m_otherCode;

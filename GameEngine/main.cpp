@@ -103,7 +103,7 @@ int main()
 	//getchar();
 
 	TestGame test;
-	CoreEngine engine(800, 600, 60, &test);
+	CoreEngine engine(800, 600, 120, &test);
 	engine.createWindow("Game ENGINE");
 	engine.start();
 
