@@ -90,6 +90,8 @@ void Script::loadScript(const std::string& fileName, ScriptManager& scriptManage
 	fileIn.open(("./res/scripts/" + fileName).c_str());
 
 	std::string line;
+	int seed = random(0, INT_MAX);
+	std::string seedPrefix = "s_" + std::to_string(seed);
 
 	if(fileIn.is_open())
 	{
@@ -102,7 +104,7 @@ void Script::loadScript(const std::string& fileName, ScriptManager& scriptManage
 			if(parts[0] == "local")
 			{
 				old_.push_back(parts[1]);
-				parts[1] = Util::split(fileName, '.')[0] + "_" + parts[1];
+				parts[1] = seedPrefix + "_" + parts[1];
 				new_.push_back(parts[1]);
 				parts.erase(parts.begin());
 
@@ -130,7 +132,7 @@ void Script::loadScript(const std::string& fileName, ScriptManager& scriptManage
 					std::string params = line_.substr(paramsStart, line_.length() - paramsStart);
 					line_ = line_.substr(0, paramsStart);
 					old_.push_back(line_);
-					line_ = Util::split(fileName, '.')[0] + "_" + line_;
+					line_ = seedPrefix + "_" + line_;
 					new_.push_back(line_);
 
 					scriptManager.generateFunctionBody(fileIn, FUNC_TYPE::OTHER,  "function " + line_ + params);
