@@ -39,7 +39,7 @@ static void tests();
 void TestGame::init(const Window& window)
 {
 	GameObject* cameraObj = new GameObject();
-	cameraObj->getTransform()->getPosition().setX(2);
+	cameraObj->getTransform()->getPosition().setX(0);
 	cameraObj->getTransform()->getPosition().setZ(0);
 	cameraObj->addComponent(new FreeLook(window.getCentre()));
 	//cameraObj->getTransform()->rotate(AXIS_Y, toRadians(180));
@@ -47,55 +47,25 @@ void TestGame::init(const Window& window)
 	cameraObj->addComponent(new CameraComponent(Matrix4().initPerspective(toRadians(70.0f), window.getAspectRatio(), 0.1f, 1000.0f)));
 
 	addToScene(cameraObj);
-	int y = 0;
-	int x = 2;
 
-	Colour c = COLOUR_AQUAMARINE;
-	Vector4 v = c.getCMYK();
+	GameObject* leftObj = new GameObject(Vector3(-4, 0, 10));
+	SpriteSheet s = SpriteSheet("", Material("", TEXTURE_BLANK, getRandomColour()), 1, 1);
+	leftObj->addComponent(new SpriteRenderer(s));
+	leftObj->enableScripting();
+	leftObj->addComponent(new Script("test2.lua", leftObj->getScriptManager()));
+	//leftObj->addComponent(new Script("rotate.lua", leftObj->getScriptManager()));
+	//leftObj->addComponent(new Script("move.lua", leftObj->getScriptManager()));
 
-	GameObject* obj_ = new GameObject(Vector3(-4, y -1, 10));
-	SpriteSheet s = SpriteSheet("", Material("", TEXTURE_BLANK, c), 1, 1);
-	obj_->addComponent(new SpriteRenderer(s));
-	obj_->enableScripting();
-	obj_->addComponent(new Script("test.lua", obj_->getScriptManager()));
-	//obj_->addComponent(new Script("rotate.lua", obj_->getScriptManager()));
-	obj_->addComponent(new Script("move.lua", obj_->getScriptManager()));
+	addToScene(leftObj);
 
-	addToScene(obj_);
-
-	GameObject* obj__ = new GameObject(Vector3(-6, y - 5, 10));
-	SpriteSheet s_ = SpriteSheet("", Material("", TEXTURE_BLANK, c), 1, 1);
-	obj__->addComponent(new SpriteRenderer(s_));
-	obj__->enableScripting();
-	//obj__->addComponent(new Script("move.lua", obj__->getScriptManager()));
-	//obj__->addComponent(new Script("rotate.lua", obj__->getScriptManager()));
-	addToScene(obj__);
-
-	for(int i = 0; i < 20; i++)
-	{
-		if(i >= 5)
-		{
-			y = -2;
-		}
-
-		GameObject* obj = new GameObject(Vector3(x * i, y, 10));
-		SpriteSheet s = SpriteSheet("", Material("", TEXTURE_BLANK, getRandomColour(c)), 1, 1);
-		obj->addComponent(new SpriteRenderer(s));
-		addToScene(obj);
-	}
-
-	for(int i = 0; i < 20; i++)
-	{
-		if(i >= 5)
-		{
-			y = -2;
-		}
-
-		GameObject* obj = new GameObject(Vector3(x * i, y - 2, 10));
-		SpriteSheet s = SpriteSheet("", Material("", TEXTURE_BLANK, getRandomColour(c)), 1, 1);
-		obj->addComponent(new SpriteRenderer(s));
-		addToScene(obj);
-	}
+	GameObject* rightObj = new GameObject(Vector3(4, 0, 10));
+	SpriteSheet s_ = SpriteSheet("", Material("", TEXTURE_BLANK, getRandomColour()), 1, 1);
+	rightObj->addComponent(new SpriteRenderer(s_));
+	rightObj->enableScripting();
+	//rightObj->addComponent(new Script("move.lua", rightObj->getScriptManager()));
+	//rightObj->addComponent(new Script("test.lua", rightObj->getScriptManager()));
+	//rightObj->addComponent(new Script("rotateControl.lua", rightObj->getScriptManager()));
+	addToScene(rightObj);
 }
 
 int main()

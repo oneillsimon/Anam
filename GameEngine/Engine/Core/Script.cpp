@@ -17,7 +17,6 @@ std::string LUA_INPUT = "final_input";
 std::string LUA_UPDATE = "final_update";
 std::string LUA_RENDER = "final_render";
 
-std::string addParts(std::vector<std::string> s);
 void generateFinalScript(std::ofstream& file, ScriptManager& scriptManager);
 void renameFunctionVariables(ScriptManager& scriptManager, int function, const std::vector<std::string>& old_, const std::vector<std::string>& new_);
 void generateFunctionCode(std::ofstream& file, ScriptManager& scriptManager, int function, bool includeEnd);
@@ -91,7 +90,7 @@ void Script::loadScript(const std::string& fileName, ScriptManager& scriptManage
 
 	std::string line;
 	int seed = random(0, INT_MAX);
-	std::string seedPrefix = "s_" + std::to_string(seed);
+	std::string seedPrefix = "s" + std::to_string(seed);
 
 	if(fileIn.is_open())
 	{
@@ -104,11 +103,11 @@ void Script::loadScript(const std::string& fileName, ScriptManager& scriptManage
 			if(parts[0] == "local")
 			{
 				old_.push_back(parts[1]);
-				parts[1] = seedPrefix + "_" + parts[1];
+				parts[1] = seedPrefix + "" + parts[1];
 				new_.push_back(parts[1]);
 				parts.erase(parts.begin());
 
-				scriptManager.addLocalCode(addParts(parts));
+				scriptManager.addLocalCode(Util::stringFromVector(parts, " "));
 			}
 			else if(parts[0] == "function")
 			{
@@ -127,7 +126,7 @@ void Script::loadScript(const std::string& fileName, ScriptManager& scriptManage
 				else
 				{
 					parts.erase(parts.begin());
-					std::string line_ = addParts(parts);
+					std::string line_ = Util::stringFromVector(parts, " ");
 					int paramsStart = line_.find('(');
 					std::string params = line_.substr(paramsStart, line_.length() - paramsStart);
 					line_ = line_.substr(0, paramsStart);
@@ -159,17 +158,6 @@ void Script::loadScript(const std::string& fileName, ScriptManager& scriptManage
 	m_finalScript.close();
 }
 
-std::string addParts(std::vector<std::string> s)
-{
-	std::string line;
-	for(int i = 0; i < s.size(); i++)
-	{
-		line += s[i] + " ";
-	}
-
-	return line;
-}
-
 void generateFinalScript(std::ofstream& file, ScriptManager& scriptManager)
 {
 	for(int i = 0; i < scriptManager.getLocalCode().size(); i++)
@@ -196,6 +184,7 @@ void renameFunctionVariables(ScriptManager& scriptManager, int function, const s
 		for(int j = 0; j < old_.size(); j++)
 		{
 			std::string s = scriptManager.getFunctionCode(function)[i];
+			std::vector<char> regex = { ':', '.' };
 			Util::findAndReplace(s, old_[j], new_[j]);
 			scriptManager.setFunctionCode(s, i, function);
 		}
