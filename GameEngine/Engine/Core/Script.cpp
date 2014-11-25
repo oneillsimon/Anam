@@ -103,7 +103,7 @@ void Script::loadScript(const std::string& fileName, ScriptManager& scriptManage
 			if(parts[0] == "local")
 			{
 				old_.push_back(parts[1]);
-				parts[1] = seedPrefix + "" + parts[1];
+				parts[1] = seedPrefix + parts[1];
 				new_.push_back(parts[1]);
 				parts.erase(parts.begin());
 
@@ -131,7 +131,7 @@ void Script::loadScript(const std::string& fileName, ScriptManager& scriptManage
 					std::string params = line_.substr(paramsStart, line_.length() - paramsStart);
 					line_ = line_.substr(0, paramsStart);
 					old_.push_back(line_);
-					line_ = seedPrefix + "_" + line_;
+					line_ = seedPrefix + line_;
 					new_.push_back(line_);
 
 					scriptManager.generateFunctionBody(fileIn, FUNC_TYPE::OTHER,  "function " + line_ + params);
@@ -185,7 +185,7 @@ void renameFunctionVariables(ScriptManager& scriptManager, int function, const s
 		{
 			std::string s = scriptManager.getFunctionCode(function)[i];
 			std::vector<char> regex = { ':', '.' };
-			Util::findAndReplace(s, old_[j], new_[j]);
+			Util::findAndReplace(s, old_[j], new_[j], regex);
 			scriptManager.setFunctionCode(s, i, function);
 		}
 	}

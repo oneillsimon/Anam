@@ -77,18 +77,19 @@ void Util::findAndReplace(std::string& subject, const std::string& search, const
 			if(!isAlphaNumeric(before) && !isAlphaNumeric(after))
 			{
 				subject.replace(pos, search.length(), replace);
-				printf("replace %s\n", subject.c_str());
 			}
 		}
 		else
 		{
 			for(int i = 0; i < regex.size(); i++)
 			{
-				if((before != regex[i] && after != regex[i]) &&
-					(!isAlphaNumeric(before) && !isAlphaNumeric(after)))
+				if(!(isAlphaNumeric(before) || isAlphaNumeric(after) || before == regex[i] || after == regex[i]))
 				{
 					subject.replace(pos, search.length(), replace);
-					printf("replace %s\n", subject.c_str());
+					break;
+				}
+				else if(before == regex[i] || after == regex[i])
+				{
 					break;
 				}
 			}
@@ -113,16 +114,3 @@ std::string Util::stringFromVector(std::vector<std::string> s, const std::string
 
 	return line;
 }
-
-//void Util::findAndReplace(std::string& s, const std::string& what, const std::string& with)
-//{
-//	size_t pos = 0;
-//	while((pos = s.find(what, pos)) != std::string::npos)
-//	{
-//		if(s.at(pos - 1) != with.at(with.length() - what.length() - 1))
-//		{
-//			s.replace(pos, what.length(), with);
-//		}
-//		pos += with.length();
-//	}
-//}

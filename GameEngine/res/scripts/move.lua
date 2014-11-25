@@ -6,6 +6,10 @@ function move(dir, amount)
 	transform:setPosition(v)
 end
 
+function sayHello()
+	print("Hello")
+end
+
 local speed = 2
 
 function input(delta)
@@ -27,4 +31,9 @@ function input(delta)
 end
 
 function update(delta)
+
+	if input:getKey(KEY_RETURN) then
+		sayHello()
+	end
+
 end

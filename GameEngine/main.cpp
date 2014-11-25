@@ -52,20 +52,21 @@ void TestGame::init(const Window& window)
 	SpriteSheet s = SpriteSheet("", Material("", TEXTURE_BLANK, getRandomColour()), 1, 1);
 	leftObj->addComponent(new SpriteRenderer(s));
 	leftObj->enableScripting();
-	leftObj->addComponent(new Script("test2.lua", leftObj->getScriptManager()));
-	//leftObj->addComponent(new Script("rotate.lua", leftObj->getScriptManager()));
-	//leftObj->addComponent(new Script("move.lua", leftObj->getScriptManager()));
+	//leftObj->addComponent(new Script("test2.lua", leftObj->getScriptManager()));
+	leftObj->addComponent(new Script("rotate.lua", leftObj->getScriptManager()));
+	leftObj->addComponent(new Script("move.lua", leftObj->getScriptManager()));
+	leftObj->addComponent(new Script("rotateControl.lua", leftObj->getScriptManager()));
 
 	addToScene(leftObj);
 
-	GameObject* rightObj = new GameObject(Vector3(4, 0, 10));
-	SpriteSheet s_ = SpriteSheet("", Material("", TEXTURE_BLANK, getRandomColour()), 1, 1);
-	rightObj->addComponent(new SpriteRenderer(s_));
-	rightObj->enableScripting();
-	//rightObj->addComponent(new Script("move.lua", rightObj->getScriptManager()));
-	//rightObj->addComponent(new Script("test.lua", rightObj->getScriptManager()));
-	//rightObj->addComponent(new Script("rotateControl.lua", rightObj->getScriptManager()));
-	addToScene(rightObj);
+	//GameObject* rightObj = new GameObject(Vector3(4, 0, 10));
+	//SpriteSheet s_ = SpriteSheet("", Material("", TEXTURE_BLANK, getRandomColour()), 1, 1);
+	//rightObj->addComponent(new SpriteRenderer(s_));
+	//rightObj->enableScripting();
+	////rightObj->addComponent(new Script("move.lua", rightObj->getScriptManager()));
+	////rightObj->addComponent(new Script("test.lua", rightObj->getScriptManager()));
+	////rightObj->addComponent(new Script("rotateControl.lua", rightObj->getScriptManager()));
+	//addToScene(rightObj);
 }
 
 int main()
