@@ -7,6 +7,9 @@
 void registerKeys(lua_State* l);
 void registerMouse(lua_State* l);
 
+float toRadiansLua(float degrees);
+float randomLua(float min, float max);
+
 void Lua::registerMembers(lua_State* l)
 {
 	char* nsCore = "Core";
@@ -42,6 +45,10 @@ void Lua::registerMembers(lua_State* l)
 
 	luabridge::getGlobalNamespace(l)
 		.beginNamespace(nsMath)
+
+		.addFunction("toRadians", &toRadiansLua)
+		.addFunction("random", &randomLua)
+
 		.beginClass<Vector2>("Vector2")
 		.addConstructor<void(*)(const float&, const float&)>()
 		.addFunction("length", &Vector2::length)
@@ -382,4 +389,14 @@ void registerMouse(lua_State* l)
 	luabridge::setGlobal(l, static_cast<int>(Input::MOUSE_LEFT), "MOUSE_RIGHT");
 	luabridge::setGlobal(l, static_cast<int>(Input::MOUSE_WHEEL_UP), "MOUSE_WHEEL_UP");
 	luabridge::setGlobal(l, static_cast<int>(Input::MOUSE_WHEEL_DOWN), "MOUSE_WHEEL_DOWN");
+}
+
+float toRadiansLua(float degrees)
+{
+	return toRadians(degrees);
+}
+
+float randomLua(float min, float max)
+{
+	return random(min, max);
 }
