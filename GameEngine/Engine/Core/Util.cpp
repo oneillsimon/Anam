@@ -83,13 +83,14 @@ void Util::findAndReplace(std::string& subject, const std::string& search, const
 		{
 			for(int i = 0; i < regex.size(); i++)
 			{
+				if(before == regex[i] || after == regex[i])
+				{
+					break;
+				}
+				
 				if(!(isAlphaNumeric(before) || isAlphaNumeric(after) || before == regex[i] || after == regex[i]))
 				{
 					subject.replace(pos, search.length(), replace);
-					break;
-				}
-				else if(before == regex[i] || after == regex[i])
-				{
 					break;
 				}
 			}

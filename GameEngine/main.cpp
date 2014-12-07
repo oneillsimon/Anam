@@ -45,28 +45,83 @@ void TestGame::init(const Window& window)
 	//cameraObj->getTransform()->rotate(AXIS_Y, toRadians(180));
 	cameraObj->addComponent(new FreeMove());
 	cameraObj->addComponent(new CameraComponent(Matrix4().initPerspective(toRadians(70.0f), window.getAspectRatio(), 0.1f, 1000.0f)));
+	cameraObj->getTransform()->getPosition().setY(4);
+	cameraObj->getTransform()->rotate(AXIS_X, toRadians(30));
 
 	addToScene(cameraObj);
 
-	GameObject* leftObj = new GameObject(Vector3(-4, 0, 10));
-	SpriteSheet s = SpriteSheet("", Material("", TEXTURE_BLANK, getRandomColour()), 1, 1);
-	leftObj->addComponent(new SpriteRenderer(s));
-	leftObj->enableScripting();
-	//leftObj->addComponent(new Script("test2.lua", leftObj->getScriptManager()));
-	leftObj->addComponent(new Script("rotate.lua", leftObj->getScriptManager()));
-	leftObj->addComponent(new Script("move.lua", leftObj->getScriptManager()));
-	leftObj->addComponent(new Script("rotateControl.lua", leftObj->getScriptManager()));
+	////DirectionalLight* d = new DirectionalLight(COLOUR_WHITE, 1);
+	////addToScene(new GameObject()->addComponent(new DirectionalLight(COLOUR_WHITE, 1.0f)));
 
-	addToScene(leftObj);
+	//Material* m = new Material("", TEXTURE_BLANK, Colour(0, 0, 0), 1.0f, 8.0f);
+	//Mesh* mm = new Mesh("monkey3.obj");
+
+
+
+	//GameObject* leftObj = new GameObject(Vector3(-4, 0, 10));
+	//leftObj->getTransform()->setScale(0.8f);
+
+	//cameraObj->getTransform()->setPosition(Vector3(-4, 0, 12));
+	//cameraObj->getTransform()->rotate(AXIS_Y, toRadians(180));
+	////leftObj->getTransform()->rotate(AXIS_Y, toRadians(180));
+	//SpriteSheet s = SpriteSheet("", *m, 1, 1);
+	////leftObj->addComponent(new SpriteRenderer(s));
+	//leftObj->addComponent(new MeshRenderer(*mm, *m));
+	//leftObj->enableScripting();
+	////leftObj->addComponent(new Script("rotate.lua", leftObj->getScriptManager()));
+
+	//addToScene(leftObj);
 
 	//GameObject* rightObj = new GameObject(Vector3(4, 0, 10));
 	//SpriteSheet s_ = SpriteSheet("", Material("", TEXTURE_BLANK, getRandomColour()), 1, 1);
 	//rightObj->addComponent(new SpriteRenderer(s_));
 	//rightObj->enableScripting();
-	////rightObj->addComponent(new Script("move.lua", rightObj->getScriptManager()));
-	////rightObj->addComponent(new Script("test.lua", rightObj->getScriptManager()));
-	////rightObj->addComponent(new Script("rotateControl.lua", rightObj->getScriptManager()));
+	//rightObj->addComponent(new Script("move.lua", rightObj->getScriptManager()));
+	//rightObj->addComponent(new Script("test.lua", rightObj->getScriptManager()));
+	//rightObj->addComponent(new Script("rotateControl.lua", rightObj->getScriptManager()));
 	//addToScene(rightObj);
+
+	//GameObject* light = new GameObject(Vector3(-4, 0, -10));
+	//light->addComponent(new DirectionalLight(COLOUR_WHITE, 0.4f));
+	//light->getTransform()->rotate(AXIS_XZ, toRadians(-45));
+	////cameraObj->addChild(light);
+	//addToScene(light);
+
+	//DirectionalLight* whiteLight = new DirectionalLight(COLOUR_WHITE, 0.4f);
+	//DirectionalLight* blueLight = new DirectionalLight(COLOUR_BLUE,	0.2f);
+	//DirectionalLight* yellowLight = new DirectionalLight(COLOUR_YELLOW, 1.4f);
+	//
+	//GameObject* whitelightObj = new GameObject();
+	////whitelightObj->addComponent(whiteLight);
+	////whitelightObj->getTransform()->rotate(AXIS_Y, toRadians(90));
+	////whitelightObj->getTransform()->rotate(AXIS_X, toRadians(45));
+	//GameObject* bluelightObj = new GameObject();
+	//bluelightObj->getTransform()->rotate(AXIS_X, toRadians(-90));
+	//bluelightObj->addComponent(blueLight);
+	//GameObject* yellowlightObj = new GameObject();
+	//yellowlightObj->addComponent(yellowLight);
+
+	//Mesh terrain = Mesh("terrain02.obj");
+	//MeshRenderer* mRenderer = new MeshRenderer(terrain, MATERIAL_DEFAULT);
+	//
+	//GameObject* terrainObj = new GameObject();
+	//terrainObj->addComponent(mRenderer);
+	//
+	////addToScene(whitelightObj);
+	//addToScene(bluelightObj);
+	//addToScene(yellowlightObj);
+	//addToScene(terrainObj);
+
+	GameObject* planeObj = new GameObject();
+	planeObj->getTransform()->setScale(5);
+	planeObj->addComponent(new MeshRenderer(Mesh("plane.obj"), MATERIAL_DEFAULT));
+
+	GameObject* spotLight = new GameObject(Vector3(0, 1, 0));
+	//spotLight->getTransform()->rotate(AXIS_X, toRadians(90));
+	spotLight->addComponent(new SpotLight(COLOUR_GREEN, 0.4f, Attenuation(0, 0, 1), 20.0f));
+
+	addToScene(planeObj);
+	addToScene(spotLight);
 }
 
 int main()

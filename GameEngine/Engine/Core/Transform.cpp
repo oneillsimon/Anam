@@ -98,7 +98,7 @@ Matrix4 Transform::getTransformation() const
 	scaleMatrix.initScale(m_scale.getX(), m_scale.getY(), m_scale.getZ());
 
 	Matrix4 result = translationMatrix * m_rotation.toRotationMatrix() * scaleMatrix;
-	
+	Matrix4 a = getParentMatrix() * result;
 	return getParentMatrix() * result;
 }
 
