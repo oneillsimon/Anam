@@ -27,7 +27,7 @@ class TestGame : public Game
 public:
 	TestGame(){};
 	
-	virtual void init(const Window& window);
+	virtual void initialise(const Window& window);
 protected:
 private:
 	//TestGame(const TestGame& other) {}
@@ -36,7 +36,7 @@ private:
 
 static void tests();
 
-void TestGame::init(const Window& window)
+void TestGame::initialise(const Window& window)
 {
 	GameObject* cameraObj = new GameObject();
 	cameraObj->getTransform()->getPosition().setX(0);
@@ -140,7 +140,7 @@ void TestGame::init(const Window& window)
 	addToScene(cube1);
 	cube1->addComponent(new ScriptManager(std::vector<std::string>{"rotateControl.lua", "rotateControl.lua"}));
 
-	Game::init(window);
+	Game::initialise(window);
 }
 
 int main()

@@ -65,7 +65,7 @@ void CoreEngine::run()
 {
 	m_isRunning = true;
 
-	m_game->init(*m_window);
+	m_game->initialise(*m_window);
 
 	double lastTime = Time::getTime();
 	double unproccessedTime = 0;

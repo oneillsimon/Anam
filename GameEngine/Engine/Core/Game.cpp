@@ -1,6 +1,6 @@
 #include "Game.h"
 
-void Game::init(const Window& window)
+void Game::initialise(const Window& window)
 {
 	rootObject.initialiseAll();
 }
