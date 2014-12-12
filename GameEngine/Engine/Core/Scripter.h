@@ -50,7 +50,7 @@ public:
 	void generateFunctionBody(std::ifstream& file, int function, const std::string& functionDeclartion = "");
 
 	template<class T>
-	void setGlobal(T t, const std::string& name)
+	void setGlobal(const std::string& name, T t)
 	{
 		luabridge::setGlobal(m_L, t, name.c_str());
 	}

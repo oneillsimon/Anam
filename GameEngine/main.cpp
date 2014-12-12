@@ -119,20 +119,20 @@ void TestGame::initialise(const Window& window)
 
 	GameObject* cube = new GameObject(Vector3(0, 2, 0), Quaternion(), 0.5f);
 	cube->addComponent(new MeshRenderer(Mesh("cube.obj"), Material("", TEXTURE_BLANK, COLOUR_BLUE)));
-	cube->addComponent(new FreeMove(10, Input::KEY_UP, Input::KEY_DOWN, Input::KEY_LEFT, Input::KEY_RIGHT));
+	//cube->addComponent(new FreeMove(10, Input::KEY_UP, Input::KEY_DOWN, Input::KEY_LEFT, Input::KEY_RIGHT));
 
-	//Scripter* scripter = new Scripter({"", ""});
-	//scripter->addScript("rotateControl.lua");
-	//
-	//cube->addComponent(scripter);
-	//addToScene(cube);
+	Scripter* scripter = new Scripter({"", ""});
+	scripter->addScript("rotateControl.lua");
+	
+	cube->addComponent(scripter);
+	addToScene(cube);
 
 	GameObject* cube1 = new GameObject(Vector3(5, 2, 0), Quaternion(), 0.5f);
 	cube1->addComponent(new MeshRenderer(Mesh("cube.obj"), Material("", TEXTURE_BLANK, COLOUR_ORANGE)));
 	cube1->addComponent(new FreeMove(10, Input::KEY_UP, Input::KEY_DOWN, Input::KEY_LEFT, Input::KEY_RIGHT));
 
 	addToScene(cube1);
-	cube1->addComponent(new Scripter({"rotateControl.lua", "g.lua"}));
+	cube1->addComponent(new Scripter({"rotateControl.lua", "move.lua"}));
 
 	Game::initialise(window);
 }

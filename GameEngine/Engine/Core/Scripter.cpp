@@ -45,14 +45,14 @@ Scripter::~Scripter()
 
 void Scripter::initialise()
 {
-	setGlobal(m_parent->getTransform(), "transform");
+	setGlobal("transform", m_parent->getTransform());
 }
 
 void Scripter::input(const Input& input, float delta)
 {
 	lua_getglobal(m_L, LUA_INPUT.c_str());
 	
-	setGlobal(input, "input");
+	setGlobal("input", input);
 	
 	if(lua_isfunction(m_L, lua_gettop(m_L)))
 	{
@@ -75,7 +75,7 @@ void Scripter::update(float delta)
 	
 	if(*m_parent->getTransform() != t)
 	{
-		setGlobal(m_parent->getTransform(), "transform");
+		setGlobal("transform", m_parent->getTransform());
 		m_parent->setTransform(t);
 	}
 }
@@ -152,7 +152,7 @@ void Scripter::loadScript(const std::string& fileName)
 	}
 	else
 	{
-		std::cout << "Unable to load script " << fileName << std::endl;
+		std::cout << "Unable to load script \"" << fileName << "\"" << std::endl;
 	}
 
 	old_.clear();
