@@ -47,28 +47,28 @@ void Scripter::initialise()
 
 void Scripter::input(const Input& input, float delta)
 {
-	lua_getglobal(getL(), LUA_INPUT.c_str());
+	lua_getglobal(m_L, LUA_INPUT.c_str());
 	
 	setGlobal(input, "input");
 	
-	if(lua_isfunction(getL(), lua_gettop(getL())))
+	if(lua_isfunction(m_L, lua_gettop(m_L)))
 	{
-		lua_pushnumber(getL(), delta);
-		lua_call(getL(), 1, 0);
+		lua_pushnumber(m_L, delta);
+		lua_call(m_L, 1, 0);
 	}
 }
 
 void Scripter::update(float delta)
 {
-	lua_getglobal(getL(), LUA_UPDATE.c_str());
+	lua_getglobal(m_L, LUA_UPDATE.c_str());
 	
-	if(lua_isfunction(getL(), lua_gettop(getL())))
+	if(lua_isfunction(m_L, lua_gettop(m_L)))
 	{
-		lua_pushnumber(getL(), delta);
-		lua_call(getL(), 1, 0);
+		lua_pushnumber(m_L, delta);
+		lua_call(m_L, 1, 0);
 	}
 
-	Transform t = (Transform)luabridge::getGlobal(getL(), "transform");
+	Transform t = (Transform)luabridge::getGlobal(m_L, "transform");
 	
 	if(*m_parent->getTransform() != t)
 	{
@@ -164,7 +164,7 @@ void Scripter::addScript(const std::string& script)
 	loadScript(script);
 	m_finalScript.close();
 
-	if(luaL_dofile(getL(), m_scriptName.c_str()))
+	if(luaL_dofile(m_L, m_scriptName.c_str()))
 	{
 		const char* err = lua_tostring(m_L, -1);
 		printf("%s\n", err);
