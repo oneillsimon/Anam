@@ -127,7 +127,7 @@ void TestGame::initialise(const Window& window)
 
 	//addToScene(planeObj);
 
-	ScriptManager* scripter = new ScriptManager();
+	Scripter* scripter = new Scripter();
 	scripter->addScript("rotateControl.lua");
 
 	cube->addComponent(scripter);
@@ -138,7 +138,7 @@ void TestGame::initialise(const Window& window)
 	cube1->addComponent(new FreeMove(10, Input::KEY_UP, Input::KEY_DOWN, Input::KEY_LEFT, Input::KEY_RIGHT));
 
 	addToScene(cube1);
-	cube1->addComponent(new ScriptManager(std::vector<std::string>{"rotateControl.lua", "rotateControl.lua"}));
+	cube1->addComponent(new Scripter(std::vector<std::string>{"rotateControl.lua", "rotateControl.lua"}));
 
 	Game::initialise(window);
 }

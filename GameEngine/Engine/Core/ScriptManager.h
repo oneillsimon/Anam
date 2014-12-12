@@ -19,7 +19,7 @@ enum FUNC_TYPE
 	OTHER
 };
 
-class ScriptManager : public GameComponent
+class Scripter : public GameComponent
 {
 private:
 	lua_State* m_L;
@@ -35,8 +35,8 @@ private:
 	void loadScript(const std::string& fileName);
 
 public:
-	ScriptManager(std::vector<std::string> scripts = {});
-	~ScriptManager();
+	Scripter(std::vector<std::string> scripts = {});
+	~Scripter();
 
 	virtual void initialise();
 	virtual void input(const Input& input, float delta);

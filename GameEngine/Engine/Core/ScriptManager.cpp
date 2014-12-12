@@ -17,11 +17,11 @@ std::string LUA_INPUT = "final_input";
 std::string LUA_UPDATE = "final_update";
 std::string LUA_RENDER = "final_render";
 
-void generateFinalScript(std::ofstream& file, ScriptManager& scriptManager);
-void renameFunctionVariables(ScriptManager& scriptManager, int function, const std::vector<std::string>& old_, const std::vector<std::string>& new_);
-void generateFunctionCode(std::ofstream& file, ScriptManager& scriptManager, int function, bool includeEnd);
+void generateFinalScript(std::ofstream& file, Scripter& scripter);
+void renameFunctionVariables(Scripter& scripter, int function, const std::vector<std::string>& old_, const std::vector<std::string>& new_);
+void generateFunctionCode(std::ofstream& file, Scripter& scripter, int function, bool includeEnd);
 
-ScriptManager::ScriptManager(std::vector<std::string> scripts)
+Scripter::Scripter(std::vector<std::string> scripts)
 {
 	m_L = luaL_newstate();
 	luaL_openlibs(m_L);
@@ -35,17 +35,17 @@ ScriptManager::ScriptManager(std::vector<std::string> scripts)
 	}
 }
 
-ScriptManager::~ScriptManager()
+Scripter::~Scripter()
 {
 	remove(m_scriptName.c_str());
 }
 
-void ScriptManager::initialise()
+void Scripter::initialise()
 {
 	setGlobal(m_parent->getTransform(), "transform");
 }
 
-void ScriptManager::input(const Input& input, float delta)
+void Scripter::input(const Input& input, float delta)
 {
 	lua_getglobal(getL(), LUA_INPUT.c_str());
 	
@@ -58,7 +58,7 @@ void ScriptManager::input(const Input& input, float delta)
 	}
 }
 
-void ScriptManager::update(float delta)
+void Scripter::update(float delta)
 {
 	lua_getglobal(getL(), LUA_UPDATE.c_str());
 	
@@ -77,11 +77,11 @@ void ScriptManager::update(float delta)
 	}
 }
 
-void ScriptManager::render(const Shader& shader, const RenderingEngine& renderingEngine, const Camera& camera) const
+void Scripter::render(const Shader& shader, const RenderingEngine& renderingEngine, const Camera& camera) const
 {
 }
 
-void ScriptManager::loadScript(const std::string& fileName)
+void Scripter::loadScript(const std::string& fileName)
 {
 	std::ifstream fileIn;
 	std::vector<std::string> old_;
@@ -158,7 +158,7 @@ void ScriptManager::loadScript(const std::string& fileName)
 	fileIn.close();
 }
 
-void ScriptManager::addScript(const std::string& script)
+void Scripter::addScript(const std::string& script)
 {
 	m_finalScript.open(m_scriptName);
 	loadScript(script);
@@ -171,7 +171,7 @@ void ScriptManager::addScript(const std::string& script)
 	}
 }
 
-void ScriptManager::addFunctionCode(const std::string& code, int function)
+void Scripter::addFunctionCode(const std::string& code, int function)
 {
 	switch(function)
 	{
@@ -190,12 +190,12 @@ void ScriptManager::addFunctionCode(const std::string& code, int function)
 	}
 }
 
-void ScriptManager::addLocalCode(const std::string& code)
+void Scripter::addLocalCode(const std::string& code)
 {
 	m_localCode.push_back(code);
 }
 
-void ScriptManager::generateFunctionBody(std::ifstream& file, int function, const std::string& functionDeclartion)
+void Scripter::generateFunctionBody(std::ifstream& file, int function, const std::string& functionDeclartion)
 {
 	std::string s;
 
@@ -208,14 +208,14 @@ void ScriptManager::generateFunctionBody(std::ifstream& file, int function, cons
 	}
 }
 
-void ScriptManager::generateScriptName(void* object)
+void Scripter::generateScriptName(void* object)
 {
 	std::ostringstream address;
 	address << "res/scripts/gen/" << (void const *)object << ".lua";
 	m_scriptName = address.str();
 }
 
-void ScriptManager::setFunctionCode(const std::string& code, int index, int function)
+void Scripter::setFunctionCode(const std::string& code, int index, int function)
 {
 	switch(function)
 	{
@@ -234,22 +234,22 @@ void ScriptManager::setFunctionCode(const std::string& code, int index, int func
 	}
 }
 
-void ScriptManager::setLocalCode(const std::string& code, int index)
+void Scripter::setLocalCode(const std::string& code, int index)
 {
 	m_localCode[index] = code;
 }
 
-lua_State* ScriptManager::getL()
+lua_State* Scripter::getL()
 {
 	return m_L;
 }
 
-std::string ScriptManager::getScriptName() const
+std::string Scripter::getScriptName() const
 {
 	return m_scriptName;
 }
 
-std::vector<std::string> ScriptManager::getFunctionCode(int function) const
+std::vector<std::string> Scripter::getFunctionCode(int function) const
 {
 	switch(function)
 	{
@@ -268,12 +268,12 @@ std::vector<std::string> ScriptManager::getFunctionCode(int function) const
 	}
 }
 
-std::vector<std::string> ScriptManager::getLocalCode() const
+std::vector<std::string> Scripter::getLocalCode() const
 {
 	return m_localCode;
 }
 
-void generateFinalScript(std::ofstream& file, ScriptManager& scriptManager)
+void generateFinalScript(std::ofstream& file, Scripter& scriptManager)
 {
 	for(int i = 0; i < scriptManager.getLocalCode().size(); i++)
 	{
@@ -292,33 +292,33 @@ void generateFinalScript(std::ofstream& file, ScriptManager& scriptManager)
 	generateFunctionCode(file, scriptManager, FUNC_TYPE::RENDER, false);
 }
 
-void renameFunctionVariables(ScriptManager& scriptManager, int function, const std::vector<std::string>& old_, const std::vector<std::string>& new_)
+void renameFunctionVariables(Scripter& scripter, int function, const std::vector<std::string>& old_, const std::vector<std::string>& new_)
 {
-	for(int i = 0; i < scriptManager.getFunctionCode(function).size(); i++)
+	for(int i = 0; i < scripter.getFunctionCode(function).size(); i++)
 	{
 		for(int j = 0; j < old_.size(); j++)
 		{
-			std::string s = scriptManager.getFunctionCode(function)[i];
+			std::string s = scripter.getFunctionCode(function)[i];
 			std::vector<char> regex = { ':', '.' };
 			Util::findAndReplace(s, old_[j], new_[j], regex);
-			scriptManager.setFunctionCode(s, i, function);
+			scripter.setFunctionCode(s, i, function);
 		}
 	}
 }
 
-void generateFunctionCode(std::ofstream& file, ScriptManager& scriptManager, int function, bool includeAnyEnds)
+void generateFunctionCode(std::ofstream& file, Scripter& scripter, int function, bool includeAnyEnds)
 {
-	for(int i = 0; i < scriptManager.getFunctionCode(function).size(); i++)
+	for(int i = 0; i < scripter.getFunctionCode(function).size(); i++)
 	{
-		if(scriptManager.getFunctionCode(function)[i] != "end")
+		if(scripter.getFunctionCode(function)[i] != "end")
 		{
-			file << scriptManager.getFunctionCode(function)[i] << "\n";
+			file << scripter.getFunctionCode(function)[i] << "\n";
 		}
 		else
 		{
 			if(includeAnyEnds)
 			{
-				file << scriptManager.getFunctionCode(function)[i] << "\n";
+				file << scripter.getFunctionCode(function)[i] << "\n";
 			}
 		}
 	}
