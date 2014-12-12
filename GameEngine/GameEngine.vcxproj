@@ -34,7 +34,6 @@
     <ClInclude Include="Engine\Core\CoreEngine.h" />
     <ClInclude Include="Engine\Core\Game.h" />
     <ClInclude Include="Engine\Core\Profiling.h" />
-    <ClInclude Include="Engine\Core\Script.h" />
     <ClInclude Include="Engine\Core\ScriptManager.h" />
     <ClInclude Include="Engine\Core\Util.h" />
     <ClInclude Include="Engine\Core\Transform.h" />
@@ -91,7 +90,6 @@
     <ClCompile Include="Engine\Core\Lua.cpp" />
     <ClCompile Include="Engine\Core\Matrix3.cpp" />
     <ClCompile Include="Engine\Core\Profiling.cpp" />
-    <ClCompile Include="Engine\Core\Script.cpp" />
     <ClCompile Include="Engine\Core\ScriptManager.cpp" />
     <ClCompile Include="Engine\Core\Vector2.cpp" />
     <ClCompile Include="Engine\Core\Vector3.cpp" />

@@ -1,10 +1,15 @@
 #ifndef SCRIPTMANAGER_H
 #define SCRIPTMANAGER_H
 
+#include <fstream>
+#include <stdio.h>
 #include <string>
 #include <vector>
 
+#include "Input.h"
+#include "GameComponent.h"
 #include "Lua.h"
+#include "../Rendering/RenderingEngine.h"
 
 enum FUNC_TYPE
 {
@@ -14,11 +19,12 @@ enum FUNC_TYPE
 	OTHER
 };
 
-class ScriptManager
+class ScriptManager : public GameComponent
 {
 private:
 	lua_State* m_L;
 	std::string m_scriptName;
+	std::ofstream m_finalScript;
 
 	std::vector<std::string> m_otherCode;
 	std::vector<std::string> m_localCode;
@@ -26,10 +32,18 @@ private:
 	std::vector<std::string> m_updateCode;
 	std::vector<std::string> m_renderCode;
 
+	void loadScript(const std::string& fileName);
+
 public:
-	ScriptManager();
+	ScriptManager(std::vector<std::string> scripts = {});
 	~ScriptManager();
 
+	virtual void initialise();
+	virtual void input(const Input& input, float delta);
+	virtual void update(float delta);
+	virtual void render(const Shader& shader, const RenderingEngine& renderingEngine, const Camera& camera) const;
+
+	void addScript(const std::string& script);
 	void addFunctionCode(const std::string& code, int function);
 	void addLocalCode(const std::string& code);
 

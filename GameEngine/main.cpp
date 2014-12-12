@@ -11,14 +11,14 @@
 
 #include "Engine\Components\Game\Movement2D.h"
 
-#include "Engine\Core\Script.h"
-
 #include "Engine\Physics_\Particle.h"
 #include "Engine\Physics_\Physics_Component.h"
 #include "Engine\Physics_\PFGen.h"
 #include "Engine\Physics_\CollideCoarse.h"
 #include "Engine\Rendering\Shape.h"
 #include "Engine\Physics\PhysicsComponent.h"
+
+#include "Engine\Core\ScriptManager.h"
 
 #undef main
 
@@ -40,13 +40,13 @@ void TestGame::init(const Window& window)
 {
 	GameObject* cameraObj = new GameObject();
 	cameraObj->getTransform()->getPosition().setX(0);
-	cameraObj->getTransform()->getPosition().setZ(0);
+	cameraObj->getTransform()->getPosition().setZ(-2);
 	cameraObj->addComponent(new FreeLook(window.getCentre()));
 	//cameraObj->getTransform()->rotate(AXIS_Y, toRadians(180));
 	cameraObj->addComponent(new FreeMove());
 	cameraObj->addComponent(new CameraComponent(Matrix4().initPerspective(toRadians(70.0f), window.getAspectRatio(), 0.1f, 1000.0f)));
-	cameraObj->getTransform()->getPosition().setY(4);
-	cameraObj->getTransform()->rotate(AXIS_X, toRadians(30));
+	cameraObj->getTransform()->getPosition().setY(0);
+	//cameraObj->getTransform()->rotate(AXIS_X, toRadians(30));
 
 	addToScene(cameraObj);
 
@@ -121,18 +121,32 @@ void TestGame::init(const Window& window)
 	cube->addComponent(new MeshRenderer(Mesh("cube.obj"), Material("", TEXTURE_BLANK, COLOUR_BLUE)));
 	cube->addComponent(new FreeMove(10, Input::KEY_UP, Input::KEY_DOWN, Input::KEY_LEFT, Input::KEY_RIGHT));
 
-	cube->enableScripting();
-	cube->addComponent(new Script("lua1.lua", cube->getScriptManager()));
-	cube->addComponent(new Script("lua2.lua", cube->getScriptManager()));
+	//cube->enableScripting();
+	//cube->addComponent(new Script("lua1.lua", cube->getScriptManager()));
+	//cube->addComponent(new Script("lua2.lua", cube->getScriptManager()));
 
-	addToScene(planeObj);
+	//addToScene(planeObj);
+
+	ScriptManager* scripter = new ScriptManager();
+	scripter->addScript("rotateControl.lua");
+
+	cube->addComponent(scripter);
 	addToScene(cube);
+
+	GameObject* cube1 = new GameObject(Vector3(5, 2, 0), Quaternion(), 0.5f);
+	cube1->addComponent(new MeshRenderer(Mesh("cube.obj"), Material("", TEXTURE_BLANK, COLOUR_ORANGE)));
+	cube1->addComponent(new FreeMove(10, Input::KEY_UP, Input::KEY_DOWN, Input::KEY_LEFT, Input::KEY_RIGHT));
+
+	addToScene(cube1);
+	cube1->addComponent(new ScriptManager(std::vector<std::string>{"rotateControl.lua", "rotateControl.lua"}));
+
+	Game::init(window);
 }
 
 int main()
 {
 	TestGame test;
-	CoreEngine engine(800, 600, 30, &test);
+	CoreEngine engine(800, 600, 120, &test);
 	engine.createWindow("Game ENGINE");
 	engine.start();
 
