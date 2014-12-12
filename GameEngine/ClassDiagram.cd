@@ -1,2 +1,64 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ClassDiagram /> 
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Game">
+    <Position X="1" Y="0.5" Width="1.5" />
+    <Members>
+      <Method Name="~Game" Hidden="true" />
+      <Method Name="addToScene" Hidden="true" />
+      <Method Name="addToScene2" Hidden="true" />
+      <Method Name="displayInputTime" Hidden="true" />
+      <Method Name="displayUpdateTime" Hidden="true" />
+      <Method Name="Game" Hidden="true" />
+      <Method Name="getRoot" Hidden="true" />
+      <Method Name="init" Hidden="true" />
+      <Method Name="integrate" Hidden="true" />
+      <Field Name="m_inputProfileTimer" Hidden="true" />
+      <Field Name="m_updateProfileTimer" Hidden="true" />
+      <Field Name="rootPhysicsObject" Hidden="true" />
+      <Method Name="setEngine" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAIIAwAAEAAAAAAECjAADIAAQAAAAAUAAA=</HashCode>
+      <FileName>Engine\Core\Game.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GameObject">
+    <Position X="2.75" Y="0.5" Width="1.5" />
+    <Members>
+      <Method Name="~GameObject" Hidden="true" />
+      <Method Name="enableScripting" Hidden="true" />
+      <Method Name="GameObject" Hidden="true" />
+      <Method Name="getAllAttached" Hidden="true" />
+      <Method Name="getChildren" Hidden="true" />
+      <Method Name="getEngine" Hidden="true" />
+      <Method Name="getL" Hidden="true" />
+      <Method Name="getScriptManager" Hidden="true" />
+      <Method Name="getTransform" Hidden="true" />
+      <Method Name="inputAll" Hidden="true" />
+      <Field Name="m_coreEngine" Hidden="true" />
+      <Method Name="renderAll" Hidden="true" />
+      <Field Name="scriptManager" Hidden="true" />
+      <Method Name="setEngine" Hidden="true" />
+      <Method Name="setTransform" Hidden="true" />
+      <Method Name="updateAll" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AJAAAAAIAAAAAEgAChACAAAAAADAABYABEACAAI0BAA=</HashCode>
+      <FileName>Engine\Core\GameObject.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GameComponent">
+    <Position X="4.5" Y="0.5" Width="1.5" />
+    <Members>
+      <Method Name="~GameComponent" Hidden="true" />
+      <Method Name="addToCoreEngine" Hidden="true" />
+      <Method Name="getTransform" Hidden="true" />
+      <Method Name="setParent" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAgAABAAAAAEAAAAAAAAAAAAAAIBAAAAAAAABUAAA=</HashCode>
+      <FileName>Engine\Core\GameComponent.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="8.25" />
+</ClassDiagram>

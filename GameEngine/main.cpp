@@ -87,12 +87,13 @@ void TestGame::init(const Window& window)
 	////cameraObj->addChild(light);
 	//addToScene(light);
 
-	//DirectionalLight* whiteLight = new DirectionalLight(COLOUR_WHITE, 0.4f);
+	DirectionalLight* whiteLight = new DirectionalLight(COLOUR_WHITE, 0.4f);
 	//DirectionalLight* blueLight = new DirectionalLight(COLOUR_BLUE,	0.2f);
 	//DirectionalLight* yellowLight = new DirectionalLight(COLOUR_YELLOW, 1.4f);
 	//
-	//GameObject* whitelightObj = new GameObject();
-	////whitelightObj->addComponent(whiteLight);
+	GameObject* whitelightObj = new GameObject(Vector3(0, 0, 0));
+	whitelightObj->getTransform()->rotate(AXIS_X, toRadians(-45));
+	whitelightObj->addComponent(whiteLight);
 	////whitelightObj->getTransform()->rotate(AXIS_Y, toRadians(90));
 	////whitelightObj->getTransform()->rotate(AXIS_X, toRadians(45));
 	//GameObject* bluelightObj = new GameObject();
@@ -107,27 +108,31 @@ void TestGame::init(const Window& window)
 	//GameObject* terrainObj = new GameObject();
 	//terrainObj->addComponent(mRenderer);
 	//
-	////addToScene(whitelightObj);
+	addToScene(whitelightObj);
 	//addToScene(bluelightObj);
 	//addToScene(yellowlightObj);
 	//addToScene(terrainObj);
 
 	GameObject* planeObj = new GameObject();
-	planeObj->getTransform()->setScale(5);
+	planeObj->getTransform()->setScale(100);
 	planeObj->addComponent(new MeshRenderer(Mesh("plane.obj"), MATERIAL_DEFAULT));
 
-	GameObject* spotLight = new GameObject(Vector3(0, 1, 0));
-	//spotLight->getTransform()->rotate(AXIS_X, toRadians(90));
-	spotLight->addComponent(new SpotLight(COLOUR_GREEN, 0.4f, Attenuation(0, 0, 1), 20.0f));
+	GameObject* cube = new GameObject(Vector3(0, 2, 0), Quaternion(), 0.5f);
+	cube->addComponent(new MeshRenderer(Mesh("cube.obj"), Material("", TEXTURE_BLANK, COLOUR_BLUE)));
+	cube->addComponent(new FreeMove(10, Input::KEY_UP, Input::KEY_DOWN, Input::KEY_LEFT, Input::KEY_RIGHT));
+
+	cube->enableScripting();
+	cube->addComponent(new Script("lua1.lua", cube->getScriptManager()));
+	cube->addComponent(new Script("lua2.lua", cube->getScriptManager()));
 
 	addToScene(planeObj);
-	addToScene(spotLight);
+	addToScene(cube);
 }
 
 int main()
 {
 	TestGame test;
-	CoreEngine engine(800, 600, 120, &test);
+	CoreEngine engine(800, 600, 30, &test);
 	engine.createWindow("Game ENGINE");
 	engine.start();
 
