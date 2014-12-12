@@ -18,7 +18,7 @@
 #include "Engine\Rendering\Shape.h"
 #include "Engine\Physics\PhysicsComponent.h"
 
-#include "Engine\Core\ScriptManager.h"
+#include "Engine\Core\Scripter.h"
 
 #undef main
 

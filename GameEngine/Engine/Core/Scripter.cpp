@@ -1,7 +1,7 @@
 #include <fstream>
 #include <iostream>
 
-#include "ScriptManager.h"
+#include "Scripter.h"
 #include "Util.h"
 
 std::string SCRIPT_DIR = "res/scripts/";
