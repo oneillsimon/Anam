@@ -22,7 +22,7 @@ public:
 	Game() {};
 	virtual ~Game() {};
 
-	virtual void init(const Window& window) {};
+	virtual void init(const Window& window);
 	virtual void processInput(const Input& input, float delta);
 	virtual void update(float delta);
 	virtual void integrate(PhysicsEngine* physicsEngine, float delta);

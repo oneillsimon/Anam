@@ -1,5 +1,10 @@
 #include "Game.h"
 
+void Game::init(const Window& window)
+{
+	rootObject.initialiseAll();
+}
+
 void Game::addToScene(GameObject* object)
 {
 	rootObject.addChild(object);

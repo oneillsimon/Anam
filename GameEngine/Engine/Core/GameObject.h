@@ -4,8 +4,6 @@
 #include <vector>
 
 #include "Input.h"
-#include "Lua.h"
-#include "ScriptManager.h"
 #include "Transform.h"
 
 class Camera;
@@ -21,11 +19,9 @@ private:
 	std::vector<GameObject*> m_children;
 	std::vector<GameComponent*> m_components;
 
-	ScriptManager scriptManager;
-
 protected:
 	Transform m_transform;
-
+	virtual void initialise();
 	virtual void input(const Input& input, float delta);
 	virtual void update(float delta);
 	virtual void render(const Shader& shader, const RenderingEngine& renderingEngine, const Camera& camera) const;
@@ -37,11 +33,10 @@ public:
 	GameObject* addChild(GameObject* child);
 	GameObject* addComponent(GameComponent* component);
 
+	void initialiseAll();
 	void inputAll(const Input& input, float delta);
 	void updateAll(float delta);
 	void renderAll(const Shader& shader, const RenderingEngine& renderingEngine, const Camera& camera) const;
-
-	void enableScripting();
 
 	std::vector<GameObject*> getChildren() const;
 	std::vector<GameObject*> getAllAttached();
@@ -51,9 +46,6 @@ public:
 	
 	void setTransform(const Transform& t);
 	void setEngine(CoreEngine* engine);
-
-	lua_State* getL();
-	ScriptManager& getScriptManager();
 };
 
 #endif

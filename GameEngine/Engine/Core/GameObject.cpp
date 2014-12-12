@@ -43,6 +43,16 @@ GameObject* GameObject::addComponent(GameComponent* component)
 	return this;
 }
 
+void GameObject::initialiseAll()
+{
+	initialise();
+
+	for(unsigned int i = 0; i < m_children.size(); i++)
+	{
+		m_children[i]->initialiseAll();
+	}
+}
+
 void GameObject::inputAll(const Input& input, float delta)
 {
 	this->input(input, delta);
@@ -70,6 +80,14 @@ void GameObject::renderAll(const Shader& shader, const RenderingEngine& renderin
 	for(unsigned int i = 0; i < m_children.size(); i++)
 	{
 		m_children[i]->renderAll(shader, renderingEgine, camera);
+	}
+}
+
+void GameObject::initialise()
+{
+	for(unsigned int i = 0; i < m_components.size(); i++)
+	{
+		m_components[i]->initialise();
 	}
 }
 
@@ -149,20 +167,4 @@ void GameObject::setEngine(CoreEngine* engine)
 			m_children[i]->setEngine(engine);
 		}
 	}
-}
-
-void GameObject::enableScripting()
-{
-	scriptManager.generateScriptName(this);
-	scriptManager.setGlobal(m_transform, "transform");
-}
-
-lua_State* GameObject::getL()
-{
-	return scriptManager.getL();
-}
-
-ScriptManager& GameObject::getScriptManager()
-{
-	return scriptManager;
 }
