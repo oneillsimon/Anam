@@ -5,6 +5,11 @@ Vector3 Transform::getPositionLua() const
 	return Transform::getPosition();
 }
 
+void Transform::setScaleLua(const Vector3& v)
+{
+	setScale(v);
+}
+
 void Transform::rotateLua(const Vector3& v, float f)
 {
 	rotate(v, f);

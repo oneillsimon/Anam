@@ -7,15 +7,27 @@
 std::string SCRIPT_DIR = "res/scripts/";
 std::string SCRIPT_GEN = SCRIPT_DIR + "gen/";
 
-std::string INPUT_STR = "input(delta)";
-std::string UPDATE_STR = "update(delta)";
-std::string RENDER_STR = "render()";
-std::string FINAL_INPUT_STR = "function final_input(delta)";
-std::string FINAL_UPDATE_STR = "function final_update(delta)";
-std::string FINAL_RENDER_STR = "function final_render()";
-std::string LUA_INPUT = "final_input";
-std::string LUA_UPDATE = "final_update";
-std::string LUA_RENDER = "final_render";
+std::string PREFIX = "final_";
+
+std::string INIT_ARGS = "()";
+std::string INPUT_ARGS = "(delta)";
+std::string UPDATE_ARGS = "(delta)";
+std::string RENDER_ARGS = "()";
+
+std::string INIT_STR = "initialise";
+std::string INPUT_STR = "input";
+std::string UPDATE_STR = "update";
+std::string RENDER_STR = "render";
+
+std::string LUA_INIT = PREFIX + INIT_STR;
+std::string LUA_INPUT = PREFIX + INPUT_STR;
+std::string LUA_UPDATE = PREFIX + UPDATE_STR;
+std::string LUA_RENDER = PREFIX + RENDER_STR;
+
+std::string FINAL_INIT_STR = "function " + LUA_INIT + INIT_ARGS;
+std::string FINAL_INPUT_STR = "function " + LUA_INPUT + INPUT_ARGS;
+std::string FINAL_UPDATE_STR = "function " + LUA_UPDATE + UPDATE_ARGS;
+std::string FINAL_RENDER_STR = "function " + LUA_RENDER + RENDER_ARGS;
 
 void generateFinalScript(std::ofstream& file, Scripter& scripter);
 void renameFunctionVariables(Scripter& scripter, int function, const std::vector<std::string>& old_, const std::vector<std::string>& new_);
@@ -45,7 +57,14 @@ Scripter::~Scripter()
 
 void Scripter::initialise()
 {
+	lua_getglobal(m_L, LUA_INIT.c_str());
+
 	setGlobal("transform", m_parent->getTransform());
+
+	if(lua_isfunction(m_L, lua_gettop(m_L)))
+	{
+		lua_call(m_L, 0, 0);
+	}
 }
 
 void Scripter::input(const Input& input, float delta)
@@ -82,6 +101,12 @@ void Scripter::update(float delta)
 
 void Scripter::render(const Shader& shader, const RenderingEngine& renderingEngine, const Camera& camera) const
 {
+	lua_getglobal(m_L, LUA_RENDER.c_str());
+
+	if(lua_isfunction(m_L, lua_gettop(m_L)))
+	{
+		lua_call(m_L, 0, 0);
+	}
 }
 
 void Scripter::loadScript(const std::string& fileName)
@@ -115,15 +140,19 @@ void Scripter::loadScript(const std::string& fileName)
 			}
 			else if(parts[0] == "function")
 			{
-				if(parts[1] == UPDATE_STR.c_str())
+				if(parts[1] == (INIT_STR + INIT_ARGS).c_str())
 				{
-					generateFunctionBody(fileIn, FUNC_TYPE::UPDATE);
+					generateFunctionBody(fileIn, FUNC_TYPE::INIT);
 				}
-				else if(parts[1] == INPUT_STR.c_str())
+				else if(parts[1] == (INPUT_STR + INPUT_ARGS).c_str())
 				{
 					generateFunctionBody(fileIn, FUNC_TYPE::INPUT);
 				}
-				else if(parts[1] == RENDER_STR.c_str())
+				else if(parts[1] == (UPDATE_STR + UPDATE_ARGS).c_str())
+				{
+					generateFunctionBody(fileIn, FUNC_TYPE::UPDATE);
+				}
+				else if(parts[1] == (RENDER_STR + RENDER_ARGS).c_str())
 				{
 					generateFunctionBody(fileIn, FUNC_TYPE::RENDER);
 				}
@@ -143,6 +172,7 @@ void Scripter::loadScript(const std::string& fileName)
 			}
 
 			renameFunctionVariables(*this, FUNC_TYPE::OTHER, old_, new_);
+			renameFunctionVariables(*this, FUNC_TYPE::INIT, old_, new_);
 			renameFunctionVariables(*this, FUNC_TYPE::INPUT, old_, new_);
 			renameFunctionVariables(*this, FUNC_TYPE::UPDATE, old_, new_);
 			renameFunctionVariables(*this, FUNC_TYPE::RENDER, old_, new_);
@@ -178,6 +208,9 @@ void Scripter::addFunctionCode(const std::string& code, int function)
 {
 	switch(function)
 	{
+	case FUNC_TYPE::INIT:
+		m_initCode.push_back(code);
+		break;
 	case FUNC_TYPE::INPUT:
 		m_inputCode.push_back(code);
 		break;
@@ -222,6 +255,9 @@ void Scripter::setFunctionCode(const std::string& code, int index, int function)
 {
 	switch(function)
 	{
+	case FUNC_TYPE::INIT:
+		m_initCode[index] = code;
+		break;
 	case FUNC_TYPE::INPUT:
 		m_inputCode[index] = code;
 		break;
@@ -256,6 +292,9 @@ std::vector<std::string> Scripter::getFunctionCode(int function) const
 {
 	switch(function)
 	{
+	case FUNC_TYPE::INIT:
+		return m_initCode;
+		break;
 	case FUNC_TYPE::INPUT:
 		return m_inputCode;
 		break;
@@ -276,23 +315,26 @@ std::vector<std::string> Scripter::getLocalCode() const
 	return m_localCode;
 }
 
-void generateFinalScript(std::ofstream& file, Scripter& scriptManager)
+void generateFinalScript(std::ofstream& file, Scripter& scripter)
 {
-	for(int i = 0; i < scriptManager.getLocalCode().size(); i++)
+	for(int i = 0; i < scripter.getLocalCode().size(); i++)
 	{
-		file << scriptManager.getLocalCode()[i] << "\n";
+		file << scripter.getLocalCode()[i] << "\n";
 	}
 
-	generateFunctionCode(file, scriptManager, FUNC_TYPE::OTHER, true);
+	generateFunctionCode(file, scripter, FUNC_TYPE::OTHER, true);
+
+	file << FINAL_INIT_STR << "\n";
+	generateFunctionCode(file, scripter, FUNC_TYPE::INIT, false);
 
 	file << FINAL_INPUT_STR << "\n";
-	generateFunctionCode(file, scriptManager, FUNC_TYPE::INPUT, false);
+	generateFunctionCode(file, scripter, FUNC_TYPE::INPUT, false);
 
 	file << FINAL_UPDATE_STR << "\n";
-	generateFunctionCode(file, scriptManager, FUNC_TYPE::UPDATE, false);
+	generateFunctionCode(file, scripter, FUNC_TYPE::UPDATE, false);
 
 	file << FINAL_RENDER_STR << "\n";
-	generateFunctionCode(file, scriptManager, FUNC_TYPE::RENDER, false);
+	generateFunctionCode(file, scripter, FUNC_TYPE::RENDER, false);
 }
 
 void renameFunctionVariables(Scripter& scripter, int function, const std::vector<std::string>& old_, const std::vector<std::string>& new_)

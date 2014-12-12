@@ -1,25 +1,9 @@
-local aor1 = Math.Vector3(0, 0, 0)
-
-function move(dir, amount)
-	-- This is from test.lua
-	-- This shouldn't conflict with move in move.lua
+function initialise()
+	transform:setScale(Math.Vector3(1, 100, 2))
 end
 
-function final_update(delta)
-	-- This is from test.lua
-	-- It should have a prefix and not
-	-- be copied into the final_update function
-end
-
-function printHello()
-	print("Hello World")
-end
-
-function add(n, m)
-	return n + m
-end
-
-function update(delta)
-	--printHello()
-	--print(add(3, 4))
+function input(delta)
+	if input:getKey(KEY_4) then
+		print("key pressed")
+	end
 end

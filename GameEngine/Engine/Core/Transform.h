@@ -49,6 +49,7 @@ public:
 
 	// TEMP
 	Vector3 getPositionLua() const;
+	void setScaleLua(const Vector3& v);
 	void rotateLua(const Vector3& v, float f);
 
 	void setParent(Transform* parent);

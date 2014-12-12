@@ -13,6 +13,7 @@
 
 enum FUNC_TYPE
 {
+	INIT,
 	INPUT,
 	UPDATE,
 	RENDER,
@@ -28,6 +29,7 @@ private:
 
 	std::vector<std::string> m_otherCode;
 	std::vector<std::string> m_localCode;
+	std::vector<std::string> m_initCode;
 	std::vector<std::string> m_inputCode;
 	std::vector<std::string> m_updateCode;
 	std::vector<std::string> m_renderCode;

@@ -22,6 +22,7 @@ void Lua::registerMembers(lua_State* l)
 		.addConstructor<void(*)(const Vector3&, const Quaternion&, const float&)>()
 		.addFunction("setPosition", &Transform::setPosition)
 		.addFunction("getPosition", &Transform::getPositionLua)
+		.addFunction("setScale", &Transform::setScaleLua)
 		.addFunction("rotate", &Transform::rotateLua)
 		.endClass()
 		.endNamespace();

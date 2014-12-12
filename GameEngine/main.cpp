@@ -132,7 +132,9 @@ void TestGame::initialise(const Window& window)
 	cube1->addComponent(new FreeMove(10, Input::KEY_UP, Input::KEY_DOWN, Input::KEY_LEFT, Input::KEY_RIGHT));
 
 	addToScene(cube1);
-	cube1->addComponent(new Scripter({"rotateControl.lua", "move.lua"}));
+
+	Scripter* ss = new Scripter({ "rotateControl.lua", "test.lua" });
+	cube1->addComponent(ss);
 
 	Game::initialise(window);
 }
