@@ -211,7 +211,7 @@ void Scripter::generateFunctionBody(std::ifstream& file, int function, const std
 void Scripter::generateScriptName(void* object)
 {
 	std::ostringstream address;
-	address << "res/scripts/gen/" << (void const *)object << ".lua";
+	address << SCRIPT_GEN << (void const *)object << ".lua";
 	m_scriptName = address.str();
 }
 
