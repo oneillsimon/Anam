@@ -21,7 +21,7 @@ void generateFinalScript(std::ofstream& file, Scripter& scripter);
 void renameFunctionVariables(Scripter& scripter, int function, const std::vector<std::string>& old_, const std::vector<std::string>& new_);
 void generateFunctionCode(std::ofstream& file, Scripter& scripter, int function, bool includeEnd);
 
-Scripter::Scripter(std::vector<std::string> scripts)
+Scripter::Scripter(std::initializer_list<std::string> scripts)
 {
 	m_L = luaL_newstate();
 	luaL_openlibs(m_L);
@@ -29,9 +29,12 @@ Scripter::Scripter(std::vector<std::string> scripts)
 
 	generateScriptName(this);
 
-	for(unsigned int i = 0; i < scripts.size(); i++)
+	std::initializer_list<std::string>::iterator i = scripts.begin();
+
+	while(i != scripts.end())
 	{
-		addScript(scripts[i]);
+		addScript(i->c_str());
+		i++;
 	}
 }
 

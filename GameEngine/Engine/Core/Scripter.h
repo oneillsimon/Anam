@@ -35,7 +35,7 @@ private:
 	void loadScript(const std::string& fileName);
 
 public:
-	Scripter(std::vector<std::string> scripts = {});
+	Scripter(std::initializer_list<std::string> scripts = {});
 	~Scripter();
 
 	virtual void initialise();
