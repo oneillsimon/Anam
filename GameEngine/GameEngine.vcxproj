@@ -47,6 +47,7 @@
     <ClInclude Include="Engine\Grafaic.h" />
     <ClInclude Include="Engine\Physics\Collider.h" />
     <ClInclude Include="Engine\Physics\IntersectionData.h" />
+    <ClInclude Include="Engine\Physics\Octree\Octree.h" />
     <ClInclude Include="Engine\Physics\PhysicsComponent.h" />
     <ClInclude Include="Engine\Physics\PhysicsEngine.h" />
     <ClInclude Include="Engine\Physics\PhysicsObject.h" />
@@ -103,6 +104,7 @@
     <ClCompile Include="Engine\Physics\BoundingSphere.cpp" />
     <ClCompile Include="Engine\Physics\Collider.cpp" />
     <ClCompile Include="Engine\Physics\IntersectionData.cpp" />
+    <ClCompile Include="Engine\Physics\Octree\Octree.cpp" />
     <ClCompile Include="Engine\Physics\PhysicsComponent.cpp" />
     <ClCompile Include="Engine\Physics\PhysicsEngine.cpp" />
     <ClCompile Include="Engine\Physics\PhysicsObject.cpp" />
