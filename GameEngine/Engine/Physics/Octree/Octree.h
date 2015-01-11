@@ -3,13 +3,14 @@
 
 #include <set>
 
-#include "../../Core/Math3D.h"
-#include "../PhysicsObject.h"
 #include "../../Core/GameComponent.h"
+#include "../../Core/Math3D.h"
+#include "../Collider.h"
+#include "../PhysicsObject.h"
 
 const int MAX_OCTREE_DEPTH = 6;
-const int MIN_BALLS_PER_OCTREE = 3;
-const int MAX_BALLS_PER_OCTREE = 6;
+const int MIN_BALLS_PER_OCTREE = 2;
+const int MAX_BALLS_PER_OCTREE = 3;
 
 class PhysicsObject;
 
@@ -19,16 +20,25 @@ struct BallPair
 	PhysicsObject* ball2;
 };
 
+struct Partition
+{
+	Vector3 centre;
+	Vector3 min;
+	Vector3 max;
+};
+
 class Octree
 {
 public:
+	static std::vector<Partition> partitions;
+
 	Vector3 corner1; //min
 	Vector3 corner2; //max
 	Vector3 centre;
 
 	Octree* children[2][2][2];
 	bool hasChildren;
-	std::set<PhysicsObject*> objects;
+	std::set<PhysicsObject*> m_objects;
 	int depth;
 	int numBalls;
 

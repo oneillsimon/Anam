@@ -5,6 +5,7 @@ ReferenceCounter(),
 m_type(type),
 m_mesh(meshName)
 {
+	c = getRandomColour();
 	m_isColliding = false;
 }
 
@@ -17,11 +18,11 @@ void Collider::render(const Shader& shader, const RenderingEngine& renderingEngi
 
 	if(m_isColliding)
 	{
-		m_mesh.getWireFrameShader().setUniform("wireFrameColour", COLOUR_RED.toGLSLVec4());
+		m_mesh.getWireFrameShader().setUniform("wireFrameColour", getRandomColour().toGLSLVec4());
 	}
 	else
 	{
-		m_mesh.getWireFrameShader().setUniform("wireFrameColour", COLOUR_LIME.toGLSLVec4());
+		m_mesh.getWireFrameShader().setUniform("wireFrameColour", c.toGLSLVec4());
 	}
 
 	m_mesh.drawWireFrame();

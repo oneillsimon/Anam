@@ -1,7 +1,6 @@
 #include "PhysicsObject.h"
 
-PhysicsObject::PhysicsObject(const Vector3& position, const Quaternion& rotation, const Vector3& scale)
+PhysicsObject::PhysicsObject(const Vector3& position, const Quaternion& rotation, float scale) :
+	GameObject(position, rotation, scale)
 {
-	//b->pos = position;
-	//b->r = scale.getX();
 }

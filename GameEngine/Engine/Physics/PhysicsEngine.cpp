@@ -2,7 +2,8 @@
 
 PhysicsEngine::PhysicsEngine()
 {
-	mainTree = new Octree(Vector3(-100, -100, -100), Vector3(100, 100, 100), 1);
+	int size = 10;
+	mainTree = new Octree(Vector3(-size, -size, -size), Vector3(size, size, size), 1);
 }
 
 void PhysicsEngine::addObject(PhysicsObject* object)
@@ -14,6 +15,12 @@ void PhysicsEngine::addObject(PhysicsObject* object)
 void PhysicsEngine::simulate(float delta)
 {
 	//advance(m_objects, mainTree, delta);
+
+	if(m_objects.empty())
+	{
+		return;
+	}
+
 	mainTree->advanceState(m_objects, delta);
 }
 

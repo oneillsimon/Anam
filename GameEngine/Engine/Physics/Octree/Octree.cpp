@@ -1,5 +1,7 @@
 #include "Octree.h"
 
+std::vector<Partition> Octree::partitions = std::vector<Partition>();
+
 Octree::Octree(Vector3 c1, Vector3 c2, int d)
 {
 	corner1 = c1;
@@ -8,6 +10,13 @@ Octree::Octree(Vector3 c1, Vector3 c2, int d)
 	depth = d;
 	numBalls = 0;
 	hasChildren = false;
+
+	Partition p;
+	p.centre = centre;
+	p.min = corner1;
+	p.max = corner2;
+
+	partitions.push_back(p);
 }
 
 void Octree::fileBall(PhysicsObject* physicsObject, bool addBall)
@@ -123,13 +132,13 @@ void Octree::haveChildren()
 		}
 	}
 
-	for(std::set<PhysicsObject*>::iterator it = objects.begin(); it != objects.end(); it++)
+	for(std::set<PhysicsObject*>::iterator it = m_objects.begin(); it != m_objects.end(); it++)
 	{
 		PhysicsObject* physicsObject = *it;
 		fileBall(physicsObject, true);
 	}
 
-	objects.clear();
+	m_objects.clear();
 	hasChildren = true;
 }
 
@@ -150,7 +159,7 @@ void Octree::collectBalls(std::set<PhysicsObject*>& bs)
 	}
 	else
 	{
-		for(std::set<PhysicsObject*>::iterator it = objects.begin(); it != objects.end(); it++)
+		for(std::set<PhysicsObject*>::iterator it = m_objects.begin(); it != m_objects.end(); it++)
 		{
 			PhysicsObject* physicsObject = *it;
 			bs.insert(physicsObject);
@@ -160,7 +169,7 @@ void Octree::collectBalls(std::set<PhysicsObject*>& bs)
 
 void Octree::destroyChildren()
 {
-	collectBalls(objects);
+	collectBalls(m_objects);
 
 	for(int x = 0; x < 2; x++)
 	{
@@ -191,7 +200,7 @@ void Octree::remove(PhysicsObject* physicsObject)
 	}
 	else
 	{
-		objects.erase(physicsObject);
+		m_objects.erase(physicsObject);
 	}
 }
 
@@ -211,7 +220,7 @@ void Octree::add(PhysicsObject* physicsObject)
 	}
 	else
 	{
-		objects.insert(physicsObject);
+		m_objects.insert(physicsObject);
 	}
 }
 
@@ -238,11 +247,11 @@ void Octree::potentialBallBallCollisions(std::vector<BallPair>& collisions)
 	}
 	else
 	{
-		for(std::set<PhysicsObject*>::iterator it = objects.begin(); it != objects.end(); it++)
+		for(std::set<PhysicsObject*>::iterator it = m_objects.begin(); it != m_objects.end(); it++)
 		{
 			PhysicsObject* obj1 = *it;
 
-			for(std::set<PhysicsObject*>::iterator it2 = objects.begin(); it2 != objects.end(); it2++)
+			for(std::set<PhysicsObject*>::iterator it2 = m_objects.begin(); it2 != m_objects.end(); it2++)
 			{
 				PhysicsObject* obj2 = *it2;
 
@@ -263,10 +272,14 @@ void Octree::advanceState(std::vector<PhysicsObject*>& objects, float delta)
 	moveObjects(objects, delta);
 }
 
+//!! rigid body motion here
 void Octree::moveObjects(std::vector<PhysicsObject*>& objects, float delta)
 {
-	PhysicsObject* physicsObject = objects[0];
-	Vector3 oldPosition = physicsObject->getTransform()->getPosition();
-	physicsObject->getTransform()->setPosition(oldPosition + (physicsObject->velocity * delta));
-	ballMoved(physicsObject, oldPosition);
+	for(unsigned int i = 0; i < objects.size(); i++)
+	{
+		PhysicsObject* physicsObject = objects[i];
+		Vector3 oldPosition = physicsObject->getTransform()->getPosition();
+		physicsObject->getTransform()->setPosition(oldPosition + (physicsObject->velocity * delta));
+		ballMoved(physicsObject, oldPosition);
+	}
 }

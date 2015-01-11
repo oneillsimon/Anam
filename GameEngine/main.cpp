@@ -46,14 +46,38 @@ void TestGame::initialise(const Window& window)
 	cameraObj->addComponent(new FreeMove());
 	cameraObj->addComponent(new CameraComponent(Matrix4().initPerspective(toRadians(70.0f), window.getAspectRatio(), 0.1f, 1000.0f)));
 
-	PhysicsObject* pObj = new PhysicsObject();
-	pObj->addComponent(new MeshRenderer(Mesh("sphere.obj"), MATERIAL_DEFAULT));
+	int n = 20;
+	int m = 10;
 
-	pObj->velocity = Vector3(0, 0, 2);
-	pObj->r = 1;
+	for(int i = 0; i < n; i++)
+	{
+		int x = random(-m, m);
+		int y = random(-m, m);
+		int z = random(0, 0);
+
+		PhysicsObject* p = new PhysicsObject(Vector3(x, y, z));
+		//GameObject* p = new GameObject(Vector3(x, y, z));
+
+		Material m = Material("", TEXTURE_BLANK, COLOUR_WHITE);
+		p->addComponent(new MeshRenderer(Mesh("sphere.obj"), m));
+
+		p->velocity = Vector3(0, 0, 0);
+		p->r = 1;
+
+		addToScene2(p);
+	}
 
 	addToScene(cameraObj);
-	addToScene2(pObj);
+
+	int partitions = Octree::partitions.size();
+
+	for(int i = 0; i < partitions / 2; i++)
+	{
+		GameObject* g = new GameObject(Octree::partitions[i].centre);
+		AABB* a = new AABB(Octree::partitions[i].min, Octree::partitions[i].max);
+		g->addComponent(a);
+		addToScene(g);
+	}
 
 	Game::initialise(window);
 }

@@ -14,6 +14,7 @@ private:
 
 protected:
 	Mesh m_mesh;
+	Colour c;
 	Vector3 m_scale;
 
 public:

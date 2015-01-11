@@ -10,7 +10,7 @@ public:
 	Vector3 velocity;
 	float r;
 
-	PhysicsObject(const Vector3& position = Vector3(), const Quaternion& rotation = Quaternion(), const Vector3& scale = Vector3());
+	PhysicsObject(const Vector3& position = Vector3(), const Quaternion& rotation = Quaternion(), float scale = 1.0f);
 };
 
 #endif
