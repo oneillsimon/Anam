@@ -13,7 +13,6 @@ private:
 
 protected:
 	GameObject rootObject;
-	PhysicsObject rootPhysicsObject;
 
 	void addToScene(GameObject* object);
 	void addToScene2(PhysicsObject* object);

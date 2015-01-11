@@ -3,6 +3,7 @@
 
 #include <vector>
 
+#include "Octree\Octree.h"
 #include "PhysicsObject.h"
 
 class PhysicsEngine
@@ -11,10 +12,11 @@ private:
 	std::vector<PhysicsObject*> m_objects;
 
 public:
+	Octree* mainTree;
 	PhysicsEngine();
 
 	void addObject(PhysicsObject* object);
-	void simulate(const PhysicsObject& object, float delta);
+	void simulate(float delta);
 	void handleCollisions();
 
 	PhysicsObject* getObject(unsigned int index) const;

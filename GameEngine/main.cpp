@@ -40,15 +40,20 @@ static void tests();
 
 void TestGame::initialise(const Window& window)
 {
-	GameObject* cameraObj = new GameObject(Vector3(0, 0, 0));
+	GameObject* cameraObj = new GameObject(Vector3(0, 0, -4));
 
 	cameraObj->addComponent(new FreeLook(window.getCentre()));
 	cameraObj->addComponent(new FreeMove());
 	cameraObj->addComponent(new CameraComponent(Matrix4().initPerspective(toRadians(70.0f), window.getAspectRatio(), 0.1f, 1000.0f)));
 
+	PhysicsObject* pObj = new PhysicsObject();
+	pObj->addComponent(new MeshRenderer(Mesh("sphere.obj"), MATERIAL_DEFAULT));
 
+	pObj->velocity = Vector3(0, 0, 2);
+	pObj->r = 1;
 
 	addToScene(cameraObj);
+	addToScene2(pObj);
 
 	Game::initialise(window);
 }

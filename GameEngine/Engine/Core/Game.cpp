@@ -32,7 +32,7 @@ void Game::update(float delta)
 
 void Game::integrate(PhysicsEngine* physicsEngine, float delta)
 {
-	physicsEngine->simulate(rootPhysicsObject, delta);
+	physicsEngine->simulate(delta);
 }
 
 void Game::render(RenderingEngine* renderingEngine, const Camera& camera)
@@ -58,5 +58,4 @@ GameObject& Game::getRoot()
 void Game::setEngine(CoreEngine* coreEngine)
 {
 	rootObject.setEngine(coreEngine);
-	rootPhysicsObject.setEngine(coreEngine);
 }
