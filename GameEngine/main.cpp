@@ -21,6 +21,7 @@
 #include "Engine\Core\Scripter.h"
 
 #include "Engine\Physics\Octree\Octree.h"
+#include "Engine\Components\Physics\ColliderRenderer.h"
 
 #undef main
 
@@ -46,7 +47,7 @@ void TestGame::initialise(const Window& window)
 	cameraObj->addComponent(new FreeMove());
 	cameraObj->addComponent(new CameraComponent(Matrix4().initPerspective(toRadians(70.0f), window.getAspectRatio(), 0.1f, 1000.0f)));
 
-	int n = 20;
+	int n = 40;
 	int m = n / 2;
 
 	for(int i = 0; i < n; i++)
@@ -58,15 +59,15 @@ void TestGame::initialise(const Window& window)
 		PhysicsObject* p = new PhysicsObject(new RigidBody(10), new BoundingSphere(radius), Vector3(x, y, z));
 		//GameObject* p = new GameObject(Vector3(x, y, z));
 
-		Material m = Material("", TEXTURE_BLANK, COLOUR_WHITE);
-		p->addComponent(new MeshRenderer(Mesh("sphere.obj"), m));
+		p->addComponent(new ColliderRenderer(p->m_collider));
+		//p->addComponent(new MeshRenderer(Mesh("sphere.obj"), m));
 
 		//p->velocity = Vector3(0, 0, 0);
 		//p->r = 1;
 
 		if(i == 0)
 		{
-			p->getTransform()->setPosition(Vector3(x + 10, y, z));
+			//p->getTransform()->setPosition(Vector3(x + 10, y, z));
 			p->addComponent(new Movement2D(10, Input::KEY_I, Input::KEY_K, Input::KEY_J, Input::KEY_L));
 		}
 
@@ -74,16 +75,6 @@ void TestGame::initialise(const Window& window)
 	}
 
 	addToScene(cameraObj);
-
-	int partitions = Octree::partitions.size();
-
-	for(int i = 0; i < partitions; i++)
-	{
-		GameObject* g = new GameObject(Octree::partitions[i].centre);
-		AABB* a = new AABB(Octree::partitions[i].min, Octree::partitions[i].max);
-		g->addComponent(a);
-		addToScene(g);
-	}
 
 	Game::initialise(window);
 }

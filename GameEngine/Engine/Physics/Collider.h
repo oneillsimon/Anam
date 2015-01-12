@@ -6,7 +6,7 @@
 #include "../Rendering/Mesh.h"
 #include "IntersectionData.h"
 
-class Collider : public ReferenceCounter, public GameComponent
+class Collider : public GameComponent
 {
 private:
 	int m_type;

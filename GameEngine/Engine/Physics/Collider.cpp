@@ -1,7 +1,6 @@
 #include "Collider.h"
 
 Collider::Collider(int type) :
-ReferenceCounter(),
 m_type(type)
 {
 	m_isColliding = false;
@@ -14,6 +13,7 @@ IntersectionData Collider::intersect(const Collider& collider) const
 		BoundingSphere* self = (BoundingSphere*)this;
 		IntersectionData intersectData = self->intersectBoundingSphere((BoundingSphere&)collider);
 		m_isColliding = intersectData.getDoesIntersect();
+		collider.m_isColliding = m_isColliding;
 		return intersectData;
 	}
 
@@ -22,6 +22,7 @@ IntersectionData Collider::intersect(const Collider& collider) const
 		AABB* self = (AABB*)this;
 		IntersectionData intersectData = self->intersectAABB((AABB&)collider);
 		m_isColliding = intersectData.getDoesIntersect();
+		collider.m_isColliding = m_isColliding;
 		return intersectData;
 	}
 }

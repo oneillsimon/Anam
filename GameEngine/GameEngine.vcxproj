@@ -21,6 +21,7 @@
     <ClInclude Include="Engine\Components\Game\Camera.h" />
     <ClInclude Include="Engine\Components\Game\FreeLook.h" />
     <ClInclude Include="Engine\Components\Game\FreeMove.h" />
+    <ClInclude Include="Engine\Components\Physics\ColliderRenderer.h" />
     <ClInclude Include="Engine\Core\GameComponent.h" />
     <ClInclude Include="Engine\Components\Rendering\Lighting.h" />
     <ClInclude Include="Engine\Components\Rendering\MeshRenderer.h" />
@@ -79,6 +80,7 @@
     <ClCompile Include="Engine\Components\Game\FreeLook.cpp" />
     <ClCompile Include="Engine\Components\Game\FreeMove.cpp" />
     <ClCompile Include="Engine\Components\Game\Movement2D.cpp" />
+    <ClCompile Include="Engine\Components\Physics\ColliderRenderer.cpp" />
     <ClCompile Include="Engine\Core\GameComponent.cpp" />
     <ClCompile Include="Engine\Components\Rendering\Lighting.cpp" />
     <ClCompile Include="Engine\Components\Rendering\MeshRenderer.cpp" />

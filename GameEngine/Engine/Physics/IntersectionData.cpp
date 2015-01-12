@@ -13,7 +13,7 @@ bool IntersectionData::getDoesIntersect() const
 
 Vector3 IntersectionData::getDirection() const
 {
-	return m_direction;
+	return m_direction.normalised();
 }
 
 float IntersectionData::getDistance() const

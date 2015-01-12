@@ -12,5 +12,4 @@ void PhysicsComponent::update(float delta)
 
 void PhysicsComponent::render(const Shader& shader, const RenderingEngine& renderingEngine, const Camera& camera)
 {
-	m_collider.render(shader, renderingEngine, camera);
 }

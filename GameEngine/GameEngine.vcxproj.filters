@@ -198,6 +198,9 @@
     <ClCompile Include="Engine\Physics\Octree\Octree.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Components\Physics\ColliderRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Core\Util.h">
@@ -384,6 +387,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Physics\Octree\Octree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Components\Physics\ColliderRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
