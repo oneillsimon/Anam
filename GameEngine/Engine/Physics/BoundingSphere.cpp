@@ -1,7 +1,7 @@
 #include "Collider.h"
 
 BoundingSphere::BoundingSphere(float radius) :
-	Collider(Collider::TYPE_SPHERE, "sphere.obj"),
+	Collider(Collider::TYPE_SPHERE),
 	m_radius(radius)
 {
 	m_scale = Vector3(radius, radius, radius);
@@ -25,11 +25,6 @@ IntersectionData BoundingSphere::intersectAABB(const AABB& other)
 	Vector3 closetest = direction;
 
 	return IntersectionData(false, Vector3());
-}
-
-void BoundingSphere::transform(const Vector3& translation)
-{
-	m_parent->getTransform()->setPosition(m_parent->getTransform()->getPosition() + translation);
 }
 
 const float BoundingSphere::getRadius() const

@@ -13,8 +13,6 @@ private:
 	mutable bool m_isColliding;
 
 protected:
-	Mesh m_mesh;
-	Colour c;
 	Vector3 m_scale;
 
 public:
@@ -25,12 +23,9 @@ public:
 		TYPE_PLANE
 	};
 
-	Collider(int type, const std::string& meshName);
-
-	virtual void render(const Shader& shader, const RenderingEngine& renderingEngine, const Camera& camera) const;
+	Collider(int type);
 
 	IntersectionData intersect(const Collider& collider) const;
-	virtual void transform(const Vector3& translation) {};
 
 	int getType() const;
 	bool getIsColliding() const;
@@ -64,7 +59,6 @@ public:
 
 	IntersectionData intersectBoundingSphere(const BoundingSphere& other);
 	IntersectionData intersectAABB(const AABB& other);
-	virtual void transform(const Vector3& translation);
 
 	const float getRadius() const;
 

@@ -1,7 +1,7 @@
 #include "Collider.h"
 
 AABB::AABB(const Vector3& minExtents, const Vector3& maxExtents) :
-	Collider(Collider::TYPE_AABB, "cube.obj"),
+	Collider(Collider::TYPE_AABB),
 	m_minExtents(minExtents),
 	m_maxExtents(maxExtents)
 {

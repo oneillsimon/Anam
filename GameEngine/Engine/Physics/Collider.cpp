@@ -1,31 +1,10 @@
 #include "Collider.h"
 
-Collider::Collider(int type, const std::string& meshName) :
+Collider::Collider(int type) :
 ReferenceCounter(),
-m_type(type),
-m_mesh(meshName)
+m_type(type)
 {
-	c = getRandomColour();
 	m_isColliding = false;
-}
-
-void Collider::render(const Shader& shader, const RenderingEngine& renderingEngine, const Camera& camera) const
-{
-	m_mesh.getWireFrameShader().bind();
-	Transform t = *m_parent->getTransform();
-	t.setScale(m_scale);
-	m_mesh.getWireFrameShader().updateUniforms(t, renderingEngine, camera);
-
-	if(m_isColliding)
-	{
-		m_mesh.getWireFrameShader().setUniform("wireFrameColour", getRandomColour().toGLSLVec4());
-	}
-	else
-	{
-		m_mesh.getWireFrameShader().setUniform("wireFrameColour", c.toGLSLVec4());
-	}
-
-	m_mesh.drawWireFrame();
 }
 
 IntersectionData Collider::intersect(const Collider& collider) const
@@ -60,11 +39,6 @@ bool Collider::getIsColliding() const
 Vector3 Collider::getCentre() const
 {
 	return m_parent->getTransform()->getPosition();
-}
-
-Mesh Collider::getMesh() const
-{
-	return m_mesh;
 }
 
 Vector3 Collider::getScale() const
