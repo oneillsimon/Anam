@@ -20,20 +20,21 @@ Octree::Octree(Vector3 c1, Vector3 c2, int d)
 	partitions.push_back(p);
 }
 
-void Octree::fileBall(PhysicsObject* physicsObject, bool addBall)
+void Octree::fileCollider(PhysicsObject* physicsObject, bool addBall)
 {
 	Vector3 position = physicsObject->getTransform()->getPosition();
+	Vector3 bounds = physicsObject->m_collider->getScale();
 
 	for(int x = 0; x < 2; x++)
 	{
 		if(x == 0)
 		{
-			if(position.getX() - physicsObject->r > centre.getX())
+			if(position.getX() - bounds.getX() > centre.getX())
 			{
 				continue;
 			}
 		}
-		else if(position.getX() + physicsObject->r < centre.getX())
+		else if(position.getX() + bounds.getX() < centre.getX())
 		{
 			continue;
 		}
@@ -42,12 +43,12 @@ void Octree::fileBall(PhysicsObject* physicsObject, bool addBall)
 		{
 			if(y == 0)
 			{
-				if(position.getY() - physicsObject->r > centre.getY())
+				if(position.getY() - bounds.getY() > centre.getY())
 				{
 					continue;
 				}
 			}
-			else if(position.getY() + physicsObject->r < centre.getY())
+			else if(position.getY() + bounds.getY() < centre.getY())
 			{
 				continue;
 			}
@@ -56,12 +57,12 @@ void Octree::fileBall(PhysicsObject* physicsObject, bool addBall)
 			{
 				if(z == 0)
 				{
-					if(position.getZ() - physicsObject->r > centre.getZ())
+					if(position.getZ() - bounds.getZ() > centre.getZ())
 					{
 						continue;
 					}
 				}
-				else if(position.getZ() + physicsObject->r < centre.getZ())
+				else if(position.getZ() + bounds.getZ() < centre.getZ())
 				{
 					continue;
 				}
@@ -133,22 +134,17 @@ void Octree::haveChildren()
 		}
 	}
 
-	if(depth > 0)
-	{
-		int u = 0;
-	}
-
 	for(std::set<PhysicsObject*>::iterator it = m_objects.begin(); it != m_objects.end(); it++)
 	{
 		PhysicsObject* physicsObject = *it;
-		fileBall(physicsObject, true);
+		fileCollider(physicsObject, true);
 	}
 
 	m_objects.clear();
 	hasChildren = true;
 }
 
-void Octree::collectBalls(std::set<PhysicsObject*>& bs)
+void Octree::collectColliders(std::set<PhysicsObject*>& bs)
 {
 	if(hasChildren)
 	{
@@ -158,7 +154,7 @@ void Octree::collectBalls(std::set<PhysicsObject*>& bs)
 			{
 				for(int z = 0; z < 2; z++)
 				{
-					children[x][y][z]->collectBalls(bs);
+					children[x][y][z]->collectColliders(bs);
 				}
 			}
 		}
@@ -175,7 +171,7 @@ void Octree::collectBalls(std::set<PhysicsObject*>& bs)
 
 void Octree::destroyChildren()
 {
-	collectBalls(m_objects);
+	collectColliders(m_objects);
 
 	for(int x = 0; x < 2; x++)
 	{
@@ -202,7 +198,7 @@ void Octree::remove(PhysicsObject* physicsObject)
 
 	if(hasChildren)
 	{
-		fileBall(physicsObject, false);
+		fileCollider(physicsObject, false);
 	}
 	else
 	{
@@ -222,7 +218,7 @@ void Octree::add(PhysicsObject* physicsObject)
 
 	if(hasChildren)
 	{
-		fileBall(physicsObject, true);
+		fileCollider(physicsObject, true);
 	}
 	else
 	{
@@ -230,13 +226,13 @@ void Octree::add(PhysicsObject* physicsObject)
 	}
 }
 
-void Octree::ballMoved(PhysicsObject* physicsObject, Vector3 oldPosition)
+void Octree::refreshObject(PhysicsObject* physicsObject)
 {
 	remove(physicsObject);
 	add(physicsObject);
 }
 
-void Octree::potentialBallBallCollisions(std::vector<BallPair>& collisions)
+void Octree::potentialCollisions(std::vector<IntersectionData>& collisions)
 {
 	if(hasChildren)
 	{
@@ -246,7 +242,7 @@ void Octree::potentialBallBallCollisions(std::vector<BallPair>& collisions)
 			{
 				for(int z = 0; z < 2; z++)
 				{
-					children[x][y][z]->potentialBallBallCollisions(collisions);
+					children[x][y][z]->potentialCollisions(collisions);
 				}
 			}
 		}
@@ -263,32 +259,23 @@ void Octree::potentialBallBallCollisions(std::vector<BallPair>& collisions)
 
 				if(obj1 < obj2)
 				{
-					BallPair bp;
-					bp.ball1 = obj1;
-					bp.ball2 = obj2;
-					collisions.push_back(bp);
+					//collisions.push_back(IntersectionData())
+					collisions.push_back(obj1->m_collider->intersect(*obj2->m_collider));
+
+					//BallPair bp;
+					//bp.ball1 = obj1;
+					//bp.ball2 = obj2;
+					//collisions.push_back(bp);
 				}
 			}
 		}
 	}
 }
 
-void Octree::advanceState(std::vector<PhysicsObject*>& objects, float delta)
-{
-	moveObjects(objects, delta);
-}
-
-//!! rigid body motion here
-void Octree::moveObjects(std::vector<PhysicsObject*>& objects, float delta)
+void Octree::refreshObjects(std::vector<PhysicsObject*>& objects)
 {
 	for(unsigned int i = 0; i < objects.size(); i++)
 	{
-		PhysicsObject* physicsObject = objects[i];
-
-		Vector3 oldPosition = physicsObject->getTransform()->getPosition();
-		//physicsObject->getTransform()->setPosition(oldPosition + (physicsObject->velocity * delta));
-		physicsObject->m_rigidBody->integrate(delta);
-
-		ballMoved(physicsObject, oldPosition);
+		refreshObject(objects[i]);
 	}
 }

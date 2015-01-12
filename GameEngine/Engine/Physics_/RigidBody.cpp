@@ -18,26 +18,26 @@ m_angularDamping(angular)
 
 void RigidBody::input(const Input& input, float delta)
 {
-	if(input.getKey(Input::KEY_P))
-	{
-		addLinearForce(Vector3(0, 0, 5));
-	}
-
-	if(input.getKey(Input::KEY_L))
-	{
-		addAngularForce(Vector3(50, 50, 50));
-	}
-
-	if(input.getKey(Input::KEY_K))
-	{
-		addAngularForce(Vector3(0, 5, 0));
-	}
-
-	if(input.getKey(Input::KEY_M))
-	{
-		addLinearForce(Vector3(3, 3, 3));
-		addAngularForce(Vector3(3, 3, 3));
-	}
+	//if(input.getKey(Input::KEY_P))
+	//{
+	//	addLinearForce(Vector3(0, 0, 5));
+	//}
+	//
+	//if(input.getKey(Input::KEY_L))
+	//{
+	//	addAngularForce(Vector3(50, 50, 50));
+	//}
+	//
+	//if(input.getKey(Input::KEY_K))
+	//{
+	//	addAngularForce(Vector3(0, 5, 0));
+	//}
+	//
+	//if(input.getKey(Input::KEY_M))
+	//{
+	//	addLinearForce(Vector3(3, 3, 3));
+	//	addAngularForce(Vector3(3, 3, 3));
+	//}
 }
 
 void RigidBody::update(float delta)

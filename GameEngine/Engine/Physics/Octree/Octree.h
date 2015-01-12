@@ -9,8 +9,8 @@
 #include "../PhysicsObject.h"
 
 const int MAX_OCTREE_DEPTH = 6;
-const int MIN_BALLS_PER_OCTREE = 3;
-const int MAX_BALLS_PER_OCTREE = 6;
+const int MIN_BALLS_PER_OCTREE = 1;
+const int MAX_BALLS_PER_OCTREE = 4;
 
 class PhysicsObject;
 
@@ -44,17 +44,16 @@ public:
 
 	Octree(Vector3 c1, Vector3 c2, int d);
 
-	void fileBall(PhysicsObject* physicsObject, bool addBall);
+	void fileCollider(PhysicsObject* physicsObject, bool addBall);
 	void haveChildren();
-	void collectBalls(std::set<PhysicsObject*>& physicsObjectSet);
+	void collectColliders(std::set<PhysicsObject*>& physicsObjectSet);
 	void destroyChildren();
 	void remove(PhysicsObject* physicsObject);
 	void add(PhysicsObject* physicsObject);
-	void ballMoved(PhysicsObject* physicsObject, Vector3 oldPosition);
-	void potentialBallBallCollisions(std::vector<BallPair>& collisions);
+	void potentialCollisions(std::vector<IntersectionData>& collisions);
 
-	void advanceState(std::vector<PhysicsObject*>& objects, float delta);
-	void moveObjects(std::vector<PhysicsObject*>& objects, float delta);
+	void refreshObject(PhysicsObject* physicsObject);
+	void refreshObjects(std::vector<PhysicsObject*>& objects);
 };
 
 #endif

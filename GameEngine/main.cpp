@@ -46,24 +46,29 @@ void TestGame::initialise(const Window& window)
 	cameraObj->addComponent(new FreeMove());
 	cameraObj->addComponent(new CameraComponent(Matrix4().initPerspective(toRadians(70.0f), window.getAspectRatio(), 0.1f, 1000.0f)));
 
-	int n = 12;
-	int m = 4;
+	int n = 20;
+	int m = n / 2;
 
 	for(int i = 0; i < n; i++)
 	{
 		int x = random(-m, m);
 		int y = random(-m, m);
 		int z = random(-m, m);
-
-		PhysicsObject* p = new PhysicsObject(new RigidBody(10), Vector3(x, y, z));
+		int radius = 1;
+		PhysicsObject* p = new PhysicsObject(new RigidBody(10), new BoundingSphere(radius), Vector3(x, y, z));
 		//GameObject* p = new GameObject(Vector3(x, y, z));
 
 		Material m = Material("", TEXTURE_BLANK, COLOUR_WHITE);
 		p->addComponent(new MeshRenderer(Mesh("sphere.obj"), m));
-		p->r = 1;
 
 		//p->velocity = Vector3(0, 0, 0);
 		//p->r = 1;
+
+		if(i == 0)
+		{
+			p->getTransform()->setPosition(Vector3(x + 10, y, z));
+			p->addComponent(new Movement2D(10, Input::KEY_I, Input::KEY_K, Input::KEY_J, Input::KEY_L));
+		}
 
 		addToScene2(p);
 	}

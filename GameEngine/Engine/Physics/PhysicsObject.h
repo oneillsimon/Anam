@@ -9,9 +9,11 @@ class PhysicsObject : public GameObject
 {
 public:
 	RigidBody* m_rigidBody;
-	float r;
+	Collider* m_collider;
 
-	PhysicsObject(RigidBody* rigidBody, const Vector3& position = Vector3(), const Quaternion& rotation = Quaternion(), float scale = 1.0f);
+	PhysicsObject(RigidBody* rigidBody, Collider* collider, const Vector3& position = Vector3(), const Quaternion& rotation = Quaternion(), float scale = 1.0f);
+
+	virtual void update(float delta);
 };
 
 #endif

@@ -10,7 +10,7 @@ class PhysicsEngine
 {
 private:
 	std::vector<PhysicsObject*> m_objects;
-	std::vector<BallPair> collisions;
+	std::vector<IntersectionData> collisions;
 
 public:
 	Octree* mainTree;
