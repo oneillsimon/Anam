@@ -2,15 +2,16 @@
 #define PHYSICSOBJECT_H
 
 #include "Octree/Octree.h"
+#include "../Physics_/RigidBody.h"
 #include "../Core/GameObject.h"
 
 class PhysicsObject : public GameObject
 {
 public:
-	Vector3 velocity;
+	RigidBody* m_rigidBody;
 	float r;
 
-	PhysicsObject(const Vector3& position = Vector3(), const Quaternion& rotation = Quaternion(), float scale = 1.0f);
+	PhysicsObject(RigidBody* rigidBody, const Vector3& position = Vector3(), const Quaternion& rotation = Quaternion(), float scale = 1.0f);
 };
 
 #endif

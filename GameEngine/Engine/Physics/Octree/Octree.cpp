@@ -8,6 +8,7 @@ Octree::Octree(Vector3 c1, Vector3 c2, int d)
 	corner2 = c2;
 	centre = (c1 + c2) / 2;
 	depth = d;
+	printf("octree created at depth %d\n", d);
 	numBalls = 0;
 	hasChildren = false;
 
@@ -31,48 +32,48 @@ void Octree::fileBall(PhysicsObject* physicsObject, bool addBall)
 			{
 				continue;
 			}
-			else if(position.getX() + physicsObject->r < centre.getX())
+		}
+		else if(position.getX() + physicsObject->r < centre.getX())
+		{
+			continue;
+		}
+
+		for(int y = 0; y < 2; y++)
+		{
+			if(y == 0)
+			{
+				if(position.getY() - physicsObject->r > centre.getY())
+				{
+					continue;
+				}
+			}
+			else if(position.getY() + physicsObject->r < centre.getY())
 			{
 				continue;
 			}
 
-			for(int y = 0; y < 2; y++)
+			for(int z = 0; z < 2; z++)
 			{
-				if(y == 0)
+				if(z == 0)
 				{
-					if(position.getY() - physicsObject->r > centre.getY())
+					if(position.getZ() - physicsObject->r > centre.getZ())
 					{
 						continue;
 					}
-					else if(position.getY() + physicsObject->r < centre.getY())
-					{
-						continue;
-					}
+				}
+				else if(position.getZ() + physicsObject->r < centre.getZ())
+				{
+					continue;
+				}
 
-					for(int z = 0; z < 2; z++)
-					{
-						if(z == 0)
-						{
-							if(position.getZ() - physicsObject->r > centre.getZ())
-							{
-								continue;
-							}
-							else if(position.getZ() + physicsObject->r < centre.getZ())
-							{
-								continue;
-							}
-
-							// Add or remove the ball
-							if(addBall)
-							{
-								children[x][y][z]->add(physicsObject);
-							}
-							else
-							{
-								children[x][y][z]->remove(physicsObject);
-							}
-						}
-					}
+				// Add or remove the ball
+				if(addBall)
+				{
+					children[x][y][z]->add(physicsObject);
+				}
+				else
+				{
+					children[x][y][z]->remove(physicsObject);
 				}
 			}
 		}
@@ -130,6 +131,11 @@ void Octree::haveChildren()
 					Vector3(maxX, maxY, maxZ), depth + 1);
 			}
 		}
+	}
+
+	if(depth > 0)
+	{
+		int u = 0;
 	}
 
 	for(std::set<PhysicsObject*>::iterator it = m_objects.begin(); it != m_objects.end(); it++)
@@ -208,7 +214,7 @@ void Octree::add(PhysicsObject* physicsObject)
 {
 	numBalls++;
 
-	if(!hasChildren && depth < MAX_BALLS_PER_OCTREE &&
+	if(!hasChildren && depth < MAX_OCTREE_DEPTH &&
 		numBalls > MAX_BALLS_PER_OCTREE)
 	{
 		haveChildren();
@@ -278,8 +284,11 @@ void Octree::moveObjects(std::vector<PhysicsObject*>& objects, float delta)
 	for(unsigned int i = 0; i < objects.size(); i++)
 	{
 		PhysicsObject* physicsObject = objects[i];
+
 		Vector3 oldPosition = physicsObject->getTransform()->getPosition();
-		physicsObject->getTransform()->setPosition(oldPosition + (physicsObject->velocity * delta));
+		//physicsObject->getTransform()->setPosition(oldPosition + (physicsObject->velocity * delta));
+		physicsObject->m_rigidBody->integrate(delta);
+
 		ballMoved(physicsObject, oldPosition);
 	}
 }

@@ -43,7 +43,7 @@ void RigidBody::input(const Input& input, float delta)
 void RigidBody::update(float delta)
 {
 	//addLinearForce(Vector3(0, -0.98f, 0));
-	integrate(delta);
+	//integrate(delta);
 	//printf("x: %s, y: %s, z: %s\n", m_parent->getTransform()->getPosition().getX(), m_parent->getTransform()->getPosition().getY(), m_parent->getTransform()->getPosition().getZ());
 }
 
@@ -53,22 +53,22 @@ void RigidBody::integrate(float delta)
 	{
 		return;
 	}
-
+	
 	m_acceleration += m_forceAccum * m_inverseMass;
 	Vector3 angularAcceleration = m_torqueAccum * m_inverseMass;
-
+	
 	m_velocity += m_acceleration * delta;
 	m_rotation += angularAcceleration * delta;
-
+	
 	m_velocity *= powf(m_linearDamping, delta);
 	m_rotation *= powf(m_angularDamping, delta);
-
+	
 	getTransform()->setPosition(getTransform()->getPosition() + (m_velocity * delta));
 	getTransform()->rotate(m_rotation, m_rotation.length());
-
+	
 	m_velocity *= powf(m_linearDamping, delta);
 	m_rotation *= powf(m_angularDamping, delta);
-
+	
 	clearAccumulators();
 }
 

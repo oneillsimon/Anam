@@ -46,23 +46,24 @@ void TestGame::initialise(const Window& window)
 	cameraObj->addComponent(new FreeMove());
 	cameraObj->addComponent(new CameraComponent(Matrix4().initPerspective(toRadians(70.0f), window.getAspectRatio(), 0.1f, 1000.0f)));
 
-	int n = 20;
-	int m = 10;
+	int n = 12;
+	int m = 4;
 
 	for(int i = 0; i < n; i++)
 	{
 		int x = random(-m, m);
 		int y = random(-m, m);
-		int z = random(0, 0);
+		int z = random(-m, m);
 
-		PhysicsObject* p = new PhysicsObject(Vector3(x, y, z));
+		PhysicsObject* p = new PhysicsObject(new RigidBody(10), Vector3(x, y, z));
 		//GameObject* p = new GameObject(Vector3(x, y, z));
 
 		Material m = Material("", TEXTURE_BLANK, COLOUR_WHITE);
 		p->addComponent(new MeshRenderer(Mesh("sphere.obj"), m));
-
-		p->velocity = Vector3(0, 0, 0);
 		p->r = 1;
+
+		//p->velocity = Vector3(0, 0, 0);
+		//p->r = 1;
 
 		addToScene2(p);
 	}
@@ -71,7 +72,7 @@ void TestGame::initialise(const Window& window)
 
 	int partitions = Octree::partitions.size();
 
-	for(int i = 0; i < partitions / 2; i++)
+	for(int i = 0; i < partitions; i++)
 	{
 		GameObject* g = new GameObject(Octree::partitions[i].centre);
 		AABB* a = new AABB(Octree::partitions[i].min, Octree::partitions[i].max);
@@ -85,7 +86,7 @@ void TestGame::initialise(const Window& window)
 int main()
 {
 	TestGame test;
-	CoreEngine engine(800, 600, 999, &test);
+	CoreEngine engine(800, 600, 120, &test);
 	engine.createWindow("Game ENGINE");
 	engine.start();
 

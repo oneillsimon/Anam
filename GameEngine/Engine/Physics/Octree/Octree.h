@@ -9,8 +9,8 @@
 #include "../PhysicsObject.h"
 
 const int MAX_OCTREE_DEPTH = 6;
-const int MIN_BALLS_PER_OCTREE = 2;
-const int MAX_BALLS_PER_OCTREE = 3;
+const int MIN_BALLS_PER_OCTREE = 3;
+const int MAX_BALLS_PER_OCTREE = 6;
 
 class PhysicsObject;
 
@@ -56,50 +56,5 @@ public:
 	void advanceState(std::vector<PhysicsObject*>& objects, float delta);
 	void moveObjects(std::vector<PhysicsObject*>& objects, float delta);
 };
-
-//void moveBalls(std::vector<int*>& objs, Octree* octree, float delta)
-//{
-//	//Ball* ball = objs[0]->b;
-//	//Vector3 oldPosition = ball->pos;
-//	//ball->pos += ball->v * delta;
-//	//octree->ballMoved(ball, oldPosition);
-//}
-//
-//void advance(std::vector<Ball*>& objs, Octree* octree, float delta)
-//{
-//	//moveBalls(objs, octree, delta);
-//	//handleCollision
-//}
-/*
-
-//Moves all of the balls by their velocity times dt
-void moveBalls(vector<Ball*> &balls, Octree* octree, float dt) {
-for(unsigned int i = 0; i < balls.size(); i++) {
-Ball* ball = balls[i];
-Vec3f oldPos = ball->pos;
-ball->pos += ball->v * dt;
-octree->ballMoved(ball, oldPos);
-}
-}
-
-void advance(vector<Ball*> &balls,
-Octree* octree,
-float t,
-float &timeUntilUpdate) {
-while (t > 0) {
-if (timeUntilUpdate <= t) {
-moveBalls(balls, octree, timeUntilUpdate);
-performUpdate(balls, octree);
-t -= timeUntilUpdate;
-timeUntilUpdate = TIME_BETWEEN_UPDATES;
-}
-else {
-moveBalls(balls, octree, t);
-timeUntilUpdate -= t;
-t = 0;
-}
-}
-}
-*/
 
 #endif
