@@ -7,6 +7,7 @@
 #include "../../Core/Math3D.h"
 #include "../Collider.h"
 #include "../PhysicsObject.h"
+#include "../../Physics_/CollideFine.h"
 
 const int MAX_OCTREE_DEPTH = 6;
 const int MIN_BALLS_PER_OCTREE = 1;
@@ -50,10 +51,11 @@ public:
 	void destroyChildren();
 	void remove(PhysicsObject* physicsObject);
 	void add(PhysicsObject* physicsObject);
-	void potentialCollisions(std::vector<IntersectionData>& collisions);
+	void potentialCollisions(CollisionData* data);
 
 	void refreshObject(PhysicsObject* physicsObject);
 	void refreshObjects(std::vector<PhysicsObject*>& objects);
+	void generateContacts(const CollisionSphere& one, const CollisionSphere& two, CollisionData* data);
 };
 
 #endif

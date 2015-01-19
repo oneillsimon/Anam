@@ -1,7 +1,9 @@
 #include "PhysicsEngine.h"
 
-PhysicsEngine::PhysicsEngine()
+PhysicsEngine::PhysicsEngine() :
+	resolver(256*8)
 {
+	cData.m_contactArray = contacts;
 	int size = 12;
 	mainTree = new Octree(Vector3(-size, -size, -size), Vector3(size, size, size), 1);
 }
@@ -20,13 +22,14 @@ void PhysicsEngine::simulate(float delta)
 	}
 
 	mainTree->refreshObjects(m_objects);
-	mainTree->potentialCollisions(collisions);
-	printf("col count: %d\n", collisions.size());
-	collisions.clear();
+	mainTree->potentialCollisions(&cData);
+	handleCollisions(delta);
 }
 
-void PhysicsEngine::handleCollisions()
+void PhysicsEngine::handleCollisions(float delta)
 {
+	printf("contact count %d\n", cData.m_contactCount);
+	resolver.resolveContacts(cData.m_contactArray, cData.m_contactCount, delta);
 }
 
 PhysicsObject* PhysicsEngine::getObject(unsigned int index) const

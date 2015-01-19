@@ -4,14 +4,16 @@
 #include "Octree/Octree.h"
 #include "../Physics_/RigidBody.h"
 #include "../Core/GameObject.h"
+#include "../Physics_/CollideFine.h"
 
 class PhysicsObject : public GameObject
 {
 public:
-	RigidBody* m_rigidBody;
-	Collider* m_collider;
+	//RigidBody* m_rigidBody;
+	//Collider* m_collider;
+	CollisionSphere* collider;
 
-	PhysicsObject(RigidBody* rigidBody, Collider* collider, const Vector3& position = Vector3(), const Quaternion& rotation = Quaternion(), float scale = 1.0f);
+	PhysicsObject(RigidBody* rigidBody, const Vector3& position = Vector3(), const Quaternion& rotation = Quaternion(0, 0, 0, 1), float scale = 1.0f);
 
 	virtual void update(float delta);
 };

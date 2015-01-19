@@ -23,7 +23,8 @@ Octree::Octree(Vector3 c1, Vector3 c2, int d)
 void Octree::fileCollider(PhysicsObject* physicsObject, bool addBall)
 {
 	Vector3 position = physicsObject->getTransform()->getPosition();
-	Vector3 bounds = physicsObject->m_collider->getScale();
+	Vector3 bounds = physicsObject->collider->m_radius;
+	//Vector3 bounds = physicsObject->m_collider->getScale();
 
 	for(int x = 0; x < 2; x++)
 	{
@@ -232,7 +233,7 @@ void Octree::refreshObject(PhysicsObject* physicsObject)
 	add(physicsObject);
 }
 
-void Octree::potentialCollisions(std::vector<IntersectionData>& collisions)
+void Octree::potentialCollisions(CollisionData* data)
 {
 	if(hasChildren)
 	{
@@ -242,7 +243,7 @@ void Octree::potentialCollisions(std::vector<IntersectionData>& collisions)
 			{
 				for(int z = 0; z < 2; z++)
 				{
-					children[x][y][z]->potentialCollisions(collisions);
+					children[x][y][z]->potentialCollisions(data);
 				}
 			}
 		}
@@ -260,12 +261,14 @@ void Octree::potentialCollisions(std::vector<IntersectionData>& collisions)
 				if(obj1 < obj2)
 				{
 					//collisions.push_back(IntersectionData())
-					collisions.push_back(obj1->m_collider->intersect(*obj2->m_collider));
-
+					//collisions.push_back(obj1->m_collider->intersect(*obj2->m_collider));
 					//BallPair bp;
 					//bp.ball1 = obj1;
 					//bp.ball2 = obj2;
 					//collisions.push_back(bp);
+					//data->m_contactsLeft++;
+					//CollisionDetector::sphereAndSphere(*obj1->collider, *obj2->collider, &data);
+					generateContacts(*obj1->collider, *obj2->collider, data);
 				}
 			}
 		}
@@ -278,4 +281,14 @@ void Octree::refreshObjects(std::vector<PhysicsObject*>& objects)
 	{
 		refreshObject(objects[i]);
 	}
+}
+
+void Octree::generateContacts(const CollisionSphere& one, const CollisionSphere& two, CollisionData* data)
+{
+	data->reset(256);
+	data->m_friction = 0.9f;
+	data->m_restitution = 0.6f;
+	data->m_tolerance = 0.1f;
+
+	CollisionDetector::sphereAndSphere(one, two, data);
 }

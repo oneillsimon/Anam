@@ -5,12 +5,16 @@
 
 #include "Octree\Octree.h"
 #include "PhysicsObject.h"
+#include "../Physics_/Contacts.h"
 
 class PhysicsEngine
 {
 private:
 	std::vector<PhysicsObject*> m_objects;
 	std::vector<IntersectionData> collisions;
+	CollisionData cData;
+	ContactResolver resolver;
+	Contact contacts[256];
 
 public:
 	Octree* mainTree;
@@ -18,7 +22,7 @@ public:
 
 	void addObject(PhysicsObject* object);
 	void simulate(float delta);
-	void handleCollisions();
+	void handleCollisions(float delta);
 
 	PhysicsObject* getObject(unsigned int index) const;
 };

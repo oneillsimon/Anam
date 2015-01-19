@@ -8,7 +8,7 @@ PhysicsEngineComponent::PhysicsEngineComponent(const PhysicsEngine& engine) :
 void PhysicsEngineComponent::update(float delta)
 {
 	//m_physicsEngine.simulate(delta);
-	m_physicsEngine.handleCollisions();
+	//m_physicsEngine.handleCollisions();
 }
 
 const PhysicsEngine& PhysicsEngineComponent::getPhysicsEngine()
