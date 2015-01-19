@@ -75,7 +75,7 @@ void RigidBody::integrate(float delta)
 	m_rotation *= powf(m_angularDamping, delta);
 
 	getTransform()->setPosition(getTransform()->getPosition() + (m_velocity * delta));
-	//getTransform()->rotate(m_rotation.normalised(), m_rotation.length() + 0.00001f);
+	getTransform()->rotate(AXIS_Z, m_rotation.length() + 0.00001f);
 
 	calculateDerivedData();
 	clearAccumulators();

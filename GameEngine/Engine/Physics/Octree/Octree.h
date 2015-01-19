@@ -10,7 +10,7 @@
 #include "../../Physics_/CollideFine.h"
 
 const int MAX_OCTREE_DEPTH = 6;
-const int MIN_BALLS_PER_OCTREE = 1;
+const int MIN_BALLS_PER_OCTREE = 4;
 const int MAX_BALLS_PER_OCTREE = 4;
 
 class PhysicsObject;

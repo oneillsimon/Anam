@@ -1,7 +1,7 @@
 #include "PhysicsEngine.h"
 
 PhysicsEngine::PhysicsEngine() :
-	resolver(256*8)
+	resolver(MAX_CONTACT_COUNT * 8)
 {
 	cData.m_contactArray = contacts;
 	int size = 12;
@@ -23,12 +23,13 @@ void PhysicsEngine::simulate(float delta)
 
 	mainTree->refreshObjects(m_objects);
 	mainTree->potentialCollisions(&cData);
+	//cData.reset(256 * 8);
 	handleCollisions(delta);
 }
 
 void PhysicsEngine::handleCollisions(float delta)
 {
-	printf("contact count %d\n", cData.m_contactCount);
+	//printf("contact count %d\n", cData.m_contactCount);
 	resolver.resolveContacts(cData.m_contactArray, cData.m_contactCount, delta);
 }
 

@@ -48,14 +48,37 @@ void TestGame::initialise(const Window& window)
 	cameraObj->addComponent(new CameraComponent(Matrix4().initPerspective(toRadians(70.0f), window.getAspectRatio(), 0.1f, 1000.0f)));
 
 	//PhysicsObject* pObj = new PhysicsObject(new RigidBody(10));
-	PhysicsObject* pObj = new PhysicsObject(new RigidBody(10), Vector3(-0.5f, 0, 0));
+	PhysicsObject* pObj = new PhysicsObject(new RigidBody(1), Vector3(-0.5f, 0, 0));
 	pObj->addComponent(new MeshRenderer(Mesh("sphere.obj"), MATERIAL_DEFAULT));
 	addToScene2(pObj);
 
-	PhysicsObject* pObj2 = new PhysicsObject(new RigidBody(10), Vector3(0.5f, 0, 0));
-	pObj2->addComponent(new MeshRenderer(Mesh("sphere.obj"), MATERIAL_DEFAULT));
+	int n = 4;
+	int m = 8;
+
+	for(int i = 0; i < n; i++)
+	{
+		float x = random(-m, m);
+		float y = random(-m, m);
+		float z = 0;//random(-m, m);
+
+		//PhysicsObject* o = new PhysicsObject(new RigidBody(1), Vector3(x, y, z));
+		//o->addComponent(new MeshRenderer(Mesh("sphere.obj"), Material("", TEXTURE_BLANK, getRandomColour())));
+		//addToScene2(o);
+	}
+
+	PhysicsObject* pObj2 = new PhysicsObject(new RigidBody(1), Vector3(0.5f, 0, 0));
+	pObj2->addComponent(new MeshRenderer(Mesh("sphere.obj"), Material("", TEXTURE_BLANK, COLOUR_MEDIUM_PURPLE)));
 	pObj2->addComponent(new Movement2D(10));
 	addToScene2(pObj2);
+
+	PhysicsObject* pObj3 = new PhysicsObject(new RigidBody(1), Vector3(0.5f, 0.5f, 0));
+	pObj3->addComponent(new MeshRenderer(Mesh("sphere.obj"), Material("", TEXTURE_BLANK, COLOUR_YELLOW)));
+	addToScene2(pObj3);
+
+	PhysicsObject* pObj4 = new PhysicsObject(new RigidBody(1), Vector3(0.5f, -0.5f, 0));
+	pObj4->addComponent(new MeshRenderer(Mesh("sphere.obj"), Material("", TEXTURE_BLANK, COLOUR_CORAL)));
+	pObj4->addComponent(new Movement2D(10, Input::KEY_UP, Input::KEY_DOWN, Input::KEY_LEFT, Input::KEY_RIGHT));
+	addToScene2(pObj4);
 
 	addToScene(cameraObj);
 

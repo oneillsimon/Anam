@@ -250,6 +250,8 @@ void Octree::potentialCollisions(CollisionData* data)
 	}
 	else
 	{
+		//data->reset(256);
+
 		for(std::set<PhysicsObject*>::iterator it = m_objects.begin(); it != m_objects.end(); it++)
 		{
 			PhysicsObject* obj1 = *it;
@@ -260,14 +262,6 @@ void Octree::potentialCollisions(CollisionData* data)
 
 				if(obj1 < obj2)
 				{
-					//collisions.push_back(IntersectionData())
-					//collisions.push_back(obj1->m_collider->intersect(*obj2->m_collider));
-					//BallPair bp;
-					//bp.ball1 = obj1;
-					//bp.ball2 = obj2;
-					//collisions.push_back(bp);
-					//data->m_contactsLeft++;
-					//CollisionDetector::sphereAndSphere(*obj1->collider, *obj2->collider, &data);
 					generateContacts(*obj1->collider, *obj2->collider, data);
 				}
 			}
@@ -286,8 +280,8 @@ void Octree::refreshObjects(std::vector<PhysicsObject*>& objects)
 void Octree::generateContacts(const CollisionSphere& one, const CollisionSphere& two, CollisionData* data)
 {
 	data->reset(256);
-	data->m_friction = 0.9f;
-	data->m_restitution = 0.6f;
+	data->m_friction = 1.9f;
+	data->m_restitution = 100.0f;
 	data->m_tolerance = 0.1f;
 
 	CollisionDetector::sphereAndSphere(one, two, data);

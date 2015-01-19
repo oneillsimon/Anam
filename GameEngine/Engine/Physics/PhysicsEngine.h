@@ -1,6 +1,8 @@
 #ifndef PHYSICSENGINE_H
 #define PHYSICSENGINE_H
 
+#define MAX_CONTACT_COUNT 256
+
 #include <vector>
 
 #include "Octree\Octree.h"
