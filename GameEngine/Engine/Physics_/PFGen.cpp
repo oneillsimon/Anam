@@ -75,7 +75,7 @@ void ParticleGravity::updateForce(RigidBody* body, float delta)
 {
 	// TODO: check for infinite mass
 
-	body->addLinearForce(m_gravity * body->getMass());
+	body->addForce(m_gravity * body->getMass());
 }
 
 ParticleDrag::ParticleDrag(float k1, float k2) :

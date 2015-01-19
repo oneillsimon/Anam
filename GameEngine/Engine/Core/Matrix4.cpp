@@ -162,35 +162,66 @@ Vector3 Matrix4::transform(const Vector3& v) const
 	return res;
 }
 
-void Matrix4::setInverse(const Matrix4& m)
+void Matrix4::setInverse(const Matrix4& matrix)
 {
-	// TODO: make this work for 4x4 matrix, this treat matrix4 as matrix3, ignoring 4th row and column
+	float d = getDeterminant();
 
-	float t4 = m.getAt(0, 0) * m.getAt(1, 1);
-	float t6 = m.getAt(0, 0) * m.getAt(2, 1);
-	float t8 = m.getAt(1, 0) * m.getAt(0, 1);
-	float t10 = m.getAt(2, 0) * m.getAt(0, 1);
-	float t12 = m.getAt(1, 0) * m.getAt(0, 2);
-	float t14 = m.getAt(2, 0) * m.getAt(0, 2);
-
-	float t16 = (t4 * m.getAt(2, 2) - t6 * m.getAt(1, 2) - t8 * m.getAt(2, 2) + t10 * m.getAt(1, 2) + t12 * m.getAt(2, 1) - t14 * m.getAt(1, 1));
-
-	if(t16 == 0.0f)
+	if(d == 0.0f)
 	{
 		return;
 	}
 
-	float t17 = 1.0f / t16;
+	d = 1.0f / d;
 
-	m.setAt(0, 0, (m.getAt(1, 1) * m.getAt(2, 2) - m.getAt(2, 1) * m.getAt(1, 2)) * t17);
-	m.setAt(1, 0, (m.getAt(1, 0) * m.getAt(2, 2) - m.getAt(2, 0) * m.getAt(1, 2)) * t17);
-	m.setAt(2, 0, (m.getAt(1, 0) * m.getAt(2, 1) - m.getAt(2, 0) * m.getAt(1, 1)) * t17);
-	m.setAt(0, 1, (m.getAt(0, 1) * m.getAt(2, 2) - m.getAt(2, 1) * m.getAt(0, 2)) * t17);
-	m.setAt(1, 1, (m.getAt(0, 0) * m.getAt(2, 2) - t14) * t17);
-	m.setAt(2, 1, -(t6 - t10) * t17);
-	m.setAt(0, 2, (m.getAt(0, 1) * m.getAt(1, 2) - m.getAt(1, 1) * m.getAt(0, 2)) * t17);
-	m.setAt(1, 2, -(m.getAt(0, 0) * m.getAt(1, 2) - t12) * t17);
-	m.setAt(2, 2, (t4 - t8) * t17);
+	m[0][0] = (-matrix.m[1][2] * matrix.m[2][1] + matrix.m[1][1] * matrix.m[2][2]) * d;
+	m[0][1] = (+matrix.m[0][2] * matrix.m[2][1] - matrix.m[0][1] * matrix.m[2][2]) * d;
+	m[0][2] = (-matrix.m[0][2] * matrix.m[1][1] + matrix.m[0][1] * matrix.m[1][2]) * d;
+
+	m[1][0] = (+matrix.m[1][2] * matrix.m[2][0] - matrix.m[1][0] * matrix.m[2][2]) * d;
+	m[1][1] = (-matrix.m[0][2] * matrix.m[2][0] + matrix.m[0][0] * matrix.m[2][2]) * d;
+	m[1][2] = (+matrix.m[0][2] * matrix.m[1][0] - matrix.m[0][0] * matrix.m[1][2]) * d;
+
+	m[2][0] = (-matrix.m[1][1] * matrix.m[2][0] + matrix.m[1][0] * matrix.m[2][1]) * d;
+	m[2][1] = (+matrix.m[0][1] * matrix.m[2][0] - matrix.m[0][0] * matrix.m[2][1]) * d;
+	m[2][2] = (-matrix.m[0][1] * matrix.m[1][0] + matrix.m[0][0] * matrix.m[1][1]) * d;
+
+	m[3][0] = (matrix.m[1][2] * matrix.m[2][1] * matrix.m[3][0] -
+			   matrix.m[1][1] * matrix.m[2][2] * matrix.m[3][0] -
+			   matrix.m[1][2] * matrix.m[2][0] * matrix.m[3][1] +
+			   matrix.m[1][0] * matrix.m[2][2] * matrix.m[3][1] +
+			   matrix.m[1][1] * matrix.m[2][0] * matrix.m[3][2]) * d;
+
+	m[3][1] = (-matrix.m[0][2] * matrix.m[2][1] * matrix.m[3][0] +
+				matrix.m[0][1] * matrix.m[2][2] * matrix.m[3][0] +
+				matrix.m[0][2] * matrix.m[2][0] * matrix.m[3][1] -
+				matrix.m[0][0] * matrix.m[2][2] * matrix.m[3][1] -
+				matrix.m[0][1] * matrix.m[2][0] * matrix.m[3][2] +
+				matrix.m[0][0] * matrix.m[2][1] * matrix.m[3][2]) * d;
+
+	m[3][2] = (matrix.m[0][2] * matrix.m[1][1] * matrix.m[3][0] -
+			   matrix.m[0][1] * matrix.m[1][2] * matrix.m[3][0] -
+			   matrix.m[0][2] * matrix.m[1][0] * matrix.m[3][1] +
+			   matrix.m[0][0] * matrix.m[1][2] * matrix.m[3][1] +
+			   matrix.m[0][1] * matrix.m[1][0] * matrix.m[3][2] -
+			   matrix.m[0][0] * matrix.m[1][1] * matrix.m[3][2]) * d;
+}
+
+Vector3 Matrix4::transformDirection(const Vector3& v) const
+{
+	float x = v.getX() * m[0][0] + v.getY() * m[1][0] * v.getZ() * m[2][0];
+	float y = v.getX() * m[0][1] + v.getY() * m[1][1] * v.getZ() * m[2][1];
+	float z = v.getX() * m[0][2] + v.getY() * m[1][2] * v.getZ() * m[2][2];
+
+	return Vector3(x, y, z);
+}
+
+Vector3 Matrix4::transformInverseDirection(const Vector3& v) const
+{
+	float x = v.getX() * m[0][0] + v.getY() * m[0][1] * v.getZ() * m[0][2];
+	float y = v.getX() * m[1][0] + v.getY() * m[1][1] * v.getZ() * m[1][2];
+	float z = v.getX() * m[2][0] + v.getY() * m[2][1] * v.getZ() * m[2][2];
+
+	return Vector3(x, y, z);
 }
 
 void Matrix4::setComponents(const Vector3& v1, const Vector3& v2, const Vector3& v3)
@@ -239,6 +270,16 @@ float Matrix4::getAt(int x, int y) const
 	return m[x][y];
 }
 
+float Matrix4::getDeterminant() const
+{
+	return -m[0][2] * m[1][1] * m[2][0] +
+			m[0][1] * m[1][2] * m[2][0] +
+			m[0][2] * m[1][0] * m[2][1] -
+			m[0][0] * m[1][2] * m[2][1] -
+			m[0][1] * m[1][0] * m[2][2] +
+			m[0][0] * m[1][1] * m[2][2];
+}
+
 void Matrix4::set(float** m)
 {
 	for(int i = 0; i < 4; i++)
@@ -271,4 +312,13 @@ Matrix4 Matrix4::operator *(const Matrix4& matrix) const
 	}
 
 	return res;
+}
+
+Vector3 Matrix4::operator *(const Vector3& v) const
+{
+	float x = v.getX() * m[0][0] + v.getY() * m[1][0] + v.getZ() * m[2][0] + m[3][0];
+	float y = v.getX() * m[0][1] + v.getY() * m[1][1] + v.getZ() * m[2][1] + m[3][1];
+	float z = v.getX() * m[0][2] + v.getY() * m[1][2] + v.getZ() * m[2][2] + m[3][2];
+
+	return Vector3(x, y, z);
 }

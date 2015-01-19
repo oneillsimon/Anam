@@ -100,16 +100,23 @@ Vector3 Vector3::absolute()
 	return Vector3(abs(x), abs(y), abs(z));
 }
 
-void Vector3::addScaledVector3(const Vector3& v, float scale)
+void Vector3::addScaledVector3(const Vector3& v, float f)
 {
-	x += (v.getX() * scale);
-	y += (v.getY() * scale);
-	z += (v.getZ() * scale);
+	x += v.getX() * f;
+	y += v.getY() * f;
+	z += v.getZ() * f;
 }
 
-float Vector3::byVector3ToFloat(const Vector3& v) const
+float Vector3::scalarProduct(const Vector3& v) const
 {
 	return x * v.getX() + y * v.getY() + z * v.getZ();
+}
+
+void Vector3::clear()
+{
+	x = 0;
+	y = 0;
+	z = 0;
 }
 
 float Vector3::getX() const
@@ -169,6 +176,15 @@ Vector3 Vector3::operator *(const Vector3& v) const
 Vector3 Vector3::operator /(const Vector3& v) const
 {
 	return Vector3(x / v.getX(), y / v.getY(), z / v.getZ());
+}
+
+Vector3 Vector3::operator %(const Vector3& v) const
+{
+	float x = y * v.getZ() - z * v.getY();
+	float y = z * v.getX() - x * v.getZ();
+	float z = x * v.getY() - y * v.getX();
+
+	return (x, y, z);
 }
 
 void Vector3::operator +=(const Vector3& v) const
@@ -255,4 +271,34 @@ bool Vector3::operator ==(const Vector3& v) const
 bool Vector3::operator !=(const Vector3& v) const
 {
 	return x != v.getX() || y != v.getY() || z != v.getZ();
+}
+
+float Vector3::operator [](unsigned index) const
+{
+	if(index == 0)
+	{
+		return x;
+	}
+
+	if(index == 1)
+	{
+		return y;
+	}
+
+	return z;
+}
+
+float& Vector3::operator [](unsigned index)
+{
+	if(index == 0)
+	{
+		return x;
+	}
+
+	if(index == 1)
+	{
+		return y;
+	}
+
+	return z;
 }

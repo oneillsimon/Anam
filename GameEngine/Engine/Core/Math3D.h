@@ -85,9 +85,9 @@ public:
 	Vector3 reflect(const Vector3& normal) const;
 	Vector3 lerp(const Vector3& destination, float lerpFactor) const;
 	Vector3 absolute();
-	void addScaledVector3(const Vector3& v, float scale);
-
-	float byVector3ToFloat(const Vector3& v) const;
+	void addScaledVector3(const Vector3& v, float f);
+	float scalarProduct(const Vector3& v) const;
+	void clear();
 
 	float getX() const;
 	float getY() const;
@@ -103,6 +103,7 @@ public:
 	Vector3 operator -(const Vector3& v) const;
 	Vector3 operator *(const Vector3& v) const;
 	Vector3 operator /(const Vector3& v) const;
+	Vector3 operator %(const Vector3& v) const;
 
 	void operator +=(const Vector3& v) const;
 	void operator -=(const Vector3& v) const;
@@ -122,7 +123,8 @@ public:
 	bool operator ==(const Vector3& v) const;
 	bool operator !=(const Vector3& v) const;
 
-	const float operator [](int index) const;
+	float operator [](unsigned index) const;
+	float& operator [](unsigned index);
 };
 
 class Vector4
@@ -177,14 +179,18 @@ public:
 	//From cyclone
 	Vector3 getAxisVector(unsigned int index) const;
 	Vector3 transformInverse(const Vector3& v) const;
+	Vector3 transformDirection(const Vector3& v) const;
+	Vector3 transformInverseDirection(const Vector3& v) const;
 
 	float** getM();
 	float getAt(int x, int y) const;
+	float getDeterminant() const;
 
 	void set(float** m);
 	void setAt(int x, int y, float value) const;
 
 	Matrix4 operator *(const Matrix4& m) const;
+	Vector3 operator *(const Vector3& v) const;
 	const float* operator [](int index) const { return m[index]; };
 };
 
@@ -199,13 +205,27 @@ public:
 
 	Matrix3 initIdentity();
 
+	Vector3 transform(const Vector3& v) const;
+	Vector3 transformTranspose(const Vector3& v) const;
+	void setInverse(const Matrix3& m);
+	Matrix3 inverse() const;
+	void setSkewSymmetric(const Vector3& v);
+	void setComponents(const Vector3& one, const Vector3& two, const Vector3& three);
+	void setTranspose(const Matrix3& m);
+	Matrix3 transpose() const;
+
 	float** getM();
 	float getAt(int x, int y) const;
 
 	void set(float** m);
 	void setAt(int x, int y, float value) const;
 
+	Vector3 operator *(const Vector3& v) const;
 	Matrix3 operator *(const Matrix3& m) const;
+	void operator +=(const Matrix3& m) const;
+	void operator *=(const Matrix3& m);
+	void operator *=(float f);
+
 	const float* operator [](int index) const { return m[index]; };
 };
 

@@ -60,7 +60,7 @@ void TestGame::initialise(const Window& window)
 		//GameObject* p = new GameObject(Vector3(x, y, z));
 
 		p->addComponent(new ColliderRenderer(p->m_collider));
-		//p->addComponent(new MeshRenderer(Mesh("sphere.obj"), m));
+		p->addComponent(new MeshRenderer(Mesh("sphere.obj"), MATERIAL_DEFAULT));
 
 		//p->velocity = Vector3(0, 0, 0);
 		//p->r = 1;
@@ -71,7 +71,11 @@ void TestGame::initialise(const Window& window)
 			p->addComponent(new Movement2D(10, Input::KEY_I, Input::KEY_K, Input::KEY_J, Input::KEY_L));
 		}
 
-		addToScene2(p);
+		GameObject* base = new GameObject();
+		base->addComponent(new MeshRenderer(Mesh("sphere.obj"), MATERIAL_DEFAULT));
+		addToScene(base);
+
+		//addToScene2(p);
 	}
 
 	addToScene(cameraObj);

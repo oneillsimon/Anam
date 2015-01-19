@@ -1,60 +1,97 @@
-//#ifndef COLLIDEFINE_H
-//#define COLLIDEFINE_H
-//
-//#include "Contacts.h"
-//#include "RigidBody.h"
-//
-//class Primitive;
-//
-//class CollisionData
-//{
-//public:
-//	Contact* m_contacts;
-//	unsigned m_contactsLeft;
-//
-//	void detectContacts(const Primitive& firstPrimitive, const Primitive& secondPrimitive, CollisionData* data);
-//};
-//
-//class CollisionDetector
-//{
-//public:
-//	unsigned sphereAndSphere(const Sphere_& one, const Sphere_& two, CollisionData* data);
-//	unsigned sphereAndHalfSapce(const Sphere_& sphere, const Plane_& plane, CollisionData* data);
-//	unsigned sphereAndTruePlane(const Sphere_& sphere, const Plane_& plane, CollisionData* data);
-//	unsigned boxAndSphere(const Box_& box, const Sphere_& sphere, CollisionData* data);
-//	unsigned boxAndPoint(const Box_& box, const Vector3& point, CollisionData* data);
-//
-//	float transformToAxis(const Box_& box, const Vector3& axis);
-//	bool overlapOnAxis(const Box_& one, const Box_& two, const Vector3& axis);
-//};
-//
-//class Primitive
-//{
-//public:
-//	RigidBody* m_body;
-//	Matrix4 m_offset;
-//	Matrix4 m_transform;
-//
-//	Vector3 getAxis(unsigned int index) const;
-//};
-//
-//class Sphere_ : public Primitive
-//{
-//public:
-//	float m_radius;
-//};
-//
-//class Plane_ : public Primitive
-//{
-//public:
-//	Vector3 m_direction;
-//	float m_offset;
-//};
-//
-//class Box_ : public Primitive
-//{
-//public:
-//	Vector3 m_halfSize;
-//}
-//
-//#endif
+#ifndef COLLIDEFINE_H
+#define COLLIDEFINE_H
+
+#include "Contacts.h"
+#include "../Core/GameComponent.h"
+
+class IntersectionTests;
+class CollisionDetector;
+
+class CollisionPrimitive : public GameComponent
+{
+public:
+	friend class IntersectionTests;
+	friend class CollisionDetector;
+
+	RigidBody* m_body;
+	Matrix4 m_offset;
+
+	void calculateInternals();
+	Vector3 getAxis(unsigned index) const
+	{
+		return m_parent->getTransform()->getTransformation().getAxisVector(index);
+	}
+};
+
+class CollisionSphere : public CollisionPrimitive
+{
+public:
+	float m_radius;
+};
+
+class CollisionPlane
+{
+public:
+	Vector3 m_direction;
+	float m_offset;
+};
+
+class CollisionBox : public CollisionPrimitive
+{
+public:
+	Vector3 m_halfSize;
+};
+
+class IntersectionTests
+{
+public:
+	static bool sphereAndHalfSpace(const CollisionSphere& sphere, const CollisionPlane& plane);
+	static bool sphereAndSphere(const CollisionSphere& one, const CollisionSphere& two);
+	static bool boxAndBox(const CollisionBox& one, const CollisionBox& two);
+	static bool boxAndHalfSpace(const CollisionBox& box, const CollisionPlane& plane);
+};
+
+class CollisionData
+{
+public:
+	Contact* m_contactArray;
+	Contact* m_contacts;
+	int m_contactsLeft;
+	unsigned m_contactCount;
+	float m_friction;
+	float m_restitution;
+	float m_tolerance;
+
+	bool hasMoreContacts()
+	{
+		return m_contactsLeft > 0;
+	}
+
+	void reset(unsigned maxContacts)
+	{
+		m_contactsLeft = maxContacts;
+		m_contactCount = 0;
+		m_contacts = m_contactArray;
+	}
+
+	void addContacts(unsigned count)
+	{
+		m_contactsLeft -= count;
+		m_contactCount += count;
+		m_contacts += count;
+	}
+};
+
+class CollisionDetector
+{
+public:
+	static unsigned sphereAndHalfSpace(const CollisionSphere& sphere, const CollisionPlane& plane, CollisionData* data);
+	static unsigned sphereAndTruePlane(const CollisionSphere& sphere, const CollisionPlane& plane, CollisionData* data);
+	static unsigned sphereAndSphere(const CollisionSphere& one, const CollisionSphere& two, CollisionData* data);
+	static unsigned boxAndHalfSpace(const CollisionBox& box, const CollisionPlane& plane, CollisionData* data);
+	static unsigned boxAndBox(const CollisionBox& one, const CollisionBox& two, CollisionData* data);
+	static unsigned boxAndPoint(const CollisionBox& box, const Vector3& point, CollisionData* data);
+	static unsigned boxAndSphere(const CollisionBox& box, const CollisionSphere& sphere, CollisionData* data);
+};
+
+#endif

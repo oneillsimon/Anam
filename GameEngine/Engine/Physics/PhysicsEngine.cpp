@@ -21,7 +21,7 @@ void PhysicsEngine::simulate(float delta)
 
 	mainTree->refreshObjects(m_objects);
 	mainTree->potentialCollisions(collisions);
-	//printf("col count: %d\n", collisions.size());
+	printf("col count: %d\n", collisions.size());
 	collisions.clear();
 }
 
