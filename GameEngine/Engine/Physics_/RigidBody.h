@@ -1,13 +1,15 @@
 #ifndef RIGIDBODY_H
 #define RIGIDBODY_H
 
-#include "../Core/GameComponent.h"
 #include "../Core/Math3D.h"
+#include "../Core/Transform.h"
 
-class RigidBody : public GameComponent
+class RigidBody
 {
 public:
 	const float m_sleepEpsilon = 0.01f;
+
+	Transform* m_owner;
 
 	float m_inverseMass;
 	Matrix3 m_inverseInertiaTensor;
@@ -20,7 +22,6 @@ public:
 	float m_motion;
 	bool m_isAwake;
 	bool m_canSleep;
-	//Matrix4 m_transformMatrix;
 	bool m_hasInfiniteMass;
 
 	Vector3 m_forceAccum;
@@ -28,9 +29,6 @@ public:
 	Vector3 m_lastFrameAcceleration;
 
 	RigidBody(float mass, float linear = 1, float angular = 2);
-
-	virtual void input(const Input& input, float delta);
-	virtual void update(float delta);
 
 	void calculateDerivedData();
 	void integrate(float delta);

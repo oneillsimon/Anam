@@ -26,7 +26,8 @@ void OctreeRenderer::render(const Shader& shader, const RenderingEngine& renderi
 {
 	//for(int i = 0; i < Octree::partitions.size(); i++)
 	//{
-	//	Transform t = Transform(Octree::partitions[i].centre, Quaternion(), abs(Octree::partitions[i].min.getX()));
+	//	Vector3 c = Octree::partitions[i].m_halfExtents - (Octree::partitions[i].m_halfExtents / 2);
+	//	Transform t = Transform(c, Quaternion(), abs(Octree::partitions[i].m_halfExtents.getX()));
 	//	Mesh m("cube.obj");
 	//	m.getWireFrameShader().bind();
 	//	m.getWireFrameShader().updateUniforms(t, renderingEngine, camera, MATERIAL_DEFAULT);

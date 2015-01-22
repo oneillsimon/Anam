@@ -53,7 +53,7 @@ void TestGame::initialise(const Window& window)
 	pObj2->addComponent(new Movement2D(10, Input::KEY_O, Input::KEY_P, -1, -1));
 	addToScene2(pObj2);
 
-	int n = 6;
+	int n = 10;
 	int m = 12;
 
 	for(int i = 0; i < n; i++)
@@ -74,14 +74,14 @@ void TestGame::initialise(const Window& window)
 
 	addToScene(cameraObj);
 
-	//int pCount = Octree::partitions.size();
-	//
-	//for(int i = 0; i < pCount; i++)
-	//{
-	//	GameObject* g = new GameObject(Octree::partitions[i].centre, Quaternion(), Octree::partitions[i].max.getX());
-	//	g->addComponent(new ColliderRenderer(new AABB(Octree::partitions[i].min, Octree::partitions[i].max)));
-	//	addToScene(g);
-	//}
+	int pCount = Octree::partitions.size();
+	
+	for(int i = 0; i < pCount; i++)
+	{
+		GameObject* g = new GameObject(Octree::partitions[i].centre, Quaternion(), Octree::partitions[i].max.getX());
+		g->addComponent(new ColliderRenderer(new AABB(Octree::partitions[i].min, Octree::partitions[i].max)));
+		addToScene(g);
+	}
 
 	//getRoot().addComponent(new OctreeRenderer(0));
 

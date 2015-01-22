@@ -6,7 +6,8 @@ PhysicsObject::PhysicsObject(RigidBody* rigidBody, const Vector3& position, cons
 	collider = new CollisionSphere();
 	collider->m_radius = 1.0f;
 	collider->m_body = rigidBody;
-	addComponent(collider->m_body);
+	collider->m_body->m_owner = getTransform();
+
 	addComponent(collider);
 }
 

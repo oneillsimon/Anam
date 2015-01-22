@@ -1,11 +1,19 @@
 #include "Octree.h"
 
+std::vector<Partition> Octree::partitions = std::vector<Partition>();
+
 Octree::Octree(int depth, const Vector3& centre, const Vector3& halfExtents) :
 	m_depth(depth),
 	m_centre(centre),
 	m_halfExtents(halfExtents)
 {
 	m_hasChildren = false;
+
+	Partition p;
+	p.centre = centre;
+	p.max = halfExtents;
+	p.min = halfExtents * -1;
+	partitions.push_back(p);
 }
 
 void Octree::addObject(PhysicsObject* object)
@@ -40,23 +48,6 @@ void Octree::addObject(PhysicsObject* object)
 			octans[i]->addObject(object);
 		}
 	}
-
-	//if(mm_objects.size() >= MAX_OBJ_COUNT)
-	//{
-	//	if(m_depth <= MAX_DEPTH)
-	//	{
-	//		divideDown();
-	//	}
-	//	
-	//	std::set<PhysicsObject*> old = mm_objects;
-	//	mm_objects.clear();
-	//
-	//	for(std::set<PhysicsObject*>::iterator it = old.begin(); it != old.end(); it++)
-	//	{
-	//		PhysicsObject* o = *it;
-	//		addObject(o);
-	//	}
-	//}
 }
 
 void Octree::divideDown()

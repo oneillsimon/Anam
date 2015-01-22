@@ -7,9 +7,18 @@
 #include "../PhysicsObject.h"
 #include "../../Physics_/CollideFine.h"
 
+struct Partition
+{
+	Vector3 centre;
+	Vector3 min;
+	Vector3 max;
+};
+
 class Octree
 {
 public:
+	static std::vector<Partition> partitions;
+
 	const int MIN_OBJ_COUNT = 1;
 	const int MAX_OBJ_COUNT = 3;
 	const int MAX_DEPTH = 6;

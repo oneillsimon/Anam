@@ -4,7 +4,7 @@
 
 void RigidBody::calculateDerivedData()
 {
-	m_parent->getTransform()->setRotation(m_parent->getTransform()->getRotation().normalised());
+	m_owner->setRotation(m_owner->getRotation().normalised());
 
 	// TODO: calculate inertiaTensor in world space.
 }
@@ -25,37 +25,6 @@ m_angularDamping(angular)
 	m_inverseMass = 1.0f / mass;
 }
 
-void RigidBody::input(const Input& input, float delta)
-{
-	//if(input.getKey(Input::KEY_P))
-	//{
-	//	addLinearForce(Vector3(0, 0, 5));
-	//}
-	//
-	//if(input.getKey(Input::KEY_L))
-	//{
-	//	addAngularForce(Vector3(50, 50, 50));
-	//}
-	//
-	//if(input.getKey(Input::KEY_K))
-	//{
-	//	addAngularForce(Vector3(0, 5, 0));
-	//}
-	//
-	//if(input.getKey(Input::KEY_M))
-	//{
-	//	addLinearForce(Vector3(3, 3, 3));
-	//	addAngularForce(Vector3(3, 3, 3));
-	//}
-}
-
-void RigidBody::update(float delta)
-{
-	//addLinearForce(Vector3(0, -0.98f, 0));
-	//integrate(delta);
-	//printf("x: %s, y: %s, z: %s\n", m_parent->getTransform()->getPosition().getX(), m_parent->getTransform()->getPosition().getY(), m_parent->getTransform()->getPosition().getZ());
-}
-
 void RigidBody::integrate(float delta)
 {
 	if(!m_isAwake)
@@ -74,8 +43,8 @@ void RigidBody::integrate(float delta)
 	m_velocity *= powf(m_linearDamping, delta);
 	m_rotation *= powf(m_angularDamping, delta);
 
-	getTransform()->setPosition(getTransform()->getPosition() + (m_velocity * delta));
-	getTransform()->rotate(AXIS_Z, m_rotation.length() + 0.00001f);
+	m_owner->setPosition(m_owner->getPosition() + (m_velocity * delta));
+	m_owner->rotate(AXIS_Z, m_rotation.length() + 0.00001f);
 
 	calculateDerivedData();
 	clearAccumulators();
@@ -202,42 +171,42 @@ float RigidBody::getAngularDamping() const
 
 void RigidBody::setPosition(const Vector3& position)
 {
-	m_parent->getTransform()->setPosition(position);
+	m_owner->setPosition(position);
 }
 
 Vector3 RigidBody::getPosition() const
 {
-	return m_parent->getTransform()->getPosition();
+	return m_owner->getPosition();
 }
 
 void RigidBody::setOrientation(Quaternion& orientation)
 {
-	m_parent->getTransform()->setRotation(orientation.normalised());
+	m_owner->setRotation(orientation.normalised());
 }
 
 Quaternion RigidBody::getOrientation() const
 {
-	return m_parent->getTransform()->getRotation();
+	return m_owner->getRotation();
 }
 
 Vector3 RigidBody::getPointInLocalSpace(const Vector3& point) const
 {
-	return getTransform().getTransformation().transformInverse(point);
+	return m_owner->getTransformation().transformInverse(point);
 }
 
 Vector3 RigidBody::getPointInWorldSpace(const Vector3& point) const
 {
-	return getTransform().getTransformation().transform(point);
+	return m_owner->getTransformation().transform(point);
 }
 
 Vector3 RigidBody::getDirectionInLocalSpace(const Vector3& direction) const
 {
-	return getTransform().getTransformation().transformInverseDirection(direction);
+	return m_owner->getTransformation().transformInverseDirection(direction);
 }
 
 Vector3 RigidBody::getDirectionInWorldSpace(const Vector3& direction) const
 {
-	return getTransform().getTransformation().transformDirection(direction);
+	return m_owner->getTransformation().transformDirection(direction);
 }
 
 void RigidBody::setVelocity(const Vector3& velocity)
@@ -321,7 +290,7 @@ void RigidBody::addForceAtBodyPoint(const Vector3& force, const Vector3& point)
 void RigidBody::addForceAtPoint(const Vector3& force, const Vector3& point)
 {
 	Vector3 pt = point;
-	pt -= m_parent->getTransform()->getPosition();
+	pt -= m_owner->getPosition();
 
 	m_forceAccum += force;
 	m_torqueAccum += pt % force;
