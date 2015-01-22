@@ -3,15 +3,16 @@
 PhysicsEngine::PhysicsEngine() :
 	resolver(MAX_CONTACT_COUNT * 8)
 {
+	cData.reset(MAX_CONTACT_COUNT * 8);
 	cData.m_contactArray = contacts;
 	int size = 12;
-	mainTree = new Octree(Vector3(-size, -size, -size), Vector3(size, size, size), 1);
+	m_tree = new Octree(0, Vector3(), Vector3(size, size, size));
 }
 
 void PhysicsEngine::addObject(PhysicsObject* object)
 {
 	m_objects.push_back(object);
-	mainTree->add(object);
+	m_tree->addObject(object);
 }
 
 void PhysicsEngine::simulate(float delta)
@@ -21,10 +22,10 @@ void PhysicsEngine::simulate(float delta)
 		return;
 	}
 
-	mainTree->refreshObjects(m_objects);
-	mainTree->potentialCollisions(&cData);
-	//cData.reset(256 * 8);
+	m_tree->potentialCollisions(&cData);
 	handleCollisions(delta);
+	
+	cData.reset(MAX_CONTACT_COUNT * 8);
 }
 
 void PhysicsEngine::handleCollisions(float delta)

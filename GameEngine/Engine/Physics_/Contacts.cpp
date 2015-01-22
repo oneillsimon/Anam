@@ -96,19 +96,16 @@ void Contact::calculateDesiredDeltaVelocity(float duration)
 {
 	const static float velocityLimit = 0.25f;
 
-	//?? should this be a float?
 	float velocityFromAcc = 0;
 
 	if(m_body[0]->getAwake())
 	{
-		//?? is using .length correct?
-		velocityFromAcc += (m_body[0]->getLastFrameAcceleration() * duration * m_contactNormal).length();
+		velocityFromAcc += m_body[0]->getLastFrameAcceleration().scalarProduct(m_contactNormal) * duration;
 	}
 
 	if(m_body[1]->getAwake())
 	{
-		//?? is using .length correct?
-		velocityFromAcc -= (m_body[1]->getLastFrameAcceleration() * duration * m_contactNormal).length();
+		velocityFromAcc -= m_body[1]->getLastFrameAcceleration().scalarProduct(m_contactNormal) * duration;
 	}
 
 	float thisRestitution = m_restitution;
@@ -201,8 +198,7 @@ Vector3 Contact::calculateFrictionlessImpulse(Matrix3* inverseInertiaTensor)
 	deltaVelocityWorld = inverseInertiaTensor[0].transform(deltaVelocityWorld);
 	deltaVelocityWorld = deltaVelocityWorld % m_relativeContactPosition[0];
 
-	//??
-	float deltaVelocity = (deltaVelocityWorld * m_contactNormal).length();
+	float deltaVelocity = deltaVelocityWorld.scalarProduct(m_contactNormal);
 	deltaVelocity += m_body[0]->getInverseMass();
 
 	if(m_body[1])
@@ -211,8 +207,7 @@ Vector3 Contact::calculateFrictionlessImpulse(Matrix3* inverseInertiaTensor)
 		deltaVelocityWorld = inverseInertiaTensor[1].transform(deltaVelocityWorld);
 		deltaVelocityWorld = deltaVelocityWorld % m_relativeContactPosition[1];
 
-		//??
-		deltaVelocity = (deltaVelocityWorld * m_contactNormal).length();
+		deltaVelocity = deltaVelocityWorld.scalarProduct(m_contactNormal);
 		deltaVelocity += m_body[1]->getInverseMass();
 	}
 

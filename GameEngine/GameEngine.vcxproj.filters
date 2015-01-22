@@ -195,10 +195,13 @@
     <ClCompile Include="Engine\Core\Scripter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Physics\Octree\Octree.cpp">
+    <ClCompile Include="Engine\Components\Physics\ColliderRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Components\Physics\ColliderRenderer.cpp">
+    <ClCompile Include="Engine\Physics\Octree\OctreeRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Physics\Octree\Octree.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -386,10 +389,13 @@
     <ClInclude Include="Engine\Core\Scripter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Physics\Octree\Octree.h">
+    <ClInclude Include="Engine\Components\Physics\ColliderRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Components\Physics\ColliderRenderer.h">
+    <ClInclude Include="Engine\Physics\Octree\OctreeRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Physics\Octree\Octree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

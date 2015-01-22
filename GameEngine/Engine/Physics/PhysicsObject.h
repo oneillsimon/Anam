@@ -1,7 +1,6 @@
 #ifndef PHYSICSOBJECT_H
 #define PHYSICSOBJECT_H
 
-#include "Octree/Octree.h"
 #include "../Physics_/RigidBody.h"
 #include "../Core/GameObject.h"
 #include "../Physics_/CollideFine.h"

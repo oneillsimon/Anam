@@ -5,9 +5,10 @@
 
 #include <vector>
 
-#include "Octree\Octree.h"
+#include "Octree/Octree.h"
 #include "PhysicsObject.h"
 #include "../Physics_/Contacts.h"
+#include "IntersectionData.h"
 
 class PhysicsEngine
 {
@@ -19,7 +20,7 @@ private:
 	Contact contacts[256];
 
 public:
-	Octree* mainTree;
+	Octree* m_tree;
 	PhysicsEngine();
 
 	void addObject(PhysicsObject* object);

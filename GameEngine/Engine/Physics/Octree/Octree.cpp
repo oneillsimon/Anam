@@ -1,262 +1,127 @@
 #include "Octree.h"
 
-std::vector<Partition> Octree::partitions = std::vector<Partition>();
-
-Octree::Octree(Vector3 c1, Vector3 c2, int d)
+Octree::Octree(int depth, const Vector3& centre, const Vector3& halfExtents) :
+	m_depth(depth),
+	m_centre(centre),
+	m_halfExtents(halfExtents)
 {
-	corner1 = c1;
-	corner2 = c2;
-	centre = (c1 + c2) / 2;
-	depth = d;
-	printf("octree created at depth %d\n", d);
-	numBalls = 0;
-	hasChildren = false;
-
-	Partition p;
-	p.centre = centre;
-	p.min = corner1;
-	p.max = corner2;
-
-	partitions.push_back(p);
+	m_hasChildren = false;
 }
 
-void Octree::fileCollider(PhysicsObject* physicsObject, bool addBall)
+void Octree::addObject(PhysicsObject* object)
 {
-	Vector3 position = physicsObject->getTransform()->getPosition();
-	Vector3 bounds = physicsObject->collider->m_radius;
-	//Vector3 bounds = physicsObject->m_collider->getScale();
-
-	for(int x = 0; x < 2; x++)
+	if(!m_hasChildren)
 	{
-		if(x == 0)
+		if(isInside(*this, object->getTransform()->getPosition()))
 		{
-			if(position.getX() - bounds.getX() > centre.getX())
+			if(mm_objects.size() >= MAX_OBJ_COUNT)
 			{
-				continue;
-			}
-		}
-		else if(position.getX() + bounds.getX() < centre.getX())
-		{
-			continue;
-		}
+				divideDown();
 
-		for(int y = 0; y < 2; y++)
-		{
-			if(y == 0)
-			{
-				if(position.getY() - bounds.getY() > centre.getY())
+				std::set<PhysicsObject*> objects;
+				collectObjects(objects);
+				//mm_objects.clear();
+
+				for(std::set<PhysicsObject*>::iterator it = objects.begin(); it != objects.end(); it++)
 				{
-					continue;
+					addObject(*it);
 				}
-			}
-			else if(position.getY() + bounds.getY() < centre.getY())
-			{
-				continue;
-			}
-
-			for(int z = 0; z < 2; z++)
-			{
-				if(z == 0)
-				{
-					if(position.getZ() - bounds.getZ() > centre.getZ())
-					{
-						continue;
-					}
-				}
-				else if(position.getZ() + bounds.getZ() < centre.getZ())
-				{
-					continue;
-				}
-
-				// Add or remove the ball
-				if(addBall)
-				{
-					children[x][y][z]->add(physicsObject);
-				}
-				else
-				{
-					children[x][y][z]->remove(physicsObject);
-				}
-			}
-		}
-	}
-}
-
-void Octree::haveChildren()
-{
-	for(int x = 0; x < 2; x++)
-	{
-		float minX, maxX;
-
-		if(x == 0)
-		{
-			minX = corner1.getX();
-			maxX = centre.getX();
-		}
-		else
-		{
-			minX = centre.getX();
-			maxX = corner2.getX();
-		}
-
-		for(int y = 0; y < 2; y++)
-		{
-			float minY, maxY;
-
-			if(y == 0)
-			{
-				minY = corner1.getY();
-				maxY = centre.getY();
 			}
 			else
 			{
-				minY = centre.getY();
-				maxY = corner2.getY();
-			}
-
-			for(int z = 0; z < 2; z++)
-			{
-				float minZ, maxZ;
-
-				if(z == 0)
-				{
-					minZ = corner1.getZ();
-					maxZ = centre.getZ();
-				}
-				else
-				{
-					minZ = centre.getZ();
-					maxZ = corner2.getZ();
-				}
-
-				children[x][y][z] = new Octree(Vector3(minX, minY, minZ),
-					Vector3(maxX, maxY, maxZ), depth + 1);
-			}
-		}
-	}
-
-	for(std::set<PhysicsObject*>::iterator it = m_objects.begin(); it != m_objects.end(); it++)
-	{
-		PhysicsObject* physicsObject = *it;
-		fileCollider(physicsObject, true);
-	}
-
-	m_objects.clear();
-	hasChildren = true;
-}
-
-void Octree::collectColliders(std::set<PhysicsObject*>& bs)
-{
-	if(hasChildren)
-	{
-		for(int x = 0; x < 2; x++)
-		{
-			for(int y = 0; y < 2; y++)
-			{
-				for(int z = 0; z < 2; z++)
-				{
-					children[x][y][z]->collectColliders(bs);
-				}
+				mm_objects.insert(object);
 			}
 		}
 	}
 	else
 	{
-		for(std::set<PhysicsObject*>::iterator it = m_objects.begin(); it != m_objects.end(); it++)
+		for(int i = 0; i < octans.size(); i++)
 		{
-			PhysicsObject* physicsObject = *it;
-			bs.insert(physicsObject);
-		}
-	}
-}
-
-void Octree::destroyChildren()
-{
-	collectColliders(m_objects);
-
-	for(int x = 0; x < 2; x++)
-	{
-		for(int y = 0; y < 2; y++)
-		{
-			for(int z = 0; z < 2; z++)
-			{
-				delete children[x][y][z];
-			}
+			octans[i]->addObject(object);
 		}
 	}
 
-	hasChildren = false;
+	//if(mm_objects.size() >= MAX_OBJ_COUNT)
+	//{
+	//	if(m_depth <= MAX_DEPTH)
+	//	{
+	//		divideDown();
+	//	}
+	//	
+	//	std::set<PhysicsObject*> old = mm_objects;
+	//	mm_objects.clear();
+	//
+	//	for(std::set<PhysicsObject*>::iterator it = old.begin(); it != old.end(); it++)
+	//	{
+	//		PhysicsObject* o = *it;
+	//		addObject(o);
+	//	}
+	//}
 }
 
-void Octree::remove(PhysicsObject* physicsObject)
+void Octree::divideDown()
 {
-	numBalls--;
+	float halfX = m_halfExtents.getX() / 2.0f;
+	float halfY = m_halfExtents.getY() / 2.0f;
+	float halfZ = m_halfExtents.getZ() / 2.0f;
 
-	if(hasChildren && numBalls < MIN_BALLS_PER_OCTREE)
-	{
-		destroyChildren();
-	}
+	octans.push_back(new Octree(m_depth + 1, Vector3(m_centre.getX() + halfX, m_centre.getY() + halfY, m_centre.getZ() + halfZ), m_halfExtents / 2.0f));
+	octans.push_back(new Octree(m_depth + 1, Vector3(m_centre.getX() - halfX, m_centre.getY() + halfY, m_centre.getZ() + halfZ), m_halfExtents / 2.0f));
+	octans.push_back(new Octree(m_depth + 1, Vector3(m_centre.getX() + halfX, m_centre.getY() + halfY, m_centre.getZ() - halfZ), m_halfExtents / 2.0f));
+	octans.push_back(new Octree(m_depth + 1, Vector3(m_centre.getX() - halfX, m_centre.getY() + halfY, m_centre.getZ() - halfZ), m_halfExtents / 2.0f));
+	
+	octans.push_back(new Octree(m_depth + 1, Vector3(m_centre.getX() + halfX, m_centre.getY() - halfY, m_centre.getZ() + halfZ), m_halfExtents / 2.0f));
+	octans.push_back(new Octree(m_depth + 1, Vector3(m_centre.getX() - halfX, m_centre.getY() - halfY, m_centre.getZ() + halfZ), m_halfExtents / 2.0f));
+	octans.push_back(new Octree(m_depth + 1, Vector3(m_centre.getX() + halfX, m_centre.getY() - halfY, m_centre.getZ() - halfZ), m_halfExtents / 2.0f));
+	octans.push_back(new Octree(m_depth + 1, Vector3(m_centre.getX() - halfX, m_centre.getY() - halfY, m_centre.getZ() - halfZ), m_halfExtents / 2.0f));
 
-	if(hasChildren)
+	m_hasChildren = true;
+}
+
+void Octree::collectObjects(std::set<PhysicsObject*>& objects)
+{
+	for(std::set<PhysicsObject*>::iterator it = mm_objects.begin(); it != mm_objects.end(); it++)
 	{
-		fileCollider(physicsObject, false);
-	}
-	else
-	{
-		m_objects.erase(physicsObject);
+		objects.insert(*it);
 	}
 }
 
-void Octree::add(PhysicsObject* physicsObject)
+void Octree::recalculate()
 {
-	numBalls++;
-
-	if(!hasChildren && depth < MAX_OCTREE_DEPTH &&
-		numBalls > MAX_BALLS_PER_OCTREE)
+	//if(mm_objects.size() < MIN_OBJ_COUNT)
 	{
-		haveChildren();
-	}
-
-	if(hasChildren)
-	{
-		fileCollider(physicsObject, true);
-	}
-	else
-	{
-		m_objects.insert(physicsObject);
+		//multiplyUp();
 	}
 }
 
-void Octree::refreshObject(PhysicsObject* physicsObject)
+bool Octree::isInside(const Octree& octree, const Vector3& position)
 {
-	remove(physicsObject);
-	add(physicsObject);
+	Vector3 min = octree.m_centre - octree.m_halfExtents;
+	Vector3 max = octree.m_centre + octree.m_halfExtents;
+
+	return ((position.getX() >= min.getX() && position.getX() <= max.getX()) &&
+			(position.getY() >= min.getY() && position.getY() <= max.getY()) &&
+			(position.getZ() >= min.getZ() && position.getZ() <= max.getZ()));
 }
 
 void Octree::potentialCollisions(CollisionData* data)
 {
-	if(hasChildren)
+	if(mm_objects.size() <= 0)
 	{
-		for(int x = 0; x < 2; x++)
-		{
-			for(int y = 0; y < 2; y++)
-			{
-				for(int z = 0; z < 2; z++)
-				{
-					children[x][y][z]->potentialCollisions(data);
-				}
-			}
-		}
+		return;
 	}
-	else
+
+	if(!m_hasChildren)
 	{
-		//data->reset(256);
+		data->m_friction = 0.9f;
+		data->m_restitution = 0.0f;
+		data->m_tolerance = 0.1f;
 
-		for(std::set<PhysicsObject*>::iterator it = m_objects.begin(); it != m_objects.end(); it++)
+		for(std::set<PhysicsObject*>::iterator it1 = mm_objects.begin(); it1 != mm_objects.end(); it1++)
 		{
-			PhysicsObject* obj1 = *it;
+			PhysicsObject* obj1 = *it1;
 
-			for(std::set<PhysicsObject*>::iterator it2 = m_objects.begin(); it2 != m_objects.end(); it2++)
+			for(std::set<PhysicsObject*>::iterator it2 = mm_objects.begin(); it2 != mm_objects.end(); it2++)
 			{
 				PhysicsObject* obj2 = *it2;
 
@@ -267,22 +132,16 @@ void Octree::potentialCollisions(CollisionData* data)
 			}
 		}
 	}
-}
-
-void Octree::refreshObjects(std::vector<PhysicsObject*>& objects)
-{
-	for(unsigned int i = 0; i < objects.size(); i++)
+	else
 	{
-		refreshObject(objects[i]);
+		for(int i = 0; i < octans.size(); i++)
+		{
+			octans[i]->potentialCollisions(data);
+		}
 	}
 }
 
 void Octree::generateContacts(const CollisionSphere& one, const CollisionSphere& two, CollisionData* data)
 {
-	data->reset(256);
-	data->m_friction = 1.9f;
-	data->m_restitution = 100.0f;
-	data->m_tolerance = 0.1f;
-
 	CollisionDetector::sphereAndSphere(one, two, data);
 }

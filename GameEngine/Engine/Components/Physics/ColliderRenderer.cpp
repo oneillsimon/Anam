@@ -8,10 +8,19 @@ m_collider(collider)
 {
 }
 
+ColliderRenderer::ColliderRenderer(Plane* collider, const Colour& defaultColour, const Colour& collidingColour) :
+MeshRenderer(Mesh("plane.obj"), Material("", TEXTURE_BLANK, defaultColour)),
+m_defaultColour(defaultColour),
+m_collidingColour(collidingColour),
+m_collider(0)
+{
+}
+
 void ColliderRenderer::render(const Shader& shader, const  RenderingEngine& renderingEngine, const Camera& camera) const
 {
 	Colour c = m_defaultColour;
 
+	if(m_collider)
 	if(m_collider->getIsColliding())
 	{
 		c = m_collidingColour;

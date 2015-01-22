@@ -136,6 +136,11 @@ unsigned CollisionDetector::sphereAndHalfSpace(const CollisionSphere& sphere, co
 
 unsigned CollisionDetector::sphereAndSphere(const CollisionSphere& one, const CollisionSphere& two, CollisionData* data)
 {
+	if(!IntersectionTests::sphereAndSphere(one, two))
+	{
+		return 0;
+	}
+
 	if(data->m_contactsLeft <= 0)
 	{
 		return 0;
