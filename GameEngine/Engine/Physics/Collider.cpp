@@ -11,11 +11,11 @@ void ColliderSphere::collide(Collider& collider, CollisionData* data)
 {
 	switch(collider.m_type)
 	{
-	case BOX:
-		CollisionDetector::boxAndSphere(*dynamic_cast<ColliderBox*>(&collider), *this, data);
-		break;
 	case SPHERE:
 		CollisionDetector::sphereAndSphere(*dynamic_cast<ColliderSphere*>(&collider), *this, data);
+		break;
+	case BOX:
+		CollisionDetector::boxAndSphere(*dynamic_cast<ColliderBox*>(&collider), *this, data);
 		break;
 	default:
 		break;

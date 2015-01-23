@@ -27,12 +27,12 @@ m_angularDamping(angular)
 
 void RigidBody::integrate(float delta)
 {
-	addForce(Vector3(0, -9.8f, 0) * delta);
-
-	if(!m_isAwake)
+	if(!m_isAwake || m_hasInfiniteMass)
 	{
 		return;
 	}
+
+	addForce(Vector3(0, -9.8f, 0) * delta);
 	
 	m_lastFrameAcceleration = m_acceleration;
 	m_lastFrameAcceleration.addScaledVector3(m_forceAccum, m_inverseMass);

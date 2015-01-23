@@ -315,7 +315,7 @@ void Contact::applyPositionChange(Vector3 linearChange[2], Vector3 angularChange
 
 			float maxMagnitude = angularLimit * projection.length();
 
-			if(angularMove[i] <= -maxMagnitude)
+			if(angularMove[i] < -maxMagnitude)
 			{
 				float totalMove = angularMove[i] + linearMove[i];
 				angularMove[i] = -maxMagnitude;

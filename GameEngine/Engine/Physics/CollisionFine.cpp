@@ -242,7 +242,7 @@ static Vector3 contactPoint(const Vector3& pOne, const Vector3& dOne, float oneS
 
 	smOne = dOne.squareLength();
 	smTwo = dTwo.squareLength();
-	dpOneTwo = dTwo.scalarProduct(toSt);
+	dpOneTwo = dTwo.scalarProduct(dOne);
 
 	toSt = pOne - pTwo;
 	dpStaOne = dOne.scalarProduct(toSt);
@@ -256,7 +256,7 @@ static Vector3 contactPoint(const Vector3& pOne, const Vector3& dOne, float oneS
 	}
 
 	mua = (dpOneTwo * dpStaTwo - smTwo * dpStaOne) / denom;
-	mub = (smOne * dpStaTwo - dpStaTwo - dpOneTwo * dpStaOne) / denom;
+	mub = (smOne * dpStaTwo - dpOneTwo * dpStaOne) / denom;
 
 	if(mua > oneSize || mua < -oneSize ||
 	   mub > twoSize || mub < -twoSize)
