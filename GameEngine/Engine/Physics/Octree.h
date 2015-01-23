@@ -1,11 +1,12 @@
-#ifndef OCTREE2_H
-#define OCTREE2_H
+#ifndef OCTREE_H
+#define OCTREE_H
 
 #include <vector>
 #include <set>
 
-#include "../PhysicsObject.h"
-#include "../../Physics_/CollideFine.h"
+#include "Collider.h"
+#include "CollisionFine.h"
+#include "PhysicsObject.h"
 
 struct Partition
 {
@@ -42,7 +43,7 @@ public:
 	void recalculate();
 	bool isInside(const Octree& octree, const Vector3& position);
 	void potentialCollisions(CollisionData* data);
-	void generateContacts(CollisionPrimitive& one, CollisionPrimitive& two, CollisionData* data);
+	void generateContacts(Collider& one, Collider& two, CollisionData* data);
 };
 
 #endif

@@ -2,84 +2,68 @@
 #define COLLIDER_H
 
 #include "../Core/GameComponent.h"
-#include "../Core/ReferenceCounter.h"
-#include "../Rendering/Mesh.h"
-#include "IntersectionData.h"
+#include "../Core/Math3D.h"
+#include "../Core/Transform.h"
+#include "RigidBody.h"
+
+class IntersectionTests;
+class CollisionDetector;
 
 class Collider : public GameComponent
 {
-private:
-	int m_type;
-	mutable bool m_isColliding;
-
-protected:
-	Vector3 m_scale;
-
 public:
-	enum
+	friend class IntersectionTests;
+	friend class CollisionDetector;
+
+	enum Type
 	{
-		TYPE_SPHERE,
-		TYPE_AABB,
-		TYPE_PLANE
+		SPHERE,
+		BOX,
+		PLANE
 	};
 
-	Collider(int type);
+	RigidBody* m_body;
+	Matrix4 m_offset;
+	int m_type;
 
-	IntersectionData intersect(const Collider& collider) const;
+	void calculateInternals();
+	Vector3 getAxis(unsigned index) const
+	{
+		return m_parent->getTransform()->getTransformation().getAxisVector(index);
+	}
 
-	int getType() const;
-	bool getIsColliding() const;
-
-	Vector3 getCentre() const;
-	Mesh getMesh() const;
-	Vector3 getScale() const;
+	virtual Vector3 getExtents() = 0;
 };
 
-class AABB : public Collider
+class ColliderSphere : public Collider
 {
-private:
-	const Vector3 m_minExtents;
-	const Vector3 m_maxExtents;
 public:
-	AABB(const Vector3& minExtends, const Vector3& maxExtents);
-
-	IntersectionData intersectAABB(const AABB& other) const;
-
-	const Vector3& getMinExtents() const;
-	const Vector3& getMaxExtents() const;
-};
-
-class BoundingSphere : public Collider
-{
-private:
+	ColliderSphere(float radius = 1.0f);
 	float m_radius;
 
-public:
-	BoundingSphere(float radius);
-
-	IntersectionData intersectBoundingSphere(const BoundingSphere& other);
-	IntersectionData intersectAABB(const AABB& other);
-
-	const float getRadius() const;
-
-	void setRadius(float radius);
+	virtual Vector3 getExtents();
 };
 
-class Plane
+class ColliderPlane : public Collider
 {
-private:
-	const Vector3 m_normal;
-	const float m_distance;
-
 public:
-	Plane(const Vector3& normal, float distance);
+	ColliderPlane(const Vector3& direction, float offset);
+	Vector3 m_direction;
+	float m_offset;
 
-	Plane normalised() const;
+	virtual Vector3 getExtents()
+	{
+		return Vector3();
+	}
+};
 
-	IntersectionData intersectSphere(const BoundingSphere& sphere) const;
+class ColliderBox : public Collider
+{
+public:
+	ColliderBox(const Vector3& halfSize = Vector3(1, 1, 1));
+	Vector3 m_halfSize;
 
-	const Vector3& getNormal() const;
-	float getDistance() const;
+	virtual Vector3 getExtents();
 };
 
 #endif

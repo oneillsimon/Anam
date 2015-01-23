@@ -1,48 +1,34 @@
 #include "Collider.h"
 
-Collider::Collider(int type) :
-m_type(type)
+ColliderSphere::ColliderSphere(float radius) :
+m_radius(radius)
 {
-	m_isColliding = false;
+	m_type = Type::SPHERE;
 }
 
-IntersectionData Collider::intersect(const Collider& collider) const
+Vector3 ColliderSphere::getExtents()
 {
-	if(m_type == TYPE_SPHERE && collider.getType() == TYPE_SPHERE)
-	{
-		BoundingSphere* self = (BoundingSphere*)this;
-		IntersectionData intersectData = self->intersectBoundingSphere((BoundingSphere&)collider);
-		m_isColliding = intersectData.getDoesIntersect();
-		collider.m_isColliding = m_isColliding;
-		return intersectData;
-	}
-
-	if(m_type == TYPE_AABB && collider.getType() == TYPE_AABB)
-	{
-		AABB* self = (AABB*)this;
-		IntersectionData intersectData = self->intersectAABB((AABB&)collider);
-		m_isColliding = intersectData.getDoesIntersect();
-		collider.m_isColliding = m_isColliding;
-		return intersectData;
-	}
+	return Vector3(m_radius, m_radius, m_radius);
 }
 
-int Collider::getType() const
+ColliderBox::ColliderBox(const Vector3& halfExtents) :
+m_halfSize(halfExtents)
 {
-	return m_type;
+	m_type = Type::BOX;
 }
 
-bool Collider::getIsColliding() const
+Vector3 ColliderBox::getExtents()
 {
-	return m_isColliding;
+	return m_halfSize;
 }
 
-Vector3 Collider::getCentre() const
+ColliderPlane::ColliderPlane(const Vector3& direction, float offset) :
+m_direction(direction),
+m_offset(offset)
 {
-	return m_parent->getTransform()->getPosition();
+	m_type = Type::PLANE;
 }
 
-Vector3 Collider::getScale() const
+void Collider::calculateInternals()
 {
-	return m_scale;
 }

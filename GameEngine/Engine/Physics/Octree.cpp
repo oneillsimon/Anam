@@ -132,38 +132,40 @@ void Octree::potentialCollisions(CollisionData* data)
 	}
 }
 
-void Octree::generateContacts(CollisionPrimitive& one, CollisionPrimitive& two, CollisionData* data)
+void Octree::generateContacts(Collider& one, Collider& two, CollisionData* data)
 {
-	if(one.m_type == CollisionPrimitive::Type::SPHERE && two.m_type == CollisionPrimitive::Type::SPHERE)
+	/*
+	if(one.m_type == Collider::Type::SPHERE && two.m_type == Collider::Type::SPHERE)
 	{
-		CollisionDetector::sphereAndSphere(*dynamic_cast<CollisionSphere*>(&one), *dynamic_cast<CollisionSphere*>(&two), data);
+		CollisionDetector::sphereAndSphere(*dynamic_cast<Collider*>(&one), *dynamic_cast<Collider*>(&two), data);
 	}
-	else if(one.m_type == CollisionPrimitive::Type::SPHERE && two.m_type == CollisionPrimitive::Type::BOX)
+	else if(one.m_type == Collider::Type::SPHERE && two.m_type == Collider::Type::BOX)
 	{
-		CollisionDetector::boxAndSphere(*dynamic_cast<CollisionBox*>(&two), *dynamic_cast<CollisionSphere*>(&one), data);
+		CollisionDetector::boxAndSphere(*dynamic_cast<Collider*>(&two), *dynamic_cast<Collider*>(&one), data);
 	}
-	else if(one.m_type == CollisionPrimitive::Type::BOX && two.m_type == CollisionPrimitive::Type::SPHERE)
+	else if(one.m_type == Collider::Type::BOX && two.m_type == Collider::Type::SPHERE)
 	{
-		CollisionDetector::boxAndSphere(*dynamic_cast<CollisionBox*>(&one), *dynamic_cast<CollisionSphere*>(&two), data);
+		CollisionDetector::boxAndSphere(*dynamic_cast<Collider*>(&one), *dynamic_cast<Collider*>(&two), data);
 	}
-	else if(one.m_type == CollisionPrimitive::Type::BOX && two.m_type == CollisionPrimitive::Type::BOX)
+	else if(one.m_type == Collider::Type::BOX && two.m_type == Collider::Type::BOX)
 	{
-		CollisionDetector::boxAndBox(*dynamic_cast<CollisionBox*>(&one), *dynamic_cast<CollisionBox*>(&two), data);
+		CollisionDetector::boxAndBox(*dynamic_cast<Collider*>(&one), *dynamic_cast<Collider*>(&two), data);
 	}
-	else if(one.m_type == CollisionPrimitive::Type::SPHERE && two.m_type == CollisionPrimitive::Type::PLANE)
+	else if(one.m_type == Collider::Type::SPHERE && two.m_type == Collider::Type::PLANE)
 	{
-		CollisionDetector::sphereAndHalfSpace(*dynamic_cast<CollisionSphere*>(&one), *dynamic_cast<CollisionPlane*>(&two), data);
+		CollisionDetector::sphereAndHalfSpace(*dynamic_cast<Collider*>(&one), *dynamic_cast<Collider*>(&two), data);
 	}
-	else if(one.m_type == CollisionPrimitive::Type::PLANE && two.m_type == CollisionPrimitive::Type::SPHERE)
+	else if(one.m_type == Collider::Type::PLANE && two.m_type == Collider::Type::SPHERE)
 	{
-		CollisionDetector::sphereAndHalfSpace(*dynamic_cast<CollisionSphere*>(&two), *dynamic_cast<CollisionPlane*>(&one), data);
+		CollisionDetector::sphereAndHalfSpace(*dynamic_cast<Collider*>(&two), *dynamic_cast<Collider*>(&one), data);
 	}
-	else if(one.m_type == CollisionPrimitive::Type::BOX && two.m_type == CollisionPrimitive::Type::PLANE)
+	else if(one.m_type == Collider::Type::BOX && two.m_type == Collider::Type::PLANE)
 	{
-		CollisionDetector::boxAndHalfSpace(*dynamic_cast<CollisionBox*>(&one), *dynamic_cast<CollisionPlane*>(&two), data);
+		CollisionDetector::boxAndHalfSpace(*dynamic_cast<Collider*>(&one), *dynamic_cast<Collider*>(&two), data);
 	}
-	else if(one.m_type == CollisionPrimitive::Type::PLANE && two.m_type == CollisionPrimitive::Type::BOX)
+	else if(one.m_type == Collider::Type::PLANE && two.m_type == Collider::Type::BOX)
 	{
-		CollisionDetector::boxAndHalfSpace(*dynamic_cast<CollisionBox*>(&two), *dynamic_cast<CollisionPlane*>(&one), data);
+		CollisionDetector::boxAndHalfSpace(*dynamic_cast<Collider*>(&two), *dynamic_cast<Collider*>(&one), data);
 	}
+	*/
 }

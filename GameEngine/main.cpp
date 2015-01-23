@@ -11,17 +11,14 @@
 
 #include "Engine\Components\Game\Movement2D.h"
 
-#include "Engine\Physics_\Particle.h"
-#include "Engine\Physics_\Physics_Component.h"
-#include "Engine\Physics_\PFGen.h"
-#include "Engine\Physics_\CollideCoarse.h"
+#include "Engine\Physics\Particle.h"
+#include "Engine\Physics\PFGen.h"
+#include "Engine\Physics\CollisionFine.h"
 #include "Engine\Rendering\Shape.h"
-#include "Engine\Physics\PhysicsComponent.h"
 
 #include "Engine\Core\Scripter.h"
 
 #include "Engine\Components\Physics\ColliderRenderer.h"
-#include "Engine\Physics\Octree\OctreeRenderer.h"
 
 #undef main
 
@@ -47,13 +44,13 @@ void TestGame::initialise(const Window& window)
 	cameraObj->addComponent(new FreeMove());
 	cameraObj->addComponent(new CameraComponent(Matrix4().initPerspective(toRadians(70.0f), window.getAspectRatio(), 0.1f, 1000.0f)));
 
-	PhysicsObject* pObj2 = new PhysicsObject(new RigidBody(00.001f), new CollisionBox(2), Vector3(3, 1, -1));
+	PhysicsObject* pObj2 = new PhysicsObject(new RigidBody(00.001f), new ColliderBox(2), Vector3(3, 1, -1));
 	pObj2->addComponent(new MeshRenderer(Mesh("cube.obj"), Material("", TEXTURE_BLANK, COLOUR_MEDIUM_PURPLE)));
 	pObj2->addComponent(new FreeMove(10, Input::KEY_UP, Input::KEY_DOWN, Input::KEY_LEFT, Input::KEY_RIGHT));
 	pObj2->addComponent(new Movement2D(10, Input::KEY_O, Input::KEY_P, -1, -1));
 	addToScene2(pObj2);
 
-	PhysicsObject* plane = new PhysicsObject(new RigidBody(-1), new CollisionPlane(AXIS_Y, 0), Vector3(0, -12, 0));
+	PhysicsObject* plane = new PhysicsObject(new RigidBody(-1), new ColliderPlane(AXIS_Y, 0), Vector3(0, -12, 0));
 	plane->getTransform()->setScale(Vector3(1000, 1, 1000));
 	plane->addComponent(new MeshRenderer(Mesh("plane3.obj"), Material("", TEXTURE_BLANK, COLOUR_ORANGE)));
 	addToScene2(plane);
@@ -67,9 +64,9 @@ void TestGame::initialise(const Window& window)
 		float y = random(-m, m);
 		float z = random(-m, m);
 
-		PhysicsObject* o = new PhysicsObject(new RigidBody(1), new CollisionSphere(), Vector3(x, y, z));
+		PhysicsObject* o = new PhysicsObject(new RigidBody(1), new ColliderSphere(), Vector3(x, y, z));
 		o->addComponent(new MeshRenderer(Mesh("sphere.obj"), Material("", TEXTURE_BLANK, getRandomColour())));
-		//addToScene2(o);
+		addToScene2(o);
 	}
 
 	DirectionalLight* d = new DirectionalLight(COLOUR_WHITE, 0.04f);
@@ -84,7 +81,7 @@ void TestGame::initialise(const Window& window)
 	for(int i = 0; i < pCount; i++)
 	{
 		GameObject* g = new GameObject(Octree::partitions[i].centre, Quaternion(), Octree::partitions[i].max.getX());
-		g->addComponent(new ColliderRenderer(new AABB(Octree::partitions[i].min, Octree::partitions[i].max)));
+		g->addComponent(new ColliderRenderer(new ColliderBox(Octree::partitions[i].min)));
 		addToScene(g);
 	}
 

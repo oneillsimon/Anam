@@ -1,14 +1,14 @@
 #include "ColliderRenderer.h"
 
 ColliderRenderer::ColliderRenderer(Collider* collider, const Colour& defaultColour, const Colour& collidingColour) :
-MeshRenderer(Mesh(getMeshFromCollider(collider->getType())), Material("", TEXTURE_BLANK, defaultColour)),
+MeshRenderer(Mesh(getMeshFromCollider(collider->m_type)), Material("", TEXTURE_BLANK, defaultColour)),
 m_defaultColour(defaultColour),
 m_collidingColour(collidingColour),
 m_collider(collider)
 {
 }
 
-ColliderRenderer::ColliderRenderer(Plane* collider, const Colour& defaultColour, const Colour& collidingColour) :
+ColliderRenderer::ColliderRenderer(ColliderPlane* collider, const Colour& defaultColour, const Colour& collidingColour) :
 MeshRenderer(Mesh("plane.obj"), Material("", TEXTURE_BLANK, defaultColour)),
 m_defaultColour(defaultColour),
 m_collidingColour(collidingColour),
@@ -20,12 +20,6 @@ void ColliderRenderer::render(const Shader& shader, const  RenderingEngine& rend
 {
 	Colour c = m_defaultColour;
 
-	if(m_collider)
-	if(m_collider->getIsColliding())
-	{
-		c = m_collidingColour;
-	}
-
 	m_mesh.getWireFrameShader().bind();
 	m_mesh.getWireFrameShader().updateUniforms(getTransform(), renderingEngine, camera, m_material);
 	m_mesh.getWireFrameShader().setUniform("wireFrameColour", c);
@@ -36,10 +30,10 @@ std::string ColliderRenderer::getMeshFromCollider(int type)
 {
 	switch(type)
 	{
-	case Collider::TYPE_SPHERE:
+	case Collider::SPHERE:
 		return "sphere.obj";
 		break;
-	case Collider::TYPE_AABB:
+	case Collider::BOX:
 		return "cube.obj";
 		break;
 	}

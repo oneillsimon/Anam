@@ -1,6 +1,6 @@
 #include "PhysicsObject.h"
 
-PhysicsObject::PhysicsObject(RigidBody* rigidBody, CollisionPrimitive* collider, const Vector3& position, const Quaternion& rotation, float scale) :
+PhysicsObject::PhysicsObject(RigidBody* rigidBody, Collider* collider, const Vector3& position, const Quaternion& rotation, float scale) :
 	GameObject(position, rotation, scale),
 	m_collider(collider)
 {

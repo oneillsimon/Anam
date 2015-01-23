@@ -1,61 +1,28 @@
 #include <assert.h>
 
-#include "CollideFine.h"
+#include "CollisionFine.h"
 
-CollisionSphere::CollisionSphere(float radius) :
-	m_radius(radius)
-{
-	m_type = Type::SPHERE;
-}
-
-Vector3 CollisionSphere::getExtents()
-{
-	return Vector3(m_radius, m_radius, m_radius);
-}
-
-CollisionBox::CollisionBox(const Vector3& halfExtents) :
-	m_halfSize(halfExtents)
-{
-	m_type = Type::BOX;
-}
-
-Vector3 CollisionBox::getExtents()
-{
-	return m_halfSize;
-}
-
-CollisionPlane::CollisionPlane(const Vector3& direction, float offset) :
-	m_direction(direction),
-	m_offset(offset)
-{
-	m_type = Type::PLANE;
-}
-
-void CollisionPrimitive::calculateInternals()
-{
-}
-
-bool IntersectionTests::sphereAndHalfSpace(const CollisionSphere& sphere, const CollisionPlane& plane)
+bool IntersectionTests::sphereAndHalfSpace(const ColliderSphere& sphere, const ColliderPlane& plane)
 {
 	float ballDistance = plane.m_direction.scalarProduct(sphere.getAxis(3)) - sphere.m_radius;
 	return ballDistance <= plane.m_offset;
 }
 
-bool IntersectionTests::sphereAndSphere(const CollisionSphere& one, const CollisionSphere& two)
+bool IntersectionTests::sphereAndSphere(const ColliderSphere& one, const ColliderSphere& two)
 {
 	Vector3 midLine = one.getAxis(3) - two.getAxis(3);
 
 	return midLine.squareLength() < (one.m_radius + two.m_radius) * (one.m_radius + two.m_radius);
 }
 
-static float transformToAxis(const CollisionBox& box, const Vector3& axis)
+static float transformToAxis(const ColliderBox& box, const Vector3& axis)
 {
 	return box.m_halfSize.getX() * fabsf(axis.scalarProduct(box.getAxis(0))) +
 		   box.m_halfSize.getY() * fabsf(axis.scalarProduct(box.getAxis(1))) +
 		   box.m_halfSize.getZ() * fabsf(axis.scalarProduct(box.getAxis(2)));
 }
 
-static bool overlapOnAxis(const CollisionBox& one, const CollisionBox& two, const Vector3& axis, const Vector3& toCentre)
+static bool overlapOnAxis(const ColliderBox& one, const ColliderBox& two, const Vector3& axis, const Vector3& toCentre)
 {
 	float oneProject = transformToAxis(one, axis);
 	float twoProject = transformToAxis(two, axis);
@@ -67,7 +34,7 @@ static bool overlapOnAxis(const CollisionBox& one, const CollisionBox& two, cons
 
 #define TEST_OVERLAP(axis) overlapOnAxis(one, two, (axis), toCentre)
 
-bool IntersectionTests::boxAndBox(const CollisionBox& one, const CollisionBox& two)
+bool IntersectionTests::boxAndBox(const ColliderBox& one, const ColliderBox& two)
 {
 	Vector3 toCentre = two.getAxis(3) - one.getAxis(3);
 
@@ -94,7 +61,7 @@ bool IntersectionTests::boxAndBox(const CollisionBox& one, const CollisionBox& t
 		);
 }
 
-bool IntersectionTests::boxAndHalfSpace(const CollisionBox& box, const CollisionPlane& plane)
+bool IntersectionTests::boxAndHalfSpace(const ColliderBox& box, const ColliderPlane& plane)
 {
 	float projectedRadius = transformToAxis(box, plane.m_direction);
 	float boxDistance = plane.m_direction.scalarProduct(box.getAxis(3)) - projectedRadius;
@@ -102,7 +69,7 @@ bool IntersectionTests::boxAndHalfSpace(const CollisionBox& box, const Collision
 	return boxDistance <= plane.m_offset;
 }
 
-unsigned CollisionDetector::sphereAndTruePlane(const CollisionSphere& sphere, const CollisionPlane& plane, CollisionData* data)
+unsigned CollisionDetector::sphereAndTruePlane(const ColliderSphere& sphere, const ColliderPlane& plane, CollisionData* data)
 {
 	if(data->m_contactsLeft <= 0)
 	{
@@ -138,7 +105,7 @@ unsigned CollisionDetector::sphereAndTruePlane(const CollisionSphere& sphere, co
 	return 1;
 }
 
-unsigned CollisionDetector::sphereAndHalfSpace(const CollisionSphere& sphere, const CollisionPlane& plane, CollisionData* data)
+unsigned CollisionDetector::sphereAndHalfSpace(const ColliderSphere& sphere, const ColliderPlane& plane, CollisionData* data)
 {
 	if(data->m_contactsLeft <= 0)
 	{
@@ -163,7 +130,7 @@ unsigned CollisionDetector::sphereAndHalfSpace(const CollisionSphere& sphere, co
 	return 1;
 }
 
-unsigned CollisionDetector::sphereAndSphere(const CollisionSphere& one, const CollisionSphere& two, CollisionData* data)
+unsigned CollisionDetector::sphereAndSphere(const ColliderSphere& one, const ColliderSphere& two, CollisionData* data)
 {
 	if(!IntersectionTests::sphereAndSphere(one, two))
 	{
@@ -198,7 +165,7 @@ unsigned CollisionDetector::sphereAndSphere(const CollisionSphere& one, const Co
 	return 1;
 }
 
-static float penetrationOnAxis(const CollisionBox& one, const CollisionBox& two, const Vector3& axis, const Vector3& toCentre)
+static float penetrationOnAxis(const ColliderBox& one, const ColliderBox& two, const Vector3& axis, const Vector3& toCentre)
 {
 	float oneProject = transformToAxis(one, axis);
 	float twoProject = transformToAxis(one, axis);
@@ -208,7 +175,7 @@ static float penetrationOnAxis(const CollisionBox& one, const CollisionBox& two,
 	return oneProject + twoProject - distance;
 }
 
-static bool tryAxis(const CollisionBox& one, const CollisionBox& two, const Vector3& axis, const Vector3& toCentre, unsigned index, float& smallestPenetration, unsigned& smallestCase)
+static bool tryAxis(const ColliderBox& one, const ColliderBox& two, const Vector3& axis, const Vector3& toCentre, unsigned index, float& smallestPenetration, unsigned& smallestCase)
 {
 	if(axis.squareLength() < 0.0001f)
 	{
@@ -233,7 +200,7 @@ static bool tryAxis(const CollisionBox& one, const CollisionBox& two, const Vect
 	return true;
 }
 
-void fillPointFaceBoxBox(const CollisionBox& one, const CollisionBox& two, const Vector3& toCentre, CollisionData* data, unsigned best, float penetration)
+void fillPointFaceBoxBox(const ColliderBox& one, const ColliderBox& two, const Vector3& toCentre, CollisionData* data, unsigned best, float penetration)
 {
 	Contact* contact = data->m_contacts;
 
@@ -308,7 +275,7 @@ static Vector3 contactPoint(const Vector3& pOne, const Vector3& dOne, float oneS
 #define checkOverlap(axis, index) \
 	if(!tryAxis(one, two, (axis), toCentre, (index), penetration, best)) return 0;
 
-unsigned CollisionDetector::boxAndBox(const CollisionBox& one, const CollisionBox& two, CollisionData* data)
+unsigned CollisionDetector::boxAndBox(const ColliderBox& one, const ColliderBox& two, CollisionData* data)
 {
 	Vector3 toCentre = two.getAxis(3) - one.getAxis(3);
 
@@ -409,7 +376,7 @@ unsigned CollisionDetector::boxAndBox(const CollisionBox& one, const CollisionBo
 
 #undef checkOverlap
 
-unsigned CollisionDetector::boxAndPoint(const CollisionBox& box, const Vector3& point, CollisionData* data)
+unsigned CollisionDetector::boxAndPoint(const ColliderBox& box, const Vector3& point, CollisionData* data)
 {
 	Vector3 relPt = box.getTransform().getTransformation().transformInverse(point);
 	Vector3 normal;
@@ -456,7 +423,7 @@ unsigned CollisionDetector::boxAndPoint(const CollisionBox& box, const Vector3& 
 	return 1;
 }
 
-unsigned CollisionDetector::boxAndSphere(const CollisionBox& box, const CollisionSphere& sphere, CollisionData* data)
+unsigned CollisionDetector::boxAndSphere(const ColliderBox& box, const ColliderSphere& sphere, CollisionData* data)
 {
 	Vector3 centre = sphere.getAxis(3);
 	Vector3 relCentre = box.getTransform().getTransformation().transformInverse(centre);
@@ -505,7 +472,7 @@ unsigned CollisionDetector::boxAndSphere(const CollisionBox& box, const Collisio
 	return 1;
 }
 
-unsigned CollisionDetector::boxAndHalfSpace(const CollisionBox& box, const CollisionPlane& plane, CollisionData* data)
+unsigned CollisionDetector::boxAndHalfSpace(const ColliderBox& box, const ColliderPlane& plane, CollisionData* data)
 {
 	if(data->m_contactsLeft <= 0)
 	{

@@ -13,7 +13,7 @@ private:
 
 public:
 	ColliderRenderer(Collider* collider, const Colour& defaultColour = COLOUR_YELLOW, const Colour& collidingColour = COLOUR_RED);
-	ColliderRenderer(Plane* collider, const Colour& defaultColour = COLOUR_YELLOW, const Colour& collidingColour = COLOUR_RED);
+	ColliderRenderer(ColliderPlane* collider, const Colour& defaultColour = COLOUR_YELLOW, const Colour& collidingColour = COLOUR_RED);
 
 	virtual void render(const Shader& shader, const  RenderingEngine& renderingEngine, const Camera& camera) const;
 
