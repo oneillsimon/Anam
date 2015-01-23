@@ -425,7 +425,7 @@ unsigned CollisionDetector::boxAndPoint(const ColliderBox& box, const Vector3& p
 
 unsigned CollisionDetector::boxAndSphere(const ColliderBox& box, const ColliderSphere& sphere, CollisionData* data)
 {
-	Vector3 centre = sphere.getAxis(3);
+	Vector3 centre = sphere.m_owner->getPosition();
 	Vector3 relCentre = box.m_owner->getTransformation().transformInverse(centre);
 
 	if(fabsf(relCentre.getX()) - sphere.m_radius > box.m_halfSize.getX() ||
@@ -465,12 +465,12 @@ unsigned CollisionDetector::boxAndSphere(const ColliderBox& box, const ColliderS
 	Vector3 closestPtWorld = box.m_owner->getTransformation().transform(closetPt);
 
 	Contact* contact = data->m_contacts;
-	contact->m_contactNormal = (closestPtWorld - centre);
-	contact->m_contactNormal = contact->m_contactNormal.normalised();
+	contact->m_contactNormal = (closestPtWorld - relCentre).normalised();
 	contact->m_contactPoint = closestPtWorld;
 	contact->m_penetration = sphere.m_radius - sqrtf(distance);
 	contact->setBodyData(box.m_body, sphere.m_body, data->m_friction, data->m_restitution);
 	data->addContacts(1);
+
 	return 1;
 }
 

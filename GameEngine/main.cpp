@@ -52,8 +52,8 @@ void TestGame::initialise(const Window& window)
 	pObj2->addComponent(new Movement2D(10, Input::KEY_O, Input::KEY_P, -1, -1));
 	addToScene2(pObj2);
 
-	PhysicsObject* plane = new PhysicsObject(new RigidBody(10), new ColliderBox(), Vector3(0, -4, 0));
-	plane->addComponent(new MeshRenderer(Mesh("cube.obj"), Material("", TEXTURE_BLANK, COLOUR_ORANGE)));
+	PhysicsObject* plane = new PhysicsObject(new RigidBody(10000), new ColliderSphere(), Vector3(0, -4, 0));
+	plane->addComponent(new MeshRenderer(Mesh("sphere.obj"), Material("", TEXTURE_BLANK, COLOUR_ORANGE)));
 	plane->addComponent(new ColliderRenderer(true, plane->m_collider, COLOUR_FIREBRICK));
 	addToScene2(plane);
 
