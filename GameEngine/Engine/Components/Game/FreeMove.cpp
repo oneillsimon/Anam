@@ -9,6 +9,11 @@ void FreeMove::input(const Input& input, float delta)
 {
 	float moveAmount = speed * delta;
 
+	if(input.getKey(Input::KEY_DELETE))
+	{
+		int uu = 0;
+	}
+
 	if(input.getKey(forwardKey))
 	{
 		move(getTransform()->getRotation().getForward(), moveAmount);

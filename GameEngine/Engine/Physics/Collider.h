@@ -32,7 +32,6 @@ public:
 		return m_owner->getTransformation().getAxisVector(index);
 	}
 
-	virtual Vector3 getExtents() = 0;
 	virtual void collide(Collider& collider, CollisionData* data) = 0;
 };
 
@@ -42,7 +41,6 @@ public:
 	ColliderSphere(float radius = 1.0f);
 	float m_radius;
 
-	virtual Vector3 getExtents();
 	virtual void collide(Collider& collider, CollisionData* data);
 };
 
@@ -52,7 +50,6 @@ public:
 	ColliderBox(const Vector3& halfSize = Vector3(1, 1, 1));
 	Vector3 m_halfSize;
 
-	virtual Vector3 getExtents();
 	virtual void collide(Collider& collider, CollisionData* data);
 };
 

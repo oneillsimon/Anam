@@ -436,10 +436,12 @@ unsigned CollisionDetector::boxAndSphere(const ColliderBox& box, const ColliderS
 	}
 
 	Vector3 closetPt = Vector3();
-	float distance = relCentre.getX();
+	float distance;
 
 	for(int i = 0; i < 3; i++)
 	{
+		distance = relCentre[i];
+
 		if(distance > box.m_halfSize[i])
 		{
 			distance = box.m_halfSize[i];

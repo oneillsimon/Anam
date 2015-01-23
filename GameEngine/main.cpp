@@ -44,14 +44,14 @@ void TestGame::initialise(const Window& window)
 	cameraObj->addComponent(new FreeMove());
 	cameraObj->addComponent(new CameraComponent(Matrix4().initPerspective(toRadians(70.0f), window.getAspectRatio(), 0.1f, 1000.0f)));
 
-	PhysicsObject* pObj2 = new PhysicsObject(new RigidBody(1000), new ColliderSphere(2), Vector3(0, 1, 0));
+	PhysicsObject* pObj2 = new PhysicsObject(new RigidBody(00.001f), new ColliderBox(), Vector3(0, 1, 0));
 	//pObj2->addComponent(new MeshRenderer(Mesh("cube.obj"), Material("", TEXTURE_BLANK, COLOUR_MEDIUM_PURPLE)));
 	pObj2->addComponent(new ColliderRenderer(true, pObj2->m_collider, COLOUR_FIREBRICK));
 	pObj2->addComponent(new FreeMove(10, Input::KEY_UP, Input::KEY_DOWN, Input::KEY_LEFT, Input::KEY_RIGHT));
 	pObj2->addComponent(new Movement2D(10, Input::KEY_O, Input::KEY_P, -1, -1));
 	addToScene2(pObj2);
 
-	PhysicsObject* plane = new PhysicsObject(new RigidBody(-1), new ColliderSphere(5), Vector3(0, -12, 0));
+	PhysicsObject* plane = new PhysicsObject(new RigidBody(-1), new ColliderSphere(), Vector3(0, -12, 0));
 	plane->addComponent(new MeshRenderer(Mesh("cube.obj"), Material("", TEXTURE_BLANK, COLOUR_ORANGE)));
 	plane->addComponent(new ColliderRenderer(true, plane->m_collider, COLOUR_FIREBRICK));
 	addToScene2(plane);

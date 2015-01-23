@@ -7,11 +7,6 @@ ColliderSphere::ColliderSphere(float radius) :
 	m_type = Type::SPHERE;
 }
 
-Vector3 ColliderSphere::getExtents()
-{
-	return Vector3(m_radius, m_radius, m_radius);
-}
-
 void ColliderSphere::collide(Collider& collider, CollisionData* data)
 {
 	switch(collider.m_type)
@@ -31,11 +26,6 @@ ColliderBox::ColliderBox(const Vector3& halfExtents) :
 	m_halfSize(halfExtents)
 {
 	m_type = Type::BOX;
-}
-
-Vector3 ColliderBox::getExtents()
-{
-	return m_halfSize;
 }
 
 void ColliderBox::collide(Collider& collider, CollisionData* data)

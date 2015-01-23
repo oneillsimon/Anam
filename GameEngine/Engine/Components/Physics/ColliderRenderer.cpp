@@ -25,7 +25,7 @@ void ColliderRenderer::render(const Shader& shader, const  RenderingEngine& rend
 
 	if(m_isPhysX)
 	{
-		t = Transform(m_collider->m_owner->getPosition(), m_collider->m_owner->getRotation(), m_collider->getExtents().getX());
+		t = getTransform();//Transform(m_collider->m_owner->getPosition(), m_collider->m_owner->getRotation(), m_collider->getExtents().getX());
 	}
 	else
 	{
