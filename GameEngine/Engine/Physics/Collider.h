@@ -1,15 +1,15 @@
 #ifndef COLLIDER_H
 #define COLLIDER_H
 
-#include "../Core/GameComponent.h"
 #include "../Core/Math3D.h"
 #include "../Core/Transform.h"
 #include "RigidBody.h"
 
 class IntersectionTests;
 class CollisionDetector;
+class CollisionData;
 
-class Collider : public GameComponent
+class Collider
 {
 public:
 	friend class IntersectionTests;
@@ -19,9 +19,9 @@ public:
 	{
 		SPHERE,
 		BOX,
-		PLANE
 	};
 
+	Transform* m_owner;
 	RigidBody* m_body;
 	Matrix4 m_offset;
 	int m_type;
@@ -29,10 +29,11 @@ public:
 	void calculateInternals();
 	Vector3 getAxis(unsigned index) const
 	{
-		return m_parent->getTransform()->getTransformation().getAxisVector(index);
+		return m_owner->getTransformation().getAxisVector(index);
 	}
 
 	virtual Vector3 getExtents() = 0;
+	virtual void collide(Collider& collider, CollisionData* data) = 0;
 };
 
 class ColliderSphere : public Collider
@@ -42,19 +43,7 @@ public:
 	float m_radius;
 
 	virtual Vector3 getExtents();
-};
-
-class ColliderPlane : public Collider
-{
-public:
-	ColliderPlane(const Vector3& direction, float offset);
-	Vector3 m_direction;
-	float m_offset;
-
-	virtual Vector3 getExtents()
-	{
-		return Vector3();
-	}
+	virtual void collide(Collider& collider, CollisionData* data);
 };
 
 class ColliderBox : public Collider
@@ -64,6 +53,15 @@ public:
 	Vector3 m_halfSize;
 
 	virtual Vector3 getExtents();
+	virtual void collide(Collider& collider, CollisionData* data);
+};
+
+class ColliderPlane
+{
+public:
+	ColliderPlane(const Vector3& direction, float offset);
+	Vector3 m_direction;
+	float m_offset;
 };
 
 #endif

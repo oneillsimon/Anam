@@ -44,15 +44,16 @@ void TestGame::initialise(const Window& window)
 	cameraObj->addComponent(new FreeMove());
 	cameraObj->addComponent(new CameraComponent(Matrix4().initPerspective(toRadians(70.0f), window.getAspectRatio(), 0.1f, 1000.0f)));
 
-	PhysicsObject* pObj2 = new PhysicsObject(new RigidBody(00.001f), new ColliderBox(2), Vector3(3, 1, -1));
-	pObj2->addComponent(new MeshRenderer(Mesh("cube.obj"), Material("", TEXTURE_BLANK, COLOUR_MEDIUM_PURPLE)));
+	PhysicsObject* pObj2 = new PhysicsObject(new RigidBody(1000), new ColliderSphere(2), Vector3(0, 1, 0));
+	//pObj2->addComponent(new MeshRenderer(Mesh("cube.obj"), Material("", TEXTURE_BLANK, COLOUR_MEDIUM_PURPLE)));
+	pObj2->addComponent(new ColliderRenderer(true, pObj2->m_collider, COLOUR_FIREBRICK));
 	pObj2->addComponent(new FreeMove(10, Input::KEY_UP, Input::KEY_DOWN, Input::KEY_LEFT, Input::KEY_RIGHT));
 	pObj2->addComponent(new Movement2D(10, Input::KEY_O, Input::KEY_P, -1, -1));
 	addToScene2(pObj2);
 
-	PhysicsObject* plane = new PhysicsObject(new RigidBody(-1), new ColliderPlane(AXIS_Y, 0), Vector3(0, -12, 0));
-	plane->getTransform()->setScale(Vector3(10, 1, 10));
-	plane->addComponent(new MeshRenderer(Mesh("plane3.obj"), Material("", TEXTURE_BLANK, COLOUR_ORANGE)));
+	PhysicsObject* plane = new PhysicsObject(new RigidBody(-1), new ColliderSphere(5), Vector3(0, -12, 0));
+	plane->addComponent(new MeshRenderer(Mesh("cube.obj"), Material("", TEXTURE_BLANK, COLOUR_ORANGE)));
+	plane->addComponent(new ColliderRenderer(true, plane->m_collider, COLOUR_FIREBRICK));
 	addToScene2(plane);
 
 	int n = 10;
@@ -66,7 +67,7 @@ void TestGame::initialise(const Window& window)
 
 		PhysicsObject* o = new PhysicsObject(new RigidBody(1), new ColliderSphere(), Vector3(x, y, z));
 		o->addComponent(new MeshRenderer(Mesh("sphere.obj"), Material("", TEXTURE_BLANK, getRandomColour())));
-		addToScene2(o);
+		//addToScene2(o);
 	}
 
 	DirectionalLight* d = new DirectionalLight(COLOUR_WHITE, 0.04f);
@@ -81,8 +82,8 @@ void TestGame::initialise(const Window& window)
 	for(int i = 0; i < pCount; i++)
 	{
 		GameObject* g = new GameObject(Octree::partitions[i].centre, Quaternion(), Octree::partitions[i].max.getX());
-		g->addComponent(new ColliderRenderer(new ColliderBox(Octree::partitions[i].min)));
-		addToScene(g);
+		g->addComponent(new ColliderRenderer(false, new ColliderBox(Octree::partitions[i].min)));
+		//addToScene(g);
 	}
 
 	//getRoot().addComponent(new OctreeRenderer(0));

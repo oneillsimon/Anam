@@ -4,11 +4,9 @@ PhysicsObject::PhysicsObject(RigidBody* rigidBody, Collider* collider, const Vec
 	GameObject(position, rotation, scale),
 	m_collider(collider)
 {
+	m_collider->m_owner = getTransform();
 	m_collider->m_body = rigidBody;
-
 	m_collider->m_body->m_owner = getTransform();
-
-	addComponent(collider);
 }
 
 void PhysicsObject::update(float delta)

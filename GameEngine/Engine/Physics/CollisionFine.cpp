@@ -230,7 +230,7 @@ void fillPointFaceBoxBox(const ColliderBox& one, const ColliderBox& two, const V
 
 	contact->m_contactNormal = normal;
 	contact->m_penetration = penetration;
-	contact->m_contactPoint = two.getTransform().getTransformation() * vertex;
+	contact->m_contactPoint = two.m_owner->getTransformation() * vertex;
 	contact->setBodyData(one.m_body, two.m_body, data->m_friction, data->m_restitution);
 }
 
@@ -355,8 +355,8 @@ unsigned CollisionDetector::boxAndBox(const ColliderBox& one, const ColliderBox&
 			}
 		}
 
-		ptOnOneEdge = one.getTransform().getTransformation() * ptOnOneEdge;
-		ptOnTwoEdge = two.getTransform().getTransformation() * ptOnTwoEdge;
+		ptOnOneEdge = one.m_owner->getTransformation() * ptOnOneEdge;
+		ptOnTwoEdge = two.m_owner->getTransformation() * ptOnTwoEdge;
 
 		Vector3 vertex = contactPoint(ptOnOneEdge, oneAxis, one.m_halfSize[oneAxisIndex],
 									  ptOnTwoEdge, twoAxis, two.m_halfSize[twoAxisIndex],
@@ -378,7 +378,7 @@ unsigned CollisionDetector::boxAndBox(const ColliderBox& one, const ColliderBox&
 
 unsigned CollisionDetector::boxAndPoint(const ColliderBox& box, const Vector3& point, CollisionData* data)
 {
-	Vector3 relPt = box.getTransform().getTransformation().transformInverse(point);
+	Vector3 relPt = box.m_owner->getTransformation().transformInverse(point);
 	Vector3 normal;
 
 	float minDepth = box.m_halfSize.getX() - fabsf(relPt.getX());
@@ -426,7 +426,7 @@ unsigned CollisionDetector::boxAndPoint(const ColliderBox& box, const Vector3& p
 unsigned CollisionDetector::boxAndSphere(const ColliderBox& box, const ColliderSphere& sphere, CollisionData* data)
 {
 	Vector3 centre = sphere.getAxis(3);
-	Vector3 relCentre = box.getTransform().getTransformation().transformInverse(centre);
+	Vector3 relCentre = box.m_owner->getTransformation().transformInverse(centre);
 
 	if(fabsf(relCentre.getX()) - sphere.m_radius > box.m_halfSize.getX() ||
 	   fabsf(relCentre.getY()) - sphere.m_radius > box.m_halfSize.getY() ||
@@ -460,7 +460,7 @@ unsigned CollisionDetector::boxAndSphere(const ColliderBox& box, const ColliderS
 		return 0;
 	}
 
-	Vector3 closestPtWorld = box.getTransform().getTransformation().transform(closetPt);
+	Vector3 closestPtWorld = box.m_owner->getTransformation().transform(closetPt);
 
 	Contact* contact = data->m_contacts;
 	contact->m_contactNormal = (closestPtWorld - centre);
@@ -500,8 +500,8 @@ unsigned CollisionDetector::boxAndHalfSpace(const ColliderBox& box, const Collid
 	{
 		Vector3 vertexPos(mults[i][0], mults[i][1], mults[i][2]);
 		vertexPos = vertexPos * box.m_halfSize;
-		vertexPos = box.getTransform().getTransformation().transform(vertexPos);
-		printf("box  pos: %f\n", box.getTransform().getPosition());
+		vertexPos = box.m_owner->getTransformation().transform(vertexPos);
+		printf("box  pos: %f\n", box.m_owner->getPosition());
 		float vertexDistance = vertexPos.scalarProduct(plane.m_direction);
 		printf("vert dist: %f\n", vertexDistance);
 		if(vertexDistance < plane.m_offset)

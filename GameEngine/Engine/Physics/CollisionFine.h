@@ -3,7 +3,6 @@
 
 #include "Collider.h"
 #include "Contacts.h"
-#include "../Core/GameComponent.h"
 
 class IntersectionTests
 {

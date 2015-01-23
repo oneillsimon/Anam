@@ -134,6 +134,7 @@ void Octree::potentialCollisions(CollisionData* data)
 
 void Octree::generateContacts(Collider& one, Collider& two, CollisionData* data)
 {
+	one.collide(two, data);
 	/*
 	if(one.m_type == Collider::Type::SPHERE && two.m_type == Collider::Type::SPHERE)
 	{
