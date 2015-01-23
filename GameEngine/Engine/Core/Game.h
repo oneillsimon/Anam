@@ -6,9 +6,6 @@
 class Game
 {
 private:
-	ProfileTimer m_inputProfileTimer;
-	ProfileTimer m_updateProfileTimer;
-
 	//void operator =(Game& game) {}
 
 protected:
@@ -26,9 +23,6 @@ public:
 	virtual void update(float delta);
 	virtual void integrate(PhysicsEngine* physicsEngine, float delta);
 	virtual void render(RenderingEngine* renderingEngine, const Camera& camera);
-
-	double displayInputTime(double divisor);
-	double displayUpdateTime(double divisor);
 
 	GameObject& getRoot();
 

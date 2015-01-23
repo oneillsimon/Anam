@@ -23,10 +23,6 @@ private:
 	Window* m_window;
 	const Camera* m_mainCamera;
 
-	ProfileTimer m_windowUpdateTimer;
-	ProfileTimer m_swapBufferTimer;
-	ProfileTimer m_sleepTimer;
-
 	void run();
 
 	void operator =(const CoreEngine& coreEgine) {};

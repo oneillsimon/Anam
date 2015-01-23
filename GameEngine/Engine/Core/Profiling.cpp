@@ -54,3 +54,12 @@ double ProfileTimer::displayAndReset(const std::string& message, double inputDiv
 
 	return time;
 }
+
+ProfileTimer ProfileTimers::inputTimer__;
+ProfileTimer ProfileTimers::updateTimer_;
+ProfileTimer ProfileTimers::renderTimer_;
+ProfileTimer ProfileTimers::wSyncTimer__;
+ProfileTimer ProfileTimers::wUpdateTimer;
+ProfileTimer ProfileTimers::swapBufTimer;
+ProfileTimer ProfileTimers::sleepTimer__;
+ProfileTimer ProfileTimers::physicsTimer;

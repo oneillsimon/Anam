@@ -23,4 +23,17 @@ public:
 	double displayAndReset(const std::string& message, double divisor = 0.0);
 };
 
+class ProfileTimers
+{
+public:
+	static ProfileTimer inputTimer__;
+	static ProfileTimer updateTimer_;
+	static ProfileTimer renderTimer_;
+	static ProfileTimer wSyncTimer__;
+	static ProfileTimer wUpdateTimer;
+	static ProfileTimer swapBufTimer;
+	static ProfileTimer sleepTimer__;
+	static ProfileTimer physicsTimer;
+};
+
 #endif

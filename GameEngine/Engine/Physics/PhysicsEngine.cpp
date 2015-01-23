@@ -22,10 +22,12 @@ void PhysicsEngine::simulate(float delta)
 		return;
 	}
 
+	ProfileTimers::physicsTimer.startInvocation();
 	m_tree->potentialCollisions(&cData);
 	handleCollisions(delta);
 	
 	cData.reset(MAX_CONTACT_COUNT * 8);
+	ProfileTimers::physicsTimer.stopInvocation();
 }
 
 void PhysicsEngine::handleCollisions(float delta)

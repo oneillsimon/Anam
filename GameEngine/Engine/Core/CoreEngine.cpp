@@ -88,16 +88,17 @@ void CoreEngine::run()
 			double totalTime = (1000.0 * frameCounter) / (double)frames;
 			double totalRecordedTime = 0.0;
 
-			totalRecordedTime += m_game->displayInputTime((double)frames);
-			totalRecordedTime += m_game->displayUpdateTime((double)frames);
-			totalRecordedTime += m_renderingEngine->displayRenderTime((double)frames);
-			totalRecordedTime += m_renderingEngine->displayWindowSyncTime((double)frames);
-			totalRecordedTime += m_windowUpdateTimer.displayAndReset("Window Update Time: ", (double)frames);
-			totalRecordedTime += m_swapBufferTimer.displayAndReset("Buffer Swap Time: ", (double)frames);
-			totalRecordedTime += m_sleepTimer.displayAndReset("Sleep Time: ", (double)frames);
+			totalRecordedTime += ProfileTimers::inputTimer__.displayAndReset("Input     - ", (double)frames);
+			totalRecordedTime += ProfileTimers::updateTimer_.displayAndReset("Update    - ", (double)frames);
+			totalRecordedTime += ProfileTimers::physicsTimer.displayAndReset("Physics   - ", (double)frames);
+			totalRecordedTime += ProfileTimers::renderTimer_.displayAndReset("Render    - ", (double)frames);
+			totalRecordedTime += ProfileTimers::wSyncTimer__.displayAndReset("WinSync   - ", (double)frames);
+			totalRecordedTime += ProfileTimers::wUpdateTimer.displayAndReset("WinUpdate - ", (double)frames);
+			totalRecordedTime += ProfileTimers::swapBufTimer.displayAndReset("Buff Swap - ", (double)frames);
+			totalRecordedTime += ProfileTimers::sleepTimer__.displayAndReset("Sleep     - ", (double)frames);
 			
-			printf("Other time: %f ms\n", totalTime - totalRecordedTime);
-			printf("Total time: %f ms\n\n", totalTime);
+			printf("Other     - %f ms\n", totalTime - totalRecordedTime);
+			printf("Total     - %f ms\n\n", totalTime);
 			
 			frames = 0;
 			frameCounter = 0;
@@ -107,14 +108,14 @@ void CoreEngine::run()
 		{
 			render = true;
 
-			m_windowUpdateTimer.startInvocation();
+			ProfileTimers::wUpdateTimer.startInvocation();
 			if(m_window->isCloseRequested())
 			{
 				stop();
 			}
 
 			m_window->update();
-			m_windowUpdateTimer.stopInvocation();
+			ProfileTimers::wUpdateTimer.stopInvocation();
 
 			m_game->processInput(m_window->getInput(), (float)m_frameRate);
 			m_game->update((float)m_frameRate);
@@ -128,17 +129,17 @@ void CoreEngine::run()
 		{
 			m_game->render(m_renderingEngine, *m_mainCamera);
 
-			m_swapBufferTimer.startInvocation();
+			ProfileTimers::swapBufTimer.startInvocation();
 			m_window->swapBuffers();
-			m_swapBufferTimer.stopInvocation();
+			ProfileTimers::swapBufTimer.stopInvocation();
 
 			frames++;
 		}
 		else
 		{
-			m_sleepTimer.startInvocation();
+			ProfileTimers::sleepTimer__.startInvocation();
 			Util::sleep(1);
-			m_sleepTimer.stopInvocation();
+			ProfileTimers::sleepTimer__.stopInvocation();
 		}
 	}
 }

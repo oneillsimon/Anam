@@ -34,9 +34,6 @@ private:
 	std::vector<const Light*> m_lights;
 	std::map<std::string, unsigned int> m_samplerMap;
 
-	ProfileTimer m_renderProfileTimer;
-	ProfileTimer m_windowSyncProfileTimer;
-
 	void blurShadowMap(int shadowMapIndex, float blur);
 	void applyFilter(const Shader& filter, const Texture& source, const Texture* destination);
 
@@ -54,9 +51,6 @@ public:
 	{
 		throw uniformType + " is not supported by the rendering engine";
 	}
-
-	double displayRenderTime(double divisor);
-	double displayWindowSyncTime(double divisor);
 
 	const Light& getActiveLight() const;
 	unsigned int getSamplerSlot(std::string& samplerName) const;

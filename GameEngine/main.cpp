@@ -51,7 +51,7 @@ void TestGame::initialise(const Window& window)
 	addToScene2(pObj2);
 
 	PhysicsObject* plane = new PhysicsObject(new RigidBody(-1), new ColliderPlane(AXIS_Y, 0), Vector3(0, -12, 0));
-	plane->getTransform()->setScale(Vector3(1000, 1, 1000));
+	plane->getTransform()->setScale(Vector3(10, 1, 10));
 	plane->addComponent(new MeshRenderer(Mesh("plane3.obj"), Material("", TEXTURE_BLANK, COLOUR_ORANGE)));
 	addToScene2(plane);
 

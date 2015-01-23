@@ -18,16 +18,16 @@ void Game::addToScene2(PhysicsObject* object)
 
 void Game::processInput(const Input& input, float delta)
 {
-	m_inputProfileTimer.startInvocation();
+	ProfileTimers::inputTimer__.startInvocation();
 	rootObject.inputAll(input, delta);
-	m_inputProfileTimer.stopInvocation();
+	ProfileTimers::inputTimer__.stopInvocation();
 }
 
 void Game::update(float delta)
 {
-	m_updateProfileTimer.startInvocation();
+	ProfileTimers::updateTimer_.startInvocation();
 	rootObject.updateAll(delta);
-	m_updateProfileTimer.stopInvocation();
+	ProfileTimers::updateTimer_.stopInvocation();
 }
 
 void Game::integrate(PhysicsEngine* physicsEngine, float delta)
@@ -38,16 +38,6 @@ void Game::integrate(PhysicsEngine* physicsEngine, float delta)
 void Game::render(RenderingEngine* renderingEngine, const Camera& camera)
 {
 	renderingEngine->render(rootObject, camera);
-}
-
-double Game::displayInputTime(double divisor)
-{
-	return m_inputProfileTimer.displayAndReset("Input Time: ", divisor);
-}
-
-double Game::displayUpdateTime(double divisor)
-{
-	return m_updateProfileTimer.displayAndReset("Update Time: ", divisor);
 }
 
 GameObject& Game::getRoot()

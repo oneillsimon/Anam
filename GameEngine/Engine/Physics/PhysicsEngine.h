@@ -5,9 +5,10 @@
 
 #include <vector>
 
+#include "../Core/Profiling.h"
+#include "Contacts.h"
 #include "Octree.h"
 #include "PhysicsObject.h"
-#include "Contacts.h"
 
 class PhysicsEngine
 {
