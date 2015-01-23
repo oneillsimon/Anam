@@ -1,19 +1,19 @@
 #include "PhysicsObject.h"
 
-PhysicsObject::PhysicsObject(RigidBody* rigidBody, const Vector3& position, const Quaternion& rotation, float scale) :
-	GameObject(position, rotation, scale)
+PhysicsObject::PhysicsObject(RigidBody* rigidBody, CollisionPrimitive* collider, const Vector3& position, const Quaternion& rotation, float scale) :
+	GameObject(position, rotation, scale),
+	m_collider(collider)
 {
-	collider = new CollisionSphere();
-	collider->m_radius = 1.0f;
-	collider->m_body = rigidBody;
-	collider->m_body->m_owner = getTransform();
+	m_collider->m_body = rigidBody;
+
+	m_collider->m_body->m_owner = getTransform();
 
 	addComponent(collider);
 }
 
 void PhysicsObject::update(float delta)
 {
-	collider->m_body->integrate(delta);
+	m_collider->m_body->integrate(delta);
 
 	GameObject::update(delta);
 }

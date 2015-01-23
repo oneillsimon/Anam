@@ -2,6 +2,35 @@
 
 #include "CollideFine.h"
 
+CollisionSphere::CollisionSphere(float radius) :
+	m_radius(radius)
+{
+	m_type = Type::SPHERE;
+}
+
+Vector3 CollisionSphere::getExtents()
+{
+	return Vector3(m_radius, m_radius, m_radius);
+}
+
+CollisionBox::CollisionBox(const Vector3& halfExtents) :
+	m_halfSize(halfExtents)
+{
+	m_type = Type::BOX;
+}
+
+Vector3 CollisionBox::getExtents()
+{
+	return m_halfSize;
+}
+
+CollisionPlane::CollisionPlane(const Vector3& direction, float offset) :
+	m_direction(direction),
+	m_offset(offset)
+{
+	m_type = Type::PLANE;
+}
+
 void CollisionPrimitive::calculateInternals()
 {
 }
@@ -505,9 +534,9 @@ unsigned CollisionDetector::boxAndHalfSpace(const CollisionBox& box, const Colli
 		Vector3 vertexPos(mults[i][0], mults[i][1], mults[i][2]);
 		vertexPos = vertexPos * box.m_halfSize;
 		vertexPos = box.getTransform().getTransformation().transform(vertexPos);
-
+		printf("box  pos: %f\n", box.getTransform().getPosition());
 		float vertexDistance = vertexPos.scalarProduct(plane.m_direction);
-
+		printf("vert dist: %f\n", vertexDistance);
 		if(vertexDistance < plane.m_offset)
 		{
 			contact->m_contactPoint = plane.m_direction;

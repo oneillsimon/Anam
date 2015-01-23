@@ -42,7 +42,7 @@ public:
 	void recalculate();
 	bool isInside(const Octree& octree, const Vector3& position);
 	void potentialCollisions(CollisionData* data);
-	void generateContacts(const CollisionSphere& one, const CollisionSphere& two, CollisionData* data);
+	void generateContacts(CollisionPrimitive& one, CollisionPrimitive& two, CollisionData* data);
 };
 
 #endif

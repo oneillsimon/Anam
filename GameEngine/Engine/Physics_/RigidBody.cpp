@@ -27,6 +27,8 @@ m_angularDamping(angular)
 
 void RigidBody::integrate(float delta)
 {
+	addForce(Vector3(0, -9.8f, 0) * delta);
+
 	if(!m_isAwake)
 	{
 		return;
@@ -44,7 +46,7 @@ void RigidBody::integrate(float delta)
 	m_rotation *= powf(m_angularDamping, delta);
 
 	m_owner->setPosition(m_owner->getPosition() + (m_velocity * delta));
-	m_owner->rotate(AXIS_Z, m_rotation.length() + 0.00001f);
+	//m_owner->rotate(AXIS_Z, m_rotation.length() + 0.00001f);
 
 	calculateDerivedData();
 	clearAccumulators();

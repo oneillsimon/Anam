@@ -8,11 +8,9 @@
 class PhysicsObject : public GameObject
 {
 public:
-	//RigidBody* m_rigidBody;
-	//Collider* m_collider;
-	CollisionSphere* collider;
+	CollisionPrimitive* m_collider;
 
-	PhysicsObject(RigidBody* rigidBody, const Vector3& position = Vector3(), const Quaternion& rotation = Quaternion(0, 0, 0, 1), float scale = 1.0f);
+	PhysicsObject(RigidBody* rigidBody, CollisionPrimitive* collider, const Vector3& position = Vector3(), const Quaternion& rotation = Quaternion(0, 0, 0, 1), float scale = 1.0f);
 
 	virtual void update(float delta);
 };
