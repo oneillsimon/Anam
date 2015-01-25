@@ -5,7 +5,7 @@ PhysicsEngine::PhysicsEngine() :
 {
 	cData.reset(MAX_CONTACT_COUNT * 8);
 	cData.m_contactArray = contacts;
-	int size = 12;
+	int size = 120;
 	m_tree = new Octree(0, Vector3(), Vector3(size, size, size));
 }
 

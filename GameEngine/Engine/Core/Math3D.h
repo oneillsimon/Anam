@@ -103,7 +103,7 @@ public:
 	Vector3 operator -(const Vector3& v) const;
 	Vector3 operator *(const Vector3& v) const;
 	Vector3 operator /(const Vector3& v) const;
-	Vector3 operator %(const Vector3& v) const;
+	//Vector3 operator %(const Vector3& v) const;
 
 	void operator +=(const Vector3& v) const;
 	void operator -=(const Vector3& v) const;
@@ -209,6 +209,8 @@ public:
 	Vector3 transformTranspose(const Vector3& v) const;
 	void setInverse(const Matrix3& m);
 	Matrix3 inverse() const;
+	void setBlockInteriaTensor(const Vector3& halfSizes, float mass);
+	void setInertiaTensorCoeffs(float ix, float iy, float iz, float ixy = 0, float ixz = 0, float iyz = 0);
 	void setSkewSymmetric(const Vector3& v);
 	void setComponents(const Vector3& one, const Vector3& two, const Vector3& three);
 	void setTranspose(const Matrix3& m);

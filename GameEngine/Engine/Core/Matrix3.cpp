@@ -77,6 +77,21 @@ Matrix3 Matrix3::inverse() const
 	return result;
 }
 
+void Matrix3::setBlockInteriaTensor(const Vector3& halfSizes, float mass)
+{
+	Vector3 squares = halfSizes * halfSizes;
+	setInertiaTensorCoeffs(0.3f * mass * (squares.getY() * squares.getZ()),
+						   0.3f * mass * (squares.getX() + squares.getZ()),
+						   0.3f * mass * (squares.getX() + squares.getY()));
+}
+
+void Matrix3::setInertiaTensorCoeffs(float ix, float iy, float iz, float ixy, float ixz, float iyz)
+{
+	m[0][0] = ix;	m[1][0] = -ixy;	m[2][0] = -ixz;
+	m[0][1] = -ixy; m[1][1] = iy;	m[2][1] = -iyz;
+	m[0][2] = -ixz; m[1][2] = -iyz; m[2][2] = iz;
+}
+
 void Matrix3::setSkewSymmetric(const Vector3& v)
 {
 	m[0][0] = 0;

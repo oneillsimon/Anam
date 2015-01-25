@@ -103,10 +103,13 @@ void Contact::calculateDesiredDeltaVelocity(float duration)
 		velocityFromAcc += m_body[0]->getLastFrameAcceleration().scalarProduct(m_contactNormal) * duration;
 	}
 
-	if(m_body[1]->getAwake())
+	if(m_body[1] && m_body[1]->getAwake())
 	{
 		velocityFromAcc -= m_body[1]->getLastFrameAcceleration().scalarProduct(m_contactNormal) * duration;
 	}
+
+	Vector3 p = m_body[0]->m_owner->getPosition();
+	p = m_body[1]->m_owner->getPosition();
 
 	float thisRestitution = m_restitution;
 
@@ -128,12 +131,12 @@ void Contact::calculateInternals(float duration)
 	assert(m_body[0]);
 
 	calculateContactBasis();
-	
+
 	m_relativeContactPosition[0] = m_contactPoint - m_body[0]->getPosition();
 
 	if(m_body[1])
 	{
-		m_relativeContactPosition[1] = m_contactPoint = m_body[1]->getPosition();
+		m_relativeContactPosition[1] = m_contactPoint - m_body[1]->getPosition();
 	}
 
 	m_contactVelocity = calculateLocalVelocity(0, duration);
@@ -173,7 +176,7 @@ void Contact::applyVelocityChange(Vector3 velocityChange[2], Vector3 rotationCha
 	Vector3 impulsiveTorque = m_relativeContactPosition[0] % impulse;
 	rotationChange[0] = inverseInertiaTensor[0].transform(impulsiveTorque);
 	velocityChange[0].clear();
-	velocityChange[0].addScaledVector3(impulse, m_body[0]->getInverseMass());
+	velocityChange[0].addScaledVector3(impulse, -m_body[0]->getInverseMass());
 
 	m_body[0]->addVelocity(velocityChange[0]);
 	m_body[0]->addRotation(rotationChange[0]);
@@ -292,7 +295,7 @@ void Contact::applyPositionChange(Vector3 linearChange[2], Vector3 angularChange
 		{
 			Matrix3 inverseIntertiaTensor = m_body[i]->getInverseInertiaTensorWorld();
 
-			Vector3 angularIntertiaWorld = m_relativeContactPosition[i] % m_contactNormal;
+			Vector3 angularIntertiaWorld = m_relativeContactPosition[i] % (m_contactNormal * 1.5f);
 			angularIntertiaWorld = inverseIntertiaTensor.transform(angularIntertiaWorld);
 			angularIntertiaWorld = angularIntertiaWorld % m_relativeContactPosition[i];
 			angularInertia[i] = angularIntertiaWorld.scalarProduct(m_contactNormal);
@@ -410,7 +413,7 @@ void ContactResolver::prepareContacts(Contact* contacts, unsigned numContacts, f
 {
 	Contact* lastContact = contacts + numContacts;
 
-	for(Contact* contact = contacts; contact > lastContact; contact++)
+	for(Contact* contact = contacts; contact < lastContact; contact++)
 	{
 		contact->calculateInternals(duration);
 	}
@@ -445,7 +448,7 @@ void ContactResolver::adjustVelocities(Contact* contact, unsigned numContacts, f
 
 		contact[index].matchAwakeState();
 		contact[index].applyVelocityChange(velocityChange, rotationChange);
-
+		
 		for(unsigned i = 0; i < numContacts; i++)
 		{
 			for(unsigned b = 0; b < 2; b++)
@@ -457,9 +460,11 @@ void ContactResolver::adjustVelocities(Contact* contact, unsigned numContacts, f
 						if(contact[i].m_body[b] == contact[index].m_body[d])
 						{
 							deltaVelocity = velocityChange[d] + (rotationChange[d] * contact[i].m_relativeContactPosition[b]);
-
 							contact[i].m_contactVelocity += contact[i].m_contactToWorld.transformTranspose(deltaVelocity) * (b ? -1 : 1);
 							contact[i].calculateDesiredDeltaVelocity(duration);
+							
+							Vector3 v = rotationChange[d];
+							//printf("v: %.4f, %.4f, %.4f\n", v.getX(), v.getY(), v.getZ());
 						}
 					}
 				}

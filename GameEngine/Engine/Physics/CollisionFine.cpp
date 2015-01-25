@@ -168,7 +168,7 @@ unsigned CollisionDetector::sphereAndSphere(const ColliderSphere& one, const Col
 static float penetrationOnAxis(const ColliderBox& one, const ColliderBox& two, const Vector3& axis, const Vector3& toCentre)
 {
 	float oneProject = transformToAxis(one, axis);
-	float twoProject = transformToAxis(one, axis);
+	float twoProject = transformToAxis(two, axis);
 
 	float distance = fabsf(toCentre.scalarProduct(axis));
 
@@ -181,7 +181,6 @@ static bool tryAxis(const ColliderBox& one, const ColliderBox& two, const Vector
 	{
 		return true;
 	}
-	
 
 	axis = axis.normalised();
 	float penetration = penetrationOnAxis(one, two, axis, toCentre);
@@ -215,17 +214,17 @@ void fillPointFaceBoxBox(const ColliderBox& one, const ColliderBox& two, const V
 
 	if(two.getAxis(0).scalarProduct(normal) < 0)
 	{
-		vertex.setX(vertex.getX());
+		vertex.setX(-vertex.getX());
 	}
 
 	if(two.getAxis(1).scalarProduct(normal) < 0)
 	{
-		vertex.setY(vertex.getY());
+		vertex.setY(-vertex.getY());
 	}
 
 	if(two.getAxis(2).scalarProduct(normal) < 0)
 	{
-		vertex.setZ(vertex.getZ());
+		vertex.setZ(-vertex.getZ());
 	}
 
 	contact->m_contactNormal = normal;
@@ -273,11 +272,34 @@ static Vector3 contactPoint(const Vector3& pOne, const Vector3& dOne, float oneS
 }
 
 #define checkOverlap(axis, index) \
-	if(!tryAxis(one, two, (axis), toCentre, (index), penetration, best)) return 0;
+		if(!tryAxis(one, two, (axis), toCentre, (index), penetration, best)) return 0;
 
 unsigned CollisionDetector::boxAndBox(const ColliderBox& one, const ColliderBox& two, CollisionData* data)
 {
-	Vector3 toCentre = two.getAxis(3) - one.getAxis(3);
+	//if(IntersectionTests::boxAndBox(one, two))
+	//{
+	//	return 0;
+	//}
+
+	//Vector3 toCentre = two.getAxis(3) - one.getAxis(3);
+
+	if(!one.m_owner)
+	{
+		int uu = 0;
+	}
+
+	Vector3 toCentre = (two.m_owner->getPosition() - one.m_owner->getPosition());
+	printf("toCentre: %f, %f, %f\n", toCentre.getX(), toCentre.getY(), toCentre.getZ());
+
+	Vector3 o0 = one.getAxis(0);
+	Vector3 o1 = one.getAxis(1);
+	Vector3 o2 = one.getAxis(2);
+	Vector3 o3 = one.getAxis(3);
+
+	Vector3 t0 = two.getAxis(0);
+	Vector3 t1 = two.getAxis(1);
+	Vector3 t2 = two.getAxis(2);
+	Vector3 t3 = two.getAxis(3);
 
 	float penetration = FLT_MAX;
 	unsigned best = 0xffffff;
@@ -285,7 +307,7 @@ unsigned CollisionDetector::boxAndBox(const ColliderBox& one, const ColliderBox&
 	checkOverlap(one.getAxis(0), 0);
 	checkOverlap(one.getAxis(1), 1);
 	checkOverlap(one.getAxis(2), 2);
-
+	
 	checkOverlap(two.getAxis(0), 3);
 	checkOverlap(two.getAxis(1), 4);
 	checkOverlap(two.getAxis(2), 5);
@@ -302,8 +324,16 @@ unsigned CollisionDetector::boxAndBox(const ColliderBox& one, const ColliderBox&
 	checkOverlap(one.getAxis(2) % two.getAxis(1), 13);
 	checkOverlap(one.getAxis(2) % two.getAxis(2), 14);
 
+	printf("best %d\n", best);
+
+	if(best == 0xffffff)
+	{
+		int uu = 0;
+	}
+
 	assert(best != 0xffffff);
 
+	
 	if(best < 3)
 	{
 		fillPointFaceBoxBox(one, two, toCentre, data, best, penetration);

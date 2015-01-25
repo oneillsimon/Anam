@@ -178,15 +178,6 @@ Vector3 Vector3::operator /(const Vector3& v) const
 	return Vector3(x / v.getX(), y / v.getY(), z / v.getZ());
 }
 
-Vector3 Vector3::operator %(const Vector3& v) const
-{
-	float x = y * v.getZ() - z * v.getY();
-	float y = z * v.getX() - x * v.getZ();
-	float z = x * v.getY() - y * v.getX();
-
-	return (x, y, z);
-}
-
 void Vector3::operator +=(const Vector3& v) const
 {
 	x += v.getX();

@@ -2,11 +2,36 @@
 
 #include "RigidBody.h"
 
+void calculateInterisTensorInWorldSpace(Matrix3& iitWorld, const Transform& t, const Matrix3& iitBody)
+{
+	Quaternion q = t.getRotation();
+	Matrix4 m = t.getTransformation();
+
+	float t4_ = m[0][0] * iitBody[0][0] + m[1][0] * iitBody[0][1] + m[2][0] * iitBody[0][2];
+	float t9_ = m[0][0] * iitBody[1][0] + m[1][0] * iitBody[1][1] + m[2][0] * iitBody[1][2];
+	float t14 = m[0][0] * iitBody[2][0] + m[1][0] * iitBody[2][1] + m[2][0] * iitBody[2][2];
+	float t28 = m[0][1] * iitBody[0][0] + m[1][1] * iitBody[0][1] + m[2][1] * iitBody[0][2];
+	float t33 = m[0][1] * iitBody[1][0] + m[1][1] * iitBody[1][1] + m[2][1] * iitBody[1][2];
+	float t38 = m[0][1] * iitBody[2][0] + m[1][1] * iitBody[2][1] + m[2][1] * iitBody[2][2];
+	float t52 = m[0][2] * iitBody[0][0] + m[1][2] * iitBody[0][1] + m[2][2] * iitBody[0][2];
+	float t57 = m[0][2] * iitBody[1][0] + m[1][2] * iitBody[1][1] + m[2][2] * iitBody[1][2];
+	float t62 = m[0][2] * iitBody[2][0] + m[1][2] * iitBody[2][1] + m[2][2] * iitBody[2][2];
+
+	iitWorld.setAt(0, 0, t4_ * m[0][0] + t9_ * m[1][0] + t14 * m[2][0]);
+	iitWorld.setAt(1, 0, t4_ * m[0][1] + t9_ * m[1][1] + t14 * m[2][1]);
+	iitWorld.setAt(2, 0, t4_ * m[0][2] + t9_ * m[1][2] + t14 * m[2][2]);
+	iitWorld.setAt(0, 1, t28 * m[0][0] + t33 * m[1][0] + t38 * m[2][0]);
+	iitWorld.setAt(1, 1, t28 * m[0][1] + t33 * m[1][1] + t38 * m[2][1]);
+	iitWorld.setAt(2, 1, t28 * m[0][2] + t33 * m[1][2] + t38 * m[2][2]);
+	iitWorld.setAt(0, 2, t52 * m[0][0] + t57 * m[1][0] + t62 * m[2][0]);
+	iitWorld.setAt(1, 2, t52 * m[0][1] + t57 * m[1][1] + t62 * m[2][1]);
+	iitWorld.setAt(2, 2, t52 * m[0][2] + t57 * m[1][2] + t62 * m[2][2]);
+}
+
 void RigidBody::calculateDerivedData()
 {
 	m_owner->setRotation(m_owner->getRotation().normalised());
-
-	// TODO: calculate inertiaTensor in world space.
+	calculateInterisTensorInWorldSpace(m_inverseInertiaTensorWorld, *m_owner, m_inverseInertiaTensor);
 }
 
 RigidBody::RigidBody(float mass, float linear, float angular) :
@@ -32,8 +57,6 @@ void RigidBody::integrate(float delta)
 		return;
 	}
 
-	addForce(Vector3(0, -9.8f, 0) * delta);
-	
 	m_lastFrameAcceleration = m_acceleration;
 	m_lastFrameAcceleration.addScaledVector3(m_forceAccum, m_inverseMass);
 
@@ -46,7 +69,7 @@ void RigidBody::integrate(float delta)
 	m_rotation *= powf(m_angularDamping, delta);
 
 	m_owner->setPosition(m_owner->getPosition() + (m_velocity * delta));
-	//m_owner->rotate(AXIS_Z, m_rotation.length() + 0.00001f);
+	m_owner->rotate(m_rotation, delta);
 
 	calculateDerivedData();
 	clearAccumulators();
@@ -295,7 +318,7 @@ void RigidBody::addForceAtPoint(const Vector3& force, const Vector3& point)
 	pt -= m_owner->getPosition();
 
 	m_forceAccum += force;
-	m_torqueAccum += pt % force;
+	m_torqueAccum += pt.cross(force);
 
 	m_isAwake = true;
 }

@@ -38,13 +38,13 @@ static void tests();
 
 void TestGame::initialise(const Window& window)
 {
-	GameObject* cameraObj = new GameObject(Vector3(0, 0, -4));
+	GameObject* cameraObj = new GameObject(Vector3(0, 0, -17));
 
 	cameraObj->addComponent(new FreeLook(window.getCentre()));
 	cameraObj->addComponent(new FreeMove());
 	cameraObj->addComponent(new CameraComponent(Matrix4().initPerspective(toRadians(70.0f), window.getAspectRatio(), 0.1f, 1000.0f)));
 
-	PhysicsObject* pObj2 = new PhysicsObject(new RigidBody(20), new ColliderBox(), Vector3(0, 1, 0));
+	PhysicsObject* pObj2 = new PhysicsObject(new RigidBody(10), new ColliderBox(), Vector3(-0.0f, 5, 0.0f));
 	pObj2->m_collider->m_body->setAwake();
 	//pObj2->addComponent(new MeshRenderer(Mesh("cube.obj"), Material("", TEXTURE_BLANK, COLOUR_MEDIUM_PURPLE)));
 	pObj2->addComponent(new ColliderRenderer(true, pObj2->m_collider, COLOUR_FIREBRICK));
@@ -52,7 +52,8 @@ void TestGame::initialise(const Window& window)
 	pObj2->addComponent(new Movement2D(10, Input::KEY_O, Input::KEY_P, -1, -1));
 	addToScene2(pObj2);
 
-	PhysicsObject* plane = new PhysicsObject(new RigidBody(10000), new ColliderSphere(), Vector3(0, -4, 0));
+	PhysicsObject* plane = new PhysicsObject(new RigidBody(100), new ColliderBox(), Vector3(1.75f, -1, 0));
+	plane->m_collider->m_body->setAwake(false);
 	plane->addComponent(new MeshRenderer(Mesh("sphere.obj"), Material("", TEXTURE_BLANK, COLOUR_ORANGE)));
 	plane->addComponent(new ColliderRenderer(true, plane->m_collider, COLOUR_FIREBRICK));
 	addToScene2(plane);
