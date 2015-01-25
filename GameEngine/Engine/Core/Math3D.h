@@ -103,7 +103,7 @@ public:
 	Vector3 operator -(const Vector3& v) const;
 	Vector3 operator *(const Vector3& v) const;
 	Vector3 operator /(const Vector3& v) const;
-	//Vector3 operator %(const Vector3& v) const;
+	Vector3 operator %(const Vector3& v) const;
 
 	void operator +=(const Vector3& v) const;
 	void operator -=(const Vector3& v) const;
