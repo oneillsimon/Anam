@@ -98,6 +98,11 @@ void Contact::calculateDesiredDeltaVelocity(float duration)
 
 	float velocityFromAcc = 0;
 
+	if(!m_body[0])
+	{
+		int uu = 0;
+	}
+
 	if(m_body[0]->getAwake())
 	{
 		velocityFromAcc += m_body[0]->getLastFrameAcceleration().scalarProduct(m_contactNormal) * duration;
@@ -107,9 +112,6 @@ void Contact::calculateDesiredDeltaVelocity(float duration)
 	{
 		velocityFromAcc -= m_body[1]->getLastFrameAcceleration().scalarProduct(m_contactNormal) * duration;
 	}
-
-	Vector3 p = m_body[0]->m_owner->getPosition();
-	p = m_body[1]->m_owner->getPosition();
 
 	float thisRestitution = m_restitution;
 
@@ -164,7 +166,7 @@ void Contact::applyVelocityChange(Vector3 velocityChange[2], Vector3 rotationCha
 
 	if(m_friction == 0.0f)
 	{
-		impulseContact = calculateFrictionlessImpulse(inverseInertiaTensor);
+		//impulseContact = calculateFrictionlessImpulse(inverseInertiaTensor);
 	}
 	else
 	{
@@ -173,17 +175,19 @@ void Contact::applyVelocityChange(Vector3 velocityChange[2], Vector3 rotationCha
 
 	Vector3 impulse = m_contactToWorld.transform(impulseContact);
 
-	Vector3 impulsiveTorque = m_relativeContactPosition[0] % impulse;
+	Vector3 impulsiveTorque = m_relativeContactPosition[0].cross(impulse);
+	//Vector3 impulsiveTorque = impulse.cross(m_relativeContactPosition[0]);
 	rotationChange[0] = inverseInertiaTensor[0].transform(impulsiveTorque);
 	velocityChange[0].clear();
-	velocityChange[0].addScaledVector3(impulse, -m_body[0]->getInverseMass());
+	velocityChange[0].addScaledVector3(impulse, m_body[0]->getInverseMass());
 
 	m_body[0]->addVelocity(velocityChange[0]);
 	m_body[0]->addRotation(rotationChange[0]);
 
 	if(m_body[1])
 	{
-		Vector3 impulsiveTorque = impulse % m_relativeContactPosition[1];
+		Vector3 impulsiveTorque = impulse.cross(m_relativeContactPosition[1]);
+		//Vector3 impulsiveTorque = m_relativeContactPosition[1].cross(impulse);
 		rotationChange[1] = inverseInertiaTensor[1].transform(impulsiveTorque);
 		velocityChange[1].clear();
 		velocityChange[1].addScaledVector3(impulse, -m_body[1]->getInverseMass());
@@ -259,21 +263,23 @@ Vector3 Contact::calculateFrictionImpulse(Matrix3* inverseIntertiaTensor)
 
 	Vector3 velKill(m_desiredDeltaVelocity, -m_contactVelocity.getY(), -m_contactVelocity.getZ());
 
-	impulseContact = impulseMatrix.transform(velKill);
+	impulseContact = impulseMatrix.transform(velKill);//.normalised();
 
 	float planarImpulse = sqrtf(impulseContact.getY() * impulseContact.getY() +
-		impulseContact.getZ() * impulseContact.getZ());
+								impulseContact.getZ() * impulseContact.getZ());
+	planarImpulse += FLT_EPSILON;
 
 	if(planarImpulse > impulseContact.getX() * m_friction)
 	{
 		impulseContact.setY(impulseContact.getY() / planarImpulse);
 		impulseContact.setZ(impulseContact.getZ() / planarImpulse);
 		impulseContact.setX(deltaVelocity.getAt(0, 0) +
-			deltaVelocity.getAt(1, 0) * m_friction * impulseContact.getY() +
-			deltaVelocity.getAt(2, 0) * m_friction * impulseContact.getZ());
+							deltaVelocity.getAt(1, 0) * m_friction * impulseContact.getY() +
+							deltaVelocity.getAt(2, 0) * m_friction * impulseContact.getZ());
+
 		impulseContact.setX(m_desiredDeltaVelocity / impulseContact.getX());
-		impulseContact.setY(impulseContact.getY() * m_friction * impulseContact.getX());
-		impulseContact.setZ(impulseContact.getZ() * m_friction * impulseContact.getX());
+		impulseContact.setY(impulseContact.getY() * (m_friction * impulseContact.getX()));
+		impulseContact.setZ(impulseContact.getZ() * (m_friction * impulseContact.getX()));
 	}
 
 	return impulseContact;
@@ -519,6 +525,7 @@ void ContactResolver::adjustPositions(Contact* contact, unsigned numContacts, fl
 						{
 							deltaPosition = linearChange[d] + (angularChange[d] * contact[i].m_relativeContactPosition[b]);
 							contact[i].m_penetration += deltaPosition.scalarProduct(contact[i].m_contactNormal) * (b ? 1 : -1);
+							contact[i].calculateDesiredDeltaVelocity(duration);
 						}
 					}
 				}

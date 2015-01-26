@@ -174,6 +174,13 @@ Vector3& Transform::getScale()
 	return m_scale;
 }
 
+void Transform::revertToPrevious()
+{
+	m_position = oldPosition;
+	m_rotation = oldRotation;
+	m_scale = oldScale;
+}
+
 void Transform::setParent(Transform* parent)
 {
 	m_parent = parent;

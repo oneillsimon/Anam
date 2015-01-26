@@ -289,7 +289,6 @@ unsigned CollisionDetector::boxAndBox(const ColliderBox& one, const ColliderBox&
 	}
 
 	Vector3 toCentre = (two.m_owner->getPosition() - one.m_owner->getPosition());
-	printf("toCentre: %f, %f, %f\n", toCentre.getX(), toCentre.getY(), toCentre.getZ());
 
 	Vector3 o0 = one.getAxis(0);
 	Vector3 o1 = one.getAxis(1);
@@ -324,11 +323,13 @@ unsigned CollisionDetector::boxAndBox(const ColliderBox& one, const ColliderBox&
 	checkOverlap(one.getAxis(2) % two.getAxis(1), 13);
 	checkOverlap(one.getAxis(2) % two.getAxis(2), 14);
 
-	printf("best %d\n", best);
-
 	if(best == 0xffffff)
 	{
 		int uu = 0;
+		//best = 6;
+		//one.m_owner->revertToPrevious();
+		
+		//return 0;
 	}
 
 	assert(best != 0xffffff);

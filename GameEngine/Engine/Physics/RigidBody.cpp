@@ -69,7 +69,8 @@ void RigidBody::integrate(float delta)
 	m_rotation *= powf(m_angularDamping, delta);
 
 	m_owner->setPosition(m_owner->getPosition() + (m_velocity * delta));
-	m_owner->rotate(m_rotation, delta);
+	m_owner->setRotation(Quaternion(m_rotation, delta));
+	//m_owner->rotate(m_rotation, m_rotation.length());
 
 	calculateDerivedData();
 	clearAccumulators();
@@ -318,7 +319,7 @@ void RigidBody::addForceAtPoint(const Vector3& force, const Vector3& point)
 	pt -= m_owner->getPosition();
 
 	m_forceAccum += force;
-	m_torqueAccum += pt.cross(force);
+	m_torqueAccum += pt % force;
 
 	m_isAwake = true;
 }

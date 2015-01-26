@@ -12,8 +12,8 @@ void PhysicsObject::initialise()
 	m_collider->m_owner = getTransform();
 	m_collider->m_body->m_owner = getTransform();
 
-	Matrix3 tensor;
-	tensor.setBlockInteriaTensor(getTransform()->getScale(), m_collider->m_body->getMass());
+	Matrix3 tensor = Matrix3().initIdentity();
+	//tensor.setBlockInteriaTensor(getTransform()->getScale(), m_collider->m_body->getMass());
 	m_collider->m_body->setIntertiaTensor(tensor);
 
 	m_collider->m_body->calculateDerivedData();

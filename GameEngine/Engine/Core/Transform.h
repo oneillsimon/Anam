@@ -47,6 +47,8 @@ public:
 	const Vector3& getScale() const;
 	Vector3& getScale();
 
+	void revertToPrevious();
+
 	// TEMP
 	Vector3 getPositionLua() const;
 	void setScaleLua(const Vector3& v);

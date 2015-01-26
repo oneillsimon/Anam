@@ -105,7 +105,7 @@ void Octree::potentialCollisions(CollisionData* data)
 	if(!m_hasChildren)
 	{
 		data->m_friction = 0.9f;
-		data->m_restitution = 0.0f;
+		data->m_restitution = 0.6f;
 		data->m_tolerance = 0.1f;
 
 		for(std::set<PhysicsObject*>::iterator it1 = mm_objects.begin(); it1 != mm_objects.end(); it1++)
@@ -116,12 +116,19 @@ void Octree::potentialCollisions(CollisionData* data)
 			{
 				PhysicsObject* obj2 = *it2;
 
-				obj1->m_collider->m_body->addForce(Vector3(0, -9.8f, 0));
-				obj2->m_collider->m_body->addForce(Vector3(0, -9.8f, 0));
+				//obj1->m_collider->m_body->addForce(Vector3(0, -90.8f, 0));
+				//obj2->m_collider->m_body->addForce(Vector3(0, -90.8f, 0));
 
 				if(obj1 < obj2)
 				{
-					obj2->m_collider->collide(*obj1->m_collider, data);
+					if(!data->hasMoreContacts())
+					{
+						return;
+					}
+					else
+					{
+						obj1->m_collider->collide(*obj2->m_collider, data);
+					}
 				}
 			}
 		}
