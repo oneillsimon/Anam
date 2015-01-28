@@ -166,7 +166,7 @@ void Contact::applyVelocityChange(Vector3 velocityChange[2], Vector3 rotationCha
 
 	if(m_friction == 0.0f)
 	{
-		//impulseContact = calculateFrictionlessImpulse(inverseInertiaTensor);
+		impulseContact = calculateFrictionlessImpulse(inverseInertiaTensor);
 	}
 	else
 	{
@@ -175,7 +175,8 @@ void Contact::applyVelocityChange(Vector3 velocityChange[2], Vector3 rotationCha
 
 	Vector3 impulse = m_contactToWorld.transform(impulseContact);
 
-	Vector3 impulsiveTorque = m_relativeContactPosition[0].cross(impulse);
+	Vector3 impulsiveTorque = m_relativeContactPosition[0] % impulse;
+
 	//Vector3 impulsiveTorque = impulse.cross(m_relativeContactPosition[0]);
 	rotationChange[0] = inverseInertiaTensor[0].transform(impulsiveTorque);
 	velocityChange[0].clear();
@@ -186,14 +187,15 @@ void Contact::applyVelocityChange(Vector3 velocityChange[2], Vector3 rotationCha
 
 	if(m_body[1])
 	{
-		Vector3 impulsiveTorque = impulse.cross(m_relativeContactPosition[1]);
+		Vector3 impulsiveTorque = impulse % m_relativeContactPosition[1];
+		//Vector3 impulsiveTorque = impulse.cross(m_relativeContactPosition[1]);
 		//Vector3 impulsiveTorque = m_relativeContactPosition[1].cross(impulse);
 		rotationChange[1] = inverseInertiaTensor[1].transform(impulsiveTorque);
 		velocityChange[1].clear();
 		velocityChange[1].addScaledVector3(impulse, -m_body[1]->getInverseMass());
 
 		m_body[1]->addVelocity(velocityChange[1]);
-		m_body[1]->addRotation(rotationChange[1]);
+		//m_body[1]->addRotation(rotationChange[1]);
 	}
 }
 
@@ -276,6 +278,11 @@ Vector3 Contact::calculateFrictionImpulse(Matrix3* inverseIntertiaTensor)
 		impulseContact.setX(deltaVelocity.getAt(0, 0) +
 							deltaVelocity.getAt(1, 0) * m_friction * impulseContact.getY() +
 							deltaVelocity.getAt(2, 0) * m_friction * impulseContact.getZ());
+
+		if(impulseContact.getX() == 0.0f)
+		{
+			int uu = 0;
+		}
 
 		impulseContact.setX(m_desiredDeltaVelocity / impulseContact.getX());
 		impulseContact.setY(impulseContact.getY() * (m_friction * impulseContact.getX()));

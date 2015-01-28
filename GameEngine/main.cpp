@@ -45,8 +45,9 @@ void TestGame::initialise(const Window& window)
 	cameraObj->addComponent(new FreeMove());
 	cameraObj->addComponent(new CameraComponent(Matrix4().initPerspective(toRadians(70.0f), window.getAspectRatio(), 0.1f, 1000.0f)));
 
-	PhysicsObject* pObj2 = new PhysicsObject(new RigidBody(10.0f), new ColliderBox(), Vector3(-1.75f, 5, 0.0f));
+	PhysicsObject* pObj2 = new PhysicsObject(new RigidBody(10), new ColliderBox(), Vector3(1.5f, 5, 0));
 	pObj2->m_collider->m_body->setAwake();
+	pObj2->m_collider->m_body->m_linearDamping = 1.0f;
 	//pObj2->addComponent(new MeshRenderer(Mesh("cube.obj"), Material("", TEXTURE_BLANK, COLOUR_MEDIUM_PURPLE)));
 	pObj2->addComponent(new ColliderRenderer(true, pObj2->m_collider, COLOUR_FIREBRICK));
 	pObj2->addComponent(new FreeMove(10, Input::KEY_UP, Input::KEY_DOWN, Input::KEY_LEFT, Input::KEY_RIGHT));
@@ -56,7 +57,8 @@ void TestGame::initialise(const Window& window)
 
 	PhysicsObject* plane = new PhysicsObject(new RigidBody(10), new ColliderBox(), Vector3(0.0f, -1, 0));
 	plane->m_collider->m_body->setAwake(false);
-	plane->addComponent(new MeshRenderer(Mesh("sphere.obj"), Material("", TEXTURE_BLANK, COLOUR_ORANGE)));
+	plane->getTransform()->rotate(AXIS_Y, toRadians(45));
+	//plane->addComponent(new MeshRenderer(Mesh("sphere.obj"), Material("", TEXTURE_BLANK, COLOUR_ORANGE)));
 	plane->addComponent(new ColliderRenderer(true, plane->m_collider, COLOUR_FIREBRICK));
 	addToScene2(plane);
 

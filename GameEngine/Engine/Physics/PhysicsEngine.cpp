@@ -33,7 +33,7 @@ void PhysicsEngine::simulate(float delta)
 void PhysicsEngine::handleCollisions(float delta)
 {
 	//printf("contact count %d\n", cData.m_contactCount);
-	resolver.resolveContacts(cData.m_contactArray, cData.m_contactCount, delta);
+	//resolver.resolveContacts(cData.m_contactArray, cData.m_contactCount, delta);
 }
 
 PhysicsObject* PhysicsEngine::getObject(unsigned int index) const

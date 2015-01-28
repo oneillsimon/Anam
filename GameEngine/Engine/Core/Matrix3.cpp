@@ -94,16 +94,9 @@ void Matrix3::setInertiaTensorCoeffs(float ix, float iy, float iz, float ixy, fl
 
 void Matrix3::setSkewSymmetric(const Vector3& v)
 {
-	m[0][0] = 0;
-	m[1][1] = 0;
-	m[2][2] = 0;
-
-	m[1][0] = -v.getZ();
-	m[2][0] = v.getY();
-	m[0][1] = v.getZ();
-	m[2][1] - v.getX();
-	m[0][2] = -v.getY();
-	m[1][2] = v.getX();
+	m[0][0] = 0;		 m[1][0] = -v.getZ(); m[2][0] = v.getY();
+	m[0][1] = v.getZ();  m[1][1] = 0;		  m[2][1] = -v.getX();
+	m[0][2] = -v.getY(); m[1][2] = v.getX();  m[2][2] = 0;
 }
 
 void Matrix3::setComponents(const Vector3& one, const Vector3& two, const Vector3& three)
@@ -122,13 +115,13 @@ void Matrix3::setComponents(const Vector3& one, const Vector3& two, const Vector
 void Matrix3::setTranspose(const Matrix3& matrix)
 {
 	m[0][0] = matrix.m[0][0];
-	m[1][0] = matrix.m[1][0];
-	m[2][0] = matrix.m[2][0];
-	m[0][1] = matrix.m[0][1];
+	m[1][0] = matrix.m[0][1];
+	m[2][0] = matrix.m[0][2];
+	m[0][1] = matrix.m[1][0];
 	m[1][1] = matrix.m[1][1];
-	m[2][1] = matrix.m[2][1];
-	m[0][2] = matrix.m[0][2];
-	m[1][2] = matrix.m[1][2];
+	m[2][1] = matrix.m[1][2];
+	m[0][2] = matrix.m[2][0];
+	m[1][2] = matrix.m[2][1];
 	m[2][2] = matrix.m[2][2];
 }
 
