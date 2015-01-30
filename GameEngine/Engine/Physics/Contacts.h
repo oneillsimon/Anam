@@ -74,6 +74,9 @@ protected:
 	void prepareContacts(Contact* contactArray, unsigned numContacts, float duration);
 	void adjustVelocities(Contact* contactArray, unsigned numContacts, float duration);
 	void adjustPositions(Contact* contacts, unsigned numContacts, float duration);
+
+	void adjustVelocities2(Contact*contactArray, unsigned numContacts, float duration);
+	void adjustPositions2(Contact*contactArray, unsigned numContacts, float duration);
 };
 
 class ContactGenerator

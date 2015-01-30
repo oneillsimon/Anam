@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <math.h>
 
 #include "Contacts.h"
 
@@ -418,8 +419,8 @@ void ContactResolver::resolveContacts(Contact* contacts, unsigned numContacts, f
 	}
 
 	prepareContacts(contacts, numContacts, duration);
-	adjustPositions(contacts, numContacts, duration);
-	adjustVelocities(contacts, numContacts, duration);
+	adjustPositions2(contacts, numContacts, duration);
+	adjustVelocities2(contacts, numContacts, duration);
 }
 
 void ContactResolver::prepareContacts(Contact* contacts, unsigned numContacts, float duration)
@@ -540,4 +541,68 @@ void ContactResolver::adjustPositions(Contact* contact, unsigned numContacts, fl
 		}
 		m_positionIterationsUsed++;
 	}
+}
+
+void ContactResolver::adjustVelocities2(Contact* contactArray, unsigned numContacts, float duration)
+{
+	//adjustVelocities(contactArray, numContacts, duration);
+
+
+}
+
+void ContactResolver::adjustPositions2(Contact* contactArray, unsigned numContacts, float duration)
+{
+	RigidBody* a = contactArray->m_body[0];
+	RigidBody* b = contactArray->m_body[1];
+
+	if(a->getInverseMass() + b->getInverseMass() == 0.0f)
+	{
+		return;
+	}
+
+	//printf("a vel: %f\nb vel: %f\n", a->getVelocity().length(), b->getVelocity().length());
+
+	Vector3 r0 = contactArray->m_contactPoint - a->getPosition();
+	Vector3 r1 = contactArray->m_contactPoint - b->getPosition();
+
+	Vector3 v0 = a->getVelocity() + a->getRotation().cross(r0);
+	Vector3 v1 = b->getVelocity() + b->getRotation().cross(r1);
+
+	Vector3 dv = v0 - v1;
+
+	float relMov = -(dv.dot(contactArray->m_contactNormal));
+
+	if(relMov <= -0.01f)
+	{
+		return;
+	}
+
+	float e = 0.0f;
+	float normDiv = (a->getInverseMass() + b->getInverseMass()) +
+		contactArray->m_contactNormal.dot(
+		(a->getInverseInertiaTensor() * r0.cross(contactArray->m_contactNormal)).cross(r0) +
+		(b->getInverseInertiaTensor() * r1.cross(contactArray->m_contactNormal)).cross(r1));
+	float jn = -1 * (1 + e) * dv.dot(contactArray->m_contactNormal) / normDiv;
+	jn = jn + (contactArray->m_penetration * 0.01f);
+
+	contactArray->matchAwakeState();
+
+	Vector3 aor = a->getPosition().cross(b->getPosition()).normalised();
+
+	Vector3 l0 = a->getVelocity() + contactArray->m_contactNormal * (jn * a->getInverseMass());
+	Vector3 a0 = a->getRotation() + a->getInertiaTensor() * r0.dot(contactArray->m_contactNormal * jn);
+	a0 *= aor;
+	Vector3 aCol = a->getPointInWorldSpace(contactArray->m_contactPoint);
+	
+
+	a->addVelocity(l0 * 1.0f);
+	//a->setRotation(100 * aor);
+	a->addTorque(aor * 100);
+
+	Vector3 l1 = b->getVelocity() + contactArray->m_contactNormal * (jn * b->getInverseMass());
+	Vector3 a1 = b->getRotation() + b->getInertiaTensor() * r1.dot(contactArray->m_contactNormal * jn);
+
+	b->addVelocity(l1 * -1.0f);
+	//b->setRotation(a1 * AXIS_Z);
+	b->addTorque(aor * -100);
 }

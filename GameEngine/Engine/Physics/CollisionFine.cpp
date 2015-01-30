@@ -283,11 +283,6 @@ unsigned CollisionDetector::boxAndBox(const ColliderBox& one, const ColliderBox&
 
 	//Vector3 toCentre = two.getAxis(3) - one.getAxis(3);
 
-	if(!one.m_owner)
-	{
-		int uu = 0;
-	}
-
 	Vector3 toCentre = (two.m_owner->getPosition() - one.m_owner->getPosition());
 
 	Vector3 o0 = one.getAxis(0);
@@ -313,21 +308,22 @@ unsigned CollisionDetector::boxAndBox(const ColliderBox& one, const ColliderBox&
 
 	unsigned bestSingleAxis = best;
 
-	checkOverlap(one.getAxis(0) % two.getAxis(0), 6);
-	checkOverlap(one.getAxis(0) % two.getAxis(1), 7);
-	checkOverlap(one.getAxis(0) % two.getAxis(2), 8);
-	checkOverlap(one.getAxis(1) % two.getAxis(0), 9);
-	checkOverlap(one.getAxis(1) % two.getAxis(1), 10);
-	checkOverlap(one.getAxis(1) % two.getAxis(2), 11);
-	checkOverlap(one.getAxis(2) % two.getAxis(0), 12);
-	checkOverlap(one.getAxis(2) % two.getAxis(1), 13);
-	checkOverlap(one.getAxis(2) % two.getAxis(2), 14);
+	checkOverlap(one.getAxis(0).cross(two.getAxis(0)), 6);
+	checkOverlap(one.getAxis(0).cross(two.getAxis(1)), 7);
+	checkOverlap(one.getAxis(0).cross(two.getAxis(2)), 8);
+	checkOverlap(one.getAxis(1).cross(two.getAxis(0)), 9);
+	checkOverlap(one.getAxis(1).cross(two.getAxis(1)), 10);
+	checkOverlap(one.getAxis(1).cross(two.getAxis(2)), 11);
+	checkOverlap(one.getAxis(2).cross(two.getAxis(0)), 12);
+	checkOverlap(one.getAxis(2).cross(two.getAxis(1)), 13);
+	checkOverlap(one.getAxis(2).cross(two.getAxis(2)), 14);
 
 	if(best == 0xffffff)
 	{
 		int uu = 0;
-		//best = 6;
-		//one.m_owner->revertToPrevious();
+		best = 8;
+		one.m_owner->revertToPrevious();
+		two.m_owner->revertToPrevious();
 		
 		//return 0;
 	}
@@ -355,7 +351,7 @@ unsigned CollisionDetector::boxAndBox(const ColliderBox& one, const ColliderBox&
 
 		Vector3 oneAxis = one.getAxis(oneAxisIndex);
 		Vector3 twoAxis = two.getAxis(twoAxisIndex);
-		Vector3 axis = (oneAxis % twoAxis).normalised();
+		Vector3 axis = (oneAxis.cross(twoAxis)).normalised();
 
 		if(axis.scalarProduct(toCentre) > 0)
 		{
