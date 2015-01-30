@@ -39,27 +39,52 @@ static void tests();
 
 void TestGame::initialise(const Window& window)
 {
-	GameObject* cameraObj = new GameObject(Vector3(0, 0, -17));
+	GameObject* cameraObj = new GameObject(Vector3(0, 0, -7.5f));
 
 	cameraObj->addComponent(new FreeLook(window.getCentre()));
 	cameraObj->addComponent(new FreeMove());
 	cameraObj->addComponent(new CameraComponent(Matrix4().initPerspective(toRadians(70.0f), window.getAspectRatio(), 0.1f, 1000.0f)));
 
-	PhysicsObject* pObj2 = new PhysicsObject(new RigidBody(1), new ColliderBox(), Vector3(1.5f, 5, 0));
-	pObj2->m_collider->m_body->setAwake();
-	pObj2->m_collider->m_body->m_linearDamping = 1.0f;
-	//pObj2->addComponent(new MeshRenderer(Mesh("cube.obj"), Material("", TEXTURE_BLANK, COLOUR_MEDIUM_PURPLE)));
-	pObj2->addComponent(new ColliderRenderer(true, pObj2->m_collider, COLOUR_FIREBRICK));
+	PhysicsObject* pObj2 = new PhysicsObject(Vector3(-1.5f, 5, 0));
+	pObj2->setCollider(new ColliderBox());
+	pObj2->addComponent(new ColliderRenderer(true, pObj2->getCollider(), COLOUR_FIREBRICK));
 	pObj2->addComponent(new FreeMove(10, Input::KEY_UP, Input::KEY_DOWN, Input::KEY_LEFT, Input::KEY_RIGHT));
 	pObj2->addComponent(new Movement2D(10, Input::KEY_O, Input::KEY_P, -1, -1));
-	pObj2->addComponent(new RigidBodyComponent(pObj2->m_collider->m_body));
-	addToScene2(pObj2);
+	pObj2->addComponent(new RigidBodyComponent(pObj2));
+	pObj2->setMass(1);
+	//addToScene2(pObj2);
 
-	PhysicsObject* plane = new PhysicsObject(new RigidBody(1), new ColliderBox(), Vector3(0.0f, -1, 0));
-	plane->m_collider->m_body->setAwake(false);
+	for(int i = 0; i < 4; i++)
+	{
+		Vector3 v;
+
+		if(i == 0)
+			v = Vector3(-1.5f, 5, 0);
+		else if(i == 1)
+			v = Vector3(0, 5, 1.5f);
+		else if(i == 2)
+			v = Vector3(1.5f, 5, 0);
+		else
+			v = Vector3(0, 5, -1.5f);
+
+		//PhysicsObject* pObj3 = new PhysicsObject(Vector3(0, 5, 0));
+		PhysicsObject* pObj3 = new PhysicsObject(v);
+		pObj3->setCollider(new ColliderSphere());
+		pObj3->addComponent(new ColliderRenderer(true, pObj3->getCollider(), COLOUR_FIREBRICK));
+		pObj3->addComponent(new FreeMove(10, Input::KEY_UP, Input::KEY_DOWN, Input::KEY_LEFT, Input::KEY_RIGHT));
+		pObj3->addComponent(new Movement2D(10, Input::KEY_O, Input::KEY_P, -1, -1));
+		pObj3->addComponent(new RigidBodyComponent(pObj3));
+		pObj3->setMass(10);
+		addToScene2(pObj3);
+	}
+
+	PhysicsObject* plane = new PhysicsObject(Vector3(0.0f, -1, 0));
+	plane->setCollider(new ColliderSphere());
+	plane->setMass(1000);
+	//plane->m_collider->m_body->setAwake(false);
 	//plane->getTransform()->rotate(AXIS_Y, toRadians(45));
 	//plane->addComponent(new MeshRenderer(Mesh("sphere.obj"), Material("", TEXTURE_BLANK, COLOUR_ORANGE)));
-	plane->addComponent(new ColliderRenderer(true, plane->m_collider, COLOUR_FIREBRICK));
+	plane->addComponent(new ColliderRenderer(true, plane->getCollider(), COLOUR_FIREBRICK));
 	addToScene2(plane);
 
 	int n = 10;
@@ -71,7 +96,7 @@ void TestGame::initialise(const Window& window)
 		float y = random(-m, m);
 		float z = random(-m, m);
 
-		PhysicsObject* o = new PhysicsObject(new RigidBody(1), new ColliderSphere(), Vector3(x, y, z));
+		PhysicsObject* o = new PhysicsObject(Vector3(x, y, z));
 		o->addComponent(new MeshRenderer(Mesh("sphere.obj"), Material("", TEXTURE_BLANK, getRandomColour())));
 		//addToScene2(o);
 	}

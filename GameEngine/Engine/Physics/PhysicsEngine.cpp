@@ -32,14 +32,14 @@ void PhysicsEngine::simulate(float delta)
 
 void PhysicsEngine::handleCollisions(float delta)
 {
-	printf("contact count %d\n", cData.m_contactCount);
+	//printf("contact count %d\n", cData.m_contactCount);
 
 	if(cData.m_contactCount > 0)
 	{
 		int uu = 0;
 	}
 
-	resolver.resolveContacts(cData.m_contactArray, cData.m_contactCount, delta);
+	//resolver.resolveContacts(cData.m_contactArray, cData.m_contactCount, delta);
 }
 
 PhysicsObject* PhysicsEngine::getObject(unsigned int index) const

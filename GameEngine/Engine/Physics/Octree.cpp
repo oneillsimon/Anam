@@ -127,7 +127,8 @@ void Octree::potentialCollisions(CollisionData* data)
 					}
 					else
 					{
-						obj1->m_collider->collide(*obj2->m_collider, data);
+						Collider::collide(*obj1, *obj2, data);
+						//obj1->getCollider()->collide(*obj2->getCollider(), data);
 					}
 				}
 			}

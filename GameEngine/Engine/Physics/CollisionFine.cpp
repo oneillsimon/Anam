@@ -276,14 +276,18 @@ static Vector3 contactPoint(const Vector3& pOne, const Vector3& dOne, float oneS
 
 unsigned CollisionDetector::boxAndBox(const ColliderBox& one, const ColliderBox& two, CollisionData* data)
 {
-	//if(IntersectionTests::boxAndBox(one, two))
-	//{
-	//	return 0;
-	//}
+	if(IntersectionTests::boxAndBox(one, two))
+	{
+		printf("Collision\n");
+		return 0;
+	}
+	else
+	{
+		printf("No Collision\n");
+		return 1;
+	}
 
-	//Vector3 toCentre = two.getAxis(3) - one.getAxis(3);
-
-	Vector3 toCentre = (two.m_owner->getPosition() - one.m_owner->getPosition());
+	/*Vector3 toCentre = two.getAxis(3) - one.getAxis(3);
 
 	Vector3 o0 = one.getAxis(0);
 	Vector3 o1 = one.getAxis(1);
@@ -317,16 +321,6 @@ unsigned CollisionDetector::boxAndBox(const ColliderBox& one, const ColliderBox&
 	checkOverlap(one.getAxis(2).cross(two.getAxis(0)), 12);
 	checkOverlap(one.getAxis(2).cross(two.getAxis(1)), 13);
 	checkOverlap(one.getAxis(2).cross(two.getAxis(2)), 14);
-
-	if(best == 0xffffff)
-	{
-		int uu = 0;
-		best = 8;
-		one.m_owner->revertToPrevious();
-		two.m_owner->revertToPrevious();
-		
-		//return 0;
-	}
 
 	assert(best != 0xffffff);
 
@@ -399,6 +393,7 @@ unsigned CollisionDetector::boxAndBox(const ColliderBox& one, const ColliderBox&
 	}
 
 	return 0;
+	*/
 }
 
 #undef checkOverlap

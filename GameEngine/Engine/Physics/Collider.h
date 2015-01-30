@@ -8,6 +8,7 @@
 class IntersectionTests;
 class CollisionDetector;
 class CollisionData;
+class PhysicsObject;
 
 class Collider
 {
@@ -32,7 +33,8 @@ public:
 		return m_owner->getTransformation().getAxisVector(index);
 	}
 
-	virtual void collide(Collider& collider, CollisionData* data) = 0;
+	//virtual void collide(Collider& collider, CollisionData* data) = 0;
+	static void collide(PhysicsObject& p0, PhysicsObject& p1, CollisionData* data);
 };
 
 class ColliderSphere : public Collider
@@ -41,7 +43,7 @@ public:
 	ColliderSphere(float radius = 1.0f);
 	float m_radius;
 
-	virtual void collide(Collider& collider, CollisionData* data);
+	//st void collide(Collider& collider, CollisionData* data);
 };
 
 class ColliderBox : public Collider
@@ -49,8 +51,6 @@ class ColliderBox : public Collider
 public:
 	ColliderBox(const Vector3& halfSize = Vector3(1, 1, 1));
 	Vector3 m_halfSize;
-
-	virtual void collide(Collider& collider, CollisionData* data);
 };
 
 class ColliderPlane
