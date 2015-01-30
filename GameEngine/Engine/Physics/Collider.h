@@ -20,6 +20,7 @@ public:
 	{
 		SPHERE,
 		BOX,
+		PLANE
 	};
 
 	int m_type;
@@ -43,12 +44,12 @@ public:
 	Vector3 m_halfSize;
 };
 
-class ColliderPlane
+class ColliderPlane : public Collider
 {
 public:
-	ColliderPlane(const Vector3& direction, float offset);
-	Vector3 m_direction;
-	float m_offset;
+	ColliderPlane(const Vector3& normal, float distance);
+	Vector3 m_normal;
+	float m_distance;
 };
 
 #endif

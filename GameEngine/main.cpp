@@ -79,11 +79,16 @@ void TestGame::initialise(const Window& window)
 	PhysicsObject* plane = new PhysicsObject(Vector3(0.0f, -1, 0));
 	plane->setCollider(new ColliderSphere());
 	plane->setMass(1000);
-	//plane->m_collider->m_body->setAwake(false);
-	//plane->getTransform()->rotate(AXIS_Y, toRadians(45));
-	//plane->addComponent(new MeshRenderer(Mesh("sphere.obj"), Material("", TEXTURE_BLANK, COLOUR_ORANGE)));
 	plane->addComponent(new ColliderRenderer(true, plane->getCollider(), COLOUR_FIREBRICK));
 	addToScene2(plane);
+
+	PhysicsObject* pl_ = new PhysicsObject(Vector3(0, -5, 0));
+	pl_->getTransform()->setScale(1);
+	pl_->setCollider(new ColliderPlane(Vector3(0, 1, 0), -5));
+	pl_->setMass(10000000000);
+	pl_->addComponent(new ColliderRenderer(true, pl_->getCollider()));
+	addToScene2(pl_);
+
 
 	int n = 10;
 	int m = 12;

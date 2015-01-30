@@ -34,7 +34,22 @@ void Collider::collide(PhysicsObject& p0, PhysicsObject& p1)
 					CollisionTester::addCollisionImpulse(p0, p1, data_);
 				}
 			}
+			else if(type1 == PLANE)
+			{
+				if(CollisionTester::planeAndSphere(p1, p0, &data_))
+				{
+					CollisionTester::addCollisionImpulse(p0, p1, data_);
+				}
+			}
 			break;
+		case PLANE:
+			if(type1 == SPHERE)
+			{
+				if(CollisionTester::planeAndSphere(p0, p1, &data_))
+				{
+					CollisionTester::addCollisionImpulse(p0, p1, data_);
+				}
+			}
 	}
 }
 
@@ -50,8 +65,9 @@ ColliderBox::ColliderBox(const Vector3& halfExtents) :
 	m_type = Type::BOX;
 }
 
-ColliderPlane::ColliderPlane(const Vector3& direction, float offset) :
-	m_direction(direction),
-	m_offset(offset)
+ColliderPlane::ColliderPlane(const Vector3& normal, float distance) :
+	m_normal(normal),
+	m_distance(distance)
 {
+	m_type = Type::PLANE;
 }

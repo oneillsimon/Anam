@@ -48,5 +48,8 @@ std::string ColliderRenderer::getMeshFromCollider(int type)
 	case Collider::BOX:
 		return "cube.obj";
 		break;
+	case Collider::PLANE:
+		return "plane.obj";
+		break;
 	}
 }

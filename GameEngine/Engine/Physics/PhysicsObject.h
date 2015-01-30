@@ -4,8 +4,6 @@
 #include "../Core/GameObject.h"
 #include "Collider.h"
 
-#define LINEAR_VELOCITY_DAMP 0.998
-#define ANGULAR_VELOCITY_DAMP 0.998
 #define LINEAR_VELOCITY_MIN 0.00001
 
 class PhysicsObject : public GameObject
@@ -18,6 +16,8 @@ private:
 	Collider* m_collider;
 	Vector3 m_force;
 	Vector3 m_torque;
+	float m_linearDamping;
+	float m_angularDamping;
 	
 public:
 

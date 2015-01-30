@@ -86,7 +86,6 @@
     <ClCompile Include="Engine\Core\CoreEngine.cpp" />
     <ClCompile Include="Engine\Core\Game.cpp" />
     <ClCompile Include="Engine\Core\Lua.cpp" />
-    <ClCompile Include="Engine\Core\Matrix3.cpp" />
     <ClCompile Include="Engine\Core\Profiling.cpp" />
     <ClCompile Include="Engine\Core\Scripter.cpp" />
     <ClCompile Include="Engine\Core\Vector2.cpp" />

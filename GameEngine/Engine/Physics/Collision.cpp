@@ -23,6 +23,28 @@ bool CollisionTester::sphereAndSphere(PhysicsObject& p0, PhysicsObject& p1, Coll
 	return false;
 }
 
+bool CollisionTester::planeAndSphere(PhysicsObject& p0, PhysicsObject& p1, CollisionData_* data)
+{
+	ColliderPlane& plane = *(ColliderPlane*)p0.getCollider();
+	ColliderSphere& sphere = *(ColliderSphere*)p1.getCollider();
+
+	float seperation = p1.getTransform()->getPosition().dot(plane.m_normal - plane.m_distance);
+
+	if(seperation > sphere.m_radius)
+	{
+		return false;
+	}
+
+	if(data)
+	{
+		data->m_penetration = sphere.m_radius - seperation;
+		data->m_normal = plane.m_normal * -1.0f;
+		data->m_point = p1.getTransform()->getPosition() - plane.m_normal * seperation;
+	}
+	
+	return true;
+}
+
 bool CollisionTester::boxAndBox(PhysicsObject& p0, PhysicsObject& p1, CollisionData_* data)
 {
 	ColliderBox& b0 = *(ColliderBox*)p0.getCollider();
@@ -82,7 +104,7 @@ void CollisionTester::addCollisionImpulse(PhysicsObject& p0, PhysicsObject& p1, 
 	}
 
 	// restituition??
-	float e = 0.0f;
+	float e = 1.0f;
 	float normDiv = (p0.getInverseMass() + p1.getInverseMass()) +
 		data.m_normal.dot(p0.getInverseInertiaTensor() * r0.cross(data.m_normal).cross(r0) +
 						  p1.getInverseInertiaTensor() * r1.cross(data.m_normal).cross(r1));

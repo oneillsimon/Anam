@@ -150,9 +150,6 @@
     <ClCompile Include="Engine\Components\Game\Movement2D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Core\Matrix3.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Core\Scripter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

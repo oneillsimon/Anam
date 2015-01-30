@@ -7,24 +7,19 @@ PhysicsObject::PhysicsObject(const Vector3& position, const Quaternion& rotation
 
 void PhysicsObject::initialise()
 {
-	m_invInertia = Matrix4().initIdentity();// *(12.0f / (getMass()*(1 * 1 + 1 * 1)));
+	m_invInertia = Matrix4().initIdentity();
 
 	for(int i = 0; i < 4; i++)
 	{
 		for(int j = 0; j < 4; j++)
 		{
-			m_invInertia.setAt(i, j, m_invInertia.getAt(i, j) * (12.0f / (getMass()*(1 * 1 + 1 * 1))));
+			m_invInertia.setAt(i, j, m_invInertia[i][j] * (12.0f / (getMass()*(1 * 1 + 1 * 1))));
 		}
 	}
 
-	//m_collider->m_owner = getTransform();
-	//m_collider->m_body->m_owner = getTransform();
-	//
-	//Matrix3 tensor;// = Matrix3().initIdentity();
-	//tensor.setBlockInteriaTensor(getTransform()->getScale(), m_collider->m_body->getMass());
-	//m_collider->m_body->setIntertiaTensor(tensor);
-	//
-	//m_collider->m_body->calculateDerivedData();
+	m_linearDamping = 0.998f;
+	m_angularDamping = 0.998f;
+
 	GameObject::initialise();
 }
 
@@ -37,13 +32,13 @@ void PhysicsObject::update(float delta)
 
 	Vector3 acc = m_force * m_invMass + Vector3(0, 0, 0);
 	m_linearVelocity += acc * delta;
-	m_linearVelocity *= LINEAR_VELOCITY_DAMP;
+	m_linearVelocity *= m_linearDamping;
 
 	getTransform()->setPosition(getTransform()->getPosition() + m_linearVelocity * delta);
 
 	Vector3 angAcc = m_invInertia * m_torque;
 	m_angualrVelocity += angAcc * delta;
-	m_angualrVelocity *= ANGULAR_VELOCITY_DAMP;
+	m_angualrVelocity *= m_angularDamping;
 
 	Quaternion rot = getTransform()->getRotation();
 	getTransform()->setRotation(rot + rot * (m_angualrVelocity * (delta / 2.0f)));
