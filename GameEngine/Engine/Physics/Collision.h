@@ -3,13 +3,6 @@
 
 #include "PhysicsObject.h"
 
-struct CollisionData_
-{
-	float m_penetration;
-	Vector3 m_normal;
-	Vector3 m_point;
-};
-
 class CollisionTester
 {
 public:
@@ -18,10 +11,5 @@ public:
 	
 	static void addCollisionImpulse(PhysicsObject& p0, PhysicsObject& p1, CollisionData_& data);
 };
-
-//float lengthSquared(const Vector3& v)
-//{
-//	return v.dot(v);
-//}
 
 #endif

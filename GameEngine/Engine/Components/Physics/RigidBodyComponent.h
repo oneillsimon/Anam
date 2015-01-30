@@ -3,7 +3,6 @@
 
 #include "../../Core/GameComponent.h"
 #include "../../Physics/PhysicsObject.h"
-#include "../../Physics/RigidBody.h"
 
 class RigidBodyComponent : public GameComponent
 {

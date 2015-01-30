@@ -12,8 +12,6 @@
 #include "Engine\Components\Game\Movement2D.h"
 
 #include "Engine\Physics\Particle.h"
-#include "Engine\Physics\PFGen.h"
-#include "Engine\Physics\CollisionFine.h"
 #include "Engine\Rendering\Shape.h"
 
 #include "Engine\Core\Scripter.h"

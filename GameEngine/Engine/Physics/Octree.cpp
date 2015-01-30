@@ -28,7 +28,6 @@ void Octree::addObject(PhysicsObject* object)
 
 				std::set<PhysicsObject*> objects;
 				collectObjects(objects);
-				//mm_objects.clear();
 
 				for(std::set<PhysicsObject*>::iterator it = objects.begin(); it != objects.end(); it++)
 				{
@@ -95,7 +94,7 @@ bool Octree::isInside(const Octree& octree, const Vector3& position)
 			(position.getZ() >= min.getZ() && position.getZ() <= max.getZ()));
 }
 
-void Octree::potentialCollisions(CollisionData* data)
+void Octree::potentialCollisions()
 {
 	if(mm_objects.size() <= 0)
 	{
@@ -104,10 +103,6 @@ void Octree::potentialCollisions(CollisionData* data)
 
 	if(!m_hasChildren)
 	{
-		data->m_friction = 0.9f;
-		data->m_restitution = 0.6f;
-		data->m_tolerance = 0.1f;
-
 		for(std::set<PhysicsObject*>::iterator it1 = mm_objects.begin(); it1 != mm_objects.end(); it1++)
 		{
 			PhysicsObject* obj1 = *it1;
@@ -116,20 +111,9 @@ void Octree::potentialCollisions(CollisionData* data)
 			{
 				PhysicsObject* obj2 = *it2;
 
-				//obj1->m_collider->m_body->addForce(Vector3(0, -90.8f, 0));
-				//obj2->m_collider->m_body->addForce(Vector3(0, -90.8f, 0));
-
 				if(obj1 < obj2)
 				{
-					if(!data->hasMoreContacts())
-					{
-						return;
-					}
-					else
-					{
-						Collider::collide(*obj1, *obj2, data);
-						//obj1->getCollider()->collide(*obj2->getCollider(), data);
-					}
+						Collider::collide(*obj1, *obj2);
 				}
 			}
 		}
@@ -138,7 +122,7 @@ void Octree::potentialCollisions(CollisionData* data)
 	{
 		for(int i = 0; i < octans.size(); i++)
 		{
-			octans[i]->potentialCollisions(data);
+			octans[i]->potentialCollisions();
 		}
 	}
 }

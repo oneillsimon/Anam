@@ -6,7 +6,6 @@
 #include <vector>
 
 #include "../Core/Profiling.h"
-#include "Contacts.h"
 #include "Octree.h"
 #include "PhysicsObject.h"
 
@@ -14,9 +13,6 @@ class PhysicsEngine
 {
 private:
 	std::vector<PhysicsObject*> m_objects;
-	CollisionData cData;
-	ContactResolver resolver;
-	Contact contacts[256];
 
 public:
 	Octree* m_tree;
@@ -24,7 +20,6 @@ public:
 
 	void addObject(PhysicsObject* object);
 	void simulate(float delta);
-	void handleCollisions(float delta);
 
 	PhysicsObject* getObject(unsigned int index) const;
 };

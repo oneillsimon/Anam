@@ -5,7 +5,6 @@
 #include <set>
 
 #include "Collider.h"
-#include "CollisionFine.h"
 #include "PhysicsObject.h"
 
 struct Partition
@@ -42,8 +41,8 @@ public:
 	void collectObjects(std::set<PhysicsObject*>& objects);
 	void recalculate();
 	bool isInside(const Octree& octree, const Vector3& position);
-	void potentialCollisions(CollisionData* data);
-	void generateContacts(Collider& one, Collider& two, CollisionData* data);
+	void potentialCollisions();
+	//void generateContacts(Collider& one, Collider& two, CollisionData_* data);
 };
 
 #endif

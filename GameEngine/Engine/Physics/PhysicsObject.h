@@ -2,8 +2,7 @@
 #define PHYSICSOBJECT_H
 
 #include "../Core/GameObject.h"
-#include "CollisionFine.h"
-#include "RigidBody.h"
+#include "Collider.h"
 
 #define LINEAR_VELOCITY_DAMP 0.998
 #define ANGULAR_VELOCITY_DAMP 0.998
