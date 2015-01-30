@@ -97,8 +97,8 @@ void CoreEngine::run()
 			totalRecordedTime += ProfileTimers::swapBufTimer.displayAndReset("Buff Swap - ", (double)frames);
 			totalRecordedTime += ProfileTimers::sleepTimer__.displayAndReset("Sleep     - ", (double)frames);
 			
-			printf("Other     - %f ms\n", totalTime - totalRecordedTime);
-			printf("Total     - %f ms\n\n", totalTime);
+			printf("Other     - %f\tms\n", totalTime - totalRecordedTime);
+			printf("Total     - %f\tms\n\n", totalTime);
 			
 			frames = 0;
 			frameCounter = 0;

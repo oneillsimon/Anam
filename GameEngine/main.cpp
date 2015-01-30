@@ -72,23 +72,16 @@ void TestGame::initialise(const Window& window)
 		pObj3->addComponent(new FreeMove(10, Input::KEY_UP, Input::KEY_DOWN, Input::KEY_LEFT, Input::KEY_RIGHT));
 		pObj3->addComponent(new Movement2D(10, Input::KEY_O, Input::KEY_P, -1, -1));
 		pObj3->addComponent(new RigidBodyComponent(pObj3));
-		pObj3->setMass(10);
+		pObj3->setMass(100);
 		addToScene2(pObj3);
 	}
 
 	PhysicsObject* plane = new PhysicsObject(Vector3(0.0f, -1, 0));
+	plane->getTransform()->setScale(1);
 	plane->setCollider(new ColliderSphere());
-	plane->setMass(1000);
+	plane->setMass(100000000);
 	plane->addComponent(new ColliderRenderer(true, plane->getCollider(), COLOUR_FIREBRICK));
 	addToScene2(plane);
-
-	PhysicsObject* pl_ = new PhysicsObject(Vector3(0, -5, 0));
-	pl_->getTransform()->setScale(1);
-	pl_->setCollider(new ColliderPlane(Vector3(0, 1, 0), -5));
-	pl_->setMass(10000000000);
-	pl_->addComponent(new ColliderRenderer(true, pl_->getCollider()));
-	addToScene2(pl_);
-
 
 	int n = 10;
 	int m = 12;

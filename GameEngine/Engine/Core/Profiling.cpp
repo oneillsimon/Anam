@@ -48,7 +48,7 @@ double ProfileTimer::displayAndReset(const std::string& message, double inputDiv
 		time = (1000.0 * m_totalTime) / (double)divisor;
 	}
 
-	std::cout << message << time << " ms" << std::endl;
+	std::cout << message << time << "\tms" << std::endl;
 	m_numInvocations = 0;
 	m_totalTime = 0.0;
 

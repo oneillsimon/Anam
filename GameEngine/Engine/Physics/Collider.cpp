@@ -1,55 +1,11 @@
 #include "Collider.h"
 #include "Collision.h"
 
-void Collider::collide(PhysicsObject& p0, PhysicsObject& p1)
+void Collider::collide(PhysicsObject& p1, CollisionData_& data)
 {
-	int type0 = p0.getCollider()->m_type;
-	int type1 = p1.getCollider()->m_type;
-	CollisionData_ data_;
-
-	switch(type0)
+	if(m_isColliding)
 	{
-		case BOX:
-			if(type1 == BOX)
-			{
-				if(CollisionTester::boxAndBox(p0, p1, &data_))
-				{
-					CollisionTester::addCollisionImpulse(p0, p1, data_);
-				}
-			}
-			else if(type1 == SPHERE)
-			{
-				
-			}
-			break;
-		case SPHERE:
-			if(type1 == BOX)
-			{
-				//CollisionTester::boxAndBox(p0, p1);
-			}
-			else if(type1 == SPHERE)
-			{
-				if(CollisionTester::sphereAndSphere(p0, p1, &data_))
-				{
-					CollisionTester::addCollisionImpulse(p0, p1, data_);
-				}
-			}
-			else if(type1 == PLANE)
-			{
-				if(CollisionTester::planeAndSphere(p1, p0, &data_))
-				{
-					CollisionTester::addCollisionImpulse(p0, p1, data_);
-				}
-			}
-			break;
-		case PLANE:
-			if(type1 == SPHERE)
-			{
-				if(CollisionTester::planeAndSphere(p0, p1, &data_))
-				{
-					CollisionTester::addCollisionImpulse(p0, p1, data_);
-				}
-			}
+		CollisionTester::addCollisionImpulse(*m_parent, p1, data);
 	}
 }
 
@@ -59,10 +15,50 @@ ColliderSphere::ColliderSphere(float radius) :
 	m_type = Type::SPHERE;
 }
 
+void ColliderSphere::collide(PhysicsObject& p1, CollisionData_& data)
+{
+	m_isColliding = false;
+
+	switch(p1.getCollider()->m_type)
+	{
+	case SPHERE:
+		m_isColliding = CollisionTester::sphereAndSphere(*m_parent, p1, &data);
+		break;
+	case BOX:
+		//CollisionTester::
+		break;
+	case PLANE:
+		m_isColliding = CollisionTester::planeAndSphere(p1, *m_parent, &data);
+		break;
+	}
+
+	Collider::collide(p1, data);
+}
+
 ColliderBox::ColliderBox(const Vector3& halfExtents) :
 	m_halfSize(halfExtents)
 {
 	m_type = Type::BOX;
+}
+
+void ColliderBox::collide(PhysicsObject& p1, CollisionData_& data)
+{
+	m_isColliding = false;
+
+	switch(p1.getCollider()->m_type)
+	{
+	case SPHERE:
+		//m_isColliding = CollisionTester::b(*m_parent, p1);
+		break;
+	case BOX:
+		m_isColliding = CollisionTester::boxAndBox(*m_parent, p1, &data);
+		break;
+	case PLANE:
+		//m_isColliding = CollisionTester::planeAndSphere(p1, *m_parent);
+		break;
+	}
+
+	Collider::collide(p1, data);
 }
 
 ColliderPlane::ColliderPlane(const Vector3& normal, float distance) :
@@ -70,4 +66,24 @@ ColliderPlane::ColliderPlane(const Vector3& normal, float distance) :
 	m_distance(distance)
 {
 	m_type = Type::PLANE;
+}
+
+void ColliderPlane::collide(PhysicsObject& p1, CollisionData_& data)
+{
+	m_isColliding = false;
+
+	switch(p1.getCollider()->m_type)
+	{
+	case SPHERE:
+		m_isColliding = CollisionTester::planeAndSphere(*m_parent, p1, &data);
+		break;
+	case BOX:
+		//CollisionTester::boxAndBox(*m_parent, p1, &data);
+		break;
+	case PLANE:
+		//m_isColliding = CollisionTester::planeAndSphere(p1, *m_parent);
+		break;
+	}
+
+	Collider::collide(p1, data);
 }

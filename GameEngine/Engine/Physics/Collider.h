@@ -24,8 +24,10 @@ public:
 	};
 
 	int m_type;
+	PhysicsObject* m_parent;
+	bool m_isColliding;
 
-	static void collide(PhysicsObject& p0, PhysicsObject& p1);
+	virtual void collide(PhysicsObject& p1, CollisionData_& data);
 };
 
 class ColliderSphere : public Collider
@@ -34,7 +36,7 @@ public:
 	ColliderSphere(float radius = 1.0f);
 	float m_radius;
 
-	//st void collide(Collider& collider, CollisionData* data);
+	virtual void collide(PhysicsObject& p1, CollisionData_& data);
 };
 
 class ColliderBox : public Collider
@@ -42,14 +44,18 @@ class ColliderBox : public Collider
 public:
 	ColliderBox(const Vector3& halfSize = Vector3(1, 1, 1));
 	Vector3 m_halfSize;
+
+	virtual void collide(PhysicsObject& p1, CollisionData_& data);
 };
 
 class ColliderPlane : public Collider
 {
 public:
-	ColliderPlane(const Vector3& normal, float distance);
+	ColliderPlane(const Vector3& normal = Vector3(0, 1, 0), float distance = 0.0f);
 	Vector3 m_normal;
 	float m_distance;
+
+	virtual void collide(PhysicsObject& p1, CollisionData_& data);
 };
 
 #endif

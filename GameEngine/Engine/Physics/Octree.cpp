@@ -113,7 +113,8 @@ void Octree::potentialCollisions()
 
 				if(obj1 < obj2)
 				{
-					Collider::collide(*obj1, *obj2);
+					CollisionData_ data;
+					obj1->getCollider()->collide(*obj2, data);
 				}
 			}
 		}

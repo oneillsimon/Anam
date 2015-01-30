@@ -113,6 +113,7 @@ void PhysicsObject::setAngularVelocity(const Vector3& v)
 void PhysicsObject::setCollider(Collider* c)
 {
 	m_collider = c;
+	m_collider->m_parent = this;
 }
 
 Vector3 PhysicsObject::getForce()
