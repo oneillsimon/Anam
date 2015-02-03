@@ -1,3 +1,5 @@
+#include <thread>
+
 #include "Game.h"
 
 void Game::initialise(const Window& window)

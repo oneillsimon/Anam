@@ -52,7 +52,7 @@ void TestGame::initialise(const Window& window)
 	pObj2->setMass(1);
 	//addToScene2(pObj2);
 
-	for(int i = 0; i < 4; i++)
+	for(int i = 0; i < 0; i++)
 	{
 		Vector3 v;
 
@@ -76,25 +76,35 @@ void TestGame::initialise(const Window& window)
 		addToScene2(pObj3);
 	}
 
-	PhysicsObject* plane = new PhysicsObject(Vector3(0.0f, -1, 0));
+	PhysicsObject* plane = new PhysicsObject(Vector3(0.0f, 0, 0));
 	plane->getTransform()->setScale(1);
 	plane->setCollider(new ColliderSphere());
 	plane->setMass(100000000);
 	plane->addComponent(new ColliderRenderer(true, plane->getCollider(), COLOUR_FIREBRICK));
-	addToScene2(plane);
+	//addToScene2(plane);
 
-	int n = 10;
+	int n = 8;
 	int m = 12;
 
+	std::vector<Vector3> v = { Vector3(-5, 5, -5), Vector3(5, 5, -5), Vector3(-5, 5, 5), Vector3(5, 5, 5),
+							   Vector3(-5, -5, -5), Vector3(5, -5, -5), Vector3(-5, -5, 5), Vector3(5, -5, 5) };
 	for(int i = 0; i < n; i++)
 	{
 		float x = random(-m, m);
 		float y = random(-m, m);
 		float z = random(-m, m);
 
-		PhysicsObject* o = new PhysicsObject(Vector3(x, y, z));
+		PhysicsObject* o = new PhysicsObject(v[i]);
+		o->setCollider(new ColliderSphere());
+		o->setMass(10);
+		if(i == 0)
+		{
+			o->addComponent(new FreeMove(10, Input::KEY_UP, Input::KEY_DOWN, Input::KEY_LEFT, Input::KEY_RIGHT));
+			o->addComponent(new Movement2D(10, Input::KEY_O, Input::KEY_P, -1, -1));
+			o->addComponent(new RigidBodyComponent(o));
+		}
 		o->addComponent(new MeshRenderer(Mesh("sphere.obj"), Material("", TEXTURE_BLANK, getRandomColour())));
-		//addToScene2(o);
+		addToScene2(o);
 	}
 
 	DirectionalLight* d = new DirectionalLight(COLOUR_WHITE, 0.04f);
@@ -110,7 +120,7 @@ void TestGame::initialise(const Window& window)
 	{
 		GameObject* g = new GameObject(Octree::partitions[i].centre, Quaternion(), Octree::partitions[i].max.getX());
 		g->addComponent(new ColliderRenderer(false, new ColliderBox(Octree::partitions[i].min)));
-		//addToScene(g);
+		addToScene(g);
 	}
 
 	//getRoot().addComponent(new OctreeRenderer(0));
