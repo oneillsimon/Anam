@@ -49,4 +49,35 @@ public:
 	//void generateContacts(Collider& one, Collider& two, CollisionData_* data);
 };
 
+class OctreeAlt
+{
+public:
+	const int MIN_OBJ_PER_OCTAN = 1;
+	const int MAX_OBJ_PER_OCTAN = 6;
+	const int MAX_OCTREE_DEPTH = 6;
+
+	Vector3 m_corner1;
+	Vector3 m_corner2;
+	Vector3 m_centre;
+
+	OctreeAlt* m_children[2][2][2];
+	~OctreeAlt();
+	bool m_hasChildren;
+	std::set<PhysicsObject*> m_objects;
+	int m_depth;
+	int m_numObjects;
+
+	void fileObject(PhysicsObject* object, const Vector3& position, bool addObject);
+	void haveChildren();
+	void collectObjects(std::set<PhysicsObject*>& set);
+	void killChildren();
+	void remove(PhysicsObject* object, const Vector3& position);
+
+	OctreeAlt(const Vector3& min, const Vector3& max, int depth);
+	void add(PhysicsObject* object);
+	void remove(PhysicsObject* object);
+	void objectMoved(PhysicsObject* object, const Vector3& oldPosition);
+	void potentialCollisions();
+};
+
 #endif
