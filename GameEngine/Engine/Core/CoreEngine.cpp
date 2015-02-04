@@ -95,17 +95,20 @@ void CoreEngine::run()
 			double totalTime = (1000.0 * frameCounter) / (double)frames;
 			double totalRecordedTime = 0.0;
 
-			totalRecordedTime += ProfileTimers::inputTimer__.displayAndReset("Input     - ", (double)frames);
-			totalRecordedTime += ProfileTimers::updateTimer_.displayAndReset("Update    - ", (double)frames);
-			totalRecordedTime += ProfileTimers::physicsTimer.displayAndReset("Physics   - ", (double)frames);
-			totalRecordedTime += ProfileTimers::renderTimer_.displayAndReset("Render    - ", (double)frames);
-			totalRecordedTime += ProfileTimers::wSyncTimer__.displayAndReset("WinSync   - ", (double)frames);
-			totalRecordedTime += ProfileTimers::wUpdateTimer.displayAndReset("WinUpdate - ", (double)frames);
-			totalRecordedTime += ProfileTimers::swapBufTimer.displayAndReset("Buff Swap - ", (double)frames);
-			totalRecordedTime += ProfileTimers::sleepTimer__.displayAndReset("Sleep     - ", (double)frames);
+			totalRecordedTime += ProfileTimers::inputTimer__.displayAndReset((double)frames);
+			totalRecordedTime += ProfileTimers::updateTimer_.displayAndReset((double)frames);
+			totalRecordedTime += ProfileTimers::physicsTimer.displayAndReset((double)frames);
+			totalRecordedTime += ProfileTimers::renderTimer_.displayAndReset((double)frames);
+								 ProfileTimers::rnderGeneral.displayAndReset((double)frames);
+								 ProfileTimers::lightTimer__.displayAndReset((double)frames);
+								 ProfileTimers::shadowTimer_.displayAndReset((double)frames);
+			totalRecordedTime += ProfileTimers::wSyncTimer__.displayAndReset((double)frames);
+			totalRecordedTime += ProfileTimers::wUpdateTimer.displayAndReset((double)frames);
+			totalRecordedTime += ProfileTimers::swapBufTimer.displayAndReset((double)frames);
+			totalRecordedTime += ProfileTimers::sleepTimer__.displayAndReset((double)frames);
 			
-			printf("Other     - %f\tms\n", totalTime - totalRecordedTime);
-			printf("Total     - %f\tms\n\n", totalTime);
+			printf("------\nOther - %f ms\n", totalTime - totalRecordedTime);
+			printf("Total  - %f ms\n\n\n", totalTime);
 			
 			frames = 0;
 			frameCounter = 0;

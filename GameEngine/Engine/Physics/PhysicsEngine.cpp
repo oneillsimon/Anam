@@ -1,8 +1,10 @@
+#include <thread>
+
 #include "PhysicsEngine.h"
 
 PhysicsEngine::PhysicsEngine()
 {
-	int size = 10;
+	int size = 20;
 	//m_tree = new Octree(0, 0, Vector3(), Vector3(size, size, size));
 	m_altTree = new OctreeAlt(Vector3(-size, -size, -size), Vector3(size, size, size), 1);
 }
@@ -24,6 +26,8 @@ void PhysicsEngine::simulate(float delta)
 
 	ProfileTimers::physicsTimer.startInvocation();
 
+	//std::thread t1(&PhysicsEngine::updateObjectReferences, this, m_objects, m_altTree, delta);
+	//t1.join();
 	updateObjectReferences(m_objects, m_altTree, delta);
 	m_altTree->potentialCollisions();
 	//m_tree->potentialCollisions();

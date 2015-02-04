@@ -100,6 +100,25 @@ void Util::findAndReplace(std::string& subject, const std::string& search, const
 	}
 }
 
+std::string Util::formatToLength(const std::string& s, int l, const std::string& append)
+{
+	int diff = l - s.length();
+
+	if(diff < 0)
+	{
+		return s.substr(0, l);
+	}
+
+	std::string res = s;
+
+	for(int i = 0; i < diff; i++)
+	{
+		res.append(append);
+	}
+
+	return res;
+}
+
 bool Util::isAlphaNumeric(char c)
 {
 	return (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || (c >= 97 && c <= 122);

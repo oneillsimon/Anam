@@ -12,6 +12,7 @@ namespace Util
 	bool isAlphaNumeric(char c);
 	std::string stringFromVector(std::vector<std::string> s, const std::string& pad);
 	void findAndReplace(std::string& subject, const std::string& search, const std::string& replace, std::vector<char> regex = {});
+	std::string formatToLength(const std::string& s, int l, const std::string& append = "");
 };
 
 #endif

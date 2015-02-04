@@ -3,12 +3,19 @@
 #include "Profiling.h"
 #include "Time.h"
 
+int ProfileTimer::m_longestLabel = 0;
 
-ProfileTimer::ProfileTimer()
+ProfileTimer::ProfileTimer(const std::string& label) :
+	m_label(label)
 {
 	m_numInvocations = 0;
 	m_totalTime = 0;
 	m_startTime = 0;
+
+	if(m_label.length() > m_longestLabel)
+	{
+		m_longestLabel = m_label.length();
+	}
 }
 
 void ProfileTimer::startInvocation()
@@ -28,7 +35,7 @@ void ProfileTimer::stopInvocation()
 	m_startTime = 0;
 }
 
-double ProfileTimer::displayAndReset(const std::string& message, double inputDivisor)
+double ProfileTimer::displayAndReset(double inputDivisor)
 {
 	double divisor = inputDivisor;
 
@@ -47,19 +54,23 @@ double ProfileTimer::displayAndReset(const std::string& message, double inputDiv
 	{
 		time = (1000.0 * m_totalTime) / (double)divisor;
 	}
+	
 
-	std::cout << message << time << "\tms" << std::endl;
+	std::cout << Util::formatToLength(m_label, m_longestLabel, " ") << " - " << Util::formatToLength(std::to_string(time), 5) << " ms" << std::endl;
 	m_numInvocations = 0;
 	m_totalTime = 0.0;
 
 	return time;
 }
 
-ProfileTimer ProfileTimers::inputTimer__;
-ProfileTimer ProfileTimers::updateTimer_;
-ProfileTimer ProfileTimers::renderTimer_;
-ProfileTimer ProfileTimers::wSyncTimer__;
-ProfileTimer ProfileTimers::wUpdateTimer;
-ProfileTimer ProfileTimers::swapBufTimer;
-ProfileTimer ProfileTimers::sleepTimer__;
-ProfileTimer ProfileTimers::physicsTimer;
+ProfileTimer ProfileTimers::inputTimer__("Input");
+ProfileTimer ProfileTimers::updateTimer_("Update");
+ProfileTimer ProfileTimers::physicsTimer("Physics");
+ProfileTimer ProfileTimers::renderTimer_("Render Total");
+ProfileTimer ProfileTimers::rnderGeneral(" >General");
+ProfileTimer ProfileTimers::lightTimer__(" >Active Light");
+ProfileTimer ProfileTimers::shadowTimer_(" >ShadowMap");
+ProfileTimer ProfileTimers::wSyncTimer__("WinSync");
+ProfileTimer ProfileTimers::wUpdateTimer("WinUpdate");
+ProfileTimer ProfileTimers::swapBufTimer("Buff Swap");
+ProfileTimer ProfileTimers::sleepTimer__("Sleep");

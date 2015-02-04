@@ -4,7 +4,7 @@ std::vector<Partition> OctreeAlt::partitions = std::vector<Partition>();
 
 void OctreeAlt::fileObject(PhysicsObject* object, const Vector3& position, bool addObject)
 {
-	float s = object->getTransform()->getScale().getX();
+	float s = 0;//object->getTransform()->getScale().getX();
 
 	for(int x = 0; x < 2; x++)
 	{
@@ -34,7 +34,7 @@ void OctreeAlt::fileObject(PhysicsObject* object, const Vector3& position, bool 
 				continue;
 			}
 
-			for(int z = 0; z < 2;z++)
+			for(int z = 0; z < 2; z++)
 			{
 				if(z == 0)
 				{
@@ -74,14 +74,15 @@ void OctreeAlt::divideDown()
 	m_children[0][1][1] = new OctreeAlt(Vector3(m_corner1[0], m_corner1[1], m_centre[2]), Vector3(m_centre[0], m_centre[1], m_corner2[2]), m_depth + 1);
 	m_children[1][1][1] = new OctreeAlt(Vector3(m_centre[0], m_corner1[1], m_centre[2]), Vector3(m_corner2[0], m_centre[1], m_corner2[2]), m_depth + 1);
 
+	m_objects.clear();
+	m_numObjects = 0;
+	m_hasChildren = true;
+
 	for(std::set<PhysicsObject*>::iterator it = m_objects.begin(); it != m_objects.end(); it++)
 	{
 		PhysicsObject* o = *it;
 		fileObject(o, o->getTransform()->getPosition(), true);
 	}
-
-	m_objects.clear();
-	m_hasChildren = true;
 }
 
 void OctreeAlt::collectObjects(std::set<PhysicsObject*>& set)
@@ -162,6 +163,8 @@ OctreeAlt::OctreeAlt(const Vector3& min, const Vector3& max, int depth)
 	p.max = max;
 
 	partitions.push_back(p);
+
+	printf("Octree created at depth %d\n", m_depth);
 }
 
 OctreeAlt::~OctreeAlt()

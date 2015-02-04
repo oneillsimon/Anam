@@ -88,13 +88,16 @@ void TestGame::initialise(const Window& window)
 
 	std::vector<Vector3> v = { Vector3(-5, 5, -5), Vector3(5, 5, -5), Vector3(-5, 5, 5), Vector3(5, 5, 5),
 							   Vector3(-5, -5, -5), Vector3(5, -5, -5), Vector3(-5, -5, 5), Vector3(5, -5, 5) };
+
+	//Mesh sphereMesh = Mesh("sphere", "sphere.obj")
 	for(int i = 0; i < n; i++)
 	{
 		float x = random(-m, m);
 		float y = random(-m, m);
 		float z = random(-m, m);
 
-		PhysicsObject* o = new PhysicsObject(v[i]);
+		//PhysicsObject* o = new PhysicsObject(v[i]);
+		PhysicsObject* o = new PhysicsObject(Vector3(x, y, z));
 		o->setCollider(new ColliderSphere());
 		o->setMass(10);
 		if(i == 0)
@@ -103,7 +106,7 @@ void TestGame::initialise(const Window& window)
 			o->addComponent(new Movement2D(10, Input::KEY_O, Input::KEY_P, -1, -1));
 			o->addComponent(new RigidBodyComponent(o));
 		}
-		o->addComponent(new MeshRenderer(Mesh("sphere.obj"), Material("", TEXTURE_BLANK, getRandomColour())));
+		o->addComponent(new MeshRenderer(Mesh("plane.obj"), Material("", TEXTURE_BLANK, getRandomColour())));
 		addToScene2(o);
 	}
 

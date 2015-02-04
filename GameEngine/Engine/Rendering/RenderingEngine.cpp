@@ -32,7 +32,7 @@ RenderingEngine::RenderingEngine(const Window& window) :
 
 	setTexture("displayTexture", Texture(m_window->getWidth(), m_window->getHeight(), 0, GL_TEXTURE_2D, GL_LINEAR, GL_RGBA, GL_RGBA, false, GL_COLOR_ATTACHMENT0));
 
-	glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
+	glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
 
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
@@ -65,7 +65,9 @@ void RenderingEngine::render(const GameObject& object, const Camera& mainCamera)
 	glClearColor(0, 0, 0, 0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	ProfileTimers::rnderGeneral.startInvocation();
 	object.renderAll(m_defaultShader, *this, mainCamera);
+	ProfileTimers::rnderGeneral.stopInvocation();
 
 	for(unsigned int i = 0; i < m_lights.size(); i++)
 	{
@@ -107,7 +109,9 @@ void RenderingEngine::render(const GameObject& object, const Camera& mainCamera)
 				glCullFace(GL_FRONT);
 			}
 
+			ProfileTimers::shadowTimer_.startInvocation();
 			object.renderAll(m_shadowMapShader, *this, m_altCamera);
+			ProfileTimers::shadowTimer_.stopInvocation();
 
 			if(flipFaces)
 			{
@@ -135,7 +139,9 @@ void RenderingEngine::render(const GameObject& object, const Camera& mainCamera)
 		glDepthMask(GL_FALSE);
 		glDepthFunc(GL_EQUAL);
 
+		ProfileTimers::lightTimer__.startInvocation();
 		object.renderAll(m_activeLight->getShader(), *this, mainCamera);
+		ProfileTimers::lightTimer__.stopInvocation();
 
 		glDepthMask(GL_TRUE);
 		glDepthFunc(GL_LESS);
