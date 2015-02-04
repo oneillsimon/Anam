@@ -52,8 +52,10 @@ public:
 class OctreeAlt
 {
 public:
+	static std::vector<Partition> partitions;
+
 	const int MIN_OBJ_PER_OCTAN = 1;
-	const int MAX_OBJ_PER_OCTAN = 6;
+	const int MAX_OBJ_PER_OCTAN = 8;
 	const int MAX_OCTREE_DEPTH = 6;
 
 	Vector3 m_corner1;
@@ -68,7 +70,7 @@ public:
 	int m_numObjects;
 
 	void fileObject(PhysicsObject* object, const Vector3& position, bool addObject);
-	void haveChildren();
+	void divideDown();
 	void collectObjects(std::set<PhysicsObject*>& set);
 	void killChildren();
 	void remove(PhysicsObject* object, const Vector3& position);

@@ -95,7 +95,6 @@ void Octree::recalculate()
 	if(!m_hasChildren)
 	{
 		int count = countObjects();
-		printf("count: %d\n", count);
 		if(count < MIN_OBJ_COUNT)
 		{
 			printf("multiplying\n");

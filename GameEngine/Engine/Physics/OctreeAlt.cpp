@@ -1,5 +1,7 @@
 #include "Octree.h"
 
+std::vector<Partition> OctreeAlt::partitions = std::vector<Partition>();
+
 void OctreeAlt::fileObject(PhysicsObject* object, const Vector3& position, bool addObject)
 {
 	float s = object->getTransform()->getScale().getX();
@@ -59,57 +61,18 @@ void OctreeAlt::fileObject(PhysicsObject* object, const Vector3& position, bool 
 	}
 }
 
-void OctreeAlt::haveChildren()
+void OctreeAlt::divideDown()
 {
-	for(int x = 0; x < 2; x++)
-	{
-		float minX, maxX;
-
-		if(x == 0)
-		{
-			minX = m_corner1[0];
-			maxX = m_centre[0];
-		}
-		else
-		{
-			minX = m_centre[0];
-			maxX = m_corner2[0];
-		}
-
-		for(int y = 0; y < 2; y++)
-		{
-			float minY, maxY;
-
-			if(y == 0)
-			{
-				minY = m_corner1[1];
-				maxY = m_centre[1];
-			}
-			else
-			{
-				minY = m_centre[1];
-				maxY = m_corner2[1];
-			}
-
-			for(int z = 0; z < 2; z++)
-			{
-				float minZ, maxZ;
-
-				if(z == 0)
-				{
-					minZ = m_corner1[2];
-					maxZ = m_centre[2];
-				}
-				else
-				{
-					minZ = m_centre[2];
-					maxZ = m_corner2[2];
-				}
-
-				m_children[x][y][z] = new OctreeAlt(Vector3(minX, minY, minZ), Vector3(maxX, maxY, maxZ), m_depth + 1);
-			}
-		}
-	}
+	printf("division\n");
+	m_children[0][0][0] = new OctreeAlt(Vector3(m_corner1[0], m_centre[1], m_corner1[2]), Vector3(m_centre[0], m_corner2[1], m_centre[2]), m_depth + 1);
+	m_children[1][0][0] = new OctreeAlt(Vector3(m_centre[0], m_centre[1], m_corner1[2]), Vector3(m_corner2[0], m_corner2[1], m_centre[2]), m_depth + 1);
+	m_children[0][1][0] = new OctreeAlt(Vector3(m_corner1[0], m_corner1[1], m_corner1[2]), Vector3(m_centre[0], m_centre[1], m_centre[2]), m_depth + 1);
+	m_children[1][1][0] = new OctreeAlt(Vector3(m_centre[0], m_corner1[1], m_corner1[2]), Vector3(m_corner2[0], m_centre[1], m_centre[2]), m_depth + 1);
+	
+	m_children[0][0][1] = new OctreeAlt(Vector3(m_corner1[0], m_centre[1], m_centre[2]), Vector3(m_centre[0], m_corner2[1], m_corner2[2]), m_depth + 1);
+	m_children[1][0][1] = new OctreeAlt(Vector3(m_centre[0], m_centre[1], m_centre[2]), Vector3(m_corner2[0], m_corner2[1], m_corner2[2]), m_depth + 1);
+	m_children[0][1][1] = new OctreeAlt(Vector3(m_corner1[0], m_corner1[1], m_centre[2]), Vector3(m_centre[0], m_centre[1], m_corner2[2]), m_depth + 1);
+	m_children[1][1][1] = new OctreeAlt(Vector3(m_centre[0], m_corner1[1], m_centre[2]), Vector3(m_corner2[0], m_centre[1], m_corner2[2]), m_depth + 1);
 
 	for(std::set<PhysicsObject*>::iterator it = m_objects.begin(); it != m_objects.end(); it++)
 	{
@@ -192,6 +155,13 @@ OctreeAlt::OctreeAlt(const Vector3& min, const Vector3& max, int depth)
 	m_depth = depth;
 	m_numObjects = 0;
 	m_hasChildren = false;
+
+	Partition p;
+	p.centre = m_centre;
+	p.min = min;
+	p.max = max;
+
+	partitions.push_back(p);
 }
 
 OctreeAlt::~OctreeAlt()
@@ -209,7 +179,7 @@ void OctreeAlt::add(PhysicsObject* object)
 	if(!m_hasChildren && m_depth < MAX_OCTREE_DEPTH &&
 	   m_numObjects > MAX_OBJ_PER_OCTAN)
 	{
-		haveChildren();
+		divideDown();
 	}
 
 	if(m_hasChildren)

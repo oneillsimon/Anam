@@ -114,12 +114,13 @@ void TestGame::initialise(const Window& window)
 
 	addToScene(cameraObj);
 
-	int pCount = Octree::partitions.size();
+	int pCount = OctreeAlt::partitions.size();
 	
 	for(int i = 0; i < pCount; i++)
 	{
-		GameObject* g = new GameObject(Octree::partitions[i].centre, Quaternion(), Octree::partitions[i].max.getX());
-		g->addComponent(new ColliderRenderer(false, new ColliderBox(Octree::partitions[i].min)));
+		float scale = fabsf(OctreeAlt::partitions[i].centre.getX() - OctreeAlt::partitions[i].max.getX());
+		GameObject* g = new GameObject(OctreeAlt::partitions[i].centre, Quaternion(), scale);
+		g->addComponent(new ColliderRenderer(false, new ColliderBox(OctreeAlt::partitions[i].max)));
 		addToScene(g);
 	}
 
