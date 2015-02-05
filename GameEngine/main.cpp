@@ -33,9 +33,19 @@ private:
 	//void operator =(const TestGame& other) {}
 };
 
+class OctreeDemo : public Game
+{
+public: virtual void initialise(const Window& window);
+};
+
+class CollisionDemo : public Game
+{
+public: virtual void initialise(const Window& window);
+};
+
 static void tests();
 
-void TestGame::initialise(const Window& window)
+void CollisionDemo::initialise(const Window& window)
 {
 	GameObject* cameraObj = new GameObject(Vector3(0, 0, -7.5f));
 
@@ -43,16 +53,9 @@ void TestGame::initialise(const Window& window)
 	cameraObj->addComponent(new FreeMove());
 	cameraObj->addComponent(new CameraComponent(Matrix4().initPerspective(toRadians(70.0f), window.getAspectRatio(), 0.1f, 1000.0f)));
 
-	PhysicsObject* pObj2 = new PhysicsObject(Vector3(-1.5f, 5, 0));
-	pObj2->setCollider(new ColliderBox());
-	pObj2->addComponent(new ColliderRenderer(true, pObj2->getCollider(), COLOUR_FIREBRICK));
-	pObj2->addComponent(new FreeMove(10, Input::KEY_UP, Input::KEY_DOWN, Input::KEY_LEFT, Input::KEY_RIGHT));
-	pObj2->addComponent(new Movement2D(10, Input::KEY_O, Input::KEY_P, -1, -1));
-	pObj2->addComponent(new RigidBodyComponent(pObj2));
-	pObj2->setMass(1);
-	//addToScene2(pObj2);
+	addToScene(cameraObj);
 
-	for(int i = 0; i < 0; i++)
+	for(int i = 0; i < 4; i++)
 	{
 		Vector3 v;
 
@@ -81,9 +84,31 @@ void TestGame::initialise(const Window& window)
 	plane->setCollider(new ColliderSphere());
 	plane->setMass(100000000);
 	plane->addComponent(new ColliderRenderer(true, plane->getCollider(), COLOUR_FIREBRICK));
-	//addToScene2(plane);
+	addToScene2(plane);
 
-	int n = 8;
+	Game::initialise(window);
+}
+
+void OctreeDemo::initialise(const Window& window)
+{
+	GameObject* cameraObj = new GameObject(Vector3(0, 0, -7.5f));
+
+	cameraObj->addComponent(new FreeLook(window.getCentre()));
+	cameraObj->addComponent(new FreeMove());
+	cameraObj->addComponent(new CameraComponent(Matrix4().initPerspective(toRadians(70.0f), window.getAspectRatio(), 0.1f, 1000.0f)));
+
+	PhysicsObject* pObj2 = new PhysicsObject(Vector3(-1.5f, 5, 0));
+	pObj2->setCollider(new ColliderBox());
+	pObj2->addComponent(new ColliderRenderer(true, pObj2->getCollider(), COLOUR_FIREBRICK));
+	pObj2->addComponent(new FreeMove(10, Input::KEY_UP, Input::KEY_DOWN, Input::KEY_LEFT, Input::KEY_RIGHT));
+	pObj2->addComponent(new Movement2D(10, Input::KEY_O, Input::KEY_P, -1, -1));
+	pObj2->addComponent(new RigidBodyComponent(pObj2));
+	pObj2->setMass(1);
+	//addToScene2(pObj2);
+
+	
+
+	int n = 12;
 	int m = 12;
 
 	std::vector<Vector3> v = { Vector3(-5, 5, -5), Vector3(5, 5, -5), Vector3(-5, 5, 5), Vector3(5, 5, 5),
@@ -106,7 +131,7 @@ void TestGame::initialise(const Window& window)
 			o->addComponent(new Movement2D(10, Input::KEY_O, Input::KEY_P, -1, -1));
 			o->addComponent(new RigidBodyComponent(o));
 		}
-		o->addComponent(new MeshRenderer(Mesh("plane.obj"), Material("", TEXTURE_BLANK, getRandomColour())));
+		o->addComponent(new MeshRenderer(Mesh("sphere.obj"), Material("", TEXTURE_BLANK, getRandomColour())));
 		addToScene2(o);
 	}
 
@@ -117,13 +142,13 @@ void TestGame::initialise(const Window& window)
 
 	addToScene(cameraObj);
 
-	int pCount = OctreeAlt::partitions.size();
+	int pCount = Octree::partitions.size();
 	
 	for(int i = 0; i < pCount; i++)
 	{
-		float scale = fabsf(OctreeAlt::partitions[i].centre.getX() - OctreeAlt::partitions[i].max.getX());
-		GameObject* g = new GameObject(OctreeAlt::partitions[i].centre, Quaternion(), scale);
-		g->addComponent(new ColliderRenderer(false, new ColliderBox(OctreeAlt::partitions[i].max)));
+		float scale = fabsf(Octree::partitions[i].centre.getX() - Octree::partitions[i].max.getX());
+		GameObject* g = new GameObject(Octree::partitions[i].centre, Quaternion(), scale);
+		g->addComponent(new ColliderRenderer(false, new ColliderBox(Octree::partitions[i].max)));
 		addToScene(g);
 	}
 
@@ -134,7 +159,7 @@ void TestGame::initialise(const Window& window)
 
 int main()
 {
-	TestGame test;
+	OctreeDemo test;
 	CoreEngine engine(800, 600, 120, &test);
 	engine.createWindow("Game ENGINE");
 	engine.start();

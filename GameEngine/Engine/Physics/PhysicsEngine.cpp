@@ -5,16 +5,13 @@
 PhysicsEngine::PhysicsEngine()
 {
 	int size = 20;
-	//m_tree = new Octree(0, 0, Vector3(), Vector3(size, size, size));
-	m_altTree = new OctreeAlt(Vector3(-size, -size, -size), Vector3(size, size, size), 1);
+	m_tree = new Octree(Vector3(-size, -size, -size), Vector3(size, size, size), 1);
 }
 
 void PhysicsEngine::addObject(PhysicsObject* object)
 {
 	m_objects.push_back(object);
-	m_altTree->add(object);
-	//m_tree->addObject(object);
-	//m_tree->m_allObjects.push_back(object);
+	m_tree->add(object);
 }
 
 void PhysicsEngine::simulate(float delta)
@@ -25,17 +22,12 @@ void PhysicsEngine::simulate(float delta)
 	}
 
 	ProfileTimers::physicsTimer.startInvocation();
-
-	//std::thread t1(&PhysicsEngine::updateObjectReferences, this, m_objects, m_altTree, delta);
-	//t1.join();
-	updateObjectReferences(m_objects, m_altTree, delta);
-	m_altTree->potentialCollisions();
-	//m_tree->potentialCollisions();
-	//m_tree->recalculate();
+	updateObjectReferences(m_objects, m_tree, delta);
+	m_tree->potentialCollisions();
 	ProfileTimers::physicsTimer.stopInvocation();
 }
 
-void PhysicsEngine::updateObjectReferences(std::vector<PhysicsObject*>& objects, OctreeAlt* octree, float delta)
+void PhysicsEngine::updateObjectReferences(std::vector<PhysicsObject*>& objects, Octree* octree, float delta)
 {
 	for(int i = 0; i < objects.size(); i++)
 	{

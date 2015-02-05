@@ -1,8 +1,8 @@
 #include "Octree.h"
 
-std::vector<Partition> OctreeAlt::partitions = std::vector<Partition>();
+std::vector<Partition> Octree::partitions = std::vector<Partition>();
 
-void OctreeAlt::fileObject(PhysicsObject* object, const Vector3& position, bool addObject)
+void Octree::fileObject(PhysicsObject* object, const Vector3& position, bool addObject)
 {
 	float s = 0;//object->getTransform()->getScale().getX();
 
@@ -61,18 +61,18 @@ void OctreeAlt::fileObject(PhysicsObject* object, const Vector3& position, bool 
 	}
 }
 
-void OctreeAlt::divideDown()
+void Octree::divideDown()
 {
 	printf("division\n");
-	m_children[0][0][0] = new OctreeAlt(Vector3(m_corner1[0], m_centre[1], m_corner1[2]), Vector3(m_centre[0], m_corner2[1], m_centre[2]), m_depth + 1);
-	m_children[1][0][0] = new OctreeAlt(Vector3(m_centre[0], m_centre[1], m_corner1[2]), Vector3(m_corner2[0], m_corner2[1], m_centre[2]), m_depth + 1);
-	m_children[0][1][0] = new OctreeAlt(Vector3(m_corner1[0], m_corner1[1], m_corner1[2]), Vector3(m_centre[0], m_centre[1], m_centre[2]), m_depth + 1);
-	m_children[1][1][0] = new OctreeAlt(Vector3(m_centre[0], m_corner1[1], m_corner1[2]), Vector3(m_corner2[0], m_centre[1], m_centre[2]), m_depth + 1);
+	m_children[0][0][0] = new Octree(Vector3(m_corner1[0], m_centre[1], m_corner1[2]), Vector3(m_centre[0], m_corner2[1], m_centre[2]), m_depth + 1);
+	m_children[1][0][0] = new Octree(Vector3(m_centre[0], m_centre[1], m_corner1[2]), Vector3(m_corner2[0], m_corner2[1], m_centre[2]), m_depth + 1);
+	m_children[0][1][0] = new Octree(Vector3(m_corner1[0], m_corner1[1], m_corner1[2]), Vector3(m_centre[0], m_centre[1], m_centre[2]), m_depth + 1);
+	m_children[1][1][0] = new Octree(Vector3(m_centre[0], m_corner1[1], m_corner1[2]), Vector3(m_corner2[0], m_centre[1], m_centre[2]), m_depth + 1);
 	
-	m_children[0][0][1] = new OctreeAlt(Vector3(m_corner1[0], m_centre[1], m_centre[2]), Vector3(m_centre[0], m_corner2[1], m_corner2[2]), m_depth + 1);
-	m_children[1][0][1] = new OctreeAlt(Vector3(m_centre[0], m_centre[1], m_centre[2]), Vector3(m_corner2[0], m_corner2[1], m_corner2[2]), m_depth + 1);
-	m_children[0][1][1] = new OctreeAlt(Vector3(m_corner1[0], m_corner1[1], m_centre[2]), Vector3(m_centre[0], m_centre[1], m_corner2[2]), m_depth + 1);
-	m_children[1][1][1] = new OctreeAlt(Vector3(m_centre[0], m_corner1[1], m_centre[2]), Vector3(m_corner2[0], m_centre[1], m_corner2[2]), m_depth + 1);
+	m_children[0][0][1] = new Octree(Vector3(m_corner1[0], m_centre[1], m_centre[2]), Vector3(m_centre[0], m_corner2[1], m_corner2[2]), m_depth + 1);
+	m_children[1][0][1] = new Octree(Vector3(m_centre[0], m_centre[1], m_centre[2]), Vector3(m_corner2[0], m_corner2[1], m_corner2[2]), m_depth + 1);
+	m_children[0][1][1] = new Octree(Vector3(m_corner1[0], m_corner1[1], m_centre[2]), Vector3(m_centre[0], m_centre[1], m_corner2[2]), m_depth + 1);
+	m_children[1][1][1] = new Octree(Vector3(m_centre[0], m_corner1[1], m_centre[2]), Vector3(m_corner2[0], m_centre[1], m_corner2[2]), m_depth + 1);
 
 	m_objects.clear();
 	m_numObjects = 0;
@@ -85,7 +85,7 @@ void OctreeAlt::divideDown()
 	}
 }
 
-void OctreeAlt::collectObjects(std::set<PhysicsObject*>& set)
+void Octree::collectObjects(std::set<PhysicsObject*>& set)
 {
 	if(m_hasChildren)
 	{
@@ -110,7 +110,7 @@ void OctreeAlt::collectObjects(std::set<PhysicsObject*>& set)
 	}
 }
 
-void OctreeAlt::killChildren()
+void Octree::killChildren()
 {
 	collectObjects(m_objects);
 
@@ -128,7 +128,7 @@ void OctreeAlt::killChildren()
 	m_hasChildren = false;
 }
 
-void OctreeAlt::remove(PhysicsObject* object, const Vector3& position)
+void Octree::remove(PhysicsObject* object, const Vector3& position)
 {
 	m_numObjects--;
 
@@ -148,7 +148,7 @@ void OctreeAlt::remove(PhysicsObject* object, const Vector3& position)
 }
 
 
-OctreeAlt::OctreeAlt(const Vector3& min, const Vector3& max, int depth)
+Octree::Octree(const Vector3& min, const Vector3& max, int depth)
 {
 	m_corner1 = min;
 	m_corner2 = max;
@@ -167,7 +167,7 @@ OctreeAlt::OctreeAlt(const Vector3& min, const Vector3& max, int depth)
 	printf("Octree created at depth %d\n", m_depth);
 }
 
-OctreeAlt::~OctreeAlt()
+Octree::~Octree()
 {
 	if(m_hasChildren)
 	{
@@ -175,7 +175,7 @@ OctreeAlt::~OctreeAlt()
 	}
 }
 
-void OctreeAlt::add(PhysicsObject* object)
+void Octree::add(PhysicsObject* object)
 {
 	m_numObjects++;
 
@@ -195,18 +195,21 @@ void OctreeAlt::add(PhysicsObject* object)
 	}
 }
 
-void OctreeAlt::remove(PhysicsObject* object)
+void Octree::remove(PhysicsObject* object)
 {
 	remove(object, object->getTransform()->getPosition());
 }
 
-void OctreeAlt::objectMoved(PhysicsObject* object, const Vector3& oldPosition)
+void Octree::objectMoved(PhysicsObject* object, const Vector3& oldPosition)
 {
-	remove(object, oldPosition);
-	add(object);
+	if(object->getTransform()->hasChanged())
+	{
+		remove(object, oldPosition);
+		add(object);
+	}
 }
 
-void OctreeAlt::potentialCollisions()
+void Octree::potentialCollisions()
 {
 	if(m_hasChildren)
 	{

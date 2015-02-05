@@ -168,9 +168,6 @@
     <ClCompile Include="Engine\Physics\Collision.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Physics\Octree.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Physics\OctreeAlt.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
