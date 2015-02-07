@@ -20,11 +20,11 @@ public:
 	static std::vector<Partition> partitions;
 
 	const int MIN_OBJ_PER_OCTAN = 2;
-	const int MAX_OBJ_PER_OCTAN = 4;
+	const int MAX_OBJ_PER_OCTAN = 1;
 	const int MAX_OCTREE_DEPTH = 6;
 
-	Vector3 m_corner1;
-	Vector3 m_corner2;
+	Vector3 m_min;
+	Vector3 m_max;
 	Vector3 m_centre;
 
 	Octree* m_children[2][2][2];

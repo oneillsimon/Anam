@@ -130,9 +130,9 @@ void CoreEngine::run()
 			m_game->processInput(m_window->getInput(), (float)m_frameRate);
 			m_game->update((float)m_frameRate);
 
-			std::thread physics_thread(&Game::integrate, m_game, m_physicsEngine, (float)m_frameRate);
-			physics_thread.join();
-			//m_game->integrate(m_physicsEngine, (float)m_frameRate);
+			//std::thread physics_thread(&Game::integrate, m_game, m_physicsEngine, (float)m_frameRate);
+			//physics_thread.join();
+			m_game->integrate(m_physicsEngine, (float)m_frameRate);
 
 			unproccessedTime -= m_frameRate;
 		}

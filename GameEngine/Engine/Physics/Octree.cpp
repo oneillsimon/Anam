@@ -63,16 +63,15 @@ void Octree::fileObject(PhysicsObject* object, const Vector3& position, bool add
 
 void Octree::divideDown()
 {
-	printf("division\n");
-	m_children[0][0][0] = new Octree(Vector3(m_corner1[0], m_centre[1], m_corner1[2]), Vector3(m_centre[0], m_corner2[1], m_centre[2]), m_depth + 1);
-	m_children[1][0][0] = new Octree(Vector3(m_centre[0], m_centre[1], m_corner1[2]), Vector3(m_corner2[0], m_corner2[1], m_centre[2]), m_depth + 1);
-	m_children[0][1][0] = new Octree(Vector3(m_corner1[0], m_corner1[1], m_corner1[2]), Vector3(m_centre[0], m_centre[1], m_centre[2]), m_depth + 1);
-	m_children[1][1][0] = new Octree(Vector3(m_centre[0], m_corner1[1], m_corner1[2]), Vector3(m_corner2[0], m_centre[1], m_centre[2]), m_depth + 1);
-	
-	m_children[0][0][1] = new Octree(Vector3(m_corner1[0], m_centre[1], m_centre[2]), Vector3(m_centre[0], m_corner2[1], m_corner2[2]), m_depth + 1);
-	m_children[1][0][1] = new Octree(Vector3(m_centre[0], m_centre[1], m_centre[2]), Vector3(m_corner2[0], m_corner2[1], m_corner2[2]), m_depth + 1);
-	m_children[0][1][1] = new Octree(Vector3(m_corner1[0], m_corner1[1], m_centre[2]), Vector3(m_centre[0], m_centre[1], m_corner2[2]), m_depth + 1);
-	m_children[1][1][1] = new Octree(Vector3(m_centre[0], m_corner1[1], m_centre[2]), Vector3(m_corner2[0], m_centre[1], m_corner2[2]), m_depth + 1);
+	m_children[0][0][0] = new Octree(Vector3(m_min[0],    m_min[1],    m_min[2]), Vector3(m_centre[0], m_centre[1], m_centre[2]), m_depth + 1);
+	m_children[1][0][0] = new Octree(Vector3(m_centre[0], m_min[1],    m_min[2]), Vector3(m_max[0],    m_centre[1], m_centre[2]), m_depth + 1);
+	m_children[0][1][0] = new Octree(Vector3(m_min[0],    m_centre[2], m_min[2]), Vector3(m_centre[0], m_max[1],    m_centre[2]), m_depth + 1);
+	m_children[1][1][0] = new Octree(Vector3(m_centre[0], m_centre[2], m_min[2]), Vector3(m_max[0],    m_max[1],    m_centre[2]), m_depth + 1);
+
+	m_children[0][0][1] = new Octree(Vector3(m_min[0],    m_min[1],    m_centre[2]), Vector3(m_centre[0], m_centre[1], m_max[2]), m_depth + 1);
+	m_children[1][0][1] = new Octree(Vector3(m_centre[0], m_min[1],    m_centre[2]), Vector3(m_max[0],    m_centre[1], m_max[2]), m_depth + 1);
+	m_children[0][1][1] = new Octree(Vector3(m_min[0],    m_centre[2], m_centre[2]), Vector3(m_centre[0], m_max[1],    m_max[2]), m_depth + 1);
+	m_children[1][1][1] = new Octree(Vector3(m_centre[0], m_centre[2], m_centre[2]), Vector3(m_max[0],    m_max[1],    m_max[2]), m_depth + 1);
 
 	m_objects.clear();
 	m_numObjects = 0;
@@ -150,8 +149,8 @@ void Octree::remove(PhysicsObject* object, const Vector3& position)
 
 Octree::Octree(const Vector3& min, const Vector3& max, int depth)
 {
-	m_corner1 = min;
-	m_corner2 = max;
+	m_min = min;
+	m_max = max;
 	m_centre = (min + max) / 2.0f;
 	m_depth = depth;
 	m_numObjects = 0;

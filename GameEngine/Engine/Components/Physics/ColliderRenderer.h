@@ -6,7 +6,7 @@
 
 class ColliderRenderer : public MeshRenderer
 {
-private:
+protected:
 	Colour m_defaultColour;
 	Colour m_collidingColour;
 	Collider* m_collider;

@@ -168,7 +168,10 @@
     <ClCompile Include="Engine\Physics\Collision.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Physics\OctreeAlt.cpp">
+    <ClCompile Include="Engine\Components\Physics\OctreeRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Physics\Octree.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -342,6 +345,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Physics\Octree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Components\Physics\OctreeRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

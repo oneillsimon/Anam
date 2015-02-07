@@ -4,7 +4,7 @@
 
 PhysicsEngine::PhysicsEngine()
 {
-	int size = 20;
+	int size = 50;
 	m_tree = new Octree(Vector3(-size, -size, -size), Vector3(size, size, size), 1);
 }
 
