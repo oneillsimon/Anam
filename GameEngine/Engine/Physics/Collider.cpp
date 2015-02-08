@@ -1,5 +1,6 @@
 #include "Collider.h"
 #include "Collision.h"
+#include <iostream>
 
 void Collider::collide(PhysicsObject& p1, CollisionData_& data)
 {
@@ -82,6 +83,27 @@ void ColliderPlane::collide(PhysicsObject& p1, CollisionData_& data)
 		break;
 	case PLANE:
 		//m_isColliding = CollisionTester::planeAndSphere(p1, *m_parent);
+		break;
+	}
+
+	Collider::collide(p1, data);
+}
+
+ColliderOBB::ColliderOBB(const Vector3& halfExtents) :
+	e(halfExtents)
+{
+	m_type = Type::OBB;
+}
+
+void ColliderOBB::collide(PhysicsObject& p1, CollisionData_& data)
+{
+	m_isColliding = false;
+
+	switch(p1.getCollider()->m_type)
+	{
+	case OBB:
+		m_isColliding = CollisionTester::oBBAndOBB(*m_parent, p1, &data);
+	default:
 		break;
 	}
 

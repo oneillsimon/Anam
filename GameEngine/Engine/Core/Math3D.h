@@ -179,7 +179,7 @@ public:
 
 	Matrix4 operator *(const Matrix4& m) const;
 	Vector3 operator *(const Vector3& v) const;
-	const float* operator [](int index) const { return m[index]; };
+	float* operator [](int index) const { return m[index]; };
 };
 
 class Quaternion

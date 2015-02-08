@@ -45,6 +45,9 @@ std::string ColliderRenderer::getMeshFromCollider(int type)
 	case Collider::SPHERE:
 		return "sphere.obj";
 		break;
+	case Collider::OBB:
+		return "cube.obj";
+		break;
 	case Collider::BOX:
 		return "cube.obj";
 		break;

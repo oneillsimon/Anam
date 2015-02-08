@@ -82,6 +82,179 @@ bool CollisionTester::boxAndBox(PhysicsObject& p0, PhysicsObject& p1, CollisionD
 	return false;
 }
 
+float getProjectedRadius(const ColliderOBB& o, const Vector3& d)
+{
+	Vector3 ox = o.m_parent->getTransform()->getRotation().getRight();
+	Vector3 oy = o.m_parent->getTransform()->getRotation().getUp();
+	Vector3 oz = o.m_parent->getTransform()->getRotation().getForward();
+
+	return o.e[0] * fabsf(d.dot(ox)) +
+		   o.e[1] * fabsf(d.dot(oy)) +
+		   o.e[2] * fabsf(d.dot(oz));
+}
+
+bool seperateOnAxis(const ColliderOBB& a, const ColliderOBB& b, const Vector3& d)
+{
+	Vector3 dist = b.m_parent->getTransform()->getPosition() - a.m_parent->getTransform()->getPosition();
+	float r = fabsf(dist.dot(d));
+	float t = getProjectedRadius(a, d) + getProjectedRadius(b, d);
+
+	return t < r;
+}
+
+bool CollisionTester::oBBAndOBB(PhysicsObject& p0, PhysicsObject& p1, CollisionData_* data)
+{
+	float ra, rb;
+	Matrix4 R, AbsR;
+	float len = 0.0f;
+
+	ColliderOBB& a = *(ColliderOBB*)p0.getCollider();
+	ColliderOBB& b = *(ColliderOBB*)p1.getCollider();
+
+	Vector3 au[3] = { p0.getTransform()->getRotation().getRight(),
+					  p0.getTransform()->getRotation().getUp(),
+					  p0.getTransform()->getRotation().getForward() };
+
+	Vector3 bu[3] = { p1.getTransform()->getRotation().getRight(),
+					  p1.getTransform()->getRotation().getUp(),
+					  p1.getTransform()->getRotation().getForward() };
+
+	for(int i = 0; i < 3; i++)
+	{
+		for(int j = 0; j < 3; j++)
+		{
+			R[i][j] = au[i].dot(bu[j]);
+		}
+	}
+
+	Vector3 dir = b.m_parent->getTransform()->getPosition() - a.m_parent->getTransform()->getPosition();
+	Vector3 t = Vector3(dir.dot(au[0]), dir.dot(au[1]), dir.dot(au[2]));
+
+	for(int i = 0; i < 3; i++)
+	{
+		for(int j = 0; j < 3; j++)
+		{
+			AbsR[i][j] = abs(R[i][j]) + FLT_EPSILON;
+		}
+	}
+
+	for(int i = 0; i < 3; i++)
+	{
+		float ra = a.e[i];
+		float rb = b.e[0] * AbsR[i][0] + b.e[1] * AbsR[i][1] + b.e[2] * AbsR[i][2];
+		
+		if(abs(t[i]) > ra + rb)
+		{
+			return false;
+		}
+	}
+
+	for(int i = 0; i < 3; i++)
+	{
+		ra = a.e[0] * AbsR[0][i] + a.e[1] * AbsR[1][i] + a.e[2] * AbsR[2][i];
+		rb = b.e[i];
+
+		if(abs(t[0] * R[0][i] + t[1] * R[1][i] + t[2] * R[2][i]) > ra + rb)
+		{
+			return false;
+		}
+	}
+
+	// Test axis L + A0 x B0
+	ra = a.e[1] * AbsR[2][0] + a.e[2] * AbsR[1][0];
+	rb = b.e[1] * AbsR[0][2] + b.e[2] * AbsR[0][1];
+
+	if(abs(t[2] * R[1][0] - t[1] * R[2][0]) > ra + rb)
+	{
+		return false;
+	}
+
+	// Test axis L = A0 x B1
+	ra = a.e[1] * AbsR[2][1] + a.e[2] * AbsR[1][1];
+	rb = b.e[0] * AbsR[0][2] + b.e[2] * AbsR[0][0];
+
+	if(abs(t[2] * R[1][1] - t[1] * R[2][1]) > ra + rb)
+	{
+		return false;
+	}
+
+	// Test axis L = A0 x B2
+	ra = a.e[1] * AbsR[2][2] + a.e[2] * AbsR[1][2];
+	rb = b.e[0] * AbsR[0][1] + b.e[1] * AbsR[0][0];
+
+	if(abs(t[2] * R[1][2] - t[1] * R[2][2]) > ra + rb)
+	{
+		return false;
+	}
+
+	// Test axis L = A1 x B0
+	ra = a.e[0] * AbsR[2][0] + a.e[2] * AbsR[0][0];
+	rb = b.e[1] * AbsR[1][2] + b.e[2] * AbsR[1][1];
+
+	if(abs(t[0] * R[2][0] - t[2] * R[0][0]) > ra + rb)
+	{
+		return false;
+	}
+
+	// Test axis L = A1 x B1
+	ra = a.e[0] * AbsR[2][1] + a.e[2] * AbsR[0][1];
+	rb = b.e[0] * AbsR[1][2] + b.e[2] * AbsR[1][0];
+
+	if(abs(t[0] * R[2][1] - t[2] * R[0][1]) > ra + rb)
+	{
+		return false;
+	}
+
+	// Test axis L = A1 x B2
+	ra = a.e[0] * AbsR[2][2] + a.e[2] * AbsR[0][2];
+	rb = b.e[0] * AbsR[1][1] + b.e[1] * AbsR[1][0];
+
+	if(abs(t[0] * R[2][2] - t[2] * R[0][2]) > ra + rb)
+	{
+		return false;
+	}
+
+	// Test axis L = A2 x B0
+	ra = a.e[0] * AbsR[1][0] + a.e[1] * AbsR[0][0];
+	rb = b.e[1] * AbsR[2][2] + b.e[2] * AbsR[2][1];
+
+	if(abs(t[1] * R[0][0] - t[0] * R[1][0]) > ra + rb)
+	{
+		return false;
+	}
+
+	// Test axis L = A2 x B1
+	ra = a.e[0] * AbsR[1][1] + a.e[1] * AbsR[0][1];
+	rb = b.e[0] * AbsR[2][2] + b.e[2] * AbsR[2][0];
+
+	if(abs(t[1] * R[0][1] - t[0] * R[1][1]) > ra + rb)
+	{
+		return false;
+	}
+
+	// Test axis L = A2 x B2
+	ra = a.e[0] * AbsR[1][2] + a.e[1] * AbsR[0][2];
+	rb = b.e[0] * AbsR[2][1] + b.e[1] * AbsR[2][0];
+
+	if(abs(t[1] * R[0][2] - t[0] * R[1][2]) > ra + rb)
+	{
+		return false;
+	}
+
+	float f = abs(t[1] * R[0][2] - t[0] * R[1][2]);
+	float f1 = ra + rb;
+
+	Vector3 p = b.m_parent->getTransform()->getTransformedPoint(t);
+	Vector3 n = b.m_parent->getTransform()->getPosition() - p;
+	n = n.normalised();
+	data->m_normal = n;
+	data->m_point = t;
+	data->m_penetration = f1;
+
+	printf("intersecting\n");
+	return true;
+}
+
 void CollisionTester::addCollisionImpulse(PhysicsObject& p0, PhysicsObject& p1, CollisionData_& data)
 {
 	if(p0.getInverseMass() + p1.getInverseMass() == 0.0f)
@@ -103,7 +276,8 @@ void CollisionTester::addCollisionImpulse(PhysicsObject& p0, PhysicsObject& p1, 
 		return;
 	}
 
-	float e = 0.0f;
+	//float e = 0.0f;
+	float e = 0.0f;//random(0, 5);
 	float normDiv = (p0.getInverseMass() + p1.getInverseMass()) +
 		data.m_normal.dot(p0.getInverseInertiaTensor() * r0.cross(data.m_normal).cross(r0) +
 						  p1.getInverseInertiaTensor() * r1.cross(data.m_normal).cross(r1));

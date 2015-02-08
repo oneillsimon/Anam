@@ -58,9 +58,9 @@ void CollisionDemo::initialise(const Window& window)
 	int y = -2;
 	int spacing = 4;
 
-	for(int l = 0; l < 100; l++)
+	for(int l = 0; l < 1; l++)
 	{
-		for(int i = 0; i < 4; i++)
+		for(int i = 0; i < 1; i++)
 		{
 			Vector3 v;
 
@@ -74,7 +74,11 @@ void CollisionDemo::initialise(const Window& window)
 				v = Vector3(-1.75f, y, 1.75f);
 
 			PhysicsObject* pObj3 = new PhysicsObject(v);
-			pObj3->setCollider(new ColliderSphere());
+			pObj3->setCollider(new ColliderOBB());
+			//pObj3->getTransform()->rotate(Quaternion(AXIS_Z, toRadians(45)));
+			pObj3->getTransform()->getPosition().setX(0.0f);
+			pObj3->getTransform()->getPosition().setZ(0);
+		//	pObj3->getTransform()->getPosition().setY(-8.5f);
 			pObj3->addComponent(new ColliderRenderer(false, pObj3->getCollider(), COLOUR_FIREBRICK));
 			pObj3->addComponent(new FreeMove(10, Input::KEY_UP, Input::KEY_DOWN, Input::KEY_LEFT, Input::KEY_RIGHT));
 			pObj3->addComponent(new Movement2D(10, Input::KEY_O, Input::KEY_P, -1, -1));
@@ -95,15 +99,15 @@ void CollisionDemo::initialise(const Window& window)
 	}
 
 	PhysicsObject* plane = new PhysicsObject(Vector3(0.0f, -8, 0));
-	plane->getTransform()->setScale(3);
-	plane->setCollider(new ColliderSphere(3));
+	//plane->getTransform()->setScale();
+	plane->setCollider(new ColliderOBB());
 	plane->setMass(100000000);
 	plane->addComponent(new ColliderRenderer(true, plane->getCollider(), COLOUR_FIREBRICK));
 	addToScene2(plane);
 
 	int pCount = Octree::partitions.size();
 
-	//getRoot().addComponent(new OctreeRenderer(getRoot().getEngine()->getPhysicsEngine(),getRoot().getEngine()->getPhysicsEngine()->m_tree, COLOUR_YELLOW_GREEN));
+	getRoot().addComponent(new OctreeRenderer(getRoot().getEngine()->getPhysicsEngine(),getRoot().getEngine()->getPhysicsEngine()->m_tree, COLOUR_YELLOW_GREEN));
 
 	for(int i = 0; i < pCount; i++)
 	{
@@ -150,18 +154,12 @@ void OctreeDemo::initialise(const Window& window)
 	GameObject* gg = new GameObject();
 	gg->addComponent(d);
 	addToScene(gg);
+	getRoot().addComponent(new OctreeRenderer(getRoot().getEngine()->getPhysicsEngine(), getRoot().getEngine()->getPhysicsEngine()->m_tree, COLOUR_YELLOW_GREEN));
 
 	addToScene(cameraObj);
 
 	int pCount = Octree::partitions.size();
 	
-	for(int i = 0; i < pCount; i++)
-	{
-		float scale = fabsf(Octree::partitions[i].centre.getX() - Octree::partitions[i].max.getX());
-		GameObject* g = new GameObject(Octree::partitions[i].centre, Quaternion(), scale);
-		g->addComponent(new ColliderRenderer(false, new ColliderBox(Octree::partitions[i].max)));
-		addToScene(g);
-	}
 
 	Game::initialise(window);
 }
