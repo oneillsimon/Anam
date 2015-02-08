@@ -58,20 +58,20 @@ void CollisionDemo::initialise(const Window& window)
 	int y = -2;
 	int spacing = 4;
 
-	for(int l = 0; l < 3; l++)
+	for(int l = 0; l < 100; l++)
 	{
 		for(int i = 0; i < 4; i++)
 		{
 			Vector3 v;
 
 			if(i == 0)
-				v = Vector3(-1.5f, y, -1.5f);
+				v = Vector3(-1.75f, y, -1.75f);
 			else if(i == 1)
-				v = Vector3(1.5f, y, 1.5f);
+				v = Vector3(1.75f, y, 1.75f);
 			else if(i == 2)
-				v = Vector3(1.5f, y, -1.5f);
+				v = Vector3(1.75f, y, -1.75f);
 			else
-				v = Vector3(-1.5f, y, 1.5f);
+				v = Vector3(-1.75f, y, 1.75f);
 
 			PhysicsObject* pObj3 = new PhysicsObject(v);
 			pObj3->setCollider(new ColliderSphere());
@@ -85,25 +85,25 @@ void CollisionDemo::initialise(const Window& window)
 		y += spacing;
 	}
 
-	for(int i = 0; i < 0; i++)
+	for(int i = 0; i < 1; i++)
 	{
-		PhysicsObject* testObj = new PhysicsObject(Vector3(-1.5f, -3, -1.5f));
-		testObj->setCollider(new ColliderBox());
+		PhysicsObject* testObj = new PhysicsObject(Vector3(-1.5f, -5, -1.5f));
+		testObj->setCollider(new ColliderSphere(10));
 		testObj->setMass(10);
 		testObj->addComponent(new ColliderRenderer(false, testObj->getCollider(), COLOUR_RED));
-		addToScene2(testObj);
+		//addToScene2(testObj);
 	}
 
-	PhysicsObject* plane = new PhysicsObject(Vector3(0.0f, 0, 0));
-	plane->getTransform()->setScale(1);
-	plane->setCollider(new ColliderSphere());
+	PhysicsObject* plane = new PhysicsObject(Vector3(0.0f, -8, 0));
+	plane->getTransform()->setScale(3);
+	plane->setCollider(new ColliderSphere(3));
 	plane->setMass(100000000);
 	plane->addComponent(new ColliderRenderer(true, plane->getCollider(), COLOUR_FIREBRICK));
-	//addToScene2(plane);
+	addToScene2(plane);
 
 	int pCount = Octree::partitions.size();
 
-	getRoot().addComponent(new OctreeRenderer(getRoot().getEngine()->getPhysicsEngine()->m_tree, COLOUR_YELLOW_GREEN));
+	//getRoot().addComponent(new OctreeRenderer(getRoot().getEngine()->getPhysicsEngine(),getRoot().getEngine()->getPhysicsEngine()->m_tree, COLOUR_YELLOW_GREEN));
 
 	for(int i = 0; i < pCount; i++)
 	{

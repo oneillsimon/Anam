@@ -21,6 +21,7 @@ public:
 	void updateObjectReferences(std::vector<PhysicsObject*>& objects, Octree* octree, float delta);
 
 	PhysicsObject* getObject(unsigned int index) const;
+	std::vector<PhysicsObject*>* getObjects();
 };
 
 #endif

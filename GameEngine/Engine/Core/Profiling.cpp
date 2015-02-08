@@ -66,6 +66,7 @@ double ProfileTimer::displayAndReset(double inputDivisor)
 ProfileTimer ProfileTimers::inputTimer__("Input");
 ProfileTimer ProfileTimers::updateTimer_("Update");
 ProfileTimer ProfileTimers::physicsTimer("Physics");
+ProfileTimer ProfileTimers::physRefTimer(" >Phys Ref Update");
 ProfileTimer ProfileTimers::renderTimer_("Render Total");
 ProfileTimer ProfileTimers::rnderGeneral(" >General");
 ProfileTimer ProfileTimers::lightTimer__(" >Active Light");

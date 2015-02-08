@@ -1,7 +1,8 @@
 #include "OctreeRenderer.h"
 
-OctreeRenderer::OctreeRenderer(Octree* tree, const Colour& colour) :
+OctreeRenderer::OctreeRenderer(PhysicsEngine* engine, Octree* tree, const Colour& colour) :
 ColliderRenderer(false, new ColliderBox(tree->m_max - tree->m_centre), colour),
+m_engine(engine),
 m_octree(tree)
 {
 }
@@ -16,11 +17,16 @@ void OctreeRenderer::initialise()
 			{
 				for(int z = 0; z < 2; z++)
 				{
-					m_parent->addComponent(new OctreeRenderer(m_octree->m_children[x][y][z], m_defaultColour));
+					m_parent->addComponent(new OctreeRenderer(m_engine, m_octree->m_children[x][y][z], m_defaultColour));
 				}
 			}
 		}
 	}
+}
+
+void OctreeRenderer::update(float delta)
+{
+	//m_engine->updateObjectReferences(*m_engine->getObjects(), m_octree, delta);
 }
 
 void OctreeRenderer::render(const Shader& shader, const  RenderingEngine& renderingEngine, const Camera& camera) const

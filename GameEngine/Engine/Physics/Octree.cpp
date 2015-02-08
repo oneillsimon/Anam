@@ -1,4 +1,5 @@
 #include "Octree.h"
+#include "../Core/Profiling.h"""
 
 std::vector<Partition> Octree::partitions = std::vector<Partition>();
 
@@ -146,6 +147,15 @@ void Octree::remove(PhysicsObject* object, const Vector3& position)
 	}
 }
 
+bool Octree::isInside(const Vector3& point, Octree* octree)
+{
+	Vector3 min = octree->m_min;
+	Vector3 max = octree->m_max;
+
+	return ((point[0] >= min[0] && point[0] <= max[0]) &&
+			(point[1] >= min[1] && point[1] <= max[1]) &&
+			(point[2] >= min[2] && point[2] <= max[2]));
+}
 
 Octree::Octree(const Vector3& min, const Vector3& max, int depth)
 {
@@ -190,7 +200,10 @@ void Octree::add(PhysicsObject* object)
 	}
 	else
 	{
-		m_objects.insert(object);
+		if(isInside(object->getTransform()->getPosition(), this))
+		{
+			m_objects.insert(object);
+		}
 	}
 }
 
@@ -201,11 +214,8 @@ void Octree::remove(PhysicsObject* object)
 
 void Octree::objectMoved(PhysicsObject* object, const Vector3& oldPosition)
 {
-	if(object->getTransform()->hasChanged())
-	{
-		remove(object, oldPosition);
-		add(object);
-	}
+	remove(object, oldPosition);
+	add(object);
 }
 
 void Octree::potentialCollisions()

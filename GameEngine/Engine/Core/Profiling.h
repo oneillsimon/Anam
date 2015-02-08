@@ -42,6 +42,7 @@ public:
 	static ProfileTimer swapBufTimer;
 	static ProfileTimer sleepTimer__;
 	static ProfileTimer physicsTimer;
+	static ProfileTimer physRefTimer;
 };
 
 #endif

@@ -20,7 +20,7 @@ public:
 	static std::vector<Partition> partitions;
 
 	const int MIN_OBJ_PER_OCTAN = 2;
-	const int MAX_OBJ_PER_OCTAN = 1;
+	const int MAX_OBJ_PER_OCTAN = 4;
 	const int MAX_OCTREE_DEPTH = 6;
 
 	Vector3 m_min;
@@ -45,6 +45,7 @@ public:
 	void remove(PhysicsObject* object);
 	void objectMoved(PhysicsObject* object, const Vector3& oldPosition);
 	void potentialCollisions();
+	bool isInside(const Vector3& point, Octree* octree);
 };
 
 #endif

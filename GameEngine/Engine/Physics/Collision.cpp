@@ -103,7 +103,7 @@ void CollisionTester::addCollisionImpulse(PhysicsObject& p0, PhysicsObject& p1, 
 		return;
 	}
 
-	float e = 10.0f;
+	float e = 0.0f;
 	float normDiv = (p0.getInverseMass() + p1.getInverseMass()) +
 		data.m_normal.dot(p0.getInverseInertiaTensor() * r0.cross(data.m_normal).cross(r0) +
 						  p1.getInverseInertiaTensor() * r1.cross(data.m_normal).cross(r1));

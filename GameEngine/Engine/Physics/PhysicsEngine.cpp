@@ -4,7 +4,7 @@
 
 PhysicsEngine::PhysicsEngine()
 {
-	int size = 50;
+	int size = 20;
 	m_tree = new Octree(Vector3(-size, -size, -size), Vector3(size, size, size), 1);
 }
 
@@ -41,4 +41,9 @@ void PhysicsEngine::updateObjectReferences(std::vector<PhysicsObject*>& objects,
 PhysicsObject* PhysicsEngine::getObject(unsigned int index) const
 {
 	return m_objects[index];
+}
+
+std::vector<PhysicsObject*>* PhysicsEngine::getObjects()
+{
+	return &m_objects;
 }

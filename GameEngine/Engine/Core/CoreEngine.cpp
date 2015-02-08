@@ -98,6 +98,7 @@ void CoreEngine::run()
 			totalRecordedTime += ProfileTimers::inputTimer__.displayAndReset((double)frames);
 			totalRecordedTime += ProfileTimers::updateTimer_.displayAndReset((double)frames);
 			totalRecordedTime += ProfileTimers::physicsTimer.displayAndReset((double)frames);
+								 ProfileTimers::physRefTimer.displayAndReset((double)frames);
 			totalRecordedTime += ProfileTimers::renderTimer_.displayAndReset((double)frames);
 								 ProfileTimers::rnderGeneral.displayAndReset((double)frames);
 								 ProfileTimers::lightTimer__.displayAndReset((double)frames);
