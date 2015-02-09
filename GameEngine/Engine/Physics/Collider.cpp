@@ -2,6 +2,11 @@
 #include "Collision.h"
 #include <iostream>
 
+Vector3 Collider::getAxis(unsigned index) const
+{
+	return m_parent->getTransform()->getTransformation().getAxisVector(index);
+}
+
 void Collider::collide(PhysicsObject& p1, CollisionData_& data)
 {
 	if(m_isColliding)

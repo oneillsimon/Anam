@@ -29,6 +29,8 @@ public:
 	bool m_isColliding;
 
 	virtual void collide(PhysicsObject& p1, CollisionData_& data);
+
+	Vector3 getAxis(unsigned index) const;
 };
 
 class ColliderSphere : public Collider

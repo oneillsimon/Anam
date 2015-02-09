@@ -106,6 +106,11 @@ Vector3 Vector3::absolute()
 	return Vector3(abs(x), abs(y), abs(z));
 }
 
+float Vector3::scalarProduct(const Vector3& vector) const
+{
+	return x * vector.getX() + y * vector.getY() + z * vector.getZ();
+}
+
 float Vector3::getX() const
 {
 	return x;

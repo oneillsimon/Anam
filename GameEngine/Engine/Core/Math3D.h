@@ -85,6 +85,7 @@ public:
 	Vector3 reflect(const Vector3& normal) const;
 	Vector3 lerp(const Vector3& destination, float lerpFactor) const;
 	Vector3 absolute();
+	float scalarProduct(const Vector3& vector) const;
 
 	float getX() const;
 	float getY() const;
@@ -170,6 +171,8 @@ public:
 	Matrix4 initRotation(const Vector3& forward, const Vector3& up);
 	Matrix4 initRotation(const Vector3& forward, const Vector3& up, const Vector3& right);
 	Vector3 transform(const Vector3& v) const;
+
+	Vector3 getAxisVector(unsigned int index) const;
 
 	float** getM();
 	float getAt(int x, int y) const;

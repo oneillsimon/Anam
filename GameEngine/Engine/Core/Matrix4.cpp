@@ -162,6 +162,11 @@ Vector3 Matrix4::transform(const Vector3& v) const
 	return res;
 }
 
+Vector3 Matrix4::getAxisVector(unsigned int index) const
+{
+	return Vector3(m[index][0], m[index][1], m[index][2]);
+}
+
 float** Matrix4::getM()
 {
 	float** res = (float**)m;

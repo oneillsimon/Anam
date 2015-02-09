@@ -1,4 +1,12 @@
+#include <assert.h>
+
 #include "Collision.h"
+
+static bool tryAxis(const ColliderBox& one, const ColliderBox& two, Vector3 axis, const Vector3& toCentre, unsigned index, float& smallestPenetration, unsigned &smallestCase);
+static float penetrationOnAxis(const ColliderBox& one, const ColliderBox& two, const Vector3 &axis, const Vector3 &toCentre);
+void fillPointFaceBoxBox(const ColliderBox& one, const ColliderBox& two, const Vector3 &toCentre, CollisionData_ *data, unsigned best, float pen);
+static Vector3 contactPoint(const Vector3 &pOne, const Vector3 &dOne, float oneSize, const Vector3 &pTwo, const Vector3 &dTwo, float twoSize, bool useOne);
+static float transformToAxis(const ColliderBox& box, const Vector3& axis);
 
 bool CollisionTester::sphereAndSphere(PhysicsObject& p0, PhysicsObject& p1, CollisionData_* data)
 {
@@ -45,42 +53,113 @@ bool CollisionTester::planeAndSphere(PhysicsObject& p0, PhysicsObject& p1, Colli
 	return true;
 }
 
+#define CHECK_OVERLAP(axis, index) \
+    if (!tryAxis(one, two, (axis), toCentre, (index), pen, best)) return 0;
+
 bool CollisionTester::boxAndBox(PhysicsObject& p0, PhysicsObject& p1, CollisionData_* data)
 {
-	ColliderBox& b0 = *(ColliderBox*)p0.getCollider();
-	ColliderBox& b1 = *(ColliderBox*)p1.getCollider();
+	ColliderBox& one = *(ColliderBox*)p0.getCollider();
+	ColliderBox& two = *(ColliderBox*)p1.getCollider();
 
-	float dist = abs(p0.getTransform()->getPosition().getX() - p1.getTransform()->getPosition().getX());
-	float sum = b0.m_halfSize.getX() + b1.m_halfSize.getX();
-	float smallDist = 0;
+	Vector3 toCentre = two.getAxis(3) - one.getAxis(3);
 
-	if(dist <= sum)
+	float pen = FLT_MAX;
+	unsigned best = 0xffffff;
+
+	CHECK_OVERLAP(one.getAxis(0), 0);
+	CHECK_OVERLAP(one.getAxis(1), 1);
+	CHECK_OVERLAP(one.getAxis(2), 2);
+
+	CHECK_OVERLAP(two.getAxis(0), 3);
+	CHECK_OVERLAP(two.getAxis(1), 4);
+	CHECK_OVERLAP(two.getAxis(2), 5);
+
+	unsigned bestSingleAxis = best;
+
+	CHECK_OVERLAP(one.getAxis(0) % two.getAxis(0), 6);
+	CHECK_OVERLAP(one.getAxis(0) % two.getAxis(1), 7);
+	CHECK_OVERLAP(one.getAxis(0) % two.getAxis(2), 8);
+	CHECK_OVERLAP(one.getAxis(1) % two.getAxis(0), 9);
+	CHECK_OVERLAP(one.getAxis(1) % two.getAxis(1), 10);
+	CHECK_OVERLAP(one.getAxis(1) % two.getAxis(2), 11);
+	CHECK_OVERLAP(one.getAxis(2) % two.getAxis(0), 12);
+	CHECK_OVERLAP(one.getAxis(2) % two.getAxis(1), 13);
+	CHECK_OVERLAP(one.getAxis(2) % two.getAxis(2), 14);
+
+	assert(best != 0xffffff);
+
+	if(best < 3)
 	{
-		dist = abs(p0.getTransform()->getPosition().getY() - p1.getTransform()->getPosition().getY());
-		sum = b0.m_halfSize.getY() + b1.m_halfSize.getY();
-		smallDist = dist;
+		fillPointFaceBoxBox(one, two, toCentre, data, best, pen);
 
-		if(dist <= sum)
+		return true;
+	}
+	else if(best < 6)
+	{
+		fillPointFaceBoxBox(two, one, toCentre * -1.0f, data, best - 3, pen);
+
+		return true;
+	}
+	else
+	{
+		best -= 6;
+		unsigned oneAxisIndex = best / 3;
+		unsigned twoAxisIndex = best % 3;
+		Vector3 oneAxis = one.getAxis(oneAxisIndex);
+		Vector3 twoAxis = two.getAxis(twoAxisIndex);
+		Vector3 axis = oneAxis % twoAxis;
+		axis = axis.normalised();
+
+		if(axis.scalarProduct(toCentre) > 0)
 		{
-			dist = abs(p0.getTransform()->getPosition().getZ() - p1.getTransform()->getPosition().getZ());
-			sum = b0.m_halfSize.getZ() + b1.m_halfSize.getZ();
-			smallDist = fminf(dist, smallDist);
+			axis = axis * -1.0f;
+		}
 
-			if(dist <= sum)
+		Vector3 ptOnOneEdge = one.m_halfSize;
+		Vector3 ptOnTwoEdge = two.m_halfSize;
+
+		for(unsigned i = 0; i < 3; i++)
+		{
+			if(i == oneAxisIndex)
 			{
-				Vector3 normal = p0.getTransform()->getPosition() - p1.getTransform()->getPosition();
-				smallDist = fminf(dist, smallDist);
+				ptOnOneEdge[i] = 0;
+			}
+			else if(one.getAxis(i).scalarProduct(axis) > 0)
+			{
+				ptOnOneEdge[i] = -ptOnOneEdge[i];
+			}
 
-				data->m_normal = normal.normalised();
-				data->m_penetration = smallDist;
-				data->m_point = normal * b0.m_halfSize * 0.5f;//.length();// +p0.getTransform()->getPosition();
-
-				return true;
+			if(i == twoAxisIndex)
+			{
+				ptOnTwoEdge[i] = 0;
+			}
+			else if(two.getAxis(i).scalarProduct(axis) < 0)
+			{
+				ptOnTwoEdge[i] = -ptOnTwoEdge[i];
 			}
 		}
+
+		ptOnOneEdge = one.m_parent->getTransform()->getTransformation() * ptOnOneEdge;
+		ptOnTwoEdge = two.m_parent->getTransform()->getTransformation() * ptOnTwoEdge;
+
+		Vector3 vertex = contactPoint(ptOnOneEdge,
+			oneAxis,
+			one.m_halfSize[oneAxisIndex],
+			ptOnTwoEdge,
+			twoAxis,
+			two.m_halfSize[twoAxisIndex],
+			bestSingleAxis > 2);
+
+		data->m_penetration = pen;
+		data->m_normal = axis;
+		data->m_point = vertex;
+
+		return true;
 	}
+
 	return false;
 }
+#undef CHECK_OVERLAP
 
 float getProjectedRadius(const ColliderOBB& o, const Vector3& d)
 {
@@ -277,10 +356,11 @@ void CollisionTester::addCollisionImpulse(PhysicsObject& p0, PhysicsObject& p1, 
 	}
 
 	//float e = 0.0f;
-	float e = 0.0f;//random(0, 5);
+	float e = 1.0f;//random(0, 5);
 	float normDiv = (p0.getInverseMass() + p1.getInverseMass()) +
-		data.m_normal.dot(p0.getInverseInertiaTensor() * r0.cross(data.m_normal).cross(r0) +
-						  p1.getInverseInertiaTensor() * r1.cross(data.m_normal).cross(r1));
+					 data.m_normal.dot(p0.getInverseInertiaTensor() * r0.cross(data.m_normal).cross(r0) +
+				     p1.getInverseInertiaTensor() * r1.cross(data.m_normal).cross(r1));
+
 	float jn = -1 * (1 + e) * dv.dot(data.m_normal) / normDiv;
 	jn = jn + (data.m_penetration * 0.01f);
 
@@ -288,7 +368,7 @@ void CollisionTester::addCollisionImpulse(PhysicsObject& p0, PhysicsObject& p1, 
 	Vector3 l1 = p1.getLinearVelocity() - data.m_normal * (jn * p1.getInverseMass());
 	p0.setLinearVelocity(l0);
 	p1.setLinearVelocity(l1);
-
+	
 	Vector3 a0 = p0.getAngularVelocity() + p0.getInverseInertiaTensor() * r0.cross(data.m_normal * jn);
 	Vector3 a1 = p1.getAngularVelocity() - p1.getInverseInertiaTensor() * r1.cross(data.m_normal * jn);
 	p0.setAngularVelocity(a0);
@@ -313,4 +393,117 @@ void CollisionTester::addCollisionImpulse(PhysicsObject& p0, PhysicsObject& p1, 
 	Vector3 a1_ = p1.getAngularVelocity() - p1.getInverseInertiaTensor() * r1.cross(tangent * jt);
 	p0.setAngularVelocity(a0_);
 	p1.setAngularVelocity(a1_);
+}
+
+static bool tryAxis(const ColliderBox& one, const ColliderBox& two, Vector3 axis, const Vector3& toCentre, unsigned index, float& smallestPenetration, unsigned &smallestCase)
+{
+	if(axis.squareLength() < 0.0001)
+	{
+		return true;
+	}
+
+	axis = axis.normalised();
+
+	float penetration = penetrationOnAxis(one, two, axis, toCentre);
+
+	if(penetration < 0)
+	{
+		return false;
+	}
+
+	if(penetration < smallestPenetration)
+	{
+		smallestPenetration = penetration;
+		smallestCase = index;
+	}
+
+	return true;
+}
+
+static float penetrationOnAxis(const ColliderBox& one, const ColliderBox& two, const Vector3 &axis, const Vector3 &toCentre)
+{
+	float oneProject = transformToAxis(one, axis);
+	float twoProject = transformToAxis(two, axis);
+
+	float distance = fabsf(toCentre.scalarProduct(axis));
+
+	return oneProject + twoProject - distance;
+}
+
+void fillPointFaceBoxBox(const ColliderBox& one, const ColliderBox& two, const Vector3 &toCentre, CollisionData_ *data, unsigned best, float pen)
+{
+	Vector3 normal = one.getAxis(best);
+
+	if(one.getAxis(best).scalarProduct(toCentre) > 0)
+	{
+		normal = normal * -1.0f;
+	}
+
+	Vector3 vertex = two.m_halfSize;
+
+	if(two.getAxis(0).scalarProduct(normal) < 0)
+	{
+		vertex.setX(-vertex.getX());
+	}
+
+	if(two.getAxis(1).scalarProduct(normal) < 0)
+	{
+		vertex.setY(-vertex.getY());
+	}
+
+	if(two.getAxis(2).scalarProduct(normal) < 0)
+	{
+		vertex.setZ(-vertex.getZ());
+	}
+
+	data->m_normal = normal;
+	data->m_penetration = pen;
+	data->m_point = two.m_parent->getTransform()->getTransformation() * normal;
+}
+
+static Vector3 contactPoint(const Vector3 &pOne, const Vector3 &dOne, float oneSize, const Vector3 &pTwo, const Vector3 &dTwo, float twoSize, bool useOne)
+{
+	Vector3 toSt, cOne, cTwo;
+	float dpStaOne, dpStaTwo, dpOneTwo, smOne, smTwo;
+	float denom, mua, mub;
+
+	smOne = dOne.squareLength();
+	smTwo = dTwo.squareLength();
+	dpOneTwo = dTwo.scalarProduct(dOne);
+
+	toSt = pOne - pTwo;
+	dpStaOne = dOne.scalarProduct(toSt);
+	dpStaTwo = dTwo.scalarProduct(toSt);
+
+	denom = smOne * smTwo - dpOneTwo * dpOneTwo;
+
+	if(fabsf(denom) < 0.0001f)
+	{
+		return useOne ? pOne : pTwo;
+	}
+
+	mua = (dpOneTwo * dpStaTwo - smTwo * dpStaOne) / denom;
+	mub = (smOne * dpStaTwo - dpOneTwo * dpStaOne) / denom;
+
+	if(mua > oneSize ||
+	   mua < -oneSize ||
+	   mub > twoSize ||
+	   mub < -twoSize)
+	{
+		return useOne ? pOne : pTwo;
+	}
+	else
+	{
+		cOne = pOne + dOne * mua;
+		cTwo = pTwo + dTwo * mub;
+
+		return cOne * 0.5 + cTwo * 0.5;
+	}
+}
+
+static float transformToAxis(const ColliderBox& box, const Vector3& axis)
+{
+	return box.m_halfSize.getX() * fabsf(axis.scalarProduct(box.getAxis(0))) +
+		   box.m_halfSize.getY() * fabsf(axis.scalarProduct(box.getAxis(1))) +
+		   box.m_halfSize.getZ() * fabsf(axis.scalarProduct(box.getAxis(2)));
 }
