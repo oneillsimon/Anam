@@ -6,11 +6,16 @@
 #include "../Core/Profiling.h"
 #include "Octree.h"
 #include "PhysicsObject.h"
+#include "Collision.h"
 
 class PhysicsEngine
 {
 private:
 	std::vector<PhysicsObject*> m_objects;
+	
+	CollisionData cData;
+	ContactResolver resolver;
+	Contact contacts[256];
 
 public:
 	Octree* m_tree;

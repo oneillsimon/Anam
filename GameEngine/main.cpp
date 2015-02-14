@@ -75,16 +75,16 @@ void CollisionDemo::initialise(const Window& window)
 
 			PhysicsObject* pObj3 = new PhysicsObject(v);
 			Vector3 ss = Vector3(1, 1, 1) * 1;
-			pObj3->setCollider(new ColliderBox(ss));
+			//pObj3->setCollider(new ColliderBox(ss));
 			//pObj3->getTransform()->rotate(Quaternion(AXIS_Z, toRadians(45)));
 			pObj3->getTransform()->getPosition().setX(-0.0f);
-			pObj3->getTransform()->getPosition().setZ(0.1f);
+			pObj3->getTransform()->getPosition().setZ(0.0f);
 		//	pObj3->getTransform()->getPosition().setY(-8.5f);
 			pObj3->addComponent(new ColliderRenderer(false, pObj3->getCollider(), COLOUR_FIREBRICK));
 			pObj3->addComponent(new FreeMove(10, Input::KEY_UP, Input::KEY_DOWN, Input::KEY_LEFT, Input::KEY_RIGHT));
 			pObj3->addComponent(new Movement2D(10, Input::KEY_O, Input::KEY_P, -1, -1));
 			pObj3->addComponent(new RigidBodyComponent(pObj3));
-			pObj3->setMass(100);
+			//pObj3->setMass(100);
 			addToScene2(pObj3);
 		}
 		y += spacing;
@@ -93,19 +93,19 @@ void CollisionDemo::initialise(const Window& window)
 	for(int i = 0; i < 1; i++)
 	{
 		PhysicsObject* testObj = new PhysicsObject(Vector3(-1.5f, -5, -1.5f));
-		testObj->setCollider(new ColliderSphere(10));
-		testObj->setMass(10);
-		testObj->addComponent(new ColliderRenderer(false, testObj->getCollider(), COLOUR_RED));
+		//testObj->setCollider(new ColliderSphere(10));
+		//testObj->setMass(10);
+		//testObj->addComponent(new ColliderRenderer(false, testObj->getCollider(), COLOUR_GREEN));
 		//addToScene2(testObj);
 	}
 
 	PhysicsObject* plane = new PhysicsObject(Vector3(0.0f, -12, 0));
 	float s = 2;
 	float h = s / 2.0f;
-	plane->getTransform()->setScale(1);
-	plane->setCollider(new ColliderBox(Vector3(s, s, s)));
-	plane->setMass(100000000);
-	plane->addComponent(new ColliderRenderer(true, plane->getCollider(), COLOUR_FIREBRICK));
+	//plane->getCollider()->m_body->setMass(1000000000);
+	//plane->setCollider(new ColliderBox(Vector3(s, s, s)));
+	//plane->setMass(100000000);
+	plane->addComponent(new ColliderRenderer(true, plane->getCollider(), COLOUR_GREEN));
 	addToScene2(plane);
 
 	int pCount = Octree::partitions.size();
@@ -141,8 +141,8 @@ void OctreeDemo::initialise(const Window& window)
 		float z = random(-m, m);
 
 		PhysicsObject* o = new PhysicsObject(Vector3(x, y, z));
-		o->setCollider(new ColliderSphere());
-		o->setMass(10);
+		//o->setCollider(new ColliderSphere());
+		//o->setMass(10);
 		if(i == 0)
 		{
 			o->addComponent(new FreeMove(10, Input::KEY_UP, Input::KEY_DOWN, Input::KEY_LEFT, Input::KEY_RIGHT));

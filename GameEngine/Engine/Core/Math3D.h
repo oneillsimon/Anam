@@ -171,8 +171,15 @@ public:
 	Matrix4 initRotation(const Vector3& forward, const Vector3& up);
 	Matrix4 initRotation(const Vector3& forward, const Vector3& up, const Vector3& right);
 	Vector3 transform(const Vector3& v) const;
+	float getDeterminant() const;
+	void setInverse(const Matrix4& m);
+	void setComponents(const Vector3& v1, const Vector3& v2, const Vector3& v3);
 
+	//From cyclone
 	Vector3 getAxisVector(unsigned int index) const;
+	Vector3 transformInverse(const Vector3& v) const;
+	Vector3 transformDirection(const Vector3& v) const;
+	Vector3 transformInverseDirection(const Vector3& v) const;
 
 	float** getM();
 	float getAt(int x, int y) const;
@@ -184,6 +191,44 @@ public:
 	Vector3 operator *(const Vector3& v) const;
 	float* operator [](int index) const { return m[index]; };
 };
+
+class Matrix3
+{
+private:
+	mutable float m[3][3];
+
+public:
+	Matrix3();
+	~Matrix3();
+
+	Matrix3 initIdentity();
+
+	Vector3 transform(const Vector3& v) const;
+	Vector3 transformTranspose(const Vector3& v) const;
+	void setInverse(const Matrix3& m);
+	Matrix3 inverse() const;
+	void setSkewSymmetric(const Vector3& v);
+	void setComponents(const Vector3& one, const Vector3& two, const Vector3& three);
+	void setTranspose(const Matrix3& m);
+	void setInertiaTensorCoeffs(float ix, float iy, float iz, float ixy = 0, float ixz = 0, float iyz = 0);
+	void setBlockInteriaTensor(const Vector3& halfSizes, float mass);
+	Matrix3 transpose() const;
+
+	float** getM();
+	float getAt(int x, int y) const;
+
+	void set(float** m);
+	void setAt(int x, int y, float value) const;
+
+	Vector3 operator *(const Vector3& v) const;
+	Matrix3 operator *(const Matrix3& m) const;
+	void operator +=(const Matrix3& m) const;
+	void operator *=(const Matrix3& m);
+	void operator *=(float f);
+
+	const float* operator [](int index) const { return m[index]; };
+};
+
 
 class Quaternion
 {

@@ -2,9 +2,10 @@
 #define COLLIDER_H
 
 #include "../Core/Math3D.h"
-#include "../Core/Transform.h"
+#include "RigidBody.h"
 
-class PhysicsObject;
+class CollisionData;
+class RigidBody;
 
 class Collider
 {
@@ -14,14 +15,13 @@ public:
 		SPHERE,
 		BOX,
 		PLANE,
-		OBB
 	};
 
 	int m_type;
-	PhysicsObject* m_parent;
+	RigidBody* m_body;
 	bool m_isColliding;
 
-	virtual void collide(PhysicsObject& p1, CollisionData_& data);
+	virtual void collide(Collider& collider, CollisionData& data) = 0;
 
 	Vector3 getAxis(unsigned index) const;
 };
@@ -32,7 +32,7 @@ public:
 	ColliderSphere(float radius = 1.0f);
 	float m_radius;
 
-	virtual void collide(PhysicsObject& p1, CollisionData_& data);
+	virtual void collide(Collider& collider, CollisionData& data);
 };
 
 class ColliderBox : public Collider
@@ -41,7 +41,7 @@ public:
 	ColliderBox(const Vector3& halfSize = Vector3(1, 1, 1));
 	Vector3 m_halfSize;
 
-	virtual void collide(PhysicsObject& p1, CollisionData_& data);
+	virtual void collide(Collider& collider, CollisionData& data);
 };
 
 class ColliderPlane : public Collider
@@ -51,16 +51,7 @@ public:
 	Vector3 m_normal;
 	float m_distance;
 
-	virtual void collide(PhysicsObject& p1, CollisionData_& data);
-};
-
-class ColliderOBB : public Collider
-{
-public:
-	ColliderOBB(const Vector3& halfExtents = Vector3(1, 1, 1));
-	Vector3 e;
-
-	virtual void collide(PhysicsObject& p1, CollisionData_& data);
+	virtual void collide(Collider& collider, CollisionData& data);
 };
 
 #endif

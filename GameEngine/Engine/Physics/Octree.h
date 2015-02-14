@@ -6,6 +6,7 @@
 
 #include "Collider.h"
 #include "PhysicsObject.h"
+#include "Collision.h"
 
 struct Partition
 {
@@ -44,7 +45,8 @@ public:
 	void add(PhysicsObject* object);
 	void remove(PhysicsObject* object);
 	void objectMoved(PhysicsObject* object, const Vector3& oldPosition);
-	void potentialCollisions();
+	void potentialCollisions(CollisionData* data);
+	void generateContacts(Collider& one, Collider& two, CollisionData* data);
 	bool isInside(const Vector3& point, Octree* octree);
 };
 

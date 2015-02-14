@@ -2,10 +2,13 @@
 
 #include "PhysicsEngine.h"
 
-PhysicsEngine::PhysicsEngine()
+PhysicsEngine::PhysicsEngine() :
+resolver(256)
 {
 	int size = 20;
 	m_tree = new Octree(Vector3(-size, -size, -size), Vector3(size, size, size), 1);
+
+	cData.m_contactArray = contacts;
 }
 
 void PhysicsEngine::addObject(PhysicsObject* object)
@@ -23,7 +26,9 @@ void PhysicsEngine::simulate(float delta)
 
 	ProfileTimers::physicsTimer.startInvocation();
 	updateObjectReferences(m_objects, m_tree, delta);
-	m_tree->potentialCollisions();
+	m_tree->potentialCollisions(&cData);
+	resolver.resolveContacts(cData.m_contactArray, cData.m_contactCount, delta);
+	//cData.reset(256);
 	ProfileTimers::physicsTimer.stopInvocation();
 }
 

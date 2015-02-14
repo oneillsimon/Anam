@@ -218,7 +218,7 @@ void Octree::objectMoved(PhysicsObject* object, const Vector3& oldPosition)
 	add(object);
 }
 
-void Octree::potentialCollisions()
+void Octree::potentialCollisions(CollisionData* data)
 {
 	if(m_hasChildren)
 	{
@@ -228,7 +228,7 @@ void Octree::potentialCollisions()
 			{
 				for(int z = 0; z < 2; z++)
 				{
-					m_children[x][y][z]->potentialCollisions();
+					m_children[x][y][z]->potentialCollisions(data);
 				}
 			}
 		}
@@ -245,10 +245,19 @@ void Octree::potentialCollisions()
 
 				if(p1 < p2)
 				{
-					CollisionData_ data;
-					p1->getCollider()->collide(*p2, data);
+					generateContacts(*p1->getCollider(), *p2->getCollider(), data);
 				}
 			}
 		}
 	}
+}
+
+void Octree::generateContacts(Collider& one, Collider& two, CollisionData* data)
+{
+	data->reset(256);
+	data->m_friction = 1.9f;
+	data->m_restitution = 0.0f;
+	data->m_tolerance = 0.1f;
+
+	one.collide(two, *data);
 }

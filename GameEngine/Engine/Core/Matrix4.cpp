@@ -162,6 +162,99 @@ Vector3 Matrix4::transform(const Vector3& v) const
 	return res;
 }
 
+float Matrix4::getDeterminant() const
+{
+	return -m[0][2] * m[1][1] * m[2][0] +
+			m[0][1] * m[1][2] * m[2][0] +
+			m[0][2] * m[1][0] * m[2][1] -
+			m[0][0] * m[1][2] * m[2][1] -
+			m[0][1] * m[1][0] * m[2][2] +
+			m[0][0] * m[1][1] * m[2][2];
+}
+
+void Matrix4::setInverse(const Matrix4& matrix)
+{
+	float d = getDeterminant();
+
+	if(d == 0.0f)
+	{
+		return;
+	}
+
+	d = 1.0f / d;
+
+	m[0][0] = (-matrix.m[1][2] * matrix.m[2][1] + matrix.m[1][1] * matrix.m[2][2]) * d;
+	m[0][1] = (+matrix.m[0][2] * matrix.m[2][1] - matrix.m[0][1] * matrix.m[2][2]) * d;
+	m[0][2] = (-matrix.m[0][2] * matrix.m[1][1] + matrix.m[0][1] * matrix.m[1][2]) * d;
+
+	m[1][0] = (+matrix.m[1][2] * matrix.m[2][0] - matrix.m[1][0] * matrix.m[2][2]) * d;
+	m[1][1] = (-matrix.m[0][2] * matrix.m[2][0] + matrix.m[0][0] * matrix.m[2][2]) * d;
+	m[1][2] = (+matrix.m[0][2] * matrix.m[1][0] - matrix.m[0][0] * matrix.m[1][2]) * d;
+
+	m[2][0] = (-matrix.m[1][1] * matrix.m[2][0] + matrix.m[1][0] * matrix.m[2][1]) * d;
+	m[2][1] = (+matrix.m[0][1] * matrix.m[2][0] - matrix.m[0][0] * matrix.m[2][1]) * d;
+	m[2][2] = (-matrix.m[0][1] * matrix.m[1][0] + matrix.m[0][0] * matrix.m[1][1]) * d;
+
+	m[3][0] = (matrix.m[1][2] * matrix.m[2][1] * matrix.m[3][0] -
+		matrix.m[1][1] * matrix.m[2][2] * matrix.m[3][0] -
+		matrix.m[1][2] * matrix.m[2][0] * matrix.m[3][1] +
+		matrix.m[1][0] * matrix.m[2][2] * matrix.m[3][1] +
+		matrix.m[1][1] * matrix.m[2][0] * matrix.m[3][2]) * d;
+
+	m[3][1] = (-matrix.m[0][2] * matrix.m[2][1] * matrix.m[3][0] +
+		matrix.m[0][1] * matrix.m[2][2] * matrix.m[3][0] +
+		matrix.m[0][2] * matrix.m[2][0] * matrix.m[3][1] -
+		matrix.m[0][0] * matrix.m[2][2] * matrix.m[3][1] -
+		matrix.m[0][1] * matrix.m[2][0] * matrix.m[3][2] +
+		matrix.m[0][0] * matrix.m[2][1] * matrix.m[3][2]) * d;
+
+	m[3][2] = (matrix.m[0][2] * matrix.m[1][1] * matrix.m[3][0] -
+		matrix.m[0][1] * matrix.m[1][2] * matrix.m[3][0] -
+		matrix.m[0][2] * matrix.m[1][0] * matrix.m[3][1] +
+		matrix.m[0][0] * matrix.m[1][2] * matrix.m[3][1] +
+		matrix.m[0][1] * matrix.m[1][0] * matrix.m[3][2] -
+		matrix.m[0][0] * matrix.m[1][1] * matrix.m[3][2]) * d;
+}
+
+Vector3 Matrix4::transformDirection(const Vector3& v) const
+{
+	float x = v.getX() * m[0][0] + v.getY() * m[1][0] * v.getZ() * m[2][0];
+	float y = v.getX() * m[0][1] + v.getY() * m[1][1] * v.getZ() * m[2][1];
+	float z = v.getX() * m[0][2] + v.getY() * m[1][2] * v.getZ() * m[2][2];
+
+	return Vector3(x, y, z);
+}
+
+Vector3 Matrix4::transformInverseDirection(const Vector3& v) const
+{
+	float x = v.getX() * m[0][0] + v.getY() * m[0][1] * v.getZ() * m[0][2];
+	float y = v.getX() * m[1][0] + v.getY() * m[1][1] * v.getZ() * m[1][2];
+	float z = v.getX() * m[2][0] + v.getY() * m[2][1] * v.getZ() * m[2][2];
+
+	return Vector3(x, y, z);
+}
+
+void Matrix4::setComponents(const Vector3& v1, const Vector3& v2, const Vector3& v3)
+{
+	m[0][0] = v1.getX(); m[1][0] = v1.getY(); m[2][0] = v1.getZ();
+	m[0][1] = v2.getX(); m[1][1] = v2.getY(); m[2][1] = v2.getZ();
+	m[0][2] = v3.getX(); m[1][2] = v3.getY(); m[2][2] = v3.getZ();
+}
+
+Vector3 Matrix4::transformInverse(const Vector3& v) const
+{
+	Vector3 temp = v;
+	temp.setX(temp.getX() - m[3][0]);
+	temp.setY(temp.getY() - m[3][1]);
+	temp.setZ(temp.getZ() - m[3][2]);
+
+	float x_ = temp.getX() * m[0][0] + temp.getY() * m[0][1] + temp.getZ() * m[0][2];
+	float y_ = temp.getX() * m[1][0] + temp.getY() * m[1][1] + temp.getZ() * m[1][2];
+	float z_ = temp.getX() * m[2][0] + temp.getY() * m[2][1] + temp.getZ() * m[2][2];
+
+	return Vector3(x_, y_, z_);
+}
+
 Vector3 Matrix4::getAxisVector(unsigned int index) const
 {
 	return Vector3(m[index][0], m[index][1], m[index][2]);

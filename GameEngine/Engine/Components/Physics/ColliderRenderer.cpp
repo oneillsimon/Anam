@@ -29,7 +29,7 @@ void ColliderRenderer::render(const Shader& shader, const  RenderingEngine& rend
 		ColliderBox& b = *(ColliderBox*)m_collider;
 
 		t.setScale(b.m_halfSize);
-		t.setRotation(b.m_parent->getTransform()->getRotation());
+		t.setRotation(b.m_body->m_parent->getTransform()->getRotation());
 	}
 	else if(m_collider->m_type == Collider::SPHERE)
 	{
@@ -37,6 +37,7 @@ void ColliderRenderer::render(const Shader& shader, const  RenderingEngine& rend
 
 		t.setScale(s.m_radius);
 		t.setRotation(Quaternion());
+		//t.setRotation(s.m_body->m_parent->getTransform()->getRotation());
 	}
 
 	m_mesh.getWireFrameShader().bind();
@@ -51,9 +52,6 @@ std::string ColliderRenderer::getMeshFromCollider(int type)
 	{
 	case Collider::SPHERE:
 		return "sphere.obj";
-		break;
-	case Collider::OBB:
-		return "cube.obj";
 		break;
 	case Collider::BOX:
 		return "cube.obj";
