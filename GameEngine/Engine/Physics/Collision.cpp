@@ -21,6 +21,8 @@ bool CollisionTester::sphereAndSphere(PhysicsObject& p0, PhysicsObject& p1, Coll
 	{
 		if(data)
 		{
+			data->body[0] = &p0;
+			data->body[1] = &p1;
 			data->m_penetration = radii - sqrtf(distSq);
 			normal = normal.normalised();
 			data->m_normal = normal;
@@ -45,6 +47,8 @@ bool CollisionTester::planeAndSphere(PhysicsObject& p0, PhysicsObject& p1, Colli
 
 	if(data)
 	{
+		data->body[0] = &p0;
+		data->body[1] = &p1;
 		data->m_penetration = sphere.m_radius - seperation;
 		data->m_normal = plane.m_normal * -1.0f;
 		data->m_point = p1.getTransform()->getPosition() - plane.m_normal * seperation;
@@ -92,11 +96,17 @@ bool CollisionTester::boxAndBox(PhysicsObject& p0, PhysicsObject& p1, CollisionD
 	{
 		fillPointFaceBoxBox(one, two, toCentre, data, best, pen);
 
+		data->body[0] = &p0;
+		data->body[1] = &p1;
+
 		return true;
 	}
 	else if(best < 6)
 	{
 		fillPointFaceBoxBox(two, one, toCentre * -1.0f, data, best - 3, pen);
+
+		data->body[0] = &p0;
+		data->body[1] = &p1;
 
 		return true;
 	}
@@ -143,13 +153,15 @@ bool CollisionTester::boxAndBox(PhysicsObject& p0, PhysicsObject& p1, CollisionD
 		ptOnTwoEdge = two.m_parent->getTransform()->getTransformation() * ptOnTwoEdge;
 
 		Vector3 vertex = contactPoint(ptOnOneEdge,
-			oneAxis,
-			one.m_halfSize[oneAxisIndex],
-			ptOnTwoEdge,
-			twoAxis,
-			two.m_halfSize[twoAxisIndex],
-			bestSingleAxis > 2);
+									  oneAxis,
+									  one.m_halfSize[oneAxisIndex],
+									  ptOnTwoEdge,
+									  twoAxis,
+									  two.m_halfSize[twoAxisIndex],
+									  bestSingleAxis > 2);
 
+		data->body[0] = &p0;
+		data->body[1] = &p1;
 		data->m_penetration = pen;
 		data->m_normal = axis;
 		data->m_point = vertex;
@@ -355,8 +367,8 @@ void CollisionTester::addCollisionImpulse(PhysicsObject& p0, PhysicsObject& p1, 
 		return;
 	}
 
-	//float e = 0.0f;
-	float e = 1.0f;//random(0, 5);
+	float e = 0.0f;
+	//float e = random(0, 5);
 	float normDiv = (p0.getInverseMass() + p1.getInverseMass()) +
 					 data.m_normal.dot(p0.getInverseInertiaTensor() * r0.cross(data.m_normal).cross(r0) +
 				     p1.getInverseInertiaTensor() * r1.cross(data.m_normal).cross(r1));
@@ -369,6 +381,9 @@ void CollisionTester::addCollisionImpulse(PhysicsObject& p0, PhysicsObject& p1, 
 	p0.setLinearVelocity(l0);
 	p1.setLinearVelocity(l1);
 	
+	//Vector3 a0 = p0.getAngularVelocity() + p0.getInverseInertiaTensor() * r0.cross(data.m_normal * jn);
+	//Vector3 a1 = p1.getAngularVelocity() - p1.getInverseInertiaTensor() * r1.cross(data.m_normal * jn);
+
 	Vector3 a0 = p0.getAngularVelocity() + p0.getInverseInertiaTensor() * r0.cross(data.m_normal * jn);
 	Vector3 a1 = p1.getAngularVelocity() - p1.getInverseInertiaTensor() * r1.cross(data.m_normal * jn);
 	p0.setAngularVelocity(a0);
@@ -439,7 +454,16 @@ void fillPointFaceBoxBox(const ColliderBox& one, const ColliderBox& two, const V
 		normal = normal * -1.0f;
 	}
 
-	Vector3 vertex = two.m_halfSize;
+	//Vector3 v = (two.m_halfSize * toCentre).absolute() / (two.m_halfSize + one.m_halfSize);
+	//Vector3 vertex = Vector3(0, 1.99478531, 1.0f) / 2.0f;//two.m_halfSize * 2.0f * toCentre / 1.0f;
+	//Vector3 vertex = (two.m_halfSize * normal).absolute() / 1.0f;//(two.m_halfSize + one.m_halfSize);
+	Vector3 v1 = one.m_parent->getTransform()->getPosition();// + one.m_halfSize;
+	Vector3 v2 = two.m_parent->getTransform()->getPosition();// + two.m_halfSize;
+	Vector3 v3 = (two.m_halfSize * toCentre.normalised()).absolute();
+	Vector3 vertex = v3;// = -two.m_parent->getTransform()->getPosition() + two.m_halfSize;
+
+	//vertex = two.m_halfSize * vertex;
+	//vertex = vertex + (vertex  * normal);
 
 	if(two.getAxis(0).scalarProduct(normal) < 0)
 	{
@@ -458,7 +482,7 @@ void fillPointFaceBoxBox(const ColliderBox& one, const ColliderBox& two, const V
 
 	data->m_normal = normal;
 	data->m_penetration = pen;
-	data->m_point = two.m_parent->getTransform()->getTransformation() * normal;
+	data->m_point = two.m_parent->getTransform()->getTransformation() * vertex;
 }
 
 static Vector3 contactPoint(const Vector3 &pOne, const Vector3 &dOne, float oneSize, const Vector3 &pTwo, const Vector3 &dTwo, float twoSize, bool useOne)
@@ -506,4 +530,121 @@ static float transformToAxis(const ColliderBox& box, const Vector3& axis)
 	return box.m_halfSize.getX() * fabsf(axis.scalarProduct(box.getAxis(0))) +
 		   box.m_halfSize.getY() * fabsf(axis.scalarProduct(box.getAxis(1))) +
 		   box.m_halfSize.getZ() * fabsf(axis.scalarProduct(box.getAxis(2)));
+}
+
+ContactResolver::ContactResolver(unsigned iterations, float velocityEpsilon, float positionEpsilon)
+{
+	setIterations(iterations, iterations);
+	setEpsilon(velocityEpsilon, positionEpsilon);
+}
+
+ContactResolver::ContactResolver(unsigned velocityIterations, unsigned positionIterations,
+								 float velocityEpsilon, float positionEpsilon)
+{
+	setIterations(velocityIterations, positionIterations);
+	setEpsilon(velocityEpsilon, positionEpsilon);
+}
+
+void ContactResolver::setIterations(unsigned iterations)
+{
+	setIterations(iterations, iterations);
+}
+
+void ContactResolver::setIterations(unsigned velcoityIterations, unsigned positionIterations)
+{
+	m_velocityIterations = velcoityIterations;
+	m_positionIterations = positionIterations;
+}
+
+void ContactResolver::setEpsilon(float velocityEpsilon, float positionEpsilon)
+{
+	m_velocityEpsilon = velocityEpsilon;
+	m_positionEpsilon = positionEpsilon;
+}
+
+void ContactResolver::resolveContacts(CollisionData_* data, unsigned numContacts, float delta)
+{
+	if(!isValid())
+	{
+		return;
+	}
+
+	prepareContacts(data, numContacts, delta);
+	adjustPositions(data, numContacts, delta);
+	adjustVelocities(data, numContacts, delta);
+}
+
+void ContactResolver::prepareContacts(CollisionData_* data, unsigned numContacts, float delta)
+{
+	//!!data->calculateInternals(delta);
+}
+
+void ContactResolver::adjustVelocities(CollisionData_* data, unsigned numContacts, float delta)
+{
+	Vector3 velocityChange[2], rotationChange[2];
+	Vector3 deltaVelocity;
+	velocityIterationsUsed = 0;
+
+	while(velocityIterationsUsed < m_velocityIterations)
+	{
+		float max = m_velocityEpsilon;
+
+		if(data->desiredDeltaVelocity > max)
+		{
+			max = data->desiredDeltaVecolity;
+		}
+
+		data->applyVelocityChange(velocityChange, rotationChange);
+
+		for(unsigned b = 0; b < 2; b++)
+		{
+			for(unsigned d = 0; d < 2; d++)
+			{
+				if(data->body[b] == data->body[d])
+				{
+					deltaVelocity = velocityChange[d] + (rotationChange[d] * data->relativeContactPosition[b]);
+
+					data->contactVelocity += data->contactToWorld.transformTranspose(deltaVelocity) * (b ? -1 : 1);
+					data->calculateDesiredDeltaVelocity(delta);
+				}
+			}
+		}
+		velocityIterationsUsed++;
+	}
+}
+
+void ContactResolver::adjustPositions(CollisionData_* data, unsigned numContacts, float delta)
+{
+	unsigned i, index;
+	Vector3 linearChange[2], angularChange[2];
+	float max;
+	Vector3 deltaPosition;
+
+	positionIterationsUsed = 0;
+
+	while(positionIterationsUsed < m_positionIterations)
+	{
+		max = m_positionEpsilon;
+
+		if(data->m_penetration > max)
+		{
+			max = data->m_penetration;
+		}
+
+		data->applyPositionChange(linearChange, angularChange, max);
+
+		for(unsigned b = 0; b < 2; b++)
+		{
+			for(unsigned d = 0; d < 2; d++)
+			{
+				if(data->body[b] == data->body[d])
+				{
+					deltaPosition = linearChange[d] + (angularChange[d] * data->relativeContactPosition[2]);
+					data->m_penetration += deltaPosition.scalarProduct(data->m_normal * (b ? 1 : -1);
+				}
+			}
+		}
+
+		positionIterationsUsed++;
+	}
 }

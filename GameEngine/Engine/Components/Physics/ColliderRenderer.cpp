@@ -1,3 +1,4 @@
+#include "../../Physics/PhysicsObject.h"
 #include "ColliderRenderer.h"
 
 ColliderRenderer::ColliderRenderer(bool isPhysX, Collider* collider, const Colour& defaultColour, const Colour& collidingColour) :
@@ -21,15 +22,21 @@ void ColliderRenderer::render(const Shader& shader, const  RenderingEngine& rend
 {
 	Colour c = m_defaultColour;
 
-	Transform t;
+	Transform t = getTransform();
 
-	if(m_isPhysX)
+	if(m_collider->m_type == Collider::BOX)
 	{
-		t = getTransform();//Transform(m_collider->m_owner->getPosition(), m_collider->m_owner->getRotation(), m_collider->getExtents().getX());
+		ColliderBox& b = *(ColliderBox*)m_collider;
+
+		t.setScale(b.m_halfSize);
+		t.setRotation(b.m_parent->getTransform()->getRotation());
 	}
-	else
+	else if(m_collider->m_type == Collider::SPHERE)
 	{
-		t = getTransform();
+		ColliderSphere& s = *(ColliderSphere*)m_collider;
+
+		t.setScale(s.m_radius);
+		t.setRotation(Quaternion());
 	}
 
 	m_mesh.getWireFrameShader().bind();

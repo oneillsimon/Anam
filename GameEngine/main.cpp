@@ -60,7 +60,7 @@ void CollisionDemo::initialise(const Window& window)
 
 	for(int l = 0; l < 1; l++)
 	{
-		for(int i = 0; i < 4; i++)
+		for(int i = 0; i < 1; i++)
 		{
 			Vector3 v;
 
@@ -74,10 +74,11 @@ void CollisionDemo::initialise(const Window& window)
 				v = Vector3(-1.75f, y, 1.75f);
 
 			PhysicsObject* pObj3 = new PhysicsObject(v);
-			pObj3->setCollider(new ColliderBox());
+			Vector3 ss = Vector3(1, 1, 1) * 1;
+			pObj3->setCollider(new ColliderBox(ss));
 			//pObj3->getTransform()->rotate(Quaternion(AXIS_Z, toRadians(45)));
-			//pObj3->getTransform()->getPosition().setX(0.0f);
-			//pObj3->getTransform()->getPosition().setZ(0);
+			pObj3->getTransform()->getPosition().setX(-0.0f);
+			pObj3->getTransform()->getPosition().setZ(0.1f);
 		//	pObj3->getTransform()->getPosition().setY(-8.5f);
 			pObj3->addComponent(new ColliderRenderer(false, pObj3->getCollider(), COLOUR_FIREBRICK));
 			pObj3->addComponent(new FreeMove(10, Input::KEY_UP, Input::KEY_DOWN, Input::KEY_LEFT, Input::KEY_RIGHT));
@@ -98,16 +99,18 @@ void CollisionDemo::initialise(const Window& window)
 		//addToScene2(testObj);
 	}
 
-	PhysicsObject* plane = new PhysicsObject(Vector3(0.0f, -8, 0));
+	PhysicsObject* plane = new PhysicsObject(Vector3(0.0f, -12, 0));
+	float s = 2;
+	float h = s / 2.0f;
 	plane->getTransform()->setScale(1);
-	plane->setCollider(new ColliderBox());
+	plane->setCollider(new ColliderBox(Vector3(s, s, s)));
 	plane->setMass(100000000);
 	plane->addComponent(new ColliderRenderer(true, plane->getCollider(), COLOUR_FIREBRICK));
 	addToScene2(plane);
 
 	int pCount = Octree::partitions.size();
 
-	//getRoot().addComponent(new OctreeRenderer(getRoot().getEngine()->getPhysicsEngine(),getRoot().getEngine()->getPhysicsEngine()->m_tree, COLOUR_YELLOW_GREEN));
+	getRoot().addComponent(new OctreeRenderer(getRoot().getEngine()->getPhysicsEngine(),getRoot().getEngine()->getPhysicsEngine()->m_tree, COLOUR_YELLOW_GREEN));
 
 	for(int i = 0; i < pCount; i++)
 	{
