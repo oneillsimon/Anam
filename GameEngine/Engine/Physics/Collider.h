@@ -6,14 +6,6 @@
 
 class PhysicsObject;
 
-struct CollisionData_
-{
-	PhysicsObject* body[2];
-	float m_penetration;
-	Vector3 m_normal;
-	Vector3 m_point;
-};
-
 class Collider
 {
 public:

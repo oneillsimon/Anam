@@ -3,6 +3,28 @@
 
 #include "PhysicsObject.h"
 
+struct CollisionData_
+{
+	PhysicsObject* body[2];
+	float m_penetration;
+	Vector3 m_normal;
+	Vector3 m_point;
+
+	float friction;
+	float restitution;
+
+	Matrix4 contactToWorld;
+	Vector3 contactVelocity;
+	float desiredDeltaVelocity;
+	Vector3 relativeContactPosition[2];
+
+	void calculateInterals(float delta);
+	void calculateDesiredDeltaVelocity();
+	void calculateContactBasis();
+
+	void applyImpulse(const Vector3& impulse)
+};
+
 class CollisionTester
 {
 public:
