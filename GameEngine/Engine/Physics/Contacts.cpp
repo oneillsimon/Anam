@@ -165,10 +165,12 @@ void Contact::applyVelocityChange(Vector3 velocityChange[2], Vector3 rotationCha
 	}
 	else
 	{
+		//impulseContact = calculateFrictionlessImpulse(inverseInertiaTensor);
 		impulseContact = calculateFrictionImpulse(inverseInertiaTensor);
 	}
 
 	Vector3 impulse = m_contactToWorld.transform(impulseContact);
+	printf("impulse %f, %f %f\n", impulse[0], impulse[1], impulse[2]);
 
 	Vector3 impulsiveTorque = m_relativeContactPosition[0] % impulse;
 	rotationChange[0] = inverseInertiaTensor[0].transform(impulsiveTorque);
@@ -187,8 +189,6 @@ void Contact::applyVelocityChange(Vector3 velocityChange[2], Vector3 rotationCha
 
 		m_body[1]->addVelocity(velocityChange[1]);
 		m_body[1]->addRotation(rotationChange[1]);
-		//printf("vel0 %f, %f, %f\n", velocityChange[0][0], velocityChange[0][1], velocityChange[0][2]);
-		//printf("vel1 %f, %f, %f\n", velocityChange[1][0], velocityChange[1][1], velocityChange[1][2]);
 	}
 }
 
