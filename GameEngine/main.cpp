@@ -77,8 +77,9 @@ void CollisionDemo::initialise(const Window& window)
 			Vector3 ss = Vector3(1, 1, 1) * 1;
 			//pObj3->setCollider(new ColliderBox(ss));
 			//pObj3->getTransform()->rotate(Quaternion(AXIS_Z, toRadians(45)));
-			pObj3->getTransform()->getPosition().setX(-0.0f);
-			pObj3->getTransform()->getPosition().setZ(1.75f);
+			pObj3->getTransform()->getPosition().setX(0);
+			pObj3->getTransform()->getPosition().setZ(0);
+			pObj3->getCollider()->m_body->setMass(100);
 		//	pObj3->getTransform()->getPosition().setY(-8.5f);
 			pObj3->addComponent(new ColliderRenderer(false, pObj3->getCollider(), COLOUR_FIREBRICK));
 			pObj3->addComponent(new FreeMove(10, Input::KEY_UP, Input::KEY_DOWN, Input::KEY_LEFT, Input::KEY_RIGHT));
@@ -102,7 +103,7 @@ void CollisionDemo::initialise(const Window& window)
 	PhysicsObject* plane = new PhysicsObject(Vector3(0.0f, -12, 0));
 	float s = 2;
 	float h = s / 2.0f;
-	plane->getCollider()->m_body->setMass(100);
+	plane->getCollider()->m_body->setMass(1000);
 	//plane->setCollider(new ColliderBox(Vector3(s, s, s)));
 	//plane->setMass(100000000);
 	plane->addComponent(new ColliderRenderer(true, plane->getCollider(), COLOUR_GREEN));

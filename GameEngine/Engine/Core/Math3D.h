@@ -13,6 +13,8 @@
 #define AXIS_YZ Vector3(0, 1, 1)
 #define AXIS_XYZ Vector3(1, 1, 1)
 
+#include <string>
+
 class Quaternion;
 
 class Vector2
@@ -64,6 +66,11 @@ private:
 	mutable float z;
 
 public:
+	static void pv3(const Vector3& v, const std::string& msg = "")
+	{
+		printf("%s %.4f, %.4f, %.4f\n", msg.c_str(), v[0], v[1], v[2]);
+	}
+
 	static const Vector3 ZERO;
 	static const Vector3 ONE;
 
@@ -198,6 +205,13 @@ private:
 	mutable float m[3][3];
 
 public:
+	static void pm3(const Matrix3& m, const std::string& msg = "")
+	{
+		printf("%.4f, %.4f, %.4f\n", m[0][0], m[1][0], m[2][0]);
+		printf("%.4f, %.4f, %.4f\n", m[0][1], m[1][1], m[2][1]);
+		printf("%.4f, %.4f, %.4f\n", m[0][2], m[1][2], m[2][2]);
+	}
+
 	Matrix3();
 	~Matrix3();
 

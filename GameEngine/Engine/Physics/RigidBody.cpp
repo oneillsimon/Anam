@@ -60,6 +60,11 @@ void RigidBody::integrate(float delta)
 	m_lastFrameAcceleration = m_acceleration;
 	m_lastFrameAcceleration += (m_forceAccum * m_inverseMass);
 
+	if(getMass() < 50)
+	{
+		//printf("lfa %f, %f, %f\n", m_velocity[0], m_velocity[1], m_velocity[2]);
+	}
+
 	Vector3 angularAcceleration = m_inverseInertiaTensorWorld.transform(m_torqueAccum);
 	angularAcceleration = m_torqueAccum;
 
@@ -262,7 +267,7 @@ Vector3 RigidBody::getRotation() const
 
 void RigidBody::addRotation(const Vector3& deltaRotation)
 {
-	m_torqueAccum += deltaRotation;
+	m_rotation += deltaRotation;
 }
 
 void RigidBody::setAwake(const bool awake)

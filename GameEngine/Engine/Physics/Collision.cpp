@@ -161,15 +161,19 @@ void fillPointFaceBoxBox(
 
 	// Work out which vertex of box two we're colliding with.
 	// Using toCentre doesn't work!
-	Vector3 vertex = two.m_halfSize;
+	//Vector3 vertex = two.m_halfSize;
+	Vector3 vertex = toCentre;
 	if(two.getAxis(0).scalarProduct(normal) < 0) vertex[0] = -vertex[0];
 	if(two.getAxis(1).scalarProduct(normal) < 0) vertex[1] = -vertex[1];
 	if(two.getAxis(2).scalarProduct(normal) < 0) vertex[2] = -vertex[2];
 
+	//vertex *= 0.5f;
+
 	// Create the contact data
 	contact->m_contactNormal = normal;
 	contact->m_penetration = pen;
-	contact->m_contactPoint = two.m_body->m_parent->getTransform()->getTransformation() * vertex;
+	contact->m_contactPoint = two.m_body->m_parent->getTransform()->getPosition() - one.m_body->m_parent->getTransform()->getPosition();
+	//contact->m_contactPoint = vertex;//two.m_body->m_parent->getTransform()->getTransformation() * vertex;
 	contact->setBodyData(one.m_body, two.m_body,
 		data->m_friction, data->m_restitution);
 }

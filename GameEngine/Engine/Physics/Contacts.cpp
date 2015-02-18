@@ -69,7 +69,7 @@ void Contact::calculateContactBasis()
 		contactTangent[0].setZ(m_contactNormal.getY() * s);
 
 		contactTangent[1].setX(m_contactNormal.getY() * contactTangent[0].getZ() -
-			m_contactNormal.getZ() * contactTangent[0].getY());
+							   m_contactNormal.getZ() * contactTangent[0].getY());
 		contactTangent[1].setY(-m_contactNormal.getX() * contactTangent[0].getZ());
 		contactTangent[1].setZ(m_contactNormal.getX() * contactTangent[0].getY());
 	}
@@ -86,15 +86,16 @@ Vector3 Contact::calculateLocalVelocity(unsigned bodyIndex, float duration)
 
 	Vector3 contactVelocity = m_contactToWorld.transformTranspose(velocity);
 	Vector3 accVelocity = thisBody->getLastFrameAcceleration() * duration;
+
 	accVelocity = m_contactToWorld.transformTranspose(accVelocity);
 	accVelocity.setX(0);
 	contactVelocity += accVelocity;
 	return contactVelocity;
 }
 
-void Contact::calculateDesiredDeltaVelocity(float duration)
+void Contact::calculateDesiredDeltaVelocity(float duration, const Vector3& contactVelocity)
 {
-	const static float velocityLimit = 0.25f;
+	const static float velocityLimit = 5.0f;
 
 	float velocityFromAcc = 0;
 
@@ -103,7 +104,7 @@ void Contact::calculateDesiredDeltaVelocity(float duration)
 		velocityFromAcc += m_body[0]->getLastFrameAcceleration().scalarProduct(m_contactNormal) * duration;
 	}
 
-	if(m_body[1]->getAwake())
+	if(m_body[1] && m_body[1]->getAwake())
 	{
 		velocityFromAcc -= m_body[1]->getLastFrameAcceleration().scalarProduct(m_contactNormal) * duration;
 	}
@@ -115,7 +116,7 @@ void Contact::calculateDesiredDeltaVelocity(float duration)
 		thisRestitution = 0.0f;
 	}
 
-	m_desiredDeltaVelocity = -m_contactVelocity.getX() - thisRestitution * (m_contactVelocity.getX() - velocityFromAcc);
+	m_desiredDeltaVelocity = -contactVelocity.getX() - thisRestitution * (contactVelocity.getX() - velocityFromAcc);
 }
 
 void Contact::calculateInternals(float duration)
@@ -130,11 +131,15 @@ void Contact::calculateInternals(float duration)
 	calculateContactBasis();
 
 	m_relativeContactPosition[0] = m_contactPoint - m_body[0]->getPosition();
+	m_relativeContactPosition[0] = m_relativeContactPosition[0].normalised() * 2.0f;
 
 	if(m_body[1])
 	{
-		m_relativeContactPosition[1] = m_contactPoint = m_body[1]->getPosition();
+		m_relativeContactPosition[1] = m_contactPoint - m_body[1]->getPosition();
+		m_relativeContactPosition[1] = m_relativeContactPosition[1].normalised() * 2.0f;
 	}
+
+	m_contactVelocity = Vector3();
 
 	m_contactVelocity = calculateLocalVelocity(0, duration);
 
@@ -143,10 +148,10 @@ void Contact::calculateInternals(float duration)
 		m_contactVelocity -= calculateLocalVelocity(1, duration);
 	}
 
-	calculateDesiredDeltaVelocity(duration);
+	calculateDesiredDeltaVelocity(duration, m_contactVelocity);
 }
 
-void Contact::applyVelocityChange(Vector3 velocityChange[2], Vector3 rotationChange[2])
+void Contact::applyVelocityChange(Vector3 velocityChange[2])
 {
 	Matrix3 inverseInertiaTensor[2];
 
@@ -165,30 +170,21 @@ void Contact::applyVelocityChange(Vector3 velocityChange[2], Vector3 rotationCha
 	}
 	else
 	{
-		//impulseContact = calculateFrictionlessImpulse(inverseInertiaTensor);
 		impulseContact = calculateFrictionImpulse(inverseInertiaTensor);
 	}
 
-	Vector3 impulse = m_contactToWorld.transform(impulseContact);
-	printf("impulse %f, %f %f\n", impulse[0], impulse[1], impulse[2]);
-
-	Vector3 impulsiveTorque = m_relativeContactPosition[0] % impulse;
-	rotationChange[0] = inverseInertiaTensor[0].transform(impulsiveTorque);
+	Vector3 impulse = m_contactToWorld.transform(impulseContact) * m_contactNormal;
 	velocityChange[0] = Vector3();
 	velocityChange[0] += impulse * m_body[0]->getInverseMass();
 
 	m_body[0]->addVelocity(velocityChange[0]);
-	m_body[0]->addRotation(rotationChange[0]);
 
 	if(m_body[1])
 	{
-		Vector3 impulsiveTorque = impulse % m_relativeContactPosition[1];
-		rotationChange[1] = inverseInertiaTensor[1].transform(impulsiveTorque);
 		velocityChange[1] = Vector3();
-		velocityChange[1] += impulse * -m_body[1]->getInverseMass();
+		velocityChange[1] += impulse * m_body[1]->getInverseMass() * -1.0f;
 
 		m_body[1]->addVelocity(velocityChange[1]);
-		m_body[1]->addRotation(rotationChange[1]);
 	}
 }
 
@@ -200,7 +196,6 @@ Vector3 Contact::calculateFrictionlessImpulse(Matrix3* inverseInertiaTensor)
 	deltaVelocityWorld = inverseInertiaTensor[0].transform(deltaVelocityWorld);
 	deltaVelocityWorld = deltaVelocityWorld % m_relativeContactPosition[0];
 
-	//??
 	float deltaVelocity = deltaVelocityWorld.scalarProduct(m_contactNormal);
 	deltaVelocity += m_body[0]->getInverseMass();
 
@@ -210,7 +205,6 @@ Vector3 Contact::calculateFrictionlessImpulse(Matrix3* inverseInertiaTensor)
 		deltaVelocityWorld = inverseInertiaTensor[1].transform(deltaVelocityWorld);
 		deltaVelocityWorld = deltaVelocityWorld % m_relativeContactPosition[1];
 
-		//??
 		deltaVelocity = deltaVelocityWorld.scalarProduct(m_contactNormal);
 		deltaVelocity += m_body[1]->getInverseMass();
 	}
@@ -423,10 +417,9 @@ void ContactResolver::prepareContacts(Contact* contacts, unsigned numContacts, f
 
 void ContactResolver::adjustVelocities(Contact* contact, unsigned numContacts, float duration)
 {
-	unsigned i;
+	//unsigned i;
 	unsigned index;
 	Vector3 velocityChange[2];
-	Vector3 rotationChange[2];
 	float max;
 	Vector3 deltaVelocity;
 
@@ -437,9 +430,9 @@ void ContactResolver::adjustVelocities(Contact* contact, unsigned numContacts, f
 		max = m_velocityEpsilon;
 		index = numContacts;
 
-		for(i = 0; i < numContacts; i++)
+		for(unsigned i = 0; i < numContacts; i++)
 		{
-			if(contact[i].m_desiredDeltaVelocity >= max)
+			if(contact[i].m_desiredDeltaVelocity > max)
 			{
 				max = contact[i].m_desiredDeltaVelocity;
 				index = i;
@@ -452,7 +445,7 @@ void ContactResolver::adjustVelocities(Contact* contact, unsigned numContacts, f
 		}
 
 		contact[index].matchAwakeState();
-		contact[index].applyVelocityChange(velocityChange, rotationChange);
+		contact[index].applyVelocityChange(velocityChange);
 
 		for(unsigned i = 0; i < numContacts; i++)
 		{
@@ -464,10 +457,13 @@ void ContactResolver::adjustVelocities(Contact* contact, unsigned numContacts, f
 					{
 						if(contact[i].m_body[b] == contact[index].m_body[d])
 						{
-							deltaVelocity = velocityChange[d] + (rotationChange[d] * contact[i].m_relativeContactPosition[b]);
-
+							Vector3 vC = velocityChange[d];
+							
+							deltaVelocity = vC * contact[i].m_relativeContactPosition[b];
 							contact[i].m_contactVelocity += contact[i].m_contactToWorld.transformTranspose(deltaVelocity) * (b ? -1 : 1);
-							contact[i].calculateDesiredDeltaVelocity(duration);
+							contact[i].calculateDesiredDeltaVelocity(duration, contact[i].m_contactVelocity);
+							//contact[i].m_contactVelocity = contact[i].m_desiredDeltaVelocity;
+							//printf("%f\n", contact[i].m_desiredDeltaVelocity);
 						}
 					}
 				}
