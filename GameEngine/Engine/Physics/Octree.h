@@ -21,7 +21,7 @@ public:
 	static std::vector<Partition> partitions;
 
 	const int MIN_OBJ_PER_OCTAN = 2;
-	const int MAX_OBJ_PER_OCTAN = 4;
+	const int MAX_OBJ_PER_OCTAN = 8;
 	const int MAX_OCTREE_DEPTH = 6;
 
 	Vector3 m_min;

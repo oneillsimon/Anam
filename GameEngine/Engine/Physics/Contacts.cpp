@@ -82,6 +82,7 @@ Vector3 Contact::calculateLocalVelocity(unsigned bodyIndex, float duration)
 	RigidBody* thisBody = m_body[bodyIndex];
 
 	Vector3 velocity = thisBody->getRotation() % m_relativeContactPosition[bodyIndex];
+	//Vector3 velocity = thisBody->getRotation() % m_contactPoint;
 	velocity += thisBody->getVelocity();
 
 	Vector3 contactVelocity = m_contactToWorld.transformTranspose(velocity);
@@ -174,17 +175,18 @@ void Contact::applyVelocityChange(Vector3 velocityChange[2])
 	}
 
 	Vector3 impulse = m_contactToWorld.transform(impulseContact) * m_contactNormal;
+	
 	velocityChange[0] = Vector3();
 	velocityChange[0] += impulse * m_body[0]->getInverseMass();
 
-	m_body[0]->addVelocity(velocityChange[0]);
+	//m_body[0]->addVelocity(velocityChange[0]);
 
 	if(m_body[1])
 	{
 		velocityChange[1] = Vector3();
-		velocityChange[1] += impulse * m_body[1]->getInverseMass() * -1.0f;
+		velocityChange[1] += impulse * -m_body[1]->getInverseMass();
 
-		m_body[1]->addVelocity(velocityChange[1]);
+		//m_body[1]->addVelocity(velocityChange[1]);
 	}
 }
 
@@ -253,7 +255,8 @@ Vector3 Contact::calculateFrictionImpulse(Matrix3* inverseIntertiaTensor)
 	Matrix3 impulseMatrix = deltaVelocity.inverse();
 
 	Vector3 velKill(m_desiredDeltaVelocity, -m_contactVelocity.getY(), -m_contactVelocity.getZ());
-
+	printf("%f\n", m_desiredDeltaVelocity);
+	
 	impulseContact = impulseMatrix.transform(velKill);
 
 	float planarImpulse = sqrtf(impulseContact.getY() * impulseContact.getY() +
@@ -261,17 +264,18 @@ Vector3 Contact::calculateFrictionImpulse(Matrix3* inverseIntertiaTensor)
 
 	if(planarImpulse > impulseContact.getX() * m_friction)
 	{
-		impulseContact.setY(impulseContact.getY() / planarImpulse);
-		impulseContact.setZ(impulseContact.getZ() / planarImpulse);
-		impulseContact.setX(deltaVelocity.getAt(0, 0) +
-							deltaVelocity.getAt(1, 0) * m_friction * impulseContact.getY() +
-							deltaVelocity.getAt(2, 0) * m_friction * impulseContact.getZ());
+		impulseContact[1] /= planarImpulse;
+		impulseContact[2] /= planarImpulse;
 
-		impulseContact.setX(m_desiredDeltaVelocity / impulseContact.getX());
-		impulseContact.setY(impulseContact.getY() * m_friction * impulseContact.getX());
-		impulseContact.setZ(impulseContact.getZ() * m_friction * impulseContact.getX());
+		impulseContact[0] = deltaVelocity.getAt(0, 0) +
+			deltaVelocity.getAt(1, 0) * m_friction * impulseContact[1] +
+			deltaVelocity.getAt(0, 0) * m_friction * impulseContact[2];
+		impulseContact[0] = m_desiredDeltaVelocity / impulseContact[0];
+		impulseContact[1] *= m_friction * impulseContact[0];
+		impulseContact[2] *= m_friction * impulseContact[0];
 	}
 
+	//Vector3::pv3(velKill);
 	return impulseContact;
 }
 
