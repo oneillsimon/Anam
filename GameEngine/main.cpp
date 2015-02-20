@@ -77,8 +77,8 @@ void CollisionDemo::initialise(const Window& window)
 			Vector3 ss = Vector3(1.55f, 1, 1.55f) * 1;
 			//pObj3->setCollider(new ColliderBox(ss));
 			//pObj3->getTransform()->rotate(Quaternion(AXIS_Z, toRadians(45)));
-			pObj3->getTransform()->getPosition().setX(1.9f);
-			pObj3->getTransform()->getPosition().setZ(1.9f);
+			pObj3->getTransform()->getPosition().setX(0);
+			pObj3->getTransform()->getPosition().setZ(0);
 			pObj3->getCollider()->m_body->setMass(100);
 		//	pObj3->getTransform()->getPosition().setY(-8.5f);
 			pObj3->addComponent(new ColliderRenderer(false, pObj3->getCollider(), COLOUR_FIREBRICK));

@@ -111,6 +111,20 @@ float Vector3::scalarProduct(const Vector3& vector) const
 	return x * vector.getX() + y * vector.getY() + z * vector.getZ();
 }
 
+Vector3 Vector3::vectorProduct(const Vector3 &vector) const
+{
+	return Vector3(y * vector.z - z * vector.y,
+				   z * vector.x - x * vector.z,
+				   x * vector.y - y * vector.x);
+}
+
+void Vector3::addScaledVector(const Vector3& vector, float scale)
+{
+	x += vector.x * scale;
+	y += vector.y * scale;
+	z += vector.z * scale;
+}
+
 float Vector3::getX() const
 {
 	return x;

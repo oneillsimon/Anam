@@ -93,6 +93,8 @@ public:
 	Vector3 lerp(const Vector3& destination, float lerpFactor) const;
 	Vector3 absolute();
 	float scalarProduct(const Vector3& vector) const;
+	Vector3 vectorProduct(const Vector3 &vector) const;
+	void addScaledVector(const Vector3& vector, float scale);
 
 	float getX() const;
 	float getY() const;
@@ -265,6 +267,7 @@ public:
 	Quaternion nlerp(Quaternion destination, float lerpFactor, bool shortest);
 	Quaternion slerp(Quaternion destination, float lerpFactor, bool shortest);
 	Matrix4 toRotationMatrix() const;
+
 	Vector3 getForward() const;
 	Vector3 getBackward() const;
 	Vector3 getUp() const;

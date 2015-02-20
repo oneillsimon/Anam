@@ -28,11 +28,11 @@ public:
 
 	void swapBodies();
 	void matchAwakeState();
-	void calculateDesiredDeltaVelocity(float duration, const Vector3& contactVelocity);
+	void calculateDesiredDeltaVelocity(float duration);
 	Vector3 calculateLocalVelocity(unsigned bodyIndex, float duration);
 	void calculateContactBasis();
 	void applyImpulse(const Vector3& impulse, RigidBody* body, Vector3* veloctyChange, Vector3* rotationChange);
-	void applyVelocityChange(Vector3 velocityChange[2]);
+	void applyVelocityChange(Vector3 velocityChange[2], Vector3 angularChange[2]);
 	void applyPositionChange(Vector3 linearChange[2], Vector3 angularChange[2], float penetration);
 	Vector3 calculateFrictionlessImpulse(Matrix3* inverseIntertiaTensor);
 	Vector3 calculateFrictionImpulse(Matrix3* inverseIntertiaTensor);
