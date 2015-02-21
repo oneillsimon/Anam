@@ -48,7 +48,7 @@ static void tests();
 
 void CollisionDemo::initialise(const Window& window)
 {
-	GameObject* cameraObj = new GameObject(Vector3(0, 0, -7.5f));
+	GameObject* cameraObj = new GameObject(Vector3(0, -7.5f, -7.5f));
 
 	cameraObj->addComponent(new FreeLook(window.getCentre()));
 	cameraObj->addComponent(new FreeMove());
@@ -74,12 +74,16 @@ void CollisionDemo::initialise(const Window& window)
 				v = Vector3(-1.5f, y - i * 3, 1.5f);
 
 			PhysicsObject* pObj3 = new PhysicsObject(v);
+			pObj3->setCollider(new ColliderBox(Vector3(1, 1, 1)), new RigidBody(10, 0.1f, 0.1f));
+			pObj3->m_collider->m_body->debug = false;
 			Vector3 ss = Vector3(1.55f, 1, 1.55f) * 1;
 			//pObj3->setCollider(new ColliderBox(ss));
-			//pObj3->getTransform()->rotate(Quaternion(AXIS_Z, toRadians(45)));
-			pObj3->getTransform()->getPosition().setX(0);
-			pObj3->getTransform()->getPosition().setZ(0);
+			//pObj3->getTransform()->rotate(Quaternion(AXIS_Z, toRadians(0)));
+			pObj3->getTransform()->getPosition().setX(1.50);
+			pObj3->getTransform()->getPosition().setZ(0.5f);
+			//pObj3->getTransform()->getPosition().setY(-8);
 			pObj3->getCollider()->m_body->setMass(100);
+			//pObj3->getCollider()->m_body->setAcceleration(Vector3(0, -10.0f, 0));
 		//	pObj3->getTransform()->getPosition().setY(-8.5f);
 			pObj3->addComponent(new ColliderRenderer(false, pObj3->getCollider(), COLOUR_FIREBRICK));
 			pObj3->addComponent(new FreeMove(10, Input::KEY_UP, Input::KEY_DOWN, Input::KEY_LEFT, Input::KEY_RIGHT));
@@ -100,12 +104,17 @@ void CollisionDemo::initialise(const Window& window)
 		//addToScene2(testObj);
 	}
 
-	PhysicsObject* plane = new PhysicsObject(Vector3(0.0f, -12, 0));
+	//new ColliderBox(Vector3(s, s, s))
+	//new ColliderPlane(Vector3(0, 1, 0), -10)
+	//
+
 	float s = 2;
+	PhysicsObject* plane = new PhysicsObject(Vector3(0.0f, -10, 0));
 	float h = s / 2.0f;
-	plane->getCollider()->m_body->setMass(1000);
+	//plane->getCollider()->m_body->setMass(10000000000000000);
+	plane->setCollider(new ColliderPlane(Vector3(0, 1, 0), -10), new RigidBody(100000000000000, 0.1f, 0.1f));
+	//plane->getCollider()->m_body->m_hasInfiniteMass = true;
 	//plane->setCollider(new ColliderBox(Vector3(s, s, s)));
-	//plane->setMass(100000000);
 	plane->addComponent(new ColliderRenderer(true, plane->getCollider(), COLOUR_GREEN));
 	addToScene2(plane);
 
@@ -172,7 +181,7 @@ int main()
 {
 	//OctreeDemo test;
 	CollisionDemo test;
-	CoreEngine engine(800, 600, 120, &test);
+	CoreEngine engine(800, 600, 999, &test);
 	engine.createWindow("Game ENGINE");
 	engine.start();
 

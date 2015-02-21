@@ -14,7 +14,7 @@ public:
 	const float m_sleepEpsilon = 0.01f;
 
 	PhysicsObject* m_parent;
-
+	bool debug;
 	float m_inverseMass;
 	Matrix3 m_inverseInertiaTensor;
 	float m_linearDamping;

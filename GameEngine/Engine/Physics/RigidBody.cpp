@@ -30,7 +30,7 @@ void calculateInterisTensorInWorldSpace(Matrix3& iitWorld, const Transform& t, c
 
 void RigidBody::calculateDerivedData()
 {
-	m_parent->getTransform()->setRotation(m_parent->getTransform()->getRotation().normalised());
+	//m_parent->getTransform()->setRotation(m_parent->getTransform()->getRotation().normalised());
 	calculateInterisTensorInWorldSpace(m_inverseInertiaTensorWorld, *m_parent->getTransform(), m_inverseInertiaTensor);
 }
 
@@ -52,49 +52,47 @@ m_angularDamping(angular)
 
 void RigidBody::integrate(float delta)
 {
-	if(!m_isAwake)
-	{
-		return;
-	}
+	if(!m_isAwake) return;
 
+	// Calculate linear acceleration from force inputs.
 	m_lastFrameAcceleration = m_acceleration;
-	m_lastFrameAcceleration += (m_forceAccum * m_inverseMass);
+	m_lastFrameAcceleration.addScaledVector(m_forceAccum, m_inverseMass);
 
-	if(getMass() < 50)
-	{
-		//printf("lfa %f, %f, %f\n", m_velocity[0], m_velocity[1], m_velocity[2]);
-	}
+	// Calculate angular acceleration from torque inputs.
+	Vector3 angularAcceleration =
+		m_inverseInertiaTensorWorld.transform(m_torqueAccum);
 
-	Vector3 angularAcceleration = m_inverseInertiaTensorWorld.transform(m_torqueAccum);
-	angularAcceleration = m_torqueAccum;
+	// Adjust velocities
+	// Update linear velocity from both acceleration and impulse.
+	m_velocity.addScaledVector(m_lastFrameAcceleration, delta);
 
-	m_velocity += (m_lastFrameAcceleration * delta);
-	m_rotation += (angularAcceleration * delta);
+	// Update angular velocity from both acceleration and impulse.
+	m_rotation.addScaledVector(angularAcceleration, delta);
 
+	// Impose drag.
 	m_velocity *= powf(m_linearDamping, delta);
 	m_rotation *= powf(m_angularDamping, delta);
 
 	m_parent->getTransform()->setPosition(m_parent->getTransform()->getPosition() + (m_velocity * delta));
-	m_parent->getTransform()->setRotation(m_parent->getTransform()->getRotation() + (m_rotation * delta));
+	//m_parent->getTransform()->setRotation(m_parent->getTransform()->getRotation() + (m_rotation * delta));
 
+	// Normalise the orientation, and update the matrices with the new
+	// position and orientation
 	calculateDerivedData();
+
+	// Clear accumulators.
 	clearAccumulators();
 
-	if(m_canSleep)
-	{
+	// Update the kinetic energy store, and possibly put the body to
+	// sleep.
+	if(m_canSleep) {
 		float currentMotion = m_velocity.scalarProduct(m_velocity) + m_rotation.scalarProduct(m_rotation);
 
-		float bias = powf(0.5f, delta);
-		m_motion = bias * m_motion + (1 - bias) * currentMotion;
-
-		if(m_motion < m_sleepEpsilon)
-		{
-			setAwake(false);
-		}
-		else if(m_motion > 10 * m_sleepEpsilon)
-		{
-			m_motion = 10 * m_sleepEpsilon;
-		}
+		float bias = powf(0.5, delta);
+		m_motion = bias*m_motion + (1 - bias)*currentMotion;
+		//printf("motion, %f\n", m_motion);
+		if(m_motion < m_sleepEpsilon) setAwake(false);
+		else if(m_motion > 10 * m_sleepEpsilon) m_motion = 10 * m_sleepEpsilon;
 	}
 }
 
@@ -252,6 +250,11 @@ Vector3 RigidBody::getVelocity() const
 
 void RigidBody::addVelocity(const Vector3& deltaVelocity)
 {
+	if(deltaVelocity.length() > 1000)
+	{
+		int b = 0;
+	}
+
 	m_velocity += deltaVelocity;
 }
 
@@ -308,8 +311,8 @@ void RigidBody::clearAccumulators()
 
 void RigidBody::addForce(const Vector3& force)
 {
-	m_forceAccum += force;
 	m_isAwake = true;
+	m_forceAccum += force;
 }
 
 void RigidBody::addForceAtBodyPoint(const Vector3& force, const Vector3& point)

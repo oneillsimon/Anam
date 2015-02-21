@@ -36,8 +36,8 @@ void ColliderRenderer::render(const Shader& shader, const  RenderingEngine& rend
 		ColliderSphere& s = *(ColliderSphere*)m_collider;
 
 		t.setScale(s.m_radius);
-		t.setRotation(Quaternion());
-		//t.setRotation(s.m_body->m_parent->getTransform()->getRotation());
+		//t.setRotation(Quaternion());
+		t.setRotation(s.m_body->m_parent->getTransform()->getRotation());
 	}
 
 	m_mesh.getWireFrameShader().bind();

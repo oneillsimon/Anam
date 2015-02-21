@@ -255,8 +255,8 @@ void Octree::potentialCollisions(CollisionData* data)
 void Octree::generateContacts(Collider& one, Collider& two, CollisionData* data)
 {
 	data->reset(256);
-	data->m_friction = 1.90f;
-	data->m_restitution = 0.0000f;
+	data->m_friction = 1.9f;
+	data->m_restitution = 5.0000f;
 	data->m_tolerance = 0.1f;
 
 	one.collide(two, *data);

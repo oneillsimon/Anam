@@ -491,7 +491,7 @@ unsigned CollisionDetector::boxAndHalfSpace(
 
 	// Go through each combination of + and - for each half-size
 	static float mults[8][3] = { { 1, 1, 1 }, { -1, 1, 1 }, { 1, -1, 1 }, { -1, -1, 1 },
-	{ 1, 1, -1 }, { -1, 1, -1 }, { 1, -1, -1 }, { -1, -1, -1 } };
+								 { 1, 1, -1 }, { -1, 1, -1 }, { 1, -1, -1 }, { -1, -1, -1 } };
 
 	Contact* contact = data->m_contacts;
 	unsigned contactsUsed = 0;
@@ -500,7 +500,8 @@ unsigned CollisionDetector::boxAndHalfSpace(
 		// Calculate the position of each vertex
 		Vector3 vertexPos(mults[i][0], mults[i][1], mults[i][2]);
 		vertexPos *= box.m_halfSize;
-		vertexPos = box.m_body->m_parent->getTransform()->getTransformation().transform(vertexPos);
+		//vertexPos = box.m_body->m_parent->getTransform()->getTransformation().transform(vertexPos);
+		vertexPos += box.m_body->getPosition();
 
 		// Calculate the distance from the plane
 		float vertexDistance = vertexPos.scalarProduct(plane.m_normal);

@@ -11,6 +11,7 @@ ColliderSphere::ColliderSphere(float radius) :
 	m_radius(radius)
 {
 	m_type = Type::SPHERE;
+	
 }
 
 void ColliderSphere::collide(Collider& collider, CollisionData& data)
@@ -31,6 +32,11 @@ void ColliderSphere::collide(Collider& collider, CollisionData& data)
 	}
 }
 
+Vector3 ColliderSphere::getExtents()
+{
+	return Vector3(m_radius, m_radius, m_radius);
+}
+
 ColliderBox::ColliderBox(const Vector3& halfExtents) :
 	m_halfSize(halfExtents)
 {
@@ -39,6 +45,7 @@ ColliderBox::ColliderBox(const Vector3& halfExtents) :
 
 void ColliderBox::collide(Collider& collider, CollisionData& data)
 {
+	
 	switch(collider.m_type)
 	{
 	case SPHERE:
@@ -51,6 +58,11 @@ void ColliderBox::collide(Collider& collider, CollisionData& data)
 		CollisionDetector::boxAndHalfSpace(*this, (ColliderPlane&)collider, &data);
 		break;
 	}
+}
+
+Vector3 ColliderBox::getExtents()
+{
+	return m_halfSize;
 }
 
 ColliderPlane::ColliderPlane(const Vector3& normal, float distance) :
@@ -73,4 +85,9 @@ void ColliderPlane::collide(Collider& collider, CollisionData& data)
 	case PLANE:
 		break;
 	}
+}
+
+Vector3 ColliderPlane::getExtents()
+{
+	return Vector3();
 }

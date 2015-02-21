@@ -76,12 +76,11 @@ Vector3 Contact::calculateLocalVelocity(unsigned bodyIndex, float duration)
 {
 	RigidBody *thisBody = m_body[bodyIndex];
 
-	Vector3 velocity =
-		thisBody->getRotation() % m_relativeContactPosition[bodyIndex];
+	Vector3 velocity = thisBody->getRotation() % m_relativeContactPosition[bodyIndex];
 	velocity += thisBody->getVelocity();
 
 	Vector3 contactVelocity = m_contactToWorld.transformTranspose(velocity);
-
+	
 	Vector3 accVelocity = thisBody->getLastFrameAcceleration() * duration;
 
 	accVelocity = m_contactToWorld.transformTranspose(accVelocity);
@@ -90,6 +89,8 @@ Vector3 Contact::calculateLocalVelocity(unsigned bodyIndex, float duration)
 
 	contactVelocity += accVelocity;
 
+	//contactVelocity[0] = 0;
+	
 	return contactVelocity;
 }
 
@@ -119,6 +120,7 @@ void Contact::calculateDesiredDeltaVelocity(float duration)
 	}
 
 	m_desiredDeltaVelocity = -m_contactVelocity[0] - thisRestitution * (m_contactVelocity[0] - velocityFromAcc);
+	//m_desiredDeltaVelocity = -1.0f;
 }
 
 
@@ -138,52 +140,58 @@ void Contact::calculateInternals(float duration)
 	if(m_body[1]) {
 		m_contactVelocity -= calculateLocalVelocity(1, duration);
 	}
-
+	
 	calculateDesiredDeltaVelocity(duration);
 }
 
 void Contact::applyVelocityChange(Vector3 velocityChange[2], Vector3 rotationChange[2])
 {
+	// Get hold of the inverse mass and inverse inertia tensor, both in
+	// world coordinates.
 	Matrix3 inverseInertiaTensor[2];
-	
 	inverseInertiaTensor[0] = m_body[0]->getInverseInertiaTensorWorld();
-
 	if(m_body[1])
-	{
 		inverseInertiaTensor[1] = m_body[1]->getInverseInertiaTensorWorld();
-	}
 
+	// We will calculate the impulse for each contact axis
 	Vector3 impulseContact;
 
 	if(m_friction == 0.0f)
 	{
+		// Use the short format for frictionless contacts
 		impulseContact = calculateFrictionlessImpulse(inverseInertiaTensor);
 	}
 	else
 	{
+		// Otherwise we may have impulses that aren't in the direction of the
+		// contact, so we need the more complex version.
+		//impulseContact = Vector3(3, 0, 0);//calculateFrictionImpulse(inverseInertiaTensor);
 		impulseContact = calculateFrictionImpulse(inverseInertiaTensor);
 	}
 
+	// Convert impulse to world coordinates
 	Vector3 impulse = m_contactToWorld.transform(impulseContact);
 
+	// Split in the impulse into linear and rotational components
 	Vector3 impulsiveTorque = m_relativeContactPosition[0] % impulse;
-	Vector3::pv3(impulsiveTorque);
-
 	rotationChange[0] = inverseInertiaTensor[0].transform(impulsiveTorque);
 	velocityChange[0] = Vector3();
 	velocityChange[0].addScaledVector(impulse, m_body[0]->getInverseMass());
 
+	// Apply the changes
+	//m_body[0]->addVelocity(velocityChange[0]);
 	m_body[0]->addVelocity(velocityChange[0]);
 	m_body[0]->addRotation(rotationChange[0]);
 
 	if(m_body[1])
 	{
-		Vector3 impulsiveTorque_ = impulse % m_relativeContactPosition[1];
-
-		rotationChange[1] = inverseInertiaTensor[1].transform(impulsiveTorque_);
+		// Work out body one's linear and angular changes
+		Vector3 impulsiveTorque = impulse % m_relativeContactPosition[1];
+		rotationChange[1] = inverseInertiaTensor[1].transform(impulsiveTorque);
 		velocityChange[1] = Vector3();
 		velocityChange[1].addScaledVector(impulse, -m_body[1]->getInverseMass());
 
+		// And apply them.
 		m_body[1]->addVelocity(velocityChange[1]);
 		m_body[1]->addRotation(rotationChange[1]);
 	}
@@ -448,7 +456,8 @@ void ContactResolver::adjustVelocities(Contact *c, unsigned numContacts, float d
 
 		for(unsigned i = 0; i < numContacts; i++)
 		{
-			if(c[i].m_desiredDeltaVelocity > max)
+			c[i].calculateDesiredDeltaVelocity(duration);
+			if(c[i].m_desiredDeltaVelocity >= max)
 			{
 				max = c[i].m_desiredDeltaVelocity;
 				index = i;
@@ -472,13 +481,15 @@ void ContactResolver::adjustVelocities(Contact *c, unsigned numContacts, float d
 					if(c[i].m_body[b] == c[index].m_body[d])
 					{
 						deltaVel = velocityChange[d] + rotationChange[d].vectorProduct(c[i].m_relativeContactPosition[b]);
-						
+
 						c[i].m_contactVelocity += c[i].m_contactToWorld.transformTranspose(deltaVel) * (b ? -1 : 1);
+						c[i].calculateInternals(duration);
 						c[i].calculateDesiredDeltaVelocity(duration);
 					}
 				}
 			}
 		}
+		//printf("velocity pass %d of %d\n", m_velocityIterationsUsed, m_velocityIterations);
 		m_velocityIterationsUsed++;
 	}
 }
@@ -533,6 +544,7 @@ void ContactResolver::adjustPositions(Contact *c,
 				}
 			}
 		}
+		//printf("position pass %d of %d\n", m_positionIterationsUsed, m_positionIterations);
 		m_positionIterationsUsed++;
 	}
 }

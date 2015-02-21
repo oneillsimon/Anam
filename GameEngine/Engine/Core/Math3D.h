@@ -243,6 +243,7 @@ public:
 	void operator *=(float f);
 
 	const float* operator [](int index) const { return m[index]; };
+	float& operator [](int index) { return *m[index]; };
 };
 
 

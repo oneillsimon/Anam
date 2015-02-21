@@ -36,6 +36,7 @@ public:
 	void applyPositionChange(Vector3 linearChange[2], Vector3 angularChange[2], float penetration);
 	Vector3 calculateFrictionlessImpulse(Matrix3* inverseIntertiaTensor);
 	Vector3 calculateFrictionImpulse(Matrix3* inverseIntertiaTensor);
+	Vector3 getOverHangingAxis();
 };
 
 class ContactResolver

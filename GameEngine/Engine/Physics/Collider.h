@@ -19,9 +19,9 @@ public:
 
 	int m_type;
 	RigidBody* m_body;
-	bool m_isColliding;
 
 	virtual void collide(Collider& collider, CollisionData& data) = 0;
+	virtual Vector3 getExtents() = 0;
 
 	Vector3 getAxis(unsigned index) const;
 };
@@ -33,6 +33,7 @@ public:
 	float m_radius;
 
 	virtual void collide(Collider& collider, CollisionData& data);
+	virtual Vector3 getExtents();
 };
 
 class ColliderBox : public Collider
@@ -42,6 +43,7 @@ public:
 	Vector3 m_halfSize;
 
 	virtual void collide(Collider& collider, CollisionData& data);
+	virtual Vector3 getExtents();
 };
 
 class ColliderPlane : public Collider
@@ -52,6 +54,7 @@ public:
 	float m_distance;
 
 	virtual void collide(Collider& collider, CollisionData& data);
+	virtual Vector3 getExtents();
 };
 
 #endif
