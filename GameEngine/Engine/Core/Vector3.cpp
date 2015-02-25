@@ -157,11 +157,11 @@ void Vector3::setZ(float z)
 
 Vector3 Vector3::operator %(const Vector3& v) const
 {
-	float x = y * v.getZ() - z * v.getY();
-	float y = z * v.getX() - x * v.getZ();
-	float z = x * v.getY() - y * v.getX();
+	float _x = y * v.getZ() - z * v.getY();
+	float _y = z * v.getX() - x * v.getZ();
+	float _z = x * v.getY() - y * v.getX();
 
-	return (x, y, z);
+	return Vector3(_x, _y, _z);
 }
 
 Vector3 Vector3::operator =(const Vector3& v) const
