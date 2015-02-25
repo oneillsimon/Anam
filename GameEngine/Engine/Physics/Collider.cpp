@@ -55,6 +55,11 @@ Vector3 ColliderSphere::getExtents()
 	return Vector3(m_radius, m_radius, m_radius);
 }
 
+float ColliderSphere::getRadius() const
+{
+	return m_radius;
+}
+
 ColliderBox::ColliderBox(const Vector3& halfExtents) :
 	Collider(Type::BOX),
 	m_halfSize(halfExtents)
@@ -78,6 +83,11 @@ void ColliderBox::collide(Collider& collider, CollisionData& data)
 }
 
 Vector3 ColliderBox::getExtents()
+{
+	return m_halfSize;
+}
+
+Vector3 ColliderBox::getHalfSize() const
 {
 	return m_halfSize;
 }
@@ -107,4 +117,14 @@ void ColliderPlane::collide(Collider& collider, CollisionData& data)
 Vector3 ColliderPlane::getExtents()
 {
 	return Vector3();
+}
+
+Vector3 ColliderPlane::getNormal() const
+{
+	return m_normal;
+}
+
+float ColliderPlane::getDistance() const
+{
+	return m_distance;
 }

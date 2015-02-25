@@ -28,14 +28,14 @@ void ColliderRenderer::render(const Shader& shader, const  RenderingEngine& rend
 	{
 		ColliderBox& b = *(ColliderBox*)m_collider;
 
-		t.setScale(b.m_halfSize);
+		t.setScale(b.getHalfSize());
 		t.setRotation(b.getBody()->getParent()->getTransform()->getRotation());
 	}
 	else if(m_collider->getType() == Collider::SPHERE)
 	{
 		ColliderSphere& s = *(ColliderSphere*)m_collider;
 
-		t.setScale(s.m_radius);
+		t.setScale(s.getRadius());
 		//t.setRotation(Quaternion());
 		t.setRotation(s.getBody()->getParent()->getTransform()->getRotation());
 	}

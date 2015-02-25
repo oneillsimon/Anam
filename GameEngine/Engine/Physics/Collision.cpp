@@ -16,7 +16,7 @@ unsigned CollisionDetector::sphereAndHalfSpace(const ColliderSphere& sphere, con
 
 	Vector3 position = sphere.getAxis(3);
 
-	float ballDistance = plane.m_normal.scalarProduct(position) - sphere.m_radius - plane.m_distance;
+	float ballDistance = plane.getNormal().scalarProduct(position) - sphere.getRadius() - plane.getDistance();
 
 	if(ballDistance >= 0)
 	{
@@ -24,9 +24,9 @@ unsigned CollisionDetector::sphereAndHalfSpace(const ColliderSphere& sphere, con
 	}
 
 	Contact* contact = data->getContacts();
-	contact->setContactNormal(plane.m_normal);
+	contact->setContactNormal(plane.getNormal());
 	contact->setPenetration(-ballDistance);
-	contact->setContactPoint(position - plane.m_normal * (ballDistance + sphere.m_radius));
+	contact->setContactPoint(position - plane.getNormal() * (ballDistance + sphere.getRadius()));
 	contact->setBodyData(sphere.getBody(), 0, data->getFriction(), data->getRestitution());
 	data->addContacts(1);
 
@@ -46,7 +46,7 @@ unsigned CollisionDetector::sphereAndSphere(const ColliderSphere& one, const Col
 	Vector3 midline = positionOne - positionTwo;
 	float size = midline.length();
 
-	if(size <= 0.0f || size >= one.m_radius + two.m_radius)
+	if(size <= 0.0f || size >= one.getRadius() + two.getRadius())
 	{
 		return 0;
 	}
@@ -56,7 +56,7 @@ unsigned CollisionDetector::sphereAndSphere(const ColliderSphere& one, const Col
 	Contact* contact = data->getContacts();
 	contact->setContactNormal(normal);
 	contact->setContactPoint(positionOne + midline * 0.5f);
-	contact->setPenetration(one.m_radius + two.m_radius - size);
+	contact->setPenetration(one.getRadius() + two.getRadius() - size);
 	contact->setBodyData(one.getBody(), two.getBody(), data->getFriction(), data->getRestitution());
 
 	data->addContacts(1);
@@ -130,8 +130,8 @@ unsigned CollisionDetector::boxAndBox(const ColliderBox& one, const ColliderBox&
 			axis = axis * -1.0f;
 		}
 
-		Vector3 ptOnOneEdge = one.m_halfSize;
-		Vector3 ptOnTwoEdge = two.m_halfSize;
+		Vector3 ptOnOneEdge = one.getHalfSize();
+		Vector3 ptOnTwoEdge = two.getHalfSize();
 
 		for(unsigned i = 0; i < 3; i++)
 		{
@@ -159,10 +159,10 @@ unsigned CollisionDetector::boxAndBox(const ColliderBox& one, const ColliderBox&
 
 		Vector3 vertex = contactPoint(ptOnOneEdge,
 									  oneAxis,
-									  one.m_halfSize[oneAxisIndex],
+									  one.getHalfSize()[oneAxisIndex],
 									  ptOnTwoEdge,
 									  twoAxis,
-									  two.m_halfSize[twoAxisIndex],
+									  two.getHalfSize()[twoAxisIndex],
 									  bestSingleAxis > 2);
 
 		Contact* contact = data->getContacts();
@@ -184,7 +184,7 @@ unsigned CollisionDetector::boxAndPoint(const ColliderBox& box, const Vector3& p
 	Vector3 relPt = box.getBody()->getParent()->getTransform()->getTransformation().transformInverse(point);
 
 	Vector3 normal;
-	float min_depth = box.m_halfSize[0] - fabsf(relPt[0]);
+	float min_depth = box.getHalfSize()[0] - fabsf(relPt[0]);
 
 	if(min_depth < 0)
 	{
@@ -193,7 +193,7 @@ unsigned CollisionDetector::boxAndPoint(const ColliderBox& box, const Vector3& p
 
 	normal = box.getAxis(0) * ((relPt[0] < 0) ? -1 : 1);
 
-	float depth = box.m_halfSize[1] - fabsf(relPt[1]);
+	float depth = box.getHalfSize()[1] - fabsf(relPt[1]);
 
 	if(depth < 0)
 	{
@@ -205,7 +205,7 @@ unsigned CollisionDetector::boxAndPoint(const ColliderBox& box, const Vector3& p
 		normal = box.getAxis(1) * ((relPt[1] < 0) ? -1 : 1);
 	}
 
-	depth = box.m_halfSize[2] - fabsf(relPt[2]);
+	depth = box.getHalfSize()[2] - fabsf(relPt[2]);
 
 	if(depth < 0)
 	{
@@ -232,9 +232,9 @@ unsigned CollisionDetector::boxAndSphere(const ColliderBox& box, const ColliderS
 	Vector3 centre = sphere.getAxis(3);
 	Vector3 relCentre = box.getBody()->getParent()->getTransform()->getTransformation().transformInverse(centre);
 
-	if(fabsf(relCentre[0]) - sphere.m_radius > box.m_halfSize[0] ||
-	   fabsf(relCentre[1]) - sphere.m_radius > box.m_halfSize[1] ||
-	   fabsf(relCentre[2]) - sphere.m_radius > box.m_halfSize[2])
+	if(fabsf(relCentre[0]) - sphere.getRadius() > box.getHalfSize()[0] ||
+	   fabsf(relCentre[1]) - sphere.getRadius() > box.getHalfSize()[1] ||
+	   fabsf(relCentre[2]) - sphere.getRadius() > box.getHalfSize()[2])
 	{
 		return 0;
 	}
@@ -242,47 +242,47 @@ unsigned CollisionDetector::boxAndSphere(const ColliderBox& box, const ColliderS
 	Vector3 closestPt(0, 0, 0);
 	float dist = relCentre[0];
 
-	if(dist > box.m_halfSize[0])
+	if(dist > box.getHalfSize()[0])
 	{
-		dist = box.m_halfSize[0];
+		dist = box.getHalfSize()[0];
 	}
 
-	if(dist < -box.m_halfSize[0])
+	if(dist < -box.getHalfSize()[0])
 	{
-		dist = -box.m_halfSize[0];
+		dist = -box.getHalfSize()[0];
 	}
 
 	closestPt[0] = dist;
 	dist = relCentre[1];
 
-	if(dist > box.m_halfSize[1])
+	if(dist > box.getHalfSize()[1])
 	{
-		dist = box.m_halfSize[1];
+		dist = box.getHalfSize()[1];
 	}
 
-	if(dist < -box.m_halfSize[1])
+	if(dist < -box.getHalfSize()[1])
 	{
-		dist = -box.m_halfSize[1];
+		dist = -box.getHalfSize()[1];
 	}
 
 	closestPt[1] = dist;
 	dist = relCentre[2];
 
-	if(dist > box.m_halfSize[2])
+	if(dist > box.getHalfSize()[2])
 	{
-		dist = box.m_halfSize[2];
+		dist = box.getHalfSize()[2];
 	}
 
-	if(dist < -box.m_halfSize[2])
+	if(dist < -box.getHalfSize()[2])
 	{
-		dist = -box.m_halfSize[2];
+		dist = -box.getHalfSize()[2];
 	}
 
 	closestPt[2] = dist;
 
 	dist = (closestPt - relCentre).squareLength();
 
-	if(dist > sphere.m_radius * sphere.m_radius)
+	if(dist > sphere.getRadius() * sphere.getRadius())
 	{
 		return 0;
 	}
@@ -293,7 +293,7 @@ unsigned CollisionDetector::boxAndSphere(const ColliderBox& box, const ColliderS
 	contact->setContactNormal(closestPtWorld - centre);
 	contact->setContactNormal(contact->getContactNormal().normalised());
 	contact->setContactPoint(closestPtWorld);
-	contact->setPenetration(sphere.m_radius - sqrtf(dist));
+	contact->setPenetration(sphere.getRadius() - sqrtf(dist));
 	contact->setBodyData(box.getBody(), sphere.getBody(), data->getFriction(), data->getRestitution());
 	data->addContacts(1);
 
@@ -322,19 +322,19 @@ unsigned CollisionDetector::boxAndHalfSpace(const ColliderBox& box, const Collid
 	{
 
 		Vector3 vertexPos(mults[i][0], mults[i][1], mults[i][2]);
-		vertexPos *= box.m_halfSize;
+		vertexPos *= box.getHalfSize();
 
 		vertexPos += box.getBody()->getPosition();
 
-		float vertexDistance = vertexPos.scalarProduct(plane.m_normal);
+		float vertexDistance = vertexPos.scalarProduct(plane.getNormal());
 
-		if(vertexDistance <= plane.m_distance)
+		if(vertexDistance <= plane.getDistance())
 		{
-			contact->setContactPoint(plane.m_normal);
-			contact->setContactPoint(contact->getContactPoint() * (vertexDistance - plane.m_distance));
+			contact->setContactPoint(plane.getNormal());
+			contact->setContactPoint(contact->getContactPoint() * (vertexDistance - plane.getDistance()));
 			contact->setContactPoint(contact->getContactPoint() + vertexPos);
-			contact->setContactNormal(plane.m_normal);
-			contact->setPenetration(plane.m_distance - vertexDistance);
+			contact->setContactNormal(plane.getNormal());
+			contact->setPenetration(plane.getDistance() - vertexDistance);
 
 			contact->setBodyData(box.getBody(), 0, data->getFriction(), data->getRestitution());
 
@@ -381,10 +381,10 @@ bool IntersectionTests::boxAndBox(const ColliderBox& one, const ColliderBox& two
 
 bool IntersectionTests::boxAndHalfSpace(const ColliderBox& box, const ColliderPlane& plane)
 {
-	float projectedRadius = transformToAxis(box, plane.m_normal);
-	float boxDistance = plane.m_normal.scalarProduct(box.getAxis(3)) - projectedRadius;
+	float projectedRadius = transformToAxis(box, plane.getNormal());
+	float boxDistance = plane.getNormal().scalarProduct(box.getAxis(3)) - projectedRadius;
 
-	return boxDistance <= plane.m_distance;
+	return boxDistance <= plane.getDistance();
 }
 
 bool CollisionData::hasMoreContacts()
@@ -463,9 +463,9 @@ void CollisionData::setTolerance(float tolerance)
 
 float transformToAxis(const ColliderBox& box, const Vector3& axis)
 {
-	return box.m_halfSize[0] * fabsf(axis.scalarProduct(box.getAxis(0))) +
-		   box.m_halfSize[1] * fabsf(axis.scalarProduct(box.getAxis(1))) +
-		   box.m_halfSize[2] * fabsf(axis.scalarProduct(box.getAxis(2)));
+	return box.getHalfSize()[0] * fabsf(axis.scalarProduct(box.getAxis(0))) +
+		   box.getHalfSize()[1] * fabsf(axis.scalarProduct(box.getAxis(1))) +
+		   box.getHalfSize()[2] * fabsf(axis.scalarProduct(box.getAxis(2)));
 }
 
 float penetrationOnAxis(const ColliderBox& one, const ColliderBox& two, const Vector3& axis, const Vector3& toCentre)
@@ -513,7 +513,7 @@ void fillPointFaceBoxBox(const ColliderBox& one, const ColliderBox& two, const V
 		normal = normal * -1.0f;
 	}
 
-	Vector3 vertex = two.m_halfSize;
+	Vector3 vertex = two.getHalfSize();
 
 	if(two.getAxis(0).scalarProduct(normal) < 0)
 	{

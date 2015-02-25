@@ -37,33 +37,45 @@ public:
 
 class ColliderSphere : public Collider
 {
+protected:
+	float m_radius;
 public:
 	ColliderSphere(float radius = 1.0f);
-	float m_radius;
 
 	virtual void collide(Collider& collider, CollisionData& data);
 	virtual Vector3 getExtents();
+
+	float getRadius() const;
 };
 
 class ColliderBox : public Collider
 {
+protected:
+	Vector3 m_halfSize;
+
 public:
 	ColliderBox(const Vector3& halfSize = Vector3(1, 1, 1));
-	Vector3 m_halfSize;
 
 	virtual void collide(Collider& collider, CollisionData& data);
 	virtual Vector3 getExtents();
+
+	Vector3 getHalfSize() const;
 };
 
 class ColliderPlane : public Collider
 {
-public:
-	ColliderPlane(const Vector3& normal = Vector3(0, 1, 0), float distance = 0.0f);
+protected:
 	Vector3 m_normal;
 	float m_distance;
 
+public:
+	ColliderPlane(const Vector3& normal = Vector3(0, 1, 0), float distance = 0.0f);
+
 	virtual void collide(Collider& collider, CollisionData& data);
 	virtual Vector3 getExtents();
+
+	Vector3 getNormal() const;
+	float getDistance()const;
 };
 
 #endif
