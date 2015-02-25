@@ -17,7 +17,6 @@ public:
 	OctreeRenderer(PhysicsEngine* engine, Octree* octree, const Colour& defaultColour = COLOUR_GREEN_YELLOW);
 
 	virtual void initialise();
-	virtual void update(float delta);
 	virtual void render(const Shader& shader, const  RenderingEngine& renderingEngine, const Camera& camera) const;
 };
 

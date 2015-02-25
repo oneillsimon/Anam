@@ -24,9 +24,9 @@ unsigned CollisionDetector::sphereAndHalfSpace(const ColliderSphere& sphere, con
 	}
 
 	Contact* contact = data->getContacts();
-	contact->m_contactNormal = plane.m_normal;
-	contact->m_penetration = -ballDistance;
-	contact->m_contactPoint = position - plane.m_normal * (ballDistance + sphere.m_radius);
+	contact->setContactNormal(plane.m_normal);
+	contact->setPenetration(-ballDistance);
+	contact->setContactPoint(position - plane.m_normal * (ballDistance + sphere.m_radius));
 	contact->setBodyData(sphere.getBody(), 0, data->getFriction(), data->getRestitution());
 	data->addContacts(1);
 
@@ -54,9 +54,9 @@ unsigned CollisionDetector::sphereAndSphere(const ColliderSphere& one, const Col
 	Vector3 normal = midline * (1.0f / size);
 
 	Contact* contact = data->getContacts();
-	contact->m_contactNormal = normal;
-	contact->m_contactPoint = positionOne + midline * 0.5f;
-	contact->m_penetration = (one.m_radius + two.m_radius - size);
+	contact->setContactNormal(normal);
+	contact->setContactPoint(positionOne + midline * 0.5f);
+	contact->setPenetration(one.m_radius + two.m_radius - size);
 	contact->setBodyData(one.getBody(), two.getBody(), data->getFriction(), data->getRestitution());
 
 	data->addContacts(1);
@@ -166,9 +166,9 @@ unsigned CollisionDetector::boxAndBox(const ColliderBox& one, const ColliderBox&
 									  bestSingleAxis > 2);
 
 		Contact* contact = data->getContacts();
-		contact->m_penetration = pen;
-		contact->m_contactNormal = axis;
-		contact->m_contactPoint = vertex;
+		contact->setPenetration(pen);
+		contact->setContactNormal(axis);
+		contact->setContactPoint(vertex);
 		contact->setBodyData(one.getBody(), two.getBody(), data->getFriction(), data->getRestitution());
 		data->addContacts(1);
 
@@ -218,9 +218,9 @@ unsigned CollisionDetector::boxAndPoint(const ColliderBox& box, const Vector3& p
 	}
 
 	Contact* contact = data->getContacts();
-	contact->m_contactNormal = normal;
-	contact->m_contactPoint = point;
-	contact->m_penetration = min_depth;
+	contact->setContactNormal(normal);
+	contact->setContactPoint(point);
+	contact->setPenetration(min_depth);
 	contact->setBodyData(box.getBody(), 0, data->getFriction(), data->getRestitution());
 	data->addContacts(1);
 
@@ -290,10 +290,10 @@ unsigned CollisionDetector::boxAndSphere(const ColliderBox& box, const ColliderS
 	Vector3 closestPtWorld = box.getBody()->getParent()->getTransform()->getTransformation().transform(closestPt);
 
 	Contact* contact = data->getContacts();
-	contact->m_contactNormal = (closestPtWorld - centre);
-	contact->m_contactNormal = contact->m_contactNormal.normalised();
-	contact->m_contactPoint = closestPtWorld;
-	contact->m_penetration = sphere.m_radius - sqrtf(dist);
+	contact->setContactNormal(closestPtWorld - centre);
+	contact->setContactNormal(contact->getContactNormal().normalised());
+	contact->setContactPoint(closestPtWorld);
+	contact->setPenetration(sphere.m_radius - sqrtf(dist));
 	contact->setBodyData(box.getBody(), sphere.getBody(), data->getFriction(), data->getRestitution());
 	data->addContacts(1);
 
@@ -330,11 +330,11 @@ unsigned CollisionDetector::boxAndHalfSpace(const ColliderBox& box, const Collid
 
 		if(vertexDistance <= plane.m_distance)
 		{
-			contact->m_contactPoint = plane.m_normal;
-			contact->m_contactPoint *= (vertexDistance - plane.m_distance);
-			contact->m_contactPoint += vertexPos;
-			contact->m_contactNormal = plane.m_normal;
-			contact->m_penetration = plane.m_distance - vertexDistance;
+			contact->setContactPoint(plane.m_normal);
+			contact->setContactPoint(contact->getContactPoint() * (vertexDistance - plane.m_distance));
+			contact->setContactPoint(contact->getContactPoint() + vertexPos);
+			contact->setContactNormal(plane.m_normal);
+			contact->setPenetration(plane.m_distance - vertexDistance);
 
 			contact->setBodyData(box.getBody(), 0, data->getFriction(), data->getRestitution());
 
@@ -530,9 +530,9 @@ void fillPointFaceBoxBox(const ColliderBox& one, const ColliderBox& two, const V
 		vertex[2] = -vertex[2];
 	}
 
-	contact->m_contactNormal = normal;
-	contact->m_penetration = pen;
-	contact->m_contactPoint = two.getBody()->getParent()->getTransform()->getTransformation() * vertex;
+	contact->setContactNormal(normal);
+	contact->setPenetration(pen);
+	contact->setContactPoint(two.getBody()->getParent()->getTransform()->getTransformation() * vertex);
 	contact->setBodyData(one.getBody(), two.getBody(), data->getFriction(), data->getRestitution());
 }
 

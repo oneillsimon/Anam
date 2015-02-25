@@ -261,3 +261,28 @@ void Octree::generateContacts(Collider& one, Collider& two, CollisionData* data)
 
 	one.collide(two, *data);
 }
+
+Octree* Octree::getChild(int x, int y, int z) const
+{
+	return m_children[x][y][z];
+}
+
+Vector3 Octree::getMinExtents() const
+{
+	return m_min;
+}
+
+Vector3 Octree::getMaxExtents() const
+{
+	return m_max;
+}
+
+Vector3 Octree::getCentre() const
+{
+	return m_centre;
+}
+
+bool Octree::getHasChildren()
+{
+	return m_hasChildren;
+}

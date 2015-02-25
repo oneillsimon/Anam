@@ -19,9 +19,7 @@ struct Partition
 
 class Octree
 {
-public:
-	static std::vector<Partition> partitions;
-
+private:
 	const int MIN_OBJ_PER_OCTAN = 2;
 	const int MAX_OBJ_PER_OCTAN = 8;
 	const int MAX_OCTREE_DEPTH = 6;
@@ -31,7 +29,6 @@ public:
 	Vector3 m_centre;
 
 	Octree* m_children[2][2][2];
-	~Octree();
 	bool m_hasChildren;
 	std::set<PhysicsObject*> m_objects;
 	int m_depth;
@@ -43,13 +40,25 @@ public:
 	void killChildren();
 	void remove(PhysicsObject* object, const Vector3& position);
 
+public:
+	static std::vector<Partition> partitions;
+
 	Octree(const Vector3& min, const Vector3& max, int depth);
+	~Octree();
 	void add(PhysicsObject* object);
 	void remove(PhysicsObject* object);
 	void objectMoved(PhysicsObject* object, const Vector3& oldPosition);
 	void potentialCollisions(CollisionData* data);
 	void generateContacts(Collider& one, Collider& two, CollisionData* data);
 	bool isInside(const Vector3& point, Octree* octree);
+
+	Octree* getChild(int x, int y, int z) const;
+
+	Vector3 getMinExtents() const;
+	Vector3 getMaxExtents() const;
+	Vector3 getCentre() const;
+
+	bool getHasChildren();
 };
 
 #endif

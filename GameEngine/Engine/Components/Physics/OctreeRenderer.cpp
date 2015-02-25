@@ -1,15 +1,15 @@
 #include "OctreeRenderer.h"
 
 OctreeRenderer::OctreeRenderer(PhysicsEngine* engine, Octree* tree, const Colour& colour) :
-ColliderRenderer(false, new ColliderBox(tree->m_max - tree->m_centre), colour),
-m_engine(engine),
-m_octree(tree)
+	ColliderRenderer(false, new ColliderBox(tree->getMaxExtents() - tree->getCentre()), colour),
+	m_engine(engine),
+	m_octree(tree)
 {
 }
 
 void OctreeRenderer::initialise()
 {
-	if(m_octree->m_hasChildren)
+	if(m_octree->getHasChildren())
 	{
 		for(int x = 0; x < 2; x++)
 		{
@@ -17,23 +17,18 @@ void OctreeRenderer::initialise()
 			{
 				for(int z = 0; z < 2; z++)
 				{
-					m_parent->addComponent(new OctreeRenderer(m_engine, m_octree->m_children[x][y][z], m_defaultColour));
+					m_parent->addComponent(new OctreeRenderer(m_engine, m_octree->getChild(x, y, z), m_defaultColour));
 				}
 			}
 		}
 	}
 }
 
-void OctreeRenderer::update(float delta)
-{
-	//m_engine->updateObjectReferences(*m_engine->getObjects(), m_octree, delta);
-}
-
 void OctreeRenderer::render(const Shader& shader, const  RenderingEngine& renderingEngine, const Camera& camera) const
 {
 	Transform t = getTransform();
-	t.setScale(m_octree->m_max - m_octree->m_centre);
-	t.setPosition(m_octree->m_centre);
+	t.setScale(m_octree->getMaxExtents() - m_octree->getCentre());
+	t.setPosition(m_octree->getCentre());
 	m_mesh.getWireFrameShader().bind();
 	m_mesh.getWireFrameShader().updateUniforms(t, renderingEngine, camera, m_material);
 	m_mesh.getWireFrameShader().setUniform("wireFrameColour", m_defaultColour);

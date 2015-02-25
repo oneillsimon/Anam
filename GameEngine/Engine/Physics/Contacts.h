@@ -10,7 +10,7 @@ class ContactResolver;
 
 class Contact
 {
-public:
+private:
 	RigidBody* m_body[2];
 	float m_friction;
 	float m_restitution;
@@ -18,13 +18,14 @@ public:
 	Vector3 m_contactNormal;
 	float m_penetration;
 
-	void setBodyData(RigidBody* one, RigidBody* two, float friction, float restitution);
-	void calculateInternals(float duration);
-
 	Matrix3 m_contactToWorld;
 	Vector3 m_contactVelocity;
 	float m_desiredDeltaVelocity;
 	Vector3 m_relativeContactPosition[2];
+
+public:
+	void setBodyData(RigidBody* one, RigidBody* two, float friction, float restitution);
+	void calculateInternals(float duration);
 
 	void swapBodies();
 	void matchAwakeState();
@@ -36,8 +37,30 @@ public:
 	void applyPositionChange(Vector3 linearChange[2], Vector3 angularChange[2], float penetration);
 	Vector3 calculateFrictionlessImpulse(Matrix3* inverseIntertiaTensor);
 	Vector3 calculateFrictionImpulse(Matrix3* inverseIntertiaTensor);
-	Vector3 getOverHangingAxis();
-	Vector3 getPointOnEdge(const Vector3& relativeContactPosition, const Vector3& impulse);
+
+	void addContactVelocity(const Vector3& deltaVelocity);
+	void addPenetration(float deltaPenetration);
+
+	RigidBody* getBody(unsigned index);
+	float getFriction();
+	float getRestitution();
+	Vector3 getContactPoint() const;
+	Vector3 getContactNormal() const;
+	float getPenetration();
+	Matrix3 getContactToWorld() const;
+	Vector3 getContactVelocity() const;
+	float getDesiredDeltaVelocity();
+	Vector3 getRelativeContactPosition(unsigned index);
+	void setBody(RigidBody* body, unsigned index);
+	void setFriction(float friction);
+	void setRestitution(float restitution);
+	void setContactPoint(const Vector3& contactPoint);
+	void setContactNormal(const Vector3& contactNormal);
+	void setPenetration(float penetration);
+	void setContactToWorld(const Matrix3& contactToWorld);
+	void setContactVelocity(const Vector3& contactVelocity);
+	void setDesiredDeltaVelocity(float desiredDeltaVelocity);
+	void setRelativeContactPosition(const Vector3& contactPosition, unsigned index);
 };
 
 class ContactResolver
@@ -59,14 +82,7 @@ public:
 	ContactResolver(unsigned iterations, float velocityEpsilon = 0.01f, float positionEpsilon = 0.01f);
 	ContactResolver(unsigned velocityIterations, unsigned positionIterations, float velocityEpsilon = 0.01f, float positionEpsilon = 0.01f);
 
-	bool isValid()
-	{
-		return m_velocityIterations > 0 &&
-			   m_positionIterations > 0 &&
-			   m_velocityEpsilon >= 0.0f &&
-			   m_positionEpsilon >= 0.0f;
-	}
-
+	bool isValid();
 	void setIterations(unsigned velocityIterations, unsigned positionIterations);
 	void setIterations(unsigned iterations);
 	void setEpsilon(float velocityEpsilon, float positionEpsilon);

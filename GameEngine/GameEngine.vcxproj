@@ -55,7 +55,6 @@
     <ClInclude Include="Engine\Physics\Octree.h" />
     <ClInclude Include="Engine\Physics\PhysicsEngine.h" />
     <ClInclude Include="Engine\Physics\PhysicsObject.h" />
-    <ClInclude Include="Engine\Physics\Particle.h" />
     <ClInclude Include="Engine\Physics\RigidBody.h" />
     <ClInclude Include="Engine\Rendering\Colour.h" />
     <ClInclude Include="Engine\Rendering\MappedValues.h" />
@@ -108,7 +107,6 @@
     <ClCompile Include="Engine\Physics\Octree.cpp" />
     <ClCompile Include="Engine\Physics\PhysicsEngine.cpp" />
     <ClCompile Include="Engine\Physics\PhysicsObject.cpp" />
-    <ClCompile Include="Engine\Physics\Particle.cpp" />
     <ClCompile Include="Engine\Physics\RigidBody.cpp" />
     <ClCompile Include="Engine\Rendering\Colour.cpp" />
     <ClCompile Include="Engine\Rendering\MappedValues.cpp" />
