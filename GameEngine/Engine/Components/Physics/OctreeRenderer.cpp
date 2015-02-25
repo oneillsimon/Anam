@@ -1,7 +1,7 @@
 #include "OctreeRenderer.h"
 
 OctreeRenderer::OctreeRenderer(PhysicsEngine* engine, Octree* tree, const Colour& colour) :
-	ColliderRenderer(false, new ColliderBox(tree->getMaxExtents() - tree->getCentre()), colour),
+	ColliderRenderer(false, new ColliderBox((tree->getMaxExtents() - tree->getCentre()).absolute()), colour),
 	m_engine(engine),
 	m_octree(tree)
 {
@@ -22,6 +22,8 @@ void OctreeRenderer::initialise()
 			}
 		}
 	}
+
+	GameComponent::initialise();
 }
 
 void OctreeRenderer::render(const Shader& shader, const  RenderingEngine& renderingEngine, const Camera& camera) const

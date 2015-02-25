@@ -10,18 +10,11 @@
 #include "PhysicsObject.h"
 #include "Collision.h"
 
-struct Partition
-{
-	Vector3 centre;
-	Vector3 min;
-	Vector3 max;
-};
-
 class Octree
 {
 private:
-	const int MIN_OBJ_PER_OCTAN = 2;
-	const int MAX_OBJ_PER_OCTAN = 8;
+	const int MIN_OBJ_PER_OCTAN = 1;
+	const int MAX_OBJ_PER_OCTAN = 4;
 	const int MAX_OCTREE_DEPTH = 6;
 
 	Vector3 m_min;
@@ -41,8 +34,6 @@ private:
 	void remove(PhysicsObject* object, const Vector3& position);
 
 public:
-	static std::vector<Partition> partitions;
-
 	Octree(const Vector3& min, const Vector3& max, int depth);
 	~Octree();
 	void add(PhysicsObject* object);

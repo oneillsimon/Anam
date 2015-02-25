@@ -1,8 +1,6 @@
 #include "Octree.h"
 #include "../Core/Profiling.h"""
 
-std::vector<Partition> Octree::partitions = std::vector<Partition>();
-
 void Octree::fileObject(PhysicsObject* object, const Vector3& position, bool addObject)
 {
 	float s = 0;//object->getTransform()->getScale().getX();
@@ -166,13 +164,6 @@ Octree::Octree(const Vector3& min, const Vector3& max, int depth)
 	m_numObjects = 0;
 	m_hasChildren = false;
 
-	Partition p;
-	p.centre = m_centre;
-	p.min = min;
-	p.max = max;
-
-	partitions.push_back(p);
-
 	printf("Octree created at depth %d\n", m_depth);
 }
 
@@ -245,7 +236,7 @@ void Octree::potentialCollisions(CollisionData* data)
 
 				if(p1 < p2)
 				{
-					generateContacts(*p1->getCollider(), *p2->getCollider(), data);
+					generateContacts(*p2->getCollider(), *p1->getCollider(), data);
 				}
 			}
 		}
@@ -254,9 +245,8 @@ void Octree::potentialCollisions(CollisionData* data)
 
 void Octree::generateContacts(Collider& one, Collider& two, CollisionData* data)
 {
-	data->reset(MAX_CONTACTS);
 	data->setFriction(0.9f);
-	data->setRestitution(1.1f);
+	data->setRestitution(0.1f);
 	data->setTolerance(0.1f);
 
 	one.collide(two, *data);

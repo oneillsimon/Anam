@@ -26,6 +26,7 @@ void PhysicsEngine::simulate(float delta)
 
 	ProfileTimers::physicsTimer.startInvocation();
 	updateObjectReferences(m_objects, m_tree, delta);
+	cData.reset(MAX_CONTACTS);
 	m_tree->potentialCollisions(&cData);
 	resolver.resolveContacts(cData.getContactArray(), cData.getContactCount(), delta);
 	ProfileTimers::physicsTimer.stopInvocation();
@@ -37,7 +38,7 @@ void PhysicsEngine::updateObjectReferences(std::vector<PhysicsObject*>& objects,
 	{
 		if(objects[i]->getTransform()->hasChanged())
 		{
-			octree->objectMoved(objects[i], objects[i]->getTransform()->getPosition());
+			//octree->objectMoved(objects[i], objects[i]->getTransform()->getPosition());
 		}
 	}
 }

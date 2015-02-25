@@ -65,19 +65,20 @@ void CollisionDemo::initialise(const Window& window)
 			Vector3 v;
 
 			if(i == 0)
-				v = Vector3(-1.5f, y * 3, -1.5f);
+				v = Vector3(-1.5f,  y * 3, -1.5f);
 			else if(i == 1)
-				v = Vector3(1.5f, y * 3, 1.5f);
+				v = Vector3(1.5f, i - y * 3, 1.5f);
 			else if(i == 2)
 				v = Vector3(1.5f, y * 3, -1.5f);
 			else
 				v = Vector3(-1.5f, y * 3, 1.5f);
 
 			PhysicsObject* pObj3 = new PhysicsObject(v);
-			Box * b = new Box(pObj3);
-			b->setState(0);
+			//Box * b = new Box(pObj3);
+			//b->setState(0);
 			pObj3->getTransform()->setScale(1.0f);
-			pObj3->setCollider(b, b->getBody());
+			//pObj3->setCollider(b, b->getBody());
+			pObj3->setCollider(new ColliderBox(Vector3(1, 1, 1)), new RigidBody(1, 0.1f, 0.1f));
 			//pObj3->getTransform()->rotate(AXIS_Z, toRadians(30));
 
 			pObj3->addComponent(new ColliderRenderer(false, pObj3->getCollider(), COLOUR_FIREBRICK));
@@ -85,6 +86,7 @@ void CollisionDemo::initialise(const Window& window)
 			pObj3->addComponent(new Movement2D(10, Input::KEY_O, Input::KEY_P, -1, -1));
 			pObj3->addComponent(new RigidBodyComponent(pObj3));
 			//pObj3->setMass(100);
+
 			addToScene2(pObj3);
 		}
 		y += spacing;
@@ -103,28 +105,20 @@ void CollisionDemo::initialise(const Window& window)
 	//new ColliderPlane(Vector3(0, 1, 0), -10)
 	//new ColliderSphere(1)
 
-	float s = 2;
+	float s = 1;
 	PhysicsObject* plane = new PhysicsObject(Vector3(0.0f, -10, 0));
+	//plane->getTransform()->rotate(AXIS_Z, toRadians(-45));
 	//plane->getTransform()->setScale(0.5f);
 	float h = s / 2.0f;
 	//plane->getCollider()->m_body->setMass(10000000000000000);
-	plane->setCollider(new ColliderPlane(Vector3(0, 1, 0), -10), new RigidBody(10, 0.1f, 0.1f));
+	plane->setCollider(new ColliderBox(Vector3(s, s, s)), new RigidBody(100000000000, 0.1f, 0.1f));
 	//plane->getCollider()->m_body->m_hasInfiniteMass = true;
 	//plane->setCollider(new ColliderBox(Vector3(s, s, s)));
+	//plane->getCollider()->getBody()->setOrientation(Quaternion(AXIS_Z, toRadians(-45)));
 	plane->addComponent(new ColliderRenderer(true, plane->getCollider(), COLOUR_GREEN));
 	addToScene2(plane);
 
-	int pCount = Octree::partitions.size();
-
 	getRoot().addComponent(new OctreeRenderer(getRoot().getEngine()->getPhysicsEngine(),getRoot().getEngine()->getPhysicsEngine()->m_tree, COLOUR_YELLOW_GREEN));
-
-	for(int i = 0; i < pCount; i++)
-	{
-		float scale = fabsf(Octree::partitions[i].centre.getX() - Octree::partitions[i].max.getX());
-		GameObject* g = new GameObject(Octree::partitions[i].centre, Quaternion(), scale);
-		g->addComponent(new ColliderRenderer(false, new ColliderBox(Octree::partitions[i].max)));
-		//addToScene(g);
-	}
 
 	Game::initialise(window);
 }
@@ -166,9 +160,6 @@ void OctreeDemo::initialise(const Window& window)
 	getRoot().addComponent(new OctreeRenderer(getRoot().getEngine()->getPhysicsEngine(), getRoot().getEngine()->getPhysicsEngine()->m_tree, COLOUR_YELLOW_GREEN));
 
 	addToScene(cameraObj);
-
-	int pCount = Octree::partitions.size();
-	
 
 	Game::initialise(window);
 }

@@ -69,10 +69,10 @@ unsigned CollisionDetector::sphereAndSphere(const ColliderSphere& one, const Col
 
 unsigned CollisionDetector::boxAndBox(const ColliderBox& one, const ColliderBox& two, CollisionData* data)
 {
-	if(!IntersectionTests::boxAndBox(one, two))
-	{
-		return 0;
-	}
+	//if(!IntersectionTests::boxAndBox(one, two))
+	//{
+	//	return 0;
+	//}
 
 	Vector3 toCentre = two.getAxis(3) - one.getAxis(3);
 
