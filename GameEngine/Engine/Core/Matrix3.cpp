@@ -35,22 +35,27 @@ Vector3 Matrix3::transformTranspose(const Vector3& v) const
 	float x = v.getX() * m[0][0] + v.getY() * m[0][1] + v.getZ() * m[0][2];
 	float y = v.getX() * m[1][0] + v.getY() * m[1][1] + v.getZ() * m[1][2];
 	float z = v.getX() * m[2][0] + v.getY() * m[2][1] + v.getZ() * m[2][2];
+	//float x = v.getX() * m[0][0] + v.getY() * m[1][0] + v.getZ() * m[2][0];
+	//float y = v.getX() * m[0][1] + v.getY() * m[1][1] + v.getZ() * m[2][1];
+	//float z = v.getX() * m[0][2] + v.getY() * m[1][2] + v.getZ() * m[2][2];
 
 	return Vector3(x, y, z);
 }
 
 void Matrix3::setInverse(const Matrix3& m)
 {
-	float t4 = m.m[0][0] * m.m[1][1];
-	float t6 = m.m[0][0] * m.m[2][1];
-	float t8 = m.m[1][0] * m.m[0][1];
+	float t4_ = m.m[0][0] * m.m[1][1];
+	float t6_ = m.m[0][0] * m.m[2][1];
+
+	float t8_ = m.m[1][0] * m.m[0][1];
 	float t10 = m.m[2][0] * m.m[0][1];
+
 	float t12 = m.m[1][0] * m.m[0][2];
 	float t14 = m.m[2][0] * m.m[0][2];
 
-	float t16 = (t4 * m.m[2][2] - t6 *m.m[1][2] -
-		t8 * m.m[2][2] + t10 * m.m[1][2] +
-		t12 * m.m[2][1] - t14 * m.m[1][1]);
+	float t16 = (t4_ * m.m[2][2] - t6_ * m.m[1][2] -
+				 t8_ * m.m[2][2] + t10 * m.m[1][2] +
+				 t12 * m.m[2][1] - t14 * m.m[1][1]);
 
 	if(t16 == 0.0f)
 	{
@@ -62,12 +67,14 @@ void Matrix3::setInverse(const Matrix3& m)
 	setAt(0, 0, (m.m[1][1] * m.m[2][2] - m.m[2][1] * m.m[1][2]) * t17);
 	setAt(1, 0, -(m.m[1][0] * m.m[2][2] - m.m[2][0] * m.m[1][2]) * t17);
 	setAt(2, 0, (m.m[1][0] * m.m[2][1] - m.m[2][0] * m.m[1][1]) * t17);
+
 	setAt(0, 1, -(m.m[0][1] * m.m[2][2] - m.m[2][1] * m.m[0][2]) * t17);
 	setAt(1, 1, (m.m[0][0] * m.m[2][2] - t14) * t17);
-	setAt(2, 1, -(t6 - t10) * t17);
+	setAt(2, 1, -(t6_ - t10) * t17);
+
 	setAt(0, 2, (m.m[0][1] * m.m[1][2] - m.m[1][1] * m.m[0][2]) * t17);
 	setAt(1, 2, -(m.m[0][0] * m.m[1][2] - t12) * t17);
-	setAt(2, 2, (t4 - t8) * t17);
+	setAt(2, 2, (t4_ - t8_) * t17);
 }
 
 Matrix3 Matrix3::inverse() const
@@ -93,12 +100,24 @@ void Matrix3::setSkewSymmetric(const Vector3& v)
 
 void Matrix3::setComponents(const Vector3& one, const Vector3& two, const Vector3& three)
 {
+	//m[0][0] = one.getX();
+	//m[0][1] = two.getX();
+	//m[0][2] = three.getX();
+	//m[1][0] = one.getY();
+	//m[1][1] = two.getY();
+	//m[1][2] = three.getY();
+	//m[2][0] = one.getZ();
+	//m[2][1] = two.getZ();
+	//m[2][2] = three.getZ();
+
 	m[0][0] = one.getX();
 	m[1][0] = two.getX();
 	m[2][0] = three.getX();
+
 	m[0][1] = one.getY();
 	m[1][1] = two.getY();
 	m[2][1] = three.getY();
+
 	m[0][2] = one.getZ();
 	m[1][2] = two.getZ();
 	m[2][2] = three.getZ();
@@ -107,29 +126,32 @@ void Matrix3::setComponents(const Vector3& one, const Vector3& two, const Vector
 void Matrix3::setTranspose(const Matrix3& matrix)
 {
 	m[0][0] = matrix.m[0][0];
-	m[1][0] = matrix.m[1][0];
-	m[2][0] = matrix.m[2][0];
-	m[0][1] = matrix.m[0][1];
+	m[1][0] = matrix.m[0][1];
+	m[2][0] = matrix.m[0][2];
+
+	m[0][1] = matrix.m[1][0];
 	m[1][1] = matrix.m[1][1];
-	m[2][1] = matrix.m[2][1];
-	m[0][2] = matrix.m[0][2];
-	m[1][2] = matrix.m[1][2];
+	m[2][1] = matrix.m[1][2];
+
+	m[0][2] = matrix.m[2][0];
+	m[1][2] = matrix.m[2][1];
 	m[2][2] = matrix.m[2][2];
 }
 
 void Matrix3::setBlockInteriaTensor(const Vector3& halfSizes, float mass)
 {
 	Vector3 squares = halfSizes * halfSizes;
-	setInertiaTensorCoeffs(0.3f * mass * (squares.getY() * squares.getZ()),
-		0.3f * mass * (squares.getX() + squares.getZ()),
-		0.3f * mass * (squares.getX() + squares.getY()));
+
+	setInertiaTensorCoeffs(0.3f * mass * (squares.getY() + squares.getZ()),
+						   0.3f * mass * (squares.getX() + squares.getZ()),
+						   0.3f * mass * (squares.getX() + squares.getY()));
 }
 
 void Matrix3::setInertiaTensorCoeffs(float ix, float iy, float iz, float ixy, float ixz, float iyz)
 {
-	m[0][0] = ix;	m[1][0] = -ixy;	m[2][0] = -ixz;
-	m[0][1] = -ixy; m[1][1] = iy;	m[2][1] = -iyz;
-	m[0][2] = -ixz; m[1][2] = -iyz; m[2][2] = iz;
+	m[0][0] = ix;	m[0][1] = -ixy;	m[0][2] = -ixz;
+	m[1][0] = -ixy; m[1][1] = iy;	m[1][2] = -iyz;
+	m[2][0] = -ixz; m[2][1] = -iyz; m[2][2] = iz;
 }
 
 Matrix3 Matrix3::transpose() const
@@ -188,11 +210,11 @@ Matrix3 Matrix3::operator *(const Matrix3& matrix) const
 {
 	Matrix3 res = Matrix3();
 
-	for(int i = 0; i < 4; i++)
+	for(int i = 0; i < 3; i++)
 	{
-		for(int j = 0; j < 4; j++)
+		for(int j = 0; j < 3; j++)
 		{
-			for(int k = 0; k < 4; k++)
+			for(int k = 0; k < 3; k++)
 			{
 				res.m[i][j] += this->m[k][j] * matrix.m[i][k];
 			}
@@ -217,6 +239,7 @@ void Matrix3::operator +=(const Matrix3& matrix) const
 
 void Matrix3::operator *=(const Matrix3& matrix)
 {
+	/*
 	float t1 = m[0][0] * matrix.m[0][0] + m[1][0] * matrix.m[0][1] + m[2][0] * matrix.m[0][2];
 	float t2 = m[0][0] * matrix.m[0][1] + m[1][0] * matrix.m[1][1] + m[2][0] * matrix.m[1][2];
 	float t3 = m[0][0] * matrix.m[0][2] + m[1][0] * matrix.m[2][1] + m[2][0] * matrix.m[2][2];
@@ -240,6 +263,34 @@ void Matrix3::operator *=(const Matrix3& matrix)
 	m[0][2] = t1;
 	m[1][2] = t2;
 	m[2][2] = t3;
+	*/
+	//float t1;
+	//float t2;
+	//float t3;
+
+	float _0 = m[0][0] * matrix.m[0][0] + m[1][0] * matrix.m[0][1] + m[2][0] * matrix.m[0][2];
+	float _1 = m[0][0] * matrix.m[1][0] + m[1][0] * matrix.m[1][1] + m[2][0] * matrix.m[1][2];
+	float _2 = m[0][0] * matrix.m[2][0] + m[1][0] * matrix.m[2][1] + m[2][0] * matrix.m[2][2];
+
+	this->m[0][0] = _0;
+	this->m[1][0] = _1;
+	this->m[2][0] = _2;
+
+	float _3 = m[0][1] * matrix.m[0][0] + m[1][1] * matrix.m[0][1] + m[2][1] * matrix.m[0][2];
+	float _4 = m[0][1] * matrix.m[1][0] + m[1][1] * matrix.m[1][1] + m[2][1] * matrix.m[1][2];
+	float _5 = m[0][1] * matrix.m[2][0] + m[1][1] * matrix.m[2][1] + m[2][1] * matrix.m[2][2];
+
+	this->m[0][1] = _3;
+	this->m[1][1] = _4;
+	this->m[2][1] = _5;
+
+	float _6 = m[0][2] * matrix.m[0][0] + m[1][2] * matrix.m[0][1] + m[2][2] * matrix.m[0][2];
+	float _7 = m[0][2] * matrix.m[1][0] + m[1][2] * matrix.m[1][1] + m[2][2] * matrix.m[1][2];
+	float _8 = m[0][2] * matrix.m[2][0] + m[1][2] * matrix.m[2][1] + m[2][2] * matrix.m[2][2];
+
+	this->m[0][2] = _6;
+	this->m[1][2] = _7;
+	this->m[2][2] = _8;
 }
 
 void Matrix3::operator *=(float f)
