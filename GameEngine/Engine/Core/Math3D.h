@@ -15,6 +15,7 @@
 
 #include <string>
 
+class Matrix3;
 class Quaternion;
 
 class Vector2
@@ -183,6 +184,7 @@ public:
 	float getDeterminant() const;
 	void setInverse(const Matrix4& m);
 	void setComponents(const Vector3& v1, const Vector3& v2, const Vector3& v3);
+	Matrix3 toMatrix3() const;
 
 	//From cyclone
 	Vector3 getAxisVector(unsigned int index) const;

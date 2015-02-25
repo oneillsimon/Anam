@@ -241,6 +241,17 @@ void Matrix4::setComponents(const Vector3& v1, const Vector3& v2, const Vector3&
 	m[0][2] = v3.getX(); m[1][2] = v3.getY(); m[2][2] = v3.getZ();
 }
 
+Matrix3 Matrix4::toMatrix3() const
+{
+	Matrix3 res;
+
+	res.setAt(0, 0, m[0][0]); res.setAt(1, 0, m[1][0]); res.setAt(2, 0, m[2][0]);
+	res.setAt(0, 1, m[0][1]); res.setAt(1, 1, m[1][1]); res.setAt(2, 1, m[2][1]);
+	res.setAt(0, 2, m[0][2]); res.setAt(1, 2, m[1][2]); res.setAt(2, 2, m[2][2]);
+
+	return res;
+}
+
 Vector3 Matrix4::transformInverse(const Vector3& v) const
 {
 	Vector3 temp = v;
