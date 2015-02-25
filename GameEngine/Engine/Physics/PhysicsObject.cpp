@@ -16,7 +16,7 @@ void PhysicsObject::initialise()
 
 void PhysicsObject::update(float delta)
 {
-	m_collider->m_body->integrate(delta);
+	m_collider->getBody()->integrate(delta);
 	GameObject::update(delta);
 }
 
@@ -28,7 +28,6 @@ Collider* PhysicsObject::getCollider()
 void PhysicsObject::setCollider(Collider* collider, RigidBody* body)
 {
 	m_collider = collider;
-	body->m_parent = this;
-	m_collider->m_body = body;
-	//m_collider->m_body->m_parent = this;
+	body->setParent(this);
+	m_collider->setBody(body);
 }

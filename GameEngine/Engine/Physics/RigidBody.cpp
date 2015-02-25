@@ -1,72 +1,8 @@
-#include <assert.h>
-
 #include "RigidBody.h"
 
-void calculateInterisTensorInWorldSpace(Matrix3& iitWorld, const Matrix3& iitBody, const Matrix4& m)
-{
-	//Quaternion q = t.getRotation();
-	//q = q.normalised();
-	//Matrix4 m = t.getTransformation();
-
-	float t4_ = m[0][0] * iitBody[0][0] + m[1][0] * iitBody[0][1] + m[2][0] * iitBody[0][2];
-	float t9_ = m[0][0] * iitBody[1][0] + m[1][0] * iitBody[1][1] + m[2][0] * iitBody[1][2];
-	float t14 = m[0][0] * iitBody[2][0] + m[1][0] * iitBody[2][1] + m[2][0] * iitBody[2][2];
-
-	float t28 = m[0][1] * iitBody[0][0] + m[1][1] * iitBody[0][1] + m[2][1] * iitBody[0][2];
-	float t33 = m[0][1] * iitBody[1][0] + m[1][1] * iitBody[1][1] + m[2][1] * iitBody[1][2];
-	float t38 = m[0][1] * iitBody[2][0] + m[1][1] * iitBody[2][1] + m[2][1] * iitBody[2][2];
-
-	float t52 = m[0][2] * iitBody[0][0] + m[1][2] * iitBody[0][1] + m[2][2] * iitBody[0][2];
-	float t57 = m[0][2] * iitBody[1][0] + m[1][2] * iitBody[1][1] + m[2][2] * iitBody[1][2];
-	float t62 = m[0][2] * iitBody[2][0] + m[1][2] * iitBody[2][1] + m[2][2] * iitBody[2][2];
-
-	iitWorld.setAt(0, 0, t4_ * m[0][0] + t9_ * m[1][0] + t14 * m[2][0]);
-	iitWorld.setAt(0, 1, t4_ * m[0][1] + t9_ * m[1][1] + t14 * m[2][1]);
-	iitWorld.setAt(0, 2, t4_ * m[0][2] + t9_ * m[1][2] + t14 * m[2][2]);
-
-	iitWorld.setAt(1, 0, t28 * m[0][0] + t33 * m[1][0] + t38 * m[2][0]);
-	iitWorld.setAt(1, 1, t28 * m[0][1] + t33 * m[1][1] + t38 * m[2][1]);
-	iitWorld.setAt(1, 2, t28 * m[0][2] + t33 * m[1][2] + t38 * m[2][2]);
-
-	iitWorld.setAt(2, 0, t52 * m[0][0] + t57 * m[1][0] + t62 * m[2][0]);
-	iitWorld.setAt(2, 1, t52 * m[0][1] + t57 * m[1][1] + t62 * m[2][1]);
-	iitWorld.setAt(2, 2, t52 * m[0][2] + t57 * m[1][2] + t62 * m[2][2]);
-}
-
-static void calculateTransformMatrix(Matrix4& m, const Vector3& pos, const Quaternion& rot)
-{
-	m[0][0] = 1 - 2 * rot.getY() * rot.getY() - 2 * rot.getZ() * rot.getZ();
-	m[1][0] = 2 * rot.getX() * rot.getY() - 2 * rot.getW() * rot.getZ();
-	m[2][0] = 2 * rot.getX() * rot.getZ() + 2 * rot.getW() * rot.getY();
-	m[3][0] = pos.getX();
-
-	m[0][1] = 2 * rot.getX() * rot.getY() + 2 * rot.getW() * rot.getZ();
-	m[1][1] = 1 - 2 * rot.getX() * rot.getX() - 2 * rot.getZ() * rot.getZ();
-	m[2][1] = 2 * rot.getY() * rot.getZ() - 2 * rot.getW() * rot.getX();
-	m[3][1] = pos.getY();
-
-	m[0][2] = 2 * rot.getX() * rot.getZ() - 2 * rot.getW() * rot.getY();
-	m[1][2] = 2 * rot.getY() * rot.getZ() + 2 * rot.getW() * rot.getX();
-	m[2][2] = 1 - 2 * rot.getX() * rot.getX() - 2 * rot.getY() * rot.getY();
-	m[3][2] = pos.getZ();
-}
-
-void RigidBody::calculateDerivedData()
-{
-	Matrix4 transform = m_parent->getTransform()->getTransformation();
-
-	//calculateTransformMatrix(transform, getPosition(), getOrientation());
-	//calculateInterisTensorInWorldSpace(m_inverseInertiaTensorWorld, m_inverseInertiaTensor, m_parent->getTransform()->getTransformation());
-
-	m_inverseInertiaTensorWorld = m_inverseInertiaTensor * m_parent->getTransform()->getTransformation().toMatrix3();
-
-	//m_parent->getTransform()->setRotation(m_parent->getTransform()->getRotation().normalised());
-	//calculateInterisTensorInWorldSpace(m_inverseInertiaTensorWorld, *m_parent->getTransform(), m_inverseInertiaTensor);
-}
-
 RigidBody::RigidBody(float mass, float linear, float angular) :
-m_linearDamping(linear),
-m_angularDamping(angular)
+	m_linearDamping(linear),
+	m_angularDamping(angular)
 {
 	if(mass == -1)
 	{
@@ -82,48 +18,60 @@ m_angularDamping(angular)
 
 void RigidBody::integrate(float delta)
 {
-	if(!m_isAwake) return;
+	if(!m_isAwake)
+	{
+		return;
+	}
 
-	// Calculate linear acceleration from force inputs.
 	m_lastFrameAcceleration = m_acceleration;
 	m_lastFrameAcceleration.addScaledVector(m_forceAccum, m_inverseMass);
 
-	// Calculate angular acceleration from torque inputs.
-	Vector3 angularAcceleration =
-		m_inverseInertiaTensorWorld.transform(m_torqueAccum);
+	Vector3 angularAcceleration = m_inverseInertiaTensorWorld.transform(m_torqueAccum);
 
-	// Adjust velocities
-	// Update linear velocity from both acceleration and impulse.
 	m_velocity.addScaledVector(m_lastFrameAcceleration, delta);
-
-	// Update angular velocity from both acceleration and impulse.
 	m_rotation.addScaledVector(angularAcceleration, delta);
 
-	// Impose drag.
 	m_velocity *= powf(m_linearDamping, delta);
 	m_rotation *= powf(m_angularDamping, delta);
 
 	m_parent->getTransform()->setPosition(m_parent->getTransform()->getPosition() + (m_velocity * delta));
 	m_parent->getTransform()->setRotation(m_parent->getTransform()->getRotation() + (m_rotation * delta));
 
-	// Normalise the orientation, and update the matrices with the new
-	// position and orientation
 	calculateDerivedData();
 
-	// Clear accumulators.
 	clearAccumulators();
 
-	// Update the kinetic energy store, and possibly put the body to
-	// sleep.
-	if(m_canSleep) {
+	if(m_canSleep)
+	{
 		float currentMotion = m_velocity.scalarProduct(m_velocity) + m_rotation.scalarProduct(m_rotation);
-
 		float bias = powf(0.5, delta);
+
 		m_motion = bias*m_motion + (1 - bias)*currentMotion;
-		//printf("motion, %f\n", m_motion);
-		if(m_motion < m_sleepEpsilon) setAwake(false);
-		else if(m_motion > 10 * m_sleepEpsilon) m_motion = 10 * m_sleepEpsilon;
+
+		if(m_motion < m_sleepEpsilon)
+		{
+			setAwake(false);
+		}
+		else if(m_motion > 10 * m_sleepEpsilon)
+		{
+			m_motion = 10 * m_sleepEpsilon;
+		}
 	}
+}
+
+void RigidBody::calculateDerivedData()
+{
+	m_inverseInertiaTensorWorld = m_inverseInertiaTensor * m_parent->getTransform()->getTransformation().toMatrix3();
+}
+
+void RigidBody::setParent(PhysicsObject* physicsObject)
+{
+	m_parent = physicsObject;
+}
+
+PhysicsObject* RigidBody::getParent()
+{
+	return m_parent;
 }
 
 void RigidBody::setMass(float mass)
@@ -303,6 +251,11 @@ void RigidBody::addRotation(const Vector3& deltaRotation)
 	m_rotation += deltaRotation;
 }
 
+bool RigidBody::getAwake() const
+{
+	return m_isAwake;
+}
+
 void RigidBody::setAwake(const bool awake)
 {
 	if(awake)
@@ -316,6 +269,11 @@ void RigidBody::setAwake(const bool awake)
 		m_velocity = Vector3();
 		m_rotation = Vector3();
 	}
+}
+
+bool RigidBody::getCanSleep() const
+{
+	return m_canSleep;
 }
 
 void RigidBody::setCanSleep(const bool canSleep)

@@ -29,7 +29,7 @@ public:
 
 class CollisionData
 {
-public:
+private:
 	Contact* m_contactArray;
 	Contact* m_contacts;
 	int m_contactsLeft;
@@ -38,6 +38,7 @@ public:
 	float m_restitution;
 	float m_tolerance;
 
+public:
 	bool hasMoreContacts();
 	void reset(unsigned maxContacts);
 	void addContacts(unsigned count);
@@ -50,6 +51,8 @@ public:
 	float getFriction();
 	float getRestitution();
 	float getTolerance();
+
+	void setContactArray(Contact* contactArray);
 
 	void setFriction(float friction);
 	void setRestitution(float restitution);

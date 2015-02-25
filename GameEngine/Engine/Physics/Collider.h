@@ -9,6 +9,10 @@ class RigidBody;
 
 class Collider
 {
+protected:
+	int m_type;
+	RigidBody* m_body;
+
 public:
 	enum Type
 	{
@@ -17,11 +21,16 @@ public:
 		PLANE,
 	};
 
-	int m_type;
-	RigidBody* m_body;
+	Collider(int type);
 
 	virtual void collide(Collider& collider, CollisionData& data) = 0;
+
 	virtual Vector3 getExtents() = 0;
+
+	RigidBody* getBody() const;
+	int getType();
+
+	void setBody(RigidBody* rigidBody);
 
 	Vector3 getAxis(unsigned index) const;
 };

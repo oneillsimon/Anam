@@ -9,7 +9,7 @@ Vector3 contactPoint(const Vector3& pOne, const Vector3& dOne, float oneSize, co
 
 unsigned CollisionDetector::sphereAndHalfSpace(const ColliderSphere& sphere, const ColliderPlane& plane, CollisionData* data)
 {
-	if(data->m_contactsLeft <= 0)
+	if(data->getContactsLeft() <= 0)
 	{
 		return 0;
 	}
@@ -23,11 +23,11 @@ unsigned CollisionDetector::sphereAndHalfSpace(const ColliderSphere& sphere, con
 		return 0;
 	}
 
-	Contact* contact = data->m_contacts;
+	Contact* contact = data->getContacts();
 	contact->m_contactNormal = plane.m_normal;
 	contact->m_penetration = -ballDistance;
 	contact->m_contactPoint = position - plane.m_normal * (ballDistance + sphere.m_radius);
-	contact->setBodyData(sphere.m_body, 0, data->m_friction, data->m_restitution);
+	contact->setBodyData(sphere.getBody(), 0, data->getFriction(), data->getRestitution());
 	data->addContacts(1);
 
 	return 1;
@@ -35,7 +35,7 @@ unsigned CollisionDetector::sphereAndHalfSpace(const ColliderSphere& sphere, con
 
 unsigned CollisionDetector::sphereAndSphere(const ColliderSphere& one, const ColliderSphere& two, CollisionData* data)
 {
-	if(data->m_contactsLeft <= 0)
+	if(data->getContactsLeft() <= 0)
 	{
 		return 0;
 	}
@@ -53,11 +53,12 @@ unsigned CollisionDetector::sphereAndSphere(const ColliderSphere& one, const Col
 
 	Vector3 normal = midline * (1.0f / size);
 
-	Contact* contact = data->m_contacts;
+	Contact* contact = data->getContacts();
 	contact->m_contactNormal = normal;
 	contact->m_contactPoint = positionOne + midline * 0.5f;
 	contact->m_penetration = (one.m_radius + two.m_radius - size);
-	contact->setBodyData(one.m_body, two.m_body, data->m_friction, data->m_restitution); 
+	contact->setBodyData(one.getBody(), two.getBody(), data->getFriction(), data->getRestitution());
+
 	data->addContacts(1);
 
 	return 1;
@@ -153,8 +154,8 @@ unsigned CollisionDetector::boxAndBox(const ColliderBox& one, const ColliderBox&
 			}
 		}
 
-		ptOnOneEdge = one.m_body->m_parent->getTransform()->getTransformation() * ptOnOneEdge;
-		ptOnTwoEdge = two.m_body->m_parent->getTransform()->getTransformation() * ptOnTwoEdge;
+		ptOnOneEdge = one.getBody()->getParent()->getTransform()->getTransformation() * ptOnOneEdge;
+		ptOnTwoEdge = two.getBody()->getParent()->getTransform()->getTransformation() * ptOnTwoEdge;
 
 		Vector3 vertex = contactPoint(ptOnOneEdge,
 									  oneAxis,
@@ -164,11 +165,11 @@ unsigned CollisionDetector::boxAndBox(const ColliderBox& one, const ColliderBox&
 									  two.m_halfSize[twoAxisIndex],
 									  bestSingleAxis > 2);
 
-		Contact* contact = data->m_contacts;
+		Contact* contact = data->getContacts();
 		contact->m_penetration = pen;
 		contact->m_contactNormal = axis;
 		contact->m_contactPoint = vertex;
-		contact->setBodyData(one.m_body, two.m_body, data->m_friction, data->m_restitution);
+		contact->setBodyData(one.getBody(), two.getBody(), data->getFriction(), data->getRestitution());
 		data->addContacts(1);
 
 		return 1;
@@ -180,7 +181,7 @@ unsigned CollisionDetector::boxAndBox(const ColliderBox& one, const ColliderBox&
 
 unsigned CollisionDetector::boxAndPoint(const ColliderBox& box, const Vector3& point, CollisionData* data)
 {
-	Vector3 relPt = box.m_body->m_parent->getTransform()->getTransformation().transformInverse(point);
+	Vector3 relPt = box.getBody()->getParent()->getTransform()->getTransformation().transformInverse(point);
 
 	Vector3 normal;
 	float min_depth = box.m_halfSize[0] - fabsf(relPt[0]);
@@ -216,11 +217,11 @@ unsigned CollisionDetector::boxAndPoint(const ColliderBox& box, const Vector3& p
 		normal = box.getAxis(2) * ((relPt[2] < 0) ? -1 : 1);
 	}
 
-	Contact* contact = data->m_contacts;
+	Contact* contact = data->getContacts();
 	contact->m_contactNormal = normal;
 	contact->m_contactPoint = point;
 	contact->m_penetration = min_depth;
-	contact->setBodyData(box.m_body, 0, data->m_friction, data->m_restitution);
+	contact->setBodyData(box.getBody(), 0, data->getFriction(), data->getRestitution());
 	data->addContacts(1);
 
 	return 1;
@@ -229,7 +230,7 @@ unsigned CollisionDetector::boxAndPoint(const ColliderBox& box, const Vector3& p
 unsigned CollisionDetector::boxAndSphere(const ColliderBox& box, const ColliderSphere& sphere, CollisionData* data)
 {
 	Vector3 centre = sphere.getAxis(3);
-	Vector3 relCentre = box.m_body->m_parent->getTransform()->getTransformation().transformInverse(centre);
+	Vector3 relCentre = box.getBody()->getParent()->getTransform()->getTransformation().transformInverse(centre);
 
 	if(fabsf(relCentre[0]) - sphere.m_radius > box.m_halfSize[0] ||
 	   fabsf(relCentre[1]) - sphere.m_radius > box.m_halfSize[1] ||
@@ -286,14 +287,14 @@ unsigned CollisionDetector::boxAndSphere(const ColliderBox& box, const ColliderS
 		return 0;
 	}
 
-	Vector3 closestPtWorld = box.m_body->m_parent->getTransform()->getTransformation().transform(closestPt);
+	Vector3 closestPtWorld = box.getBody()->getParent()->getTransform()->getTransformation().transform(closestPt);
 
-	Contact* contact = data->m_contacts;
+	Contact* contact = data->getContacts();
 	contact->m_contactNormal = (closestPtWorld - centre);
 	contact->m_contactNormal = contact->m_contactNormal.normalised();
 	contact->m_contactPoint = closestPtWorld;
 	contact->m_penetration = sphere.m_radius - sqrtf(dist);
-	contact->setBodyData(box.m_body, sphere.m_body, data->m_friction, data->m_restitution);
+	contact->setBodyData(box.getBody(), sphere.getBody(), data->getFriction(), data->getRestitution());
 	data->addContacts(1);
 
 	return 1;
@@ -301,7 +302,7 @@ unsigned CollisionDetector::boxAndSphere(const ColliderBox& box, const ColliderS
 
 unsigned CollisionDetector::boxAndHalfSpace(const ColliderBox& box, const ColliderPlane& plane, CollisionData* data)
 {
-	if(data->m_contactsLeft <= 0)
+	if(data->getContactsLeft() <= 0)
 	{
 		return 0;
 	}
@@ -314,7 +315,7 @@ unsigned CollisionDetector::boxAndHalfSpace(const ColliderBox& box, const Collid
 	float mults[8][3] = { { 1, 1,  1 }, { -1, 1,  1 }, { 1, -1,  1 }, { -1, -1,  1 },
 						  { 1, 1, -1 }, { -1, 1, -1 }, { 1, -1, -1 }, { -1, -1, -1 } };
 
-	Contact* contact = data->m_contacts;
+	Contact* contact = data->getContacts();
 	unsigned contactsUsed = 0;
 
 	for(unsigned i = 0; i < 8; i++)
@@ -323,7 +324,7 @@ unsigned CollisionDetector::boxAndHalfSpace(const ColliderBox& box, const Collid
 		Vector3 vertexPos(mults[i][0], mults[i][1], mults[i][2]);
 		vertexPos *= box.m_halfSize;
 
-		vertexPos += box.m_body->getPosition();
+		vertexPos += box.getBody()->getPosition();
 
 		float vertexDistance = vertexPos.scalarProduct(plane.m_normal);
 
@@ -335,12 +336,12 @@ unsigned CollisionDetector::boxAndHalfSpace(const ColliderBox& box, const Collid
 			contact->m_contactNormal = plane.m_normal;
 			contact->m_penetration = plane.m_distance - vertexDistance;
 
-			contact->setBodyData(box.m_body, 0, data->m_friction, data->m_restitution);
+			contact->setBodyData(box.getBody(), 0, data->getFriction(), data->getRestitution());
 
 			contact++;
 			contactsUsed++;
 
-			if(contactsUsed == (unsigned)data->m_contactsLeft)
+			if(contactsUsed == (unsigned)data->getContactsLeft())
 			{
 				return contactsUsed;
 			}
@@ -440,6 +441,11 @@ float CollisionData::getTolerance()
 	return m_tolerance;
 }
 
+void CollisionData::setContactArray(Contact* contactArray)
+{
+	m_contactArray = contactArray;
+}
+
 void CollisionData::setFriction(float friction)
 {
 	m_friction = friction;
@@ -498,7 +504,7 @@ bool tryAxis(const ColliderBox& one, const ColliderBox& two, Vector3 axis, const
 
 void fillPointFaceBoxBox(const ColliderBox& one, const ColliderBox& two, const Vector3& toCentre, CollisionData* data, unsigned best, float pen)
 {
-	Contact* contact = data->m_contacts;
+	Contact* contact = data->getContacts();
 
 	Vector3 normal = one.getAxis(best);
 
@@ -526,8 +532,8 @@ void fillPointFaceBoxBox(const ColliderBox& one, const ColliderBox& two, const V
 
 	contact->m_contactNormal = normal;
 	contact->m_penetration = pen;
-	contact->m_contactPoint = two.m_body->m_parent->getTransform()->getTransformation() * vertex;
-	contact->setBodyData(one.m_body, two.m_body, data->m_friction, data->m_restitution);
+	contact->m_contactPoint = two.getBody()->getParent()->getTransform()->getTransformation() * vertex;
+	contact->setBodyData(one.getBody(), two.getBody(), data->getFriction(), data->getRestitution());
 }
 
 Vector3 contactPoint(const Vector3& pOne, const Vector3& dOne, float oneSize, const Vector3& pTwo, const Vector3& dTwo, float twoSize, bool useOne)

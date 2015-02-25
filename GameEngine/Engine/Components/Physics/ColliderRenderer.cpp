@@ -2,7 +2,7 @@
 #include "ColliderRenderer.h"
 
 ColliderRenderer::ColliderRenderer(bool isPhysX, Collider* collider, const Colour& defaultColour, const Colour& collidingColour) :
-MeshRenderer(Mesh(getMeshFromCollider(collider->m_type)), Material("", TEXTURE_BLANK, defaultColour)),
+MeshRenderer(Mesh(getMeshFromCollider(collider->getType())), Material("", TEXTURE_BLANK, defaultColour)),
 m_defaultColour(defaultColour),
 m_collidingColour(collidingColour),
 m_collider(collider),
@@ -24,20 +24,20 @@ void ColliderRenderer::render(const Shader& shader, const  RenderingEngine& rend
 
 	Transform t = getTransform();
 
-	if(m_collider->m_type == Collider::BOX)
+	if(m_collider->getType() == Collider::BOX)
 	{
 		ColliderBox& b = *(ColliderBox*)m_collider;
 
 		t.setScale(b.m_halfSize);
-		t.setRotation(b.m_body->m_parent->getTransform()->getRotation());
+		t.setRotation(b.getBody()->getParent()->getTransform()->getRotation());
 	}
-	else if(m_collider->m_type == Collider::SPHERE)
+	else if(m_collider->getType() == Collider::SPHERE)
 	{
 		ColliderSphere& s = *(ColliderSphere*)m_collider;
 
 		t.setScale(s.m_radius);
 		//t.setRotation(Quaternion());
-		t.setRotation(s.m_body->m_parent->getTransform()->getRotation());
+		t.setRotation(s.getBody()->getParent()->getTransform()->getRotation());
 	}
 
 	m_mesh.getWireFrameShader().bind();

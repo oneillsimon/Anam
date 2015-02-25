@@ -1,6 +1,7 @@
 #ifndef RIGIDBODY_H
 #define RIGIDBODY_H
 
+#include <assert.h>
 #include <math.h>
 
 #include "../Core/Math3D.h"
@@ -10,11 +11,11 @@ class PhysicsObject;
 
 class RigidBody
 {
-public:
+private:
 	const float m_sleepEpsilon = 0.01f;
 
 	PhysicsObject* m_parent;
-	bool debug;
+
 	float m_inverseMass;
 	Matrix3 m_inverseInertiaTensor;
 	float m_linearDamping;
@@ -26,13 +27,13 @@ public:
 	float m_motion;
 	bool m_isAwake;
 	bool m_canSleep;
-	//Matrix4 m_transformMatrix;
 	bool m_hasInfiniteMass;
 
 	Vector3 m_forceAccum;
 	Vector3 m_torqueAccum;
 	Vector3 m_lastFrameAcceleration;
 
+public:
 	RigidBody(float mass, float linear = 0.1f, float angular = 0.1f);
 
 	void calculateDerivedData();
@@ -42,6 +43,7 @@ public:
 
 	bool hasFiniteMass() const;
 
+	void setParent(PhysicsObject* physicsObject);
 	void setMass(const float mass);
 	void setInverseMass(const float inverseMass);
 	void setIntertiaTensor(const Matrix3& interiaTensor);
@@ -52,8 +54,9 @@ public:
 	void setPosition(const Vector3& position);
 	void setOrientation(Quaternion& orientation);
 
-	float getInverseMass() const;
+	PhysicsObject* getParent();
 	float getMass() const;
+	float getInverseMass() const;
 	void getInertiaTensor(Matrix3* intertiaTensor) const;
 	Matrix3 getInertiaTensor() const;
 	void getInertiaTensorWorld(Matrix3* intertiaTensor) const;
@@ -78,18 +81,10 @@ public:
 	Vector3 getRotation() const;
 	void addRotation(const Vector3& deltaRotation);
 
-	bool getAwake() const
-	{
-		return m_isAwake;
-	}
-
+	bool getAwake() const;
 	void setAwake(const bool awake = true);
 
-	bool getCanSleep() const
-	{
-		return m_canSleep;
-	}
-
+	bool getCanSleep() const;
 	void setCanSleep(const bool canSleep = true);
 
 	Vector3 getLastFrameAcceleration() const;

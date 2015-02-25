@@ -78,7 +78,7 @@ void CollisionDemo::initialise(const Window& window)
 			Box * b = new Box(pObj3);
 			b->setState(0);
 			pObj3->getTransform()->setScale(1.0f);
-			pObj3->setCollider(b, b->m_body);
+			pObj3->setCollider(b, b->getBody());
 			//pObj3->getTransform()->rotate(AXIS_Z, toRadians(30));
 
 			pObj3->addComponent(new ColliderRenderer(false, pObj3->getCollider(), COLOUR_FIREBRICK));

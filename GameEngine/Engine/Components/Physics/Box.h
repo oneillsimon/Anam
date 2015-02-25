@@ -6,7 +6,7 @@ public:
 	Box(PhysicsObject* obj)
 	{
 		m_body = new RigidBody(1);
-		m_body->m_parent = obj;
+		m_body->setParent(obj);
 	}
 
 	~Box()

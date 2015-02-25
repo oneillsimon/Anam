@@ -1,24 +1,42 @@
 #include "Collider.h"
 #include "Collision.h"
-#include <iostream>
+
+Collider::Collider(int type) :
+	m_type(type)
+{
+}
+
+RigidBody* Collider::getBody() const
+{
+	return m_body;
+}
+
+int Collider::getType()
+{
+	return m_type;
+}
+
+void Collider::setBody(RigidBody* rigidBody)
+{
+	m_body = rigidBody;
+}
 
 Vector3 Collider::getAxis(unsigned index) const
 {
-	return m_body->m_parent->getTransform()->getTransformation().getAxisVector(index);
+	return m_body->getParent()->getTransform()->getTransformation().getAxisVector(index);
 }
 
 ColliderSphere::ColliderSphere(float radius) :
+	Collider(Type::SPHERE),
 	m_radius(radius)
 {
-	m_type = Type::SPHERE;
-	
 }
 
 void ColliderSphere::collide(Collider& collider, CollisionData& data)
 {
 	ColliderSphere& w = (ColliderSphere&)collider;
 
-	switch(collider.m_type)
+	switch(collider.getType())
 	{
 	case SPHERE:
 		CollisionDetector::sphereAndSphere(*this, (ColliderSphere&)collider, &data);
@@ -38,15 +56,14 @@ Vector3 ColliderSphere::getExtents()
 }
 
 ColliderBox::ColliderBox(const Vector3& halfExtents) :
+	Collider(Type::BOX),
 	m_halfSize(halfExtents)
 {
-	m_type = Type::BOX;
 }
 
 void ColliderBox::collide(Collider& collider, CollisionData& data)
 {
-	
-	switch(collider.m_type)
+	switch(collider.getType())
 	{
 	case SPHERE:
 		CollisionDetector::boxAndSphere(*this, (ColliderSphere&)collider, &data);
@@ -66,15 +83,15 @@ Vector3 ColliderBox::getExtents()
 }
 
 ColliderPlane::ColliderPlane(const Vector3& normal, float distance) :
+	Collider(Type::PLANE),
 	m_normal(normal),
 	m_distance(distance)
 {
-	m_type = Type::PLANE;
 }
 
 void ColliderPlane::collide(Collider& collider, CollisionData& data)
 {
-	switch(collider.m_type)
+	switch(collider.getType())
 	{
 	case SPHERE:
 		CollisionDetector::sphereAndHalfSpace((ColliderSphere&)collider, *this, &data);
