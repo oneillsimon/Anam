@@ -16,7 +16,7 @@ public:
 
 	void setState(float z)
 	{
-		m_body->setPosition(Vector3(0, 3, z));
+		//m_body->setPosition(Vector3(0, 3, z));
 		m_body->setOrientation(Quaternion(0, 0, 0, 1));
 		m_body->setVelocity(Vector3(0, 0, 0));
 		m_body->setRotation(Vector3(0, 0, 0));

@@ -1,6 +1,8 @@
 #ifndef OCTREE_H
 #define OCTREE_H
 
+#define MAX_CONTACTS 1024
+
 #include <vector>
 #include <set>
 
@@ -20,7 +22,6 @@ class Octree
 public:
 	static std::vector<Partition> partitions;
 
-	const int MAX_COLLISIONS = 256 * 8;
 	const int MIN_OBJ_PER_OCTAN = 2;
 	const int MAX_OBJ_PER_OCTAN = 8;
 	const int MAX_OCTREE_DEPTH = 6;

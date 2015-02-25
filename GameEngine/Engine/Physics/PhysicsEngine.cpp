@@ -3,7 +3,7 @@
 #include "PhysicsEngine.h"
 
 PhysicsEngine::PhysicsEngine() :
-resolver(256 * 8)
+resolver(MAX_CONTACTS)
 {
 	int size = 20;
 	m_tree = new Octree(Vector3(-size, -size, -size), Vector3(size, size, size), 1);
@@ -28,7 +28,6 @@ void PhysicsEngine::simulate(float delta)
 	updateObjectReferences(m_objects, m_tree, delta);
 	m_tree->potentialCollisions(&cData);
 	resolver.resolveContacts(cData.m_contactArray, cData.m_contactCount, delta);
-	//cData.reset(256);
 	ProfileTimers::physicsTimer.stopInvocation();
 }
 
@@ -38,7 +37,7 @@ void PhysicsEngine::updateObjectReferences(std::vector<PhysicsObject*>& objects,
 	{
 		if(objects[i]->getTransform()->hasChanged())
 		{
-			//octree->objectMoved(objects[i], objects[i]->getTransform()->getPosition());
+			octree->objectMoved(objects[i], objects[i]->getTransform()->getPosition());
 		}
 	}
 }

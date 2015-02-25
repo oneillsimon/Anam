@@ -61,18 +61,18 @@ void CollisionDemo::initialise(const Window& window)
 
 	for(int l = 0; l < 1; l++)
 	{
-		for(int i = 0; i < 1; i++)
+		for(int i = 0; i < 2; i++)
 		{
 			Vector3 v;
 
 			if(i == 0)
-				v = Vector3(-1.5f, y - i * 3, -1.5f);
+				v = Vector3(-1.5f, y * 3, -1.5f);
 			else if(i == 1)
-				v = Vector3(1.5f, y - i * 3, 1.5f);
+				v = Vector3(1.5f, y * 3, 1.5f);
 			else if(i == 2)
-				v = Vector3(1.5f, y - i * 3, -1.5f);
+				v = Vector3(1.5f, y * 3, -1.5f);
 			else
-				v = Vector3(-1.5f, y - i * 3, 1.5f);
+				v = Vector3(-1.5f, y * 3, 1.5f);
 
 			PhysicsObject* pObj3 = new PhysicsObject(v);
 			Box * b = new Box(pObj3);
@@ -105,11 +105,11 @@ void CollisionDemo::initialise(const Window& window)
 	//new ColliderSphere(1)
 
 	float s = 2;
-	PhysicsObject* plane = new PhysicsObject(Vector3(0.0f, -4, 0));
+	PhysicsObject* plane = new PhysicsObject(Vector3(0.0f, -10, 0));
 	//plane->getTransform()->setScale(0.5f);
 	float h = s / 2.0f;
 	//plane->getCollider()->m_body->setMass(10000000000000000);
-	plane->setCollider(new ColliderBox(Vector3(s, s, s)), new RigidBody(10, 0.1f, 0.1f));
+	plane->setCollider(new ColliderPlane(Vector3(0, 1, 0), -10), new RigidBody(10, 0.1f, 0.1f));
 	//plane->getCollider()->m_body->m_hasInfiniteMass = true;
 	//plane->setCollider(new ColliderBox(Vector3(s, s, s)));
 	plane->addComponent(new ColliderRenderer(true, plane->getCollider(), COLOUR_GREEN));
