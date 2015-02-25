@@ -2,6 +2,59 @@
 
 #include "Collision.h"
 
+static inline bool overlapOnAxis(
+	const ColliderBox &one,
+	const ColliderBox &two,
+	const Vector3 &axis,
+	const Vector3 &toCentre
+	);
+
+static float transformToAxis(
+	const ColliderBox &box,
+	const Vector3 &axis
+	);
+
+static float penetrationOnAxis(
+	const ColliderBox &one,
+	const ColliderBox &two,
+	const Vector3 &axis,
+	const Vector3 &toCentre
+	);
+
+static bool tryAxis(
+	const ColliderBox &one,
+	const ColliderBox &two,
+	Vector3 axis,
+	const Vector3& toCentre,
+	unsigned index,
+
+	// These values may be updated
+	float& smallestPenetration,
+	unsigned &smallestCase
+	);
+
+void fillPointFaceBoxBox(
+	const ColliderBox &one,
+	const ColliderBox &two,
+	const Vector3 &toCentre,
+	CollisionData *data,
+	unsigned best,
+	float pen
+	);
+
+static Vector3 contactPoint(
+	const Vector3 &pOne,
+	const Vector3 &dOne,
+	float oneSize,
+	const Vector3 &pTwo,
+	const Vector3 &dTwo,
+	float twoSize,
+
+	// If this is true, and the contact point is outside
+	// the edge (in the case of an edge-face contact) then
+	// we use one's midpoint, otherwise we use two's.
+	bool useOne);
+
 unsigned CollisionDetector::sphereAndHalfSpace(
 	const ColliderSphere &sphere,
 	const ColliderPlane &plane,
@@ -71,168 +124,6 @@ unsigned CollisionDetector::sphereAndSphere(
 	data->addContacts(1);
 	return 1;
 }
-
-static float transformToAxis(
-	const ColliderBox &box,
-	const Vector3 &axis
-	)
-{
-	return
-		box.m_halfSize[0] * fabsf(axis.scalarProduct(box.getAxis(0))) +
-		box.m_halfSize[1] * fabsf(axis.scalarProduct(box.getAxis(1))) +
-		box.m_halfSize[2] * fabsf(axis.scalarProduct(box.getAxis(2)));
-}
-
-/*
-* This function checks if the two boxes overlap
-* along the given axis, returning the ammount of overlap.
-* The final parameter toCentre
-* is used to pass in the vector between the boxes centre
-* points, to avoid having to recalculate it each time.
-*/
-static float penetrationOnAxis(
-	const ColliderBox &one,
-	const ColliderBox &two,
-	const Vector3 &axis,
-	const Vector3 &toCentre
-	)
-{
-	// Project the half-size of one onto axis
-	float oneProject = transformToAxis(one, axis);
-	float twoProject = transformToAxis(two, axis);
-
-	// Project this onto the axis
-	float distance = fabsf(toCentre.scalarProduct(axis));
-
-	// Return the overlap (i.e. positive indicates
-	// overlap, negative indicates separation).
-	return oneProject + twoProject - distance;
-}
-
-
-static bool tryAxis(
-	const ColliderBox &one,
-	const ColliderBox &two,
-	Vector3 axis,
-	const Vector3& toCentre,
-	unsigned index,
-
-	// These values may be updated
-	float& smallestPenetration,
-	unsigned &smallestCase
-	)
-{
-	// Make sure we have a normalized axis, and don't check almost parallel axes
-	if(axis.squareLength() < 0.0001) return true;
-	axis = axis.normalised();
-
-	float penetration = penetrationOnAxis(one, two, axis, toCentre);
-
-	if(penetration < 0) return false;
-	if(penetration < smallestPenetration) {
-		smallestPenetration = penetration;
-		smallestCase = index;
-	}
-	return true;
-}
-
-void fillPointFaceBoxBox(
-	const ColliderBox &one,
-	const ColliderBox &two,
-	const Vector3 &toCentre,
-	CollisionData *data,
-	unsigned best,
-	float pen
-	)
-{
-	// This method is called when we know that a vertex from
-	// box two is in contact with box one.
-
-	Contact* contact = data->m_contacts;
-
-	// We know which axis the collision is on (i.e. best),
-	// but we need to work out which of the two faces on
-	// this axis.
-	Vector3 normal = one.getAxis(best);
-	if(one.getAxis(best).scalarProduct(toCentre) > 0)
-	{
-		normal = normal * -1.0f;
-	}
-
-	// Work out which vertex of box two we're colliding with.
-	// Using toCentre doesn't work!
-	//Vector3 vertex = two.m_halfSize;
-	Vector3 vertex = toCentre;
-	if(two.getAxis(0).scalarProduct(normal) < 0) vertex[0] = -vertex[0];
-	if(two.getAxis(1).scalarProduct(normal) < 0) vertex[1] = -vertex[1];
-	if(two.getAxis(2).scalarProduct(normal) < 0) vertex[2] = -vertex[2];
-
-	//vertex *= 0.5f;
-
-	// Create the contact data
-	contact->m_contactNormal = normal;
-	contact->m_penetration = pen;
-	contact->m_contactPoint = two.m_body->m_parent->getTransform()->getPosition() - one.m_body->m_parent->getTransform()->getPosition();
-	//contact->m_contactPoint = vertex;//two.m_body->m_parent->getTransform()->getTransformation() * vertex;
-	contact->setBodyData(one.m_body, two.m_body,
-		data->m_friction, data->m_restitution);
-}
-
-static Vector3 contactPoint(
-	const Vector3 &pOne,
-	const Vector3 &dOne,
-	float oneSize,
-	const Vector3 &pTwo,
-	const Vector3 &dTwo,
-	float twoSize,
-
-	// If this is true, and the contact point is outside
-	// the edge (in the case of an edge-face contact) then
-	// we use one's midpoint, otherwise we use two's.
-	bool useOne)
-{
-	Vector3 toSt, cOne, cTwo;
-	float dpStaOne, dpStaTwo, dpOneTwo, smOne, smTwo;
-	float denom, mua, mub;
-
-	smOne = dOne.squareLength();
-	smTwo = dTwo.squareLength();
-	dpOneTwo = dTwo.scalarProduct(dOne);
-
-	toSt = pOne - pTwo;
-	dpStaOne = dOne.scalarProduct(toSt);
-	dpStaTwo = dTwo.scalarProduct(toSt);
-
-	denom = smOne * smTwo - dpOneTwo * dpOneTwo;
-
-	// Zero denominator indicates parrallel lines
-	if(fabsf(denom) < 0.0001f) {
-		return useOne ? pOne : pTwo;
-	}
-
-	mua = (dpOneTwo * dpStaTwo - smTwo * dpStaOne) / denom;
-	mub = (smOne * dpStaTwo - dpOneTwo * dpStaOne) / denom;
-
-	// If either of the edges has the nearest point out
-	// of bounds, then the edges aren't crossed, we have
-	// an edge-face contact. Our point is on the edge, which
-	// we know from the useOne parameter.
-	if(mua > oneSize ||
-		mua < -oneSize ||
-		mub > twoSize ||
-		mub < -twoSize)
-	{
-		return useOne ? pOne : pTwo;
-	}
-	else
-	{
-		cOne = pOne + dOne * mua;
-		cTwo = pTwo + dTwo * mub;
-
-		return cOne * 0.5 + cTwo * 0.5;
-	}
-}
-
 // This preprocessor definition is only used as a convenience
 // in the boxAndBox contact generation method.
 #define CHECK_OVERLAP(axis, index) \
@@ -480,10 +371,10 @@ unsigned CollisionDetector::boxAndHalfSpace(
 	if(data->m_contactsLeft <= 0) return 0;
 
 	// Check for intersection
-	//if(!IntersectionTests::boxAndHalfSpace(box, plane))
-	//{
-	//	return 0;
-	//}
+	if(!IntersectionTests::boxAndHalfSpace(box, plane))
+	{
+		//return 0;
+	}
 
 	// We have an intersection, so find the intersection points. We can make
 	// do with only checking vertices. If the box is resting on a plane
@@ -533,4 +424,234 @@ unsigned CollisionDetector::boxAndHalfSpace(
 
 	data->addContacts(contactsUsed);
 	return contactsUsed;
+}
+
+#define TEST_OVERLAP(axis) overlapOnAxis(one, two, (axis), toCentre)
+
+bool IntersectionTests::boxAndBox(
+	const ColliderBox &one,
+	const ColliderBox &two
+	)
+{
+	// Find the vector between the two centres
+	Vector3 toCentre = two.getAxis(3) - one.getAxis(3);
+
+	return (
+		// Check on box one's axes first
+		TEST_OVERLAP(one.getAxis(0)) &&
+		TEST_OVERLAP(one.getAxis(1)) &&
+		TEST_OVERLAP(one.getAxis(2)) &&
+
+		// And on two's
+		TEST_OVERLAP(two.getAxis(0)) &&
+		TEST_OVERLAP(two.getAxis(1)) &&
+		TEST_OVERLAP(two.getAxis(2)) &&
+
+		// Now on the cross products
+		TEST_OVERLAP(one.getAxis(0) % two.getAxis(0)) &&
+		TEST_OVERLAP(one.getAxis(0) % two.getAxis(1)) &&
+		TEST_OVERLAP(one.getAxis(0) % two.getAxis(2)) &&
+		TEST_OVERLAP(one.getAxis(1) % two.getAxis(0)) &&
+		TEST_OVERLAP(one.getAxis(1) % two.getAxis(1)) &&
+		TEST_OVERLAP(one.getAxis(1) % two.getAxis(2)) &&
+		TEST_OVERLAP(one.getAxis(2) % two.getAxis(0)) &&
+		TEST_OVERLAP(one.getAxis(2) % two.getAxis(1)) &&
+		TEST_OVERLAP(one.getAxis(2) % two.getAxis(2))
+		);
+}
+#undef TEST_OVERLAP
+
+bool IntersectionTests::boxAndHalfSpace(
+	const ColliderBox &box,
+	const ColliderPlane &plane
+	)
+{
+	// Work out the projected radius of the box onto the plane direction
+	float projectedRadius = transformToAxis(box, plane.m_normal);
+
+	// Work out how far the box is from the origin
+	float boxDistance =
+		plane.m_normal.scalarProduct(box.getAxis(3)) - projectedRadius;
+
+	// Check for the intersection
+	return boxDistance <= plane.m_distance;
+}
+
+static float transformToAxis(
+	const ColliderBox &box,
+	const Vector3 &axis
+	)
+{
+	return
+		box.m_halfSize[0] * fabsf(axis.scalarProduct(box.getAxis(0))) +
+		box.m_halfSize[1] * fabsf(axis.scalarProduct(box.getAxis(1))) +
+		box.m_halfSize[2] * fabsf(axis.scalarProduct(box.getAxis(2)));
+}
+
+/*
+* This function checks if the two boxes overlap
+* along the given axis, returning the ammount of overlap.
+* The final parameter toCentre
+* is used to pass in the vector between the boxes centre
+* points, to avoid having to recalculate it each time.
+*/
+static float penetrationOnAxis(
+	const ColliderBox &one,
+	const ColliderBox &two,
+	const Vector3 &axis,
+	const Vector3 &toCentre
+	)
+{
+	// Project the half-size of one onto axis
+	float oneProject = transformToAxis(one, axis);
+	float twoProject = transformToAxis(two, axis);
+
+	// Project this onto the axis
+	float distance = fabsf(toCentre.scalarProduct(axis));
+
+	// Return the overlap (i.e. positive indicates
+	// overlap, negative indicates separation).
+	return oneProject + twoProject - distance;
+}
+
+
+static bool tryAxis(
+	const ColliderBox &one,
+	const ColliderBox &two,
+	Vector3 axis,
+	const Vector3& toCentre,
+	unsigned index,
+
+	// These values may be updated
+	float& smallestPenetration,
+	unsigned &smallestCase
+	)
+{
+	// Make sure we have a normalized axis, and don't check almost parallel axes
+	if(axis.squareLength() < 0.0001) return true;
+	axis = axis.normalised();
+
+	float penetration = penetrationOnAxis(one, two, axis, toCentre);
+
+	if(penetration < 0) return false;
+	if(penetration < smallestPenetration) {
+		smallestPenetration = penetration;
+		smallestCase = index;
+	}
+	return true;
+}
+
+void fillPointFaceBoxBox(
+	const ColliderBox &one,
+	const ColliderBox &two,
+	const Vector3 &toCentre,
+	CollisionData *data,
+	unsigned best,
+	float pen
+	)
+{
+	// This method is called when we know that a vertex from
+	// box two is in contact with box one.
+
+	Contact* contact = data->m_contacts;
+
+	// We know which axis the collision is on (i.e. best),
+	// but we need to work out which of the two faces on
+	// this axis.
+	Vector3 normal = one.getAxis(best);
+	if(one.getAxis(best).scalarProduct(toCentre) > 0)
+	{
+		normal = normal * -1.0f;
+	}
+
+	// Work out which vertex of box two we're colliding with.
+	// Using toCentre doesn't work!
+	//Vector3 vertex = two.m_halfSize;
+	Vector3 vertex = two.m_halfSize;
+	if(two.getAxis(0).scalarProduct(normal) < 0) vertex[0] = -vertex[0];
+	if(two.getAxis(1).scalarProduct(normal) < 0) vertex[1] = -vertex[1];
+	if(two.getAxis(2).scalarProduct(normal) < 0) vertex[2] = -vertex[2];
+
+	//vertex *= 0.5f;
+
+	// Create the contact data
+	contact->m_contactNormal = normal;
+	contact->m_penetration = pen;
+	//contact->m_contactPoint = two.m_body->m_parent->getTransform()->getPosition() - one.m_body->m_parent->getTransform()->getPosition();
+	contact->m_contactPoint = two.m_body->m_parent->getTransform()->getTransformation() * vertex;
+	contact->setBodyData(one.m_body, two.m_body,
+		data->m_friction, data->m_restitution);
+}
+
+static Vector3 contactPoint(
+	const Vector3 &pOne,
+	const Vector3 &dOne,
+	float oneSize,
+	const Vector3 &pTwo,
+	const Vector3 &dTwo,
+	float twoSize,
+
+	// If this is true, and the contact point is outside
+	// the edge (in the case of an edge-face contact) then
+	// we use one's midpoint, otherwise we use two's.
+	bool useOne)
+{
+	Vector3 toSt, cOne, cTwo;
+	float dpStaOne, dpStaTwo, dpOneTwo, smOne, smTwo;
+	float denom, mua, mub;
+
+	smOne = dOne.squareLength();
+	smTwo = dTwo.squareLength();
+	dpOneTwo = dTwo.scalarProduct(dOne);
+
+	toSt = pOne - pTwo;
+	dpStaOne = dOne.scalarProduct(toSt);
+	dpStaTwo = dTwo.scalarProduct(toSt);
+
+	denom = smOne * smTwo - dpOneTwo * dpOneTwo;
+
+	// Zero denominator indicates parrallel lines
+	if(fabsf(denom) < 0.0001f) {
+		return useOne ? pOne : pTwo;
+	}
+
+	mua = (dpOneTwo * dpStaTwo - smTwo * dpStaOne) / denom;
+	mub = (smOne * dpStaTwo - dpOneTwo * dpStaOne) / denom;
+
+	// If either of the edges has the nearest point out
+	// of bounds, then the edges aren't crossed, we have
+	// an edge-face contact. Our point is on the edge, which
+	// we know from the useOne parameter.
+	if(mua > oneSize ||
+		mua < -oneSize ||
+		mub > twoSize ||
+		mub < -twoSize)
+	{
+		return useOne ? pOne : pTwo;
+	}
+	else
+	{
+		cOne = pOne + dOne * mua;
+		cTwo = pTwo + dTwo * mub;
+
+		return cOne * 0.5 + cTwo * 0.5;
+	}
+}
+
+static inline bool overlapOnAxis(
+	const ColliderBox &one,
+	const ColliderBox &two,
+	const Vector3 &axis,
+	const Vector3 &toCentre
+	)
+{
+	// Project the half-size of one onto axis
+	float oneProject = transformToAxis(one, axis);
+	float twoProject = transformToAxis(two, axis);
+
+	// Project this onto the axis
+	float distance = fabsf(toCentre.scalarProduct(axis));
+
+	// Check for overlap
+	return (distance < oneProject + twoProject);
 }

@@ -15,7 +15,7 @@ private:
 	
 	CollisionData cData;
 	ContactResolver resolver;
-	Contact contacts[256];
+	Contact contacts[256 * 8];
 
 public:
 	Octree* m_tree;

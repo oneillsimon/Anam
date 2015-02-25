@@ -37,6 +37,7 @@ public:
 	Vector3 calculateFrictionlessImpulse(Matrix3* inverseIntertiaTensor);
 	Vector3 calculateFrictionImpulse(Matrix3* inverseIntertiaTensor);
 	Vector3 getOverHangingAxis();
+	Vector3 getPointOnEdge(const Vector3& relativeContactPosition, const Vector3& impulse);
 };
 
 class ContactResolver

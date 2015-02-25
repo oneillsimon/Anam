@@ -70,6 +70,8 @@ void Contact::calculateContactBasis()
 		m_contactNormal,
 		contactTangent[0],
 		contactTangent[1]);
+
+	int b = 0;
 }
 
 Vector3 Contact::calculateLocalVelocity(unsigned bodyIndex, float duration)
@@ -91,6 +93,7 @@ Vector3 Contact::calculateLocalVelocity(unsigned bodyIndex, float duration)
 
 	//contactVelocity[0] = 0;
 	
+
 	return contactVelocity;
 }
 
@@ -120,7 +123,6 @@ void Contact::calculateDesiredDeltaVelocity(float duration)
 	}
 
 	m_desiredDeltaVelocity = -m_contactVelocity[0] - thisRestitution * (m_contactVelocity[0] - velocityFromAcc);
-	//m_desiredDeltaVelocity = -1.0f;
 }
 
 
@@ -149,9 +151,13 @@ void Contact::applyVelocityChange(Vector3 velocityChange[2], Vector3 rotationCha
 	// Get hold of the inverse mass and inverse inertia tensor, both in
 	// world coordinates.
 	Matrix3 inverseInertiaTensor[2];
+	
 	inverseInertiaTensor[0] = m_body[0]->getInverseInertiaTensorWorld();
 	if(m_body[1])
+	{
 		inverseInertiaTensor[1] = m_body[1]->getInverseInertiaTensorWorld();
+		//m_body[1]->getInertiaTensorWorld(&inverseInertiaTensor[1]);
+	}
 
 	// We will calculate the impulse for each contact axis
 	Vector3 impulseContact;
@@ -168,18 +174,19 @@ void Contact::applyVelocityChange(Vector3 velocityChange[2], Vector3 rotationCha
 		//impulseContact = Vector3(3, 0, 0);//calculateFrictionImpulse(inverseInertiaTensor);
 		impulseContact = calculateFrictionImpulse(inverseInertiaTensor);
 	}
-
+	
 	// Convert impulse to world coordinates
 	Vector3 impulse = m_contactToWorld.transform(impulseContact);
 
 	// Split in the impulse into linear and rotational components
-	Vector3 impulsiveTorque = m_relativeContactPosition[0] % impulse;
+	//Vector3 impulsiveTorque = m_relativeContactPosition[0] % impulse;
+	Vector3 impulsiveTorque = m_relativeContactPosition[0].vectorProduct(impulse);
+	
 	rotationChange[0] = inverseInertiaTensor[0].transform(impulsiveTorque);
 	velocityChange[0] = Vector3();
 	velocityChange[0].addScaledVector(impulse, m_body[0]->getInverseMass());
 
 	// Apply the changes
-	//m_body[0]->addVelocity(velocityChange[0]);
 	m_body[0]->addVelocity(velocityChange[0]);
 	m_body[0]->addRotation(rotationChange[0]);
 
@@ -233,7 +240,7 @@ Vector3 Contact::calculateFrictionImpulse(Matrix3 * inverseInertiaTensor)
 
 	Matrix3 impulseToTorque;
 	impulseToTorque.setSkewSymmetric(m_relativeContactPosition[0]);
-
+	// multiply by -1?
 	Matrix3 deltaVelWorld = impulseToTorque;
 	deltaVelWorld *= inverseInertiaTensor[0];
 	deltaVelWorld *= impulseToTorque;
@@ -266,10 +273,10 @@ Vector3 Contact::calculateFrictionImpulse(Matrix3 * inverseInertiaTensor)
 	Vector3 velKill(m_desiredDeltaVelocity,
 					-m_contactVelocity[1],
 					-m_contactVelocity[2]);
-
+	
 	impulseContact = impulseMatrix.transform(velKill);
 
-	float planarImpulse = fabsf(impulseContact[1] * impulseContact[1] + impulseContact[2] * impulseContact[2]);
+	float planarImpulse = sqrtf(impulseContact[1] * impulseContact[1] + impulseContact[2] * impulseContact[2]);
 
 	if(planarImpulse > impulseContact[0] * m_friction)
 	{
@@ -304,14 +311,10 @@ void Contact::applyPositionChange(Vector3 linearChange[2],
 	{
 		Matrix3 inverseInertiaTensor  = m_body[i]->getInverseInertiaTensorWorld();
 
-		Vector3 angularInertiaWorld =
-			m_relativeContactPosition[i] % m_contactNormal;
-		angularInertiaWorld =
-			inverseInertiaTensor.transform(angularInertiaWorld);
-		angularInertiaWorld =
-			angularInertiaWorld % m_relativeContactPosition[i];
-		angularInertia[i] =
-			angularInertiaWorld.scalarProduct(m_contactNormal);
+		Vector3 angularInertiaWorld = m_relativeContactPosition[i] % m_contactNormal;
+		angularInertiaWorld = inverseInertiaTensor.transform(angularInertiaWorld);
+		angularInertiaWorld = angularInertiaWorld % m_relativeContactPosition[i];
+		angularInertia[i] = angularInertiaWorld.scalarProduct(m_contactNormal);
 
 		linearInertia[i] = m_body[i]->getInverseMass();
 
@@ -355,7 +358,7 @@ void Contact::applyPositionChange(Vector3 linearChange[2],
 		else
 		{
 			Vector3 targetAngularDirection =
-				m_relativeContactPosition[i] * (m_contactNormal);
+				m_relativeContactPosition[i].vectorProduct(m_contactNormal);
 
 			Matrix3 inverseInertiaTensor = m_body[i]->getInverseInertiaTensorWorld();
 
@@ -378,6 +381,12 @@ void Contact::applyPositionChange(Vector3 linearChange[2],
 
 		if(!m_body[i]->getAwake()) m_body[i]->calculateDerivedData();
 	}
+}
+
+Vector3 Contact::getPointOnEdge(const Vector3& relativeContactPosition, const Vector3& impulse)
+{
+	Vector3 impulseNormal = impulse.normalised();
+	return (relativeContactPosition / 2.0f) * impulseNormal * 2.0f;
 }
 
 ContactResolver::ContactResolver(unsigned iterations,
@@ -424,9 +433,9 @@ void ContactResolver::resolveContacts(Contact *contacts,
 	if(!isValid()) return;
 
 	prepareContacts(contacts, numContacts, duration);
-
+	
 	adjustPositions(contacts, numContacts, duration);
-
+	
 	adjustVelocities(contacts, numContacts, duration);
 }
 
@@ -456,8 +465,7 @@ void ContactResolver::adjustVelocities(Contact *c, unsigned numContacts, float d
 
 		for(unsigned i = 0; i < numContacts; i++)
 		{
-			c[i].calculateDesiredDeltaVelocity(duration);
-			if(c[i].m_desiredDeltaVelocity >= max)
+			if(c[i].m_desiredDeltaVelocity > max)
 			{
 				max = c[i].m_desiredDeltaVelocity;
 				index = i;
@@ -481,15 +489,13 @@ void ContactResolver::adjustVelocities(Contact *c, unsigned numContacts, float d
 					if(c[i].m_body[b] == c[index].m_body[d])
 					{
 						deltaVel = velocityChange[d] + rotationChange[d].vectorProduct(c[i].m_relativeContactPosition[b]);
-
+						
 						c[i].m_contactVelocity += c[i].m_contactToWorld.transformTranspose(deltaVel) * (b ? -1 : 1);
-						c[i].calculateInternals(duration);
 						c[i].calculateDesiredDeltaVelocity(duration);
 					}
 				}
 			}
 		}
-		//printf("velocity pass %d of %d\n", m_velocityIterationsUsed, m_velocityIterations);
 		m_velocityIterationsUsed++;
 	}
 }
@@ -536,7 +542,7 @@ void ContactResolver::adjustPositions(Contact *c,
 						deltaPosition = linearChange[d] +
 							angularChange[d].vectorProduct(
 							c[i].m_relativeContactPosition[b]);
-
+						
 						c[i].m_penetration +=
 							deltaPosition.scalarProduct(c[i].m_contactNormal)
 							* (b ? 1 : -1);
@@ -544,7 +550,6 @@ void ContactResolver::adjustPositions(Contact *c,
 				}
 			}
 		}
-		//printf("position pass %d of %d\n", m_positionIterationsUsed, m_positionIterations);
 		m_positionIterationsUsed++;
 	}
 }

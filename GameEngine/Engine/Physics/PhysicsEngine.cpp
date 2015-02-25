@@ -3,7 +3,7 @@
 #include "PhysicsEngine.h"
 
 PhysicsEngine::PhysicsEngine() :
-resolver(256)
+resolver(256 * 8)
 {
 	int size = 20;
 	m_tree = new Octree(Vector3(-size, -size, -size), Vector3(size, size, size), 1);
@@ -38,7 +38,7 @@ void PhysicsEngine::updateObjectReferences(std::vector<PhysicsObject*>& objects,
 	{
 		if(objects[i]->getTransform()->hasChanged())
 		{
-			octree->objectMoved(objects[i], objects[i]->getTransform()->getPosition());
+			//octree->objectMoved(objects[i], objects[i]->getTransform()->getPosition());
 		}
 	}
 }

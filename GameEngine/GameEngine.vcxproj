@@ -21,6 +21,7 @@
     <ClInclude Include="Engine\Components\Game\Camera.h" />
     <ClInclude Include="Engine\Components\Game\FreeLook.h" />
     <ClInclude Include="Engine\Components\Game\FreeMove.h" />
+    <ClInclude Include="Engine\Components\Physics\Box.h" />
     <ClInclude Include="Engine\Components\Physics\ColliderRenderer.h" />
     <ClInclude Include="Engine\Components\Physics\OctreeRenderer.h" />
     <ClInclude Include="Engine\Components\Physics\RigidBodyComponent.h" />
