@@ -1,7 +1,7 @@
 #ifndef OCTREE_H
 #define OCTREE_H
 
-#define MAX_CONTACTS 1024
+#define MAX_CONTACTS 2048
 
 #include <vector>
 #include <set>

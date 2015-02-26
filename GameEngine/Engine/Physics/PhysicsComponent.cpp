@@ -25,8 +25,6 @@ void PhysicsComponent::initialise()
 		tensor.setBlockInteriaTensor(extents, mass);
 		m_collider->getBody()->setIntertiaTensor(tensor);
 
-		m_collider->getBody()->setLinearDamping(0.95f);
-		m_collider->getBody()->setAngularDamping(0.8f);
 		m_collider->getBody()->clearAccumulators();
 
 		m_collider->getBody()->setCanSleep(true);

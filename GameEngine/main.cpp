@@ -52,13 +52,28 @@ void CollisionDemo::initialise(const Window& window)
 
 	Material mat = Material("mat", TEXTURE_BLANK, COLOUR_RED);
 
-	for(int i = 0; i < 5; i++)
+	for(int i = 0; i < 4; i++)
 	{
 		for(int j = 0; j < 2; j++)
 		{
-			PhysicsComponent* physicsComponent = new PhysicsComponent(new ColliderBox(), new RigidBody(1));
-			GameObject* cubeoObj = new GameObject(Vector3(3 + (3 * i), 3 + (3 * j), 0));
-			cubeoObj->addComponent(new MeshRenderer(Mesh("cube.obj"), mat));
+			Collider* c;
+			std::string s = "";
+			int r = random(0, 1);
+
+			if(r)
+			{
+				c = new ColliderBox();
+				s = "cube.obj";
+			}
+			else
+			{
+				c = new ColliderSphere();
+				s = "sphere.obj";
+			}
+
+			PhysicsComponent* physicsComponent = new PhysicsComponent(c, new RigidBody(1));
+			GameObject* cubeoObj = new GameObject(Vector3(3 + (3 * i + (0.05f * j)), 3 + (3 * j), 0.05f * j));
+			cubeoObj->addComponent(new MeshRenderer(Mesh(s), mat));
 			cubeoObj->addComponent(physicsComponent);
 			cubeoObj->addComponent(new ColliderRenderer(physicsComponent));
 			addToScene(cubeoObj);
