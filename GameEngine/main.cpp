@@ -12,7 +12,6 @@
 
 #include "Engine\Core\Scripter.h"
 
-#include "Engine\Components\Physics\OctreeRenderer.h"
 #include "Engine\Components\Physics\ColliderRenderer.h"
 
 #undef main
@@ -57,13 +56,13 @@ void CollisionDemo::initialise(const Window& window)
 	GameObject* cubeoObj = new GameObject(Vector3(0, 10, 0));
 	cubeoObj->addComponent(new MeshRenderer(Mesh("cube.obj"), mat));
 	cubeoObj->addComponent(physicsComponent);
-	cubeoObj->addComponent(new ColliderRenderer(false, physicsComponent->getCollider()));
+	cubeoObj->addComponent(new ColliderRenderer(physicsComponent));
 
 	PhysicsComponent* planeComponent = new PhysicsComponent(new ColliderPlane());
 	
 	GameObject* planeObj = new GameObject();
 	planeObj->addComponent(planeComponent);
-	planeObj->addComponent(new ColliderRenderer(false, planeComponent->getCollider()));
+	planeObj->addComponent(new ColliderRenderer(planeComponent));
 
 	addToScene(cubeoObj);
 	addToScene(planeObj);

@@ -1,48 +1,39 @@
-#include "../../Physics/PhysicsComponent.h"
 #include "ColliderRenderer.h"
 
-ColliderRenderer::ColliderRenderer(bool isPhysX, Collider* collider, const Colour& defaultColour, const Colour& collidingColour) :
-	MeshRenderer(Mesh(getMeshFromCollider(collider->getType())), Material("", TEXTURE_BLANK, defaultColour)),
-	m_defaultColour(defaultColour),
-	m_collidingColour(collidingColour),
-	m_collider(collider),
-	m_isPhysX(isPhysX)
-{
-}
-
-ColliderRenderer::ColliderRenderer(ColliderPlane* collider, const Colour& defaultColour, const Colour& collidingColour) :
-	MeshRenderer(Mesh("plane.obj"), Material("", TEXTURE_BLANK, defaultColour)),
-	m_defaultColour(defaultColour),
-	m_collidingColour(collidingColour),
-	m_collider(0)
+ColliderRenderer::ColliderRenderer(PhysicsComponent* component, const Colour& colour) :
+	MeshRenderer(Mesh(getMeshFromCollider(component->getCollider()->getType())), Material("", TEXTURE_BLANK, colour)),
+	m_colour(colour),
+	m_component(component)
 {
 }
 
 void ColliderRenderer::render(const Shader& shader, const  RenderingEngine& renderingEngine, const Camera& camera) const
 {
-	Colour c = m_defaultColour;
-
 	Transform t = getTransform();
 
-	if(m_collider->getType() == Collider::BOX)
+	if(m_component->getCollider()->getType() == Collider::BOX)
 	{
-		ColliderBox& b = *(ColliderBox*)m_collider;
+		ColliderBox& b = *(ColliderBox*)m_component->getCollider();
 
 		t.setScale(b.getHalfSize());
-		t.setRotation(b.getBody()->getParent()->getTransform()->getRotation());
 	}
-	else if(m_collider->getType() == Collider::SPHERE)
+	else if(m_component->getCollider()->getType() == Collider::SPHERE)
 	{
-		ColliderSphere& s = *(ColliderSphere*)m_collider;
+		ColliderSphere& s = *(ColliderSphere*)m_component->getCollider();
 
 		t.setScale(s.getRadius());
-		//t.setRotation(Quaternion());
-		t.setRotation(s.getBody()->getParent()->getTransform()->getRotation());
+	}
+
+	else if(m_component->getCollider()->getType() == Collider::PLANE)
+	{
+		ColliderPlane& p = *(ColliderPlane*)m_component->getCollider();
+
+		t.setScale((p.getNormal() - 1).absolute() * 20);
 	}
 
 	m_mesh.getWireFrameShader().bind();
 	m_mesh.getWireFrameShader().updateUniforms(t, renderingEngine, camera, m_material);
-	m_mesh.getWireFrameShader().setUniform("wireFrameColour", c);
+	m_mesh.getWireFrameShader().setUniform("wireFrameColour", m_colour);
 	m_mesh.drawWireFrame();
 }
 
