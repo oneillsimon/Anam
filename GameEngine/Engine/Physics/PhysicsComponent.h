@@ -19,6 +19,7 @@ public:
 	virtual void update(float delta);
 	
 	Collider* getCollider();
+	RigidBody* getBody();
 };
 
 #endif

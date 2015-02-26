@@ -49,3 +49,8 @@ Collider* PhysicsComponent::getCollider()
 {
 	return m_collider;
 }
+
+RigidBody* PhysicsComponent::getBody()
+{
+	return m_collider->getBody();
+}
