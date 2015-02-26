@@ -11,44 +11,44 @@ resolver(MAX_CONTACTS)
 	cData.setContactArray(contacts);
 }
 
-void PhysicsEngine::addObject(PhysicsObject* object)
+void PhysicsEngine::addComponent(PhysicsComponent* component)
 {
-	m_objects.push_back(object);
-	m_tree->add(object);
+	m_components.push_back(component);
+	m_tree->add(component);
 }
 
 void PhysicsEngine::simulate(float delta)
 {
-	if(m_objects.empty())
+	if(m_components.empty())
 	{
 		return;
 	}
 
 	ProfileTimers::physicsTimer.startInvocation();
-	updateObjectReferences(m_objects, m_tree, delta);
+	updateComponentReferences(m_components, m_tree, delta);
 	cData.reset(MAX_CONTACTS);
 	m_tree->potentialCollisions(&cData);
 	resolver.resolveContacts(cData.getContactArray(), cData.getContactCount(), delta);
 	ProfileTimers::physicsTimer.stopInvocation();
 }
 
-void PhysicsEngine::updateObjectReferences(std::vector<PhysicsObject*>& objects, Octree* octree, float delta)
+void PhysicsEngine::updateComponentReferences(std::vector<PhysicsComponent*>& components, Octree* octree, float delta)
 {
-	for(int i = 0; i < objects.size(); i++)
+	for(int i = 0; i < components.size(); i++)
 	{
-		if(objects[i]->getTransform()->hasChanged())
+		if(components[i]->getTransform()->hasChanged())
 		{
-			octree->objectMoved(objects[i], objects[i]->getTransform()->getPosition());
+			octree->objectMoved(components[i], components[i]->getTransform()->getPosition());
 		}
 	}
 }
 
-PhysicsObject* PhysicsEngine::getObject(unsigned int index) const
-{
-	return m_objects[index];
-}
-
-std::vector<PhysicsObject*>* PhysicsEngine::getObjects()
-{
-	return &m_objects;
-}
+//PhysicsObject* PhysicsEngine::getObject(unsigned int index) const
+//{
+//	return m_objects[index];
+//}
+//
+//std::vector<PhysicsObject*>* PhysicsEngine::getObjects()
+//{
+//	return &m_objects;
+//}

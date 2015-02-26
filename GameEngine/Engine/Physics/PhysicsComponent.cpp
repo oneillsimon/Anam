@@ -1,3 +1,4 @@
+#include "../Core/CoreEngine.h"
 #include "PhysicsComponent.h"
 
 PhysicsComponent::PhysicsComponent(Collider* collider, RigidBody* rigidBody) :
@@ -12,7 +13,7 @@ void PhysicsComponent::initialise()
 	{
 		m_collider->getBody()->setParent(this);
 
-		m_collider->getBody()->setOrientation(Quaternion(0, 0, 0, 1));
+		m_collider->getBody()->setOrientation(m_parent->getTransform()->getRotation());
 		m_collider->getBody()->setVelocity(Vector3(0, 0, 0));
 		m_collider->getBody()->setRotation(Vector3(0, 0, 0));
 
@@ -33,11 +34,20 @@ void PhysicsComponent::initialise()
 
 		m_collider->getBody()->calculateDerivedData();
 	}
-	m_parent->getEngine()->getPhysicsEngine()->addObject(this);
+	
+	m_parent->getEngine()->getPhysicsEngine()->addComponent(this);
 }
 
 void PhysicsComponent::update(float delta)
 {
-	m_collider->getBody()->integrate(delta);
+	if(m_collider->getBody())
+	{
+		m_collider->getBody()->integrate(delta);
+	}
 	GameComponent::update(delta);
+}
+
+Collider* PhysicsComponent::getCollider()
+{
+	return m_collider;
 }

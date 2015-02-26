@@ -7,7 +7,7 @@
 #include <set>
 
 #include "Collider.h"
-#include "PhysicsObject.h"
+#include "PhysicsComponent.h"
 #include "Collision.h"
 
 class Octree
@@ -23,22 +23,22 @@ private:
 
 	Octree* m_children[2][2][2];
 	bool m_hasChildren;
-	std::set<PhysicsObject*> m_objects;
+	std::set<PhysicsComponent*> m_components;
 	int m_depth;
 	int m_numObjects;
 
-	void fileObject(PhysicsObject* object, const Vector3& position, bool addObject);
+	void fileObject(PhysicsComponent* component, const Vector3& position, bool addObject);
 	void divideDown();
-	void collectObjects(std::set<PhysicsObject*>& set);
+	void collectObjects(std::set<PhysicsComponent*>& set);
 	void killChildren();
-	void remove(PhysicsObject* object, const Vector3& position);
+	void remove(PhysicsComponent* component, const Vector3& position);
 
 public:
 	Octree(const Vector3& min, const Vector3& max, int depth);
 	~Octree();
-	void add(PhysicsObject* object);
-	void remove(PhysicsObject* object);
-	void objectMoved(PhysicsObject* object, const Vector3& oldPosition);
+	void add(PhysicsComponent* component);
+	void remove(PhysicsComponent* component);
+	void objectMoved(PhysicsComponent* component, const Vector3& oldPosition);
 	void potentialCollisions(CollisionData* data);
 	void generateContacts(Collider& one, Collider& two, CollisionData* data);
 	bool isInside(const Vector3& point, Octree* octree);

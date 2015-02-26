@@ -64,12 +64,12 @@ void RigidBody::calculateDerivedData()
 	m_inverseInertiaTensorWorld = m_inverseInertiaTensor * m_parent->getTransform()->getTransformation().toMatrix3();
 }
 
-void RigidBody::setParent(PhysicsObject* physicsObject)
+void RigidBody::setParent(PhysicsComponent* physicsObject)
 {
 	m_parent = physicsObject;
 }
 
-PhysicsObject* RigidBody::getParent()
+PhysicsComponent* RigidBody::getParent()
 {
 	return m_parent;
 }

@@ -5,16 +5,16 @@
 #include <math.h>
 
 #include "../Core/Math3D.h"
-#include "PhysicsObject.h"
+#include "PhysicsComponent.h"
 
-class PhysicsObject;
+class PhysicsComponent;
 
 class RigidBody
 {
 private:
 	const float m_sleepEpsilon = 0.01f;
 
-	PhysicsObject* m_parent;
+	PhysicsComponent* m_parent;
 
 	float m_inverseMass;
 	Matrix3 m_inverseInertiaTensor;
@@ -43,7 +43,7 @@ public:
 
 	bool hasFiniteMass() const;
 
-	void setParent(PhysicsObject* physicsObject);
+	void setParent(PhysicsComponent* physicsObject);
 	void setMass(const float mass);
 	void setInverseMass(const float inverseMass);
 	void setIntertiaTensor(const Matrix3& interiaTensor);
@@ -54,7 +54,7 @@ public:
 	void setPosition(const Vector3& position);
 	void setOrientation(Quaternion& orientation);
 
-	PhysicsObject* getParent();
+	PhysicsComponent* getParent();
 	float getMass() const;
 	float getInverseMass() const;
 	void getInertiaTensor(Matrix3* intertiaTensor) const;

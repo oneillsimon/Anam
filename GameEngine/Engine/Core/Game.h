@@ -12,7 +12,6 @@ protected:
 	GameObject rootObject;
 
 	void addToScene(GameObject* object);
-	void addToScene2(PhysicsObject* object);
 
 public:
 	Game() {};

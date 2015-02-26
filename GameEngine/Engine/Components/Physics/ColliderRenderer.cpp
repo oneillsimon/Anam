@@ -1,20 +1,20 @@
-#include "../../Physics/PhysicsObject.h"
+#include "../../Physics/PhysicsComponent.h"
 #include "ColliderRenderer.h"
 
 ColliderRenderer::ColliderRenderer(bool isPhysX, Collider* collider, const Colour& defaultColour, const Colour& collidingColour) :
-MeshRenderer(Mesh(getMeshFromCollider(collider->getType())), Material("", TEXTURE_BLANK, defaultColour)),
-m_defaultColour(defaultColour),
-m_collidingColour(collidingColour),
-m_collider(collider),
-m_isPhysX(isPhysX)
+	MeshRenderer(Mesh(getMeshFromCollider(collider->getType())), Material("", TEXTURE_BLANK, defaultColour)),
+	m_defaultColour(defaultColour),
+	m_collidingColour(collidingColour),
+	m_collider(collider),
+	m_isPhysX(isPhysX)
 {
 }
 
 ColliderRenderer::ColliderRenderer(ColliderPlane* collider, const Colour& defaultColour, const Colour& collidingColour) :
-MeshRenderer(Mesh("plane.obj"), Material("", TEXTURE_BLANK, defaultColour)),
-m_defaultColour(defaultColour),
-m_collidingColour(collidingColour),
-m_collider(0)
+	MeshRenderer(Mesh("plane.obj"), Material("", TEXTURE_BLANK, defaultColour)),
+	m_defaultColour(defaultColour),
+	m_collidingColour(collidingColour),
+	m_collider(0)
 {
 }
 

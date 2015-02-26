@@ -12,12 +12,6 @@ void Game::addToScene(GameObject* object)
 	rootObject.addChild(object);
 }
 
-void Game::addToScene2(PhysicsObject* object)
-{
-	rootObject.addChild(object);
-	rootObject.getEngine()->getPhysicsEngine()->addObject(object);
-}
-
 void Game::processInput(const Input& input, float delta)
 {
 	ProfileTimers::inputTimer__.startInvocation();

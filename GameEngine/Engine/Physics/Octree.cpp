@@ -1,9 +1,9 @@
 #include "Octree.h"
 #include "../Core/Profiling.h"""
 
-void Octree::fileObject(PhysicsObject* object, const Vector3& position, bool addObject)
+void Octree::fileObject(PhysicsComponent* component, const Vector3& position, bool addObject)
 {
-	float s = object->getCollider()->getExtents().max();
+	float s = component->getCollider()->getExtents().max();
 
 	for(int x = 0; x < 2; x++)
 	{
@@ -49,11 +49,11 @@ void Octree::fileObject(PhysicsObject* object, const Vector3& position, bool add
 
 				if(addObject)
 				{
-					m_children[x][y][z]->add(object);
+					m_children[x][y][z]->add(component);
 				}
 				else
 				{
-					m_children[x][y][z]->remove(object, position);
+					m_children[x][y][z]->remove(component, position);
 				}
 			}
 		}
@@ -62,28 +62,28 @@ void Octree::fileObject(PhysicsObject* object, const Vector3& position, bool add
 
 void Octree::divideDown()
 {
-	m_children[0][0][0] = new Octree(Vector3(m_min[0],    m_min[1],    m_min[2]), Vector3(m_centre[0], m_centre[1], m_centre[2]), m_depth + 1);
-	m_children[1][0][0] = new Octree(Vector3(m_centre[0], m_min[1],    m_min[2]), Vector3(m_max[0],    m_centre[1], m_centre[2]), m_depth + 1);
-	m_children[0][1][0] = new Octree(Vector3(m_min[0],    m_centre[2], m_min[2]), Vector3(m_centre[0], m_max[1],    m_centre[2]), m_depth + 1);
-	m_children[1][1][0] = new Octree(Vector3(m_centre[0], m_centre[2], m_min[2]), Vector3(m_max[0],    m_max[1],    m_centre[2]), m_depth + 1);
+	m_children[0][0][0] = new Octree(Vector3(m_min[0], m_min[1], m_min[2]), Vector3(m_centre[0], m_centre[1], m_centre[2]), m_depth + 1);
+	m_children[1][0][0] = new Octree(Vector3(m_centre[0], m_min[1], m_min[2]), Vector3(m_max[0], m_centre[1], m_centre[2]), m_depth + 1);
+	m_children[0][1][0] = new Octree(Vector3(m_min[0], m_centre[2], m_min[2]), Vector3(m_centre[0], m_max[1], m_centre[2]), m_depth + 1);
+	m_children[1][1][0] = new Octree(Vector3(m_centre[0], m_centre[2], m_min[2]), Vector3(m_max[0], m_max[1], m_centre[2]), m_depth + 1);
 
-	m_children[0][0][1] = new Octree(Vector3(m_min[0],    m_min[1],    m_centre[2]), Vector3(m_centre[0], m_centre[1], m_max[2]), m_depth + 1);
-	m_children[1][0][1] = new Octree(Vector3(m_centre[0], m_min[1],    m_centre[2]), Vector3(m_max[0],    m_centre[1], m_max[2]), m_depth + 1);
-	m_children[0][1][1] = new Octree(Vector3(m_min[0],    m_centre[2], m_centre[2]), Vector3(m_centre[0], m_max[1],    m_max[2]), m_depth + 1);
-	m_children[1][1][1] = new Octree(Vector3(m_centre[0], m_centre[2], m_centre[2]), Vector3(m_max[0],    m_max[1],    m_max[2]), m_depth + 1);
+	m_children[0][0][1] = new Octree(Vector3(m_min[0], m_min[1], m_centre[2]), Vector3(m_centre[0], m_centre[1], m_max[2]), m_depth + 1);
+	m_children[1][0][1] = new Octree(Vector3(m_centre[0], m_min[1], m_centre[2]), Vector3(m_max[0], m_centre[1], m_max[2]), m_depth + 1);
+	m_children[0][1][1] = new Octree(Vector3(m_min[0], m_centre[2], m_centre[2]), Vector3(m_centre[0], m_max[1], m_max[2]), m_depth + 1);
+	m_children[1][1][1] = new Octree(Vector3(m_centre[0], m_centre[2], m_centre[2]), Vector3(m_max[0], m_max[1], m_max[2]), m_depth + 1);
 
-	m_objects.clear();
+	m_components.clear();
 	m_numObjects = 0;
 	m_hasChildren = true;
 
-	for(std::set<PhysicsObject*>::iterator it = m_objects.begin(); it != m_objects.end(); it++)
+	for(std::set<PhysicsComponent*>::iterator it = m_components.begin(); it != m_components.end(); it++)
 	{
-		PhysicsObject* o = *it;
-		fileObject(o, o->getTransform()->getPosition(), true);
+		PhysicsComponent* c = *it;
+		fileObject(c, c->getTransform()->getPosition(), true);
 	}
 }
 
-void Octree::collectObjects(std::set<PhysicsObject*>& set)
+void Octree::collectObjects(std::set<PhysicsComponent*>& set)
 {
 	if(m_hasChildren)
 	{
@@ -100,17 +100,17 @@ void Octree::collectObjects(std::set<PhysicsObject*>& set)
 	}
 	else
 	{
-		for(std::set<PhysicsObject*>::iterator it = m_objects.begin(); it != m_objects.end(); it++)
+		for(std::set<PhysicsComponent*>::iterator it = m_components.begin(); it != m_components.end(); it++)
 		{
-			PhysicsObject* p = *it;
-			set.insert(p);
+			PhysicsComponent* c = *it;
+			set.insert(c);
 		}
 	}
 }
 
 void Octree::killChildren()
 {
-	collectObjects(m_objects);
+	collectObjects(m_components);
 
 	for(int x = 0; x < 2; x++)
 	{
@@ -126,7 +126,7 @@ void Octree::killChildren()
 	m_hasChildren = false;
 }
 
-void Octree::remove(PhysicsObject* object, const Vector3& position)
+void Octree::remove(PhysicsComponent* component, const Vector3& position)
 {
 	m_numObjects--;
 
@@ -137,11 +137,11 @@ void Octree::remove(PhysicsObject* object, const Vector3& position)
 
 	if(m_hasChildren)
 	{
-		fileObject(object, position, false);
+		fileObject(component, position, false);
 	}
 	else
 	{
-		m_objects.erase(object);
+		m_components.erase(component);
 	}
 }
 
@@ -151,8 +151,8 @@ bool Octree::isInside(const Vector3& point, Octree* octree)
 	Vector3 max = octree->m_max;
 
 	return ((point[0] >= min[0] && point[0] <= max[0]) &&
-			(point[1] >= min[1] && point[1] <= max[1]) &&
-			(point[2] >= min[2] && point[2] <= max[2]));
+		(point[1] >= min[1] && point[1] <= max[1]) &&
+		(point[2] >= min[2] && point[2] <= max[2]));
 }
 
 Octree::Octree(const Vector3& min, const Vector3& max, int depth)
@@ -175,38 +175,38 @@ Octree::~Octree()
 	}
 }
 
-void Octree::add(PhysicsObject* object)
+void Octree::add(PhysicsComponent* component)
 {
 	m_numObjects++;
 
 	if(!m_hasChildren && m_depth < MAX_OCTREE_DEPTH &&
-	   m_numObjects > MAX_OBJ_PER_OCTAN)
+		m_numObjects > MAX_OBJ_PER_OCTAN)
 	{
 		divideDown();
 	}
 
 	if(m_hasChildren)
 	{
-		fileObject(object, object->getTransform()->getPosition(), true);
+		fileObject(component, component->getTransform()->getPosition(), true);
 	}
 	else
 	{
-		if(isInside(object->getTransform()->getPosition(), this))
+		if(isInside(component->getTransform()->getPosition(), this))
 		{
-			m_objects.insert(object);
+			m_components.insert(component);
 		}
 	}
 }
 
-void Octree::remove(PhysicsObject* object)
+void Octree::remove(PhysicsComponent* component)
 {
-	remove(object, object->getTransform()->getPosition());
+	remove(component, component->getTransform()->getPosition());
 }
 
-void Octree::objectMoved(PhysicsObject* object, const Vector3& oldPosition)
+void Octree::objectMoved(PhysicsComponent* component, const Vector3& oldPosition)
 {
-	remove(object, oldPosition);
-	add(object);
+	remove(component, oldPosition);
+	add(component);
 }
 
 void Octree::potentialCollisions(CollisionData* data)
@@ -226,17 +226,17 @@ void Octree::potentialCollisions(CollisionData* data)
 	}
 	else
 	{
-		for(std::set<PhysicsObject*>::iterator it = m_objects.begin(); it != m_objects.end(); it++)
+		for(std::set<PhysicsComponent*>::iterator it = m_components.begin(); it != m_components.end(); it++)
 		{
-			PhysicsObject* p1 = *it;
+			PhysicsComponent* c1 = *it;
 
-			for(std::set<PhysicsObject*>::iterator it2 = m_objects.begin(); it2 != m_objects.end(); it2++)
+			for(std::set<PhysicsComponent*>::iterator it2 = m_components.begin(); it2 != m_components.end(); it2++)
 			{
-				PhysicsObject* p2 = *it2;
+				PhysicsComponent* c2 = *it2;
 
-				if(p1 < p2)
+				if(c1 < c2)
 				{
-					generateContacts(*p2->getCollider(), *p1->getCollider(), data);
+					generateContacts(*c2->getCollider(), *c1->getCollider(), data);
 				}
 			}
 		}

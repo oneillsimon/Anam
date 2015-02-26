@@ -1,6 +1,11 @@
+#ifndef PHYSICSCOMPONENT_H
+#define PHYSICSCOMPONENT_H
+
 #include "../Core/GameComponent.h"
-#include "../Core/CoreEngine.h"
 #include "Collider.h"
+
+class Collider;
+class RigidBody;
 
 class PhysicsComponent : public GameComponent
 {
@@ -12,4 +17,8 @@ public:
 
 	virtual void initialise();
 	virtual void update(float delta);
+	
+	Collider* getCollider();
 };
+
+#endif
