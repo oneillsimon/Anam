@@ -316,7 +316,7 @@ void Contact::applyPositionChange(Vector3 linearChange[2], Vector3 angularChange
 	{
 		if(m_body[i])
 		{
-			float sign = (i == 0) ? 1 : -1;
+			float sign = (i == 0) ? 1.0f : -1.0f;
 
 			angularMove[i] = sign * penetration * (angularInertia[i] / totalInertia);
 			linearMove[i] = sign * penetration * (linearInertia[i] / totalInertia);
@@ -592,7 +592,7 @@ void ContactResolver::adjustVelocities(Contact *c, unsigned numContacts, float d
 						{
 							deltaVel = velocityChange[d] + rotationChange[d].vectorProduct(c[i].getRelativeContactPosition(b));
 
-							c[i].addContactVelocity(c[i].getContactToWorld().transformTranspose(deltaVel) * (b ? -1 : 1));
+							c[i].addContactVelocity(c[i].getContactToWorld().transformTranspose(deltaVel) * (b ? -1.0f : 1.0f));
 							c[i].calculateDesiredDeltaVelocity(duration);
 						}
 					}

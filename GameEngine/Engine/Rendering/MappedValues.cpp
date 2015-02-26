@@ -20,7 +20,7 @@ void MappedValues::setTexture(const std::string& name, const Texture& t)
 	textureMap[name] = t;
 }
 
-const Vector3& MappedValues::getVector3(const std::string& name) const
+Vector3 MappedValues::getVector3(const std::string& name) const
 {
 	std::map<std::string, Vector3>::const_iterator it = vector3Map.find(name);
 
@@ -32,7 +32,7 @@ const Vector3& MappedValues::getVector3(const std::string& name) const
 	return Vector3();
 }
 
-const Vector4& MappedValues::getVector4(const std::string& name) const
+Vector4 MappedValues::getVector4(const std::string& name) const
 {
 	std::map<std::string, Vector4>::const_iterator it = vector4Map.find(name);
 
@@ -56,7 +56,7 @@ float MappedValues::getFloat(const std::string& name) const
 	return 0.0f;
 }
 
-const Texture& MappedValues::getTexture(const std::string& name) const
+Texture MappedValues::getTexture(const std::string& name) const
 {
 	std::map<std::string, Texture>::const_iterator it = textureMap.find(name);
 

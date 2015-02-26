@@ -5,7 +5,7 @@
 PhysicsEngine::PhysicsEngine() :
 resolver(MAX_CONTACTS)
 {
-	int size = 20;
+	float size = 20.0f;
 	m_tree = new Octree(Vector3(-size, -size, -size), Vector3(size, size, size), 1);
 
 	cData.setContactArray(contacts);
@@ -34,7 +34,7 @@ void PhysicsEngine::simulate(float delta)
 
 void PhysicsEngine::updateComponentReferences(std::vector<PhysicsComponent*>& components, Octree* octree, float delta)
 {
-	for(int i = 0; i < components.size(); i++)
+	for(unsigned i = 0; i < components.size(); i++)
 	{
 		if(components[i]->getTransform()->hasChanged())
 		{

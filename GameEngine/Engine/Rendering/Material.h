@@ -11,7 +11,7 @@
 class MaterialData : public ReferenceCounter, public MappedValues
 {
 public:
-	const Colour& getColour(const std::string& name) const;
+	Colour getColour(const std::string& name) const;
 private:
 };
 
@@ -42,12 +42,12 @@ public:
 	void setTexture(const std::string& name, const Texture& value);
 	void setVector4(const std::string& name, const Vector4& colour);
 
-	const Vector3& getVector3(const std::string& name) const;
+	Vector3 getVector3(const std::string& name) const;
 	float getFloat(const std::string& name) const;
-	const Texture& getTexture(const std::string& name) const;
-	const Vector4& getVector4(const std::string& name) const;
-	const Colour& getColour(const std::string& name) const;
-	const Texture& getDiffuseTexture() const;
+	Texture getTexture(const std::string& name) const;
+	Vector4 getVector4(const std::string& name) const;
+	Colour getColour(const std::string& name) const;
+	Texture getDiffuseTexture() const;
 
 	void operator =(Material& material) {}
 };

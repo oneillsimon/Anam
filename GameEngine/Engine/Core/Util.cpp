@@ -44,7 +44,7 @@ std::vector<std::string> Util::split(const std::string& s, char delims[])
 	{
 		res = split(temp, delims[j]);
 
-		for(int i = 0; i < res.size(); i++)
+		for(unsigned i = 0; i < res.size(); i++)
 		{
 			temp = stringFromVector(res, std::string(1, 127));
 		}
@@ -81,7 +81,7 @@ void Util::findAndReplace(std::string& subject, const std::string& search, const
 		}
 		else
 		{
-			for(int i = 0; i < regex.size(); i++)
+			for(unsigned i = 0; i < regex.size(); i++)
 			{
 				if(before == regex[i] || after == regex[i])
 				{
@@ -127,7 +127,7 @@ bool Util::isAlphaNumeric(char c)
 std::string Util::stringFromVector(std::vector<std::string> s, const std::string& pad)
 {
 	std::string line;
-	for(int i = 0; i < s.size(); i++)
+	for(unsigned i = 0; i < s.size(); i++)
 	{
 		line += s[i] + pad;
 	}

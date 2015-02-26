@@ -51,12 +51,19 @@ void CollisionDemo::initialise(const Window& window)
 	addToScene(cameraObj);
 
 	Material mat = Material("mat", TEXTURE_BLANK, COLOUR_RED);
-	PhysicsComponent* physicsComponent = new PhysicsComponent(new ColliderBox(), new RigidBody(1));
 
-	GameObject* cubeoObj = new GameObject(Vector3(0, 10, 0));
-	cubeoObj->addComponent(new MeshRenderer(Mesh("cube.obj"), mat));
-	cubeoObj->addComponent(physicsComponent);
-	cubeoObj->addComponent(new ColliderRenderer(physicsComponent));
+	for(int i = 0; i < 5; i++)
+	{
+		for(int j = 0; j < 2; j++)
+		{
+			PhysicsComponent* physicsComponent = new PhysicsComponent(new ColliderBox(), new RigidBody(1));
+			GameObject* cubeoObj = new GameObject(Vector3(3 + (3 * i), 3 + (3 * j), 0));
+			cubeoObj->addComponent(new MeshRenderer(Mesh("cube.obj"), mat));
+			cubeoObj->addComponent(physicsComponent);
+			cubeoObj->addComponent(new ColliderRenderer(physicsComponent));
+			addToScene(cubeoObj);
+		}
+	}
 
 	PhysicsComponent* planeComponent = new PhysicsComponent(new ColliderPlane());
 	
@@ -64,7 +71,6 @@ void CollisionDemo::initialise(const Window& window)
 	planeObj->addComponent(planeComponent);
 	planeObj->addComponent(new ColliderRenderer(planeComponent));
 
-	addToScene(cubeoObj);
 	addToScene(planeObj);
 
 	Game::initialise(window);

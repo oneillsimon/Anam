@@ -50,5 +50,8 @@ std::string ColliderRenderer::getMeshFromCollider(int type)
 	case Collider::PLANE:
 		return "plane.obj";
 		break;
+	default:
+		return "sphere.obj";
+		break;
 	}
 }

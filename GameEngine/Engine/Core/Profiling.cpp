@@ -12,7 +12,7 @@ ProfileTimer::ProfileTimer(const std::string& label) :
 	m_totalTime = 0;
 	m_startTime = 0;
 
-	if(m_label.length() > m_longestLabel)
+	if(m_label.length() > (unsigned)m_longestLabel)
 	{
 		m_longestLabel = m_label.length();
 	}

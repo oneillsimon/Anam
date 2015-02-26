@@ -12,10 +12,10 @@ SpriteSheet::SpriteSheet(const std::string& spriteName, const Material& material
 	Vector2 _2_01(0.0f / (float)spritesX, 1.0f / (float)spritesY);
 	Vector2 _0_11(1.0f / (float)spritesX, 1.0f / (float)spritesY);
 
-	m_indexedModel.addVertex(1.0f, 1.0f, 0.0f);
-	m_indexedModel.addVertex(1.0f, -1.0f, 0.0f);
-	m_indexedModel.addVertex(-1.0f, 1.0f, 0.0f);
-	m_indexedModel.addVertex(-1.0f, -1.0f, 0.0f);
+	m_indexedModel.addVertex( 1,  1, 0);
+	m_indexedModel.addVertex( 1,  1, 0);
+	m_indexedModel.addVertex(-1,  1, 0);
+	m_indexedModel.addVertex(-1, -1, 0);
 	
 	m_indexedModel.addTexCoord(_0_11);
 	m_indexedModel.addTexCoord(_1_10);

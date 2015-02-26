@@ -20,10 +20,10 @@ public:
 	void setFloat(const std::string& name, float f);
 	void setTexture(const std::string& name, const Texture& t);
 
-	const Vector3& getVector3(const std::string& name) const;
-	const Vector4& getVector4(const std::string& name) const;
+	Vector3 getVector3(const std::string& name) const;
+	Vector4 getVector4(const std::string& name) const;
 	float getFloat(const std::string& name) const;
-	const Texture& getTexture(const std::string& name) const;
+	Texture getTexture(const std::string& name) const;
 };
 
 #endif

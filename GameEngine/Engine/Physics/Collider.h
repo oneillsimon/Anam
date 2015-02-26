@@ -54,7 +54,7 @@ protected:
 	Vector3 m_halfSize;
 
 public:
-	ColliderBox(const Vector3& halfSize = Vector3(1, 1, 1));
+	ColliderBox(const Vector3& dimensions = Vector3(1, 1, 1));
 
 	virtual void collide(Collider& collider, CollisionData& data);
 	virtual Vector3 getExtents();

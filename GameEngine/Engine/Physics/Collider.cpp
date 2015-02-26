@@ -60,9 +60,9 @@ float ColliderSphere::getRadius() const
 	return m_radius;
 }
 
-ColliderBox::ColliderBox(const Vector3& halfExtents) :
+ColliderBox::ColliderBox(const Vector3& dimensions) :
 	Collider(Type::BOX),
-	m_halfSize(halfExtents)
+	m_halfSize(dimensions / 2.0f)
 {
 }
 

@@ -191,7 +191,7 @@ unsigned CollisionDetector::boxAndPoint(const ColliderBox& box, const Vector3& p
 		return 0;
 	}
 
-	normal = box.getAxis(0) * ((relPt[0] < 0) ? -1 : 1);
+	normal = box.getAxis(0) * ((relPt[0] < 0) ? -1.0f : 1.0f);
 
 	float depth = box.getHalfSize()[1] - fabsf(relPt[1]);
 
@@ -202,7 +202,7 @@ unsigned CollisionDetector::boxAndPoint(const ColliderBox& box, const Vector3& p
 	else if(depth < min_depth)
 	{
 		min_depth = depth;
-		normal = box.getAxis(1) * ((relPt[1] < 0) ? -1 : 1);
+		normal = box.getAxis(1) * ((relPt[1] < 0) ? -1.0f : 1.0f);
 	}
 
 	depth = box.getHalfSize()[2] - fabsf(relPt[2]);
@@ -214,7 +214,7 @@ unsigned CollisionDetector::boxAndPoint(const ColliderBox& box, const Vector3& p
 	else if(depth < min_depth)
 	{
 		min_depth = depth;
-		normal = box.getAxis(2) * ((relPt[2] < 0) ? -1 : 1);
+		normal = box.getAxis(2) * ((relPt[2] < 0) ? -1.0f : 1.0f);
 	}
 
 	Contact* contact = data->getContacts();

@@ -1,5 +1,5 @@
 #include "Octree.h"
-#include "../Core/Profiling.h"""
+#include "../Core/Profiling.h"
 
 void Octree::fileObject(PhysicsComponent* component, const Vector3& position, bool addObject)
 {
@@ -255,30 +255,6 @@ void Octree::generateContacts(Collider& one, Collider& two, CollisionData* data)
 Octree* Octree::getChild(int x, int y, int z) const
 {
 	return m_children[x][y][z];
-}
-
-Octree* Octree::getContainingOctant(const Vector3& position)
-{
-	if(m_hasChildren)
-	{
-		for(int x = 0; x < 2; x++)
-		{
-			for(int y = 0; y < 2; y++)
-			{
-				for(int z = 0; z < 2; z++)
-				{
-					return getContainingOctant(position);
-				}
-			}
-		}
-	}
-	else
-	{
-		if(isInside(position, this))
-		{
-			return this;
-		}
-	}
 }
 
 Vector3 Octree::getMinExtents() const

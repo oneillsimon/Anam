@@ -118,7 +118,7 @@ void Scripter::loadScript(const std::string& fileName)
 	fileIn.open((SCRIPT_DIR + fileName).c_str());
 
 	std::string line;
-	int seed = random(0, INT_MAX);
+	int seed = random(0, INT_MAX - 1);
 	std::string seedPrefix = "s" + std::to_string(seed);
 
 	if(fileIn.is_open())
@@ -304,7 +304,7 @@ std::vector<std::string> Scripter::getFunctionCode(int function) const
 	case FUNC_TYPE::RENDER:
 		return m_renderCode;
 		break;
-	case FUNC_TYPE::OTHER:
+	default:
 		return m_otherCode;
 		break;
 	}
@@ -317,7 +317,7 @@ std::vector<std::string> Scripter::getLocalCode() const
 
 void generateFinalScript(std::ofstream& file, Scripter& scripter)
 {
-	for(int i = 0; i < scripter.getLocalCode().size(); i++)
+	for(unsigned i = 0; i < scripter.getLocalCode().size(); i++)
 	{
 		file << scripter.getLocalCode()[i] << "\n";
 	}
@@ -339,9 +339,9 @@ void generateFinalScript(std::ofstream& file, Scripter& scripter)
 
 void renameFunctionVariables(Scripter& scripter, int function, const std::vector<std::string>& old_, const std::vector<std::string>& new_)
 {
-	for(int i = 0; i < scripter.getFunctionCode(function).size(); i++)
+	for(unsigned i = 0; i < scripter.getFunctionCode(function).size(); i++)
 	{
-		for(int j = 0; j < old_.size(); j++)
+		for(unsigned j = 0; j < old_.size(); j++)
 		{
 			std::string s = scripter.getFunctionCode(function)[i];
 			std::vector<char> regex = { ':', '.' };
@@ -353,7 +353,7 @@ void renameFunctionVariables(Scripter& scripter, int function, const std::vector
 
 void generateFunctionCode(std::ofstream& file, Scripter& scripter, int function, bool includeAnyEnds)
 {
-	for(int i = 0; i < scripter.getFunctionCode(function).size(); i++)
+	for(unsigned i = 0; i < scripter.getFunctionCode(function).size(); i++)
 	{
 		if(scripter.getFunctionCode(function)[i] != "end")
 		{

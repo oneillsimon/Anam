@@ -23,7 +23,7 @@ Colour Colour::hexToRGBA(int hex) const
 	int b = (hex >> 8) & 0xFF;
 	int a = (hex >> 0) & 0xFF;
 
-	return Colour(r, g, b, a);
+	return Colour((float)r, (float)g, (float)b, (float)a);
 }
 
 Colour::Colour(int hex)
@@ -146,7 +146,7 @@ Colour getRandomColour()
 	int g = random(0, 255);
 	int b = random(0, 255);
 
-	return Colour(r, g, b);
+	return Colour((float)r, (float)g, (float)b);
 }
 
 Colour getRandomColour(Colour mix)

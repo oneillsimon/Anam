@@ -3,13 +3,14 @@
 
 std::map<std::string, MaterialData*> Material::s_resourceMap;
 
-const Colour& MaterialData::getColour(const std::string& name) const
+Colour MaterialData::getColour(const std::string& name) const
 {
 	std::map<std::string, Vector4>::const_iterator it = vector4Map.find(name);
 
 	if(it != vector4Map.end())
 	{
 		Vector4 v = it->second;
+		
 		return Colour(v.getX(), v.getY(), v.getZ(), v.getW());
 	}
 	
@@ -101,7 +102,7 @@ void Material::setVector4(const std::string& name, const Vector4& value)
 	m_materialData->setVector4(name, value);
 }
 
-const Vector3& Material::getVector3(const std::string& name) const
+Vector3 Material::getVector3(const std::string& name) const
 {
 	return m_materialData->getVector3(name);
 }
@@ -111,22 +112,22 @@ float Material::getFloat(const std::string& name) const
 	return m_materialData->getFloat(name);
 }
 
-const Texture& Material::getTexture(const std::string& name) const
+Texture Material::getTexture(const std::string& name) const
 {
 	return m_materialData->getTexture(name);
 }
 
-const Vector4& Material::getVector4(const std::string& name) const
+Vector4 Material::getVector4(const std::string& name) const
 {
 	return m_materialData->getVector4(name);
 }
 
-const Colour& Material::getColour(const std::string& name) const
+Colour Material::getColour(const std::string& name) const
 {
 	return m_materialData->getColour(name);
 }
 
-const Texture& Material::getDiffuseTexture() const
+Texture Material::getDiffuseTexture() const
 {
 	return getTexture("diffuse");
 }

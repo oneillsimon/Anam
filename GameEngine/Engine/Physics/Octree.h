@@ -44,7 +44,6 @@ public:
 	bool isInside(const Vector3& point, Octree* octree);
 
 	Octree* getChild(int x, int y, int z) const;
-	Octree* getContainingOctant(const Vector3& position);
 
 	Vector3 getMinExtents() const;
 	Vector3 getMaxExtents() const;
