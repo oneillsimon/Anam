@@ -2,6 +2,7 @@
 #define PHYSICSENGINECOMPONENT_H
 
 #include "../../Core/GameComponent.h"
+#include "../../Core/GameObject.h"
 #include "../../Physics/PhysicsEngine.h"
 
 class PhysicsEngineComponent : public GameComponent

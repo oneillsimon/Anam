@@ -38,7 +38,7 @@ void PhysicsEngine::updateObjectReferences(std::vector<PhysicsObject*>& objects,
 	{
 		if(objects[i]->getTransform()->hasChanged())
 		{
-			//octree->objectMoved(objects[i], objects[i]->getTransform()->getPosition());
+			octree->objectMoved(objects[i], objects[i]->getTransform()->getPosition());
 		}
 	}
 }

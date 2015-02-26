@@ -55,30 +55,30 @@ void CollisionDemo::initialise(const Window& window)
 	cameraObj->addComponent(new CameraComponent(Matrix4().initPerspective(toRadians(70.0f), window.getAspectRatio(), 0.1f, 1000.0f)));
 
 	addToScene(cameraObj);
-	int y = -2;
+	int y = -1;
 	int spacing = 4;
 
-	for(int l = 0; l < 1; l++)
+	for(int l = 0; l < 6; l++)
 	{
-		for(int i = 0; i < 2; i++)
+		for(int i = 0; i < 4; i++)
 		{
 			Vector3 v;
 
 			if(i == 0)
 				v = Vector3(-1.5f,  y * 3, -1.5f);
 			else if(i == 1)
-				v = Vector3(1.5f, i - y * 3, 1.5f);
+				v = Vector3(1.5f, y * 3, 1.5f);
 			else if(i == 2)
 				v = Vector3(1.5f, y * 3, -1.5f);
 			else
 				v = Vector3(-1.5f, y * 3, 1.5f);
 
 			PhysicsObject* pObj3 = new PhysicsObject(v);
-			//Box * b = new Box(pObj3);
-			//b->setState(0);
+			Box * b = new Box(pObj3);
+			b->setState(0);
 			pObj3->getTransform()->setScale(1.0f);
-			//pObj3->setCollider(b, b->getBody());
-			pObj3->setCollider(new ColliderBox(Vector3(1, 1, 1)), new RigidBody(1, 0.1f, 0.1f));
+			pObj3->setCollider(b, b->getBody());
+			//pObj3->setCollider(new ColliderBox(Vector3(1, 1, 1)), new RigidBody(1, 0.1f, 0.1f));
 			//pObj3->getTransform()->rotate(AXIS_Z, toRadians(30));
 
 			pObj3->addComponent(new ColliderRenderer(false, pObj3->getCollider(), COLOUR_FIREBRICK));
@@ -111,14 +111,14 @@ void CollisionDemo::initialise(const Window& window)
 	//plane->getTransform()->setScale(0.5f);
 	float h = s / 2.0f;
 	//plane->getCollider()->m_body->setMass(10000000000000000);
-	plane->setCollider(new ColliderBox(Vector3(s, s, s)), new RigidBody(100000000000, 0.1f, 0.1f));
+	plane->setCollider(new ColliderPlane(Vector3(0, 1, 0), -10), new RigidBody(100000000000, 0.1f, 0.1f));
 	//plane->getCollider()->m_body->m_hasInfiniteMass = true;
 	//plane->setCollider(new ColliderBox(Vector3(s, s, s)));
 	//plane->getCollider()->getBody()->setOrientation(Quaternion(AXIS_Z, toRadians(-45)));
 	plane->addComponent(new ColliderRenderer(true, plane->getCollider(), COLOUR_GREEN));
 	addToScene2(plane);
 
-	getRoot().addComponent(new OctreeRenderer(getRoot().getEngine()->getPhysicsEngine(),getRoot().getEngine()->getPhysicsEngine()->m_tree, COLOUR_YELLOW_GREEN));
+	//getRoot().addComponent(new OctreeRenderer(getRoot().getEngine()->getPhysicsEngine(),getRoot().getEngine()->getPhysicsEngine()->m_tree, COLOUR_YELLOW_GREEN));
 
 	Game::initialise(window);
 }

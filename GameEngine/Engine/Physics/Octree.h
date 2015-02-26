@@ -14,7 +14,7 @@ class Octree
 {
 private:
 	const int MIN_OBJ_PER_OCTAN = 1;
-	const int MAX_OBJ_PER_OCTAN = 4;
+	const int MAX_OBJ_PER_OCTAN = 8;
 	const int MAX_OCTREE_DEPTH = 6;
 
 	Vector3 m_min;
@@ -44,6 +44,7 @@ public:
 	bool isInside(const Vector3& point, Octree* octree);
 
 	Octree* getChild(int x, int y, int z) const;
+	Octree* getContainingOctant(const Vector3& position);
 
 	Vector3 getMinExtents() const;
 	Vector3 getMaxExtents() const;

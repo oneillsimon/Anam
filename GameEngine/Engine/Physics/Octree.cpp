@@ -3,7 +3,7 @@
 
 void Octree::fileObject(PhysicsObject* object, const Vector3& position, bool addObject)
 {
-	float s = 0;//object->getTransform()->getScale().getX();
+	float s = object->getCollider()->getExtents().max();
 
 	for(int x = 0; x < 2; x++)
 	{
@@ -246,7 +246,7 @@ void Octree::potentialCollisions(CollisionData* data)
 void Octree::generateContacts(Collider& one, Collider& two, CollisionData* data)
 {
 	data->setFriction(0.9f);
-	data->setRestitution(0.1f);
+	data->setRestitution(0.0f);
 	data->setTolerance(0.1f);
 
 	one.collide(two, *data);
@@ -255,6 +255,30 @@ void Octree::generateContacts(Collider& one, Collider& two, CollisionData* data)
 Octree* Octree::getChild(int x, int y, int z) const
 {
 	return m_children[x][y][z];
+}
+
+Octree* Octree::getContainingOctant(const Vector3& position)
+{
+	if(m_hasChildren)
+	{
+		for(int x = 0; x < 2; x++)
+		{
+			for(int y = 0; y < 2; y++)
+			{
+				for(int z = 0; z < 2; z++)
+				{
+					return getContainingOctant(position);
+				}
+			}
+		}
+	}
+	else
+	{
+		if(isInside(position, this))
+		{
+			return this;
+		}
+	}
 }
 
 Vector3 Octree::getMinExtents() const
