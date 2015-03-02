@@ -89,15 +89,15 @@ unsigned CollisionDetector::boxAndBox(const ColliderBox& one, const ColliderBox&
 
 	unsigned bestSingleAxis = best;
 
-	//CHECK_OVERLAP(one.getAxis(0) % two.getAxis(0), 6);
-	//CHECK_OVERLAP(one.getAxis(0) % two.getAxis(1), 7);
-	//CHECK_OVERLAP(one.getAxis(0) % two.getAxis(2), 8);
-	//CHECK_OVERLAP(one.getAxis(1) % two.getAxis(0), 9);
-	//CHECK_OVERLAP(one.getAxis(1) % two.getAxis(1), 10);
-	//CHECK_OVERLAP(one.getAxis(1) % two.getAxis(2), 11);
-	//CHECK_OVERLAP(one.getAxis(2) % two.getAxis(0), 12);
-	//CHECK_OVERLAP(one.getAxis(2) % two.getAxis(1), 13);
-	//CHECK_OVERLAP(one.getAxis(2) % two.getAxis(2), 14);
+	CHECK_OVERLAP(one.getAxis(0) % two.getAxis(0), 6);
+	CHECK_OVERLAP(one.getAxis(0) % two.getAxis(1), 7);
+	CHECK_OVERLAP(one.getAxis(0) % two.getAxis(2), 8);
+	CHECK_OVERLAP(one.getAxis(1) % two.getAxis(0), 9);
+	CHECK_OVERLAP(one.getAxis(1) % two.getAxis(1), 10);
+	CHECK_OVERLAP(one.getAxis(1) % two.getAxis(2), 11);
+	CHECK_OVERLAP(one.getAxis(2) % two.getAxis(0), 12);
+	CHECK_OVERLAP(one.getAxis(2) % two.getAxis(1), 13);
+	CHECK_OVERLAP(one.getAxis(2) % two.getAxis(2), 14);
 
 	assert(best != 0xffffff);
 

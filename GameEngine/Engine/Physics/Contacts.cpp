@@ -638,6 +638,11 @@ void ContactResolver::adjustPositions(Contact *c, unsigned numContacts, float du
 			{
 				if(c[i].getBody(b))
 				{
+					if(!c[i].getBody(b)->getAwake())
+					{
+						return;
+					}
+
 					for(unsigned d = 0; d < 2; d++)
 					{
 						if(c[i].getBody(b) == c[index].getBody(d))

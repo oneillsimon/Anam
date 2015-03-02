@@ -41,7 +41,9 @@ void PhysicsComponent::update(float delta)
 	if(m_collider->getBody())
 	{
 		m_collider->getBody()->integrate(delta);
+		//m_collider->getBody()->addForce(Vector3(0, -9.8f, 0));
 	}
+
 	GameComponent::update(delta);
 }
 

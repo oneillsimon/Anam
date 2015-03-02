@@ -5,7 +5,7 @@
 PhysicsEngine::PhysicsEngine() :
 resolver(MAX_CONTACTS)
 {
-	float size = 40.0f;
+	float size = 12.0f;
 	m_tree = new Octree(Vector3(-size, -size, -size), Vector3(size, size, size), 1);
 
 	cData.setContactArray(contacts);
@@ -24,9 +24,12 @@ void PhysicsEngine::simulate(float delta)
 		return;
 	}
 
-	ProfileTimers::physicsTimer.startInvocation();
-	updateComponentReferences(m_components, m_tree, delta);
 	cData.reset(MAX_CONTACTS);
+
+	ProfileTimers::physicsTimer.startInvocation();
+	ProfileTimers::physRefTimer.startInvocation();
+	updateComponentReferences(m_components, m_tree, delta);
+	ProfileTimers::physRefTimer.stopInvocation();
 	m_tree->potentialCollisions(&cData);
 	resolver.resolveContacts(cData.getContactArray(), cData.getContactCount(), delta);
 	ProfileTimers::physicsTimer.stopInvocation();
@@ -42,13 +45,3 @@ void PhysicsEngine::updateComponentReferences(std::vector<PhysicsComponent*>& co
 		}
 	}
 }
-
-//PhysicsObject* PhysicsEngine::getObject(unsigned int index) const
-//{
-//	return m_objects[index];
-//}
-//
-//std::vector<PhysicsObject*>* PhysicsEngine::getObjects()
-//{
-//	return &m_objects;
-//}

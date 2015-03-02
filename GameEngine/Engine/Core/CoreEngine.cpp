@@ -5,11 +5,6 @@
 #include "Time.h"
 #include "Util.h"
 
-void test(float i, std::string j)
-{
-	printf("%f, %s\n", i, j.c_str());
-}
-
 CoreEngine::CoreEngine(int width, int height, double frameRate, Game* game)
 {
 	m_isRunning = false;
@@ -34,11 +29,6 @@ CoreEngine::~CoreEngine()
 	{
 		delete m_renderingEngine;
 	}
-
-	//if(Lua::L)
-	//{
-	//	//lua_close(Lua::luaState);
-	//}
 }
 
 void CoreEngine::createWindow(const std::string& title)

@@ -18,8 +18,6 @@ RigidBody::RigidBody(float mass, float linear, float angular) :
 
 void RigidBody::integrate(float delta)
 {
-	addForce(Vector3(0, -9.8f, 0));
-
 	if(!m_isAwake)
 	{
 		return;
@@ -48,7 +46,7 @@ void RigidBody::integrate(float delta)
 		float currentMotion = m_velocity.scalarProduct(m_velocity) + m_rotation.scalarProduct(m_rotation);
 		float bias = powf(0.5, delta);
 
-		m_motion = bias*m_motion + (1 - bias)*currentMotion;
+		m_motion = bias * m_motion + (1 - bias) * currentMotion;
 
 		if(m_motion < m_sleepEpsilon)
 		{

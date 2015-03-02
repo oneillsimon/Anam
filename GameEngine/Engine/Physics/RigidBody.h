@@ -12,7 +12,7 @@ class PhysicsComponent;
 class RigidBody
 {
 private:
-	const float m_sleepEpsilon = 0.01f;
+	const float m_sleepEpsilon = 0.1f;
 
 	PhysicsComponent* m_parent;
 

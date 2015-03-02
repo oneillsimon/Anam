@@ -1,7 +1,7 @@
 #ifndef OCTREE_H
 #define OCTREE_H
 
-#define MAX_CONTACTS 2048
+#define MAX_CONTACTS 256
 
 #include <vector>
 #include <set>
@@ -13,9 +13,9 @@
 class Octree
 {
 private:
-	const int MIN_OBJ_PER_OCTAN = 1;
-	const int MAX_OBJ_PER_OCTAN = 8;
-	const int MAX_OCTREE_DEPTH = 6;
+	const int MIN_OBJ_PER_OCTAN = 2;
+	const int MAX_OBJ_PER_OCTAN = 4;
+	const int MAX_OCTREE_DEPTH = 10;
 
 	Vector3 m_min;
 	Vector3 m_max;

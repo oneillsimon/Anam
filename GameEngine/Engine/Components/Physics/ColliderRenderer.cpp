@@ -31,9 +31,27 @@ void ColliderRenderer::render(const Shader& shader, const  RenderingEngine& rend
 		t.setScale((p.getNormal() - 1).absolute() * 20);
 	}
 
+	Colour c;
+
+	if(m_component->getCollider()->getBody())
+	{
+		if(m_component->getCollider()->getBody()->getAwake())
+		{
+			c = m_colour;
+		}
+		else
+		{
+			c = COLOUR_BLUE;
+		}
+	}
+	else
+	{
+		c = COLOUR_BISQUE;
+	}
+
 	m_mesh.getWireFrameShader().bind();
 	m_mesh.getWireFrameShader().updateUniforms(t, renderingEngine, camera, m_material);
-	m_mesh.getWireFrameShader().setUniform("wireFrameColour", m_colour);
+	m_mesh.getWireFrameShader().setUniform("wireFrameColour", c);
 	m_mesh.drawWireFrame();
 }
 
