@@ -26,9 +26,11 @@ public:
 	virtual void collide(Collider& collider, CollisionData& data) = 0;
 
 	virtual Vector3 getExtents() = 0;
+	virtual Vector3 getMin();
+	virtual Vector3 getMax();
 
 	RigidBody* getBody() const;
-	int getType();
+	int getType() const;
 
 	void setBody(RigidBody* rigidBody);
 
@@ -44,6 +46,8 @@ public:
 
 	virtual void collide(Collider& collider, CollisionData& data);
 	virtual Vector3 getExtents();
+	virtual Vector3 getMin();
+	virtual Vector3 getMax();
 
 	float getRadius() const;
 };
@@ -58,6 +62,8 @@ public:
 
 	virtual void collide(Collider& collider, CollisionData& data);
 	virtual Vector3 getExtents();
+	virtual Vector3 getMin();
+	virtual Vector3 getMax();
 
 	Vector3 getHalfSize() const;
 };
@@ -73,6 +79,8 @@ public:
 
 	virtual void collide(Collider& collider, CollisionData& data);
 	virtual Vector3 getExtents();
+	virtual Vector3 getMin();
+	virtual Vector3 getMax();
 
 	Vector3 getNormal() const;
 	float getDistance()const;

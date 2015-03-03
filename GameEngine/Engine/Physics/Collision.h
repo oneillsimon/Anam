@@ -9,6 +9,7 @@
 class IntersectionTests
 {
 public:
+	static bool colliderAndCollider(const Collider& one, const Collider& two);
 	static bool sphereAndHalfSpace(const ColliderSphere& sphere, const ColliderPlane& plane);
 	static bool sphereAndSphere(const ColliderSphere& one, const ColliderSphere& two);
 	static bool boxAndBox(const ColliderBox& one, const ColliderBox& two);

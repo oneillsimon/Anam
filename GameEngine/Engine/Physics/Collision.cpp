@@ -353,6 +353,22 @@ unsigned CollisionDetector::boxAndHalfSpace(const ColliderBox& box, const Collid
 	return contactsUsed;
 }
 
+bool IntersectionTests::colliderAndCollider(const Collider& one, const Collider& two)
+{
+	if(one.getType() == Collider::BOX)
+	{
+		if(one.getType() == Collider::PLANE)
+		{
+			return IntersectionTests::boxAndHalfSpace((ColliderBox&)one, (ColliderPlane&)two);
+		}
+	}
+	else
+	{
+		return IntersectionTests::boxAndHalfSpace((ColliderBox&)two, (ColliderPlane&)one);
+	}
+}
+
+
 #define TEST_OVERLAP(axis) overlapOnAxis(one, two, (axis), toCentre)
 
 bool IntersectionTests::boxAndBox(const ColliderBox& one, const ColliderBox& two)
