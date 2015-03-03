@@ -53,34 +53,35 @@ void CollisionDemo::initialise(const Window& window)
 
 	Material mat = Material("mat", TEXTURE_BLANK, COLOUR_RED);
 	//int i = 0;
-	int s = 0;
-	for(int i = 0; i < 100; i++)
+	int s = 30;
+	for(int i = 0; i < 1; i++)
 	{
-		for(int j = 0; j < 4; j++)
+		for(int j = 0; j < 1; j++)
 		{
 			Vector3 v(-100, -100, -100);
 			switch(j)
 			{
 			case 0:
-				v = Vector3(0, s, 1.5f);
+				v = Vector3(0, s, 2.5f);
 				break;
 			case 1:
-				v = Vector3(0, s, -1.5f);
+				v = Vector3(0, s, -2.5f);
 				break;
 			case 2:
-				v = Vector3(1.5f, s, 0);
+				v = Vector3(2.5f, s, 0);
 				break;
 			case 3:
-				v = Vector3(-1.5f, s, 0);
+				v = Vector3(-2.5f, s, 0);
 				break;
 			}
 
-			PhysicsComponent* physicsComponent = new PhysicsComponent(new ColliderSphere(), new RigidBody(1));
+			float f = random(1, 1);
+			PhysicsComponent* physicsComponent = new PhysicsComponent(new ColliderBox(), new RigidBody(1));
 			GameObject* cubeoObj = new GameObject(v);
 			printf("i %d, j %d\n", i, j);
-			cubeoObj->addComponent(new MeshRenderer(Mesh("sphere.obj"), mat));
+			//cubeoObj->addComponent(new MeshRenderer(Mesh("sphere.obj"), mat));
 			cubeoObj->addComponent(physicsComponent);
-			//cubeoObj->addComponent(new PhysicsInput(*physicsComponent, Input::KEY_1));
+			cubeoObj->addComponent(new PhysicsInput(*physicsComponent, Input::KEY_1));
 			cubeoObj->addComponent(new ColliderRenderer(physicsComponent));
 			addToScene(cubeoObj);
 		}
@@ -88,10 +89,10 @@ void CollisionDemo::initialise(const Window& window)
 		s += 5;
 	}
 
-	PhysicsComponent* planeComponent = new PhysicsComponent(new ColliderSphere(2), new RigidBody(1000000000));
-	
+	PhysicsComponent* planeComponent = new PhysicsComponent(new ColliderPlane(Vector3(0, 1, 0), -5));
+	//PhysicsComponent* planeComponent = new PhysicsComponent(new ColliderBox(Vector3(5, 5, 5)), new RigidBody(1000000000));
 	GameObject* planeObj = new GameObject(Vector3(0, -5, 0));
-	planeObj->getTransform()->setScale(2);
+	//planeObj->getTransform()->setScale(2);
 	planeObj->addComponent(planeComponent);
 	planeObj->addComponent(new ColliderRenderer(planeComponent));
 

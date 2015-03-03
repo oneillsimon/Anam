@@ -544,7 +544,7 @@ void ContactResolver::resolveContacts(Contact *contacts, unsigned numContacts, f
 void ContactResolver::prepareContacts(Contact* contacts, unsigned numContacts, float duration)
 {
 	Contact* lastContact = contacts + numContacts;
-
+	
 	for(Contact* contact = contacts; contact < lastContact; contact++)
 	{
 		contact->calculateInternals(duration);
